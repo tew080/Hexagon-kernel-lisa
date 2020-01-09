@@ -627,25 +627,42 @@ static int msm_component_bind_all(struct device *dev,
 }
 #endif
 
-static int msm_drm_display_thread_create(struct msm_drm_private *priv, struct drm_device *ddev,
+static int msm_drm_display_thread_create(struct sched_param param, struct msm_drm_private *priv, struct drm_device *ddev,
 	struct device *dev)
 {
 	int i, ret = 0;
-
+	
+	/**
+	 * this priority was found during empiric testing to have appropriate
+	 * realtime scheduling to process display updates and interact with
+	 * other real time and normal priority task
+	 */
+	param.sched_priority = 16;
 	for (i = 0; i < priv->num_crtcs; i++) {
 		/* initialize display thread */
 		priv->disp_thread[i].crtc_id = priv->crtcs[i]->base.id;
 		kthread_init_worker(&priv->disp_thread[i].worker);
 		priv->disp_thread[i].dev = ddev;
-		priv->disp_thread[i].thread =
-			kthread_run(kthread_worker_fn,
-				&priv->disp_thread[i].worker,
-				"crtc_commit:%d", priv->disp_thread[i].crtc_id);
-		kthread_init_work(&priv->thread_priority_work,
-				  msm_drm_display_thread_priority_worker);
-		kthread_queue_work(&priv->disp_thread[i].worker, &priv->thread_priority_work);
-		kthread_flush_work(&priv->thread_priority_work);
-
+		/* Only pin actual display thread to big cluster */
+		if (i == 0) {
+			priv->disp_thread[i].thread =
+				kthread_run_perf_critical(cpu_prime_mask,
+					kthread_worker_fn,
+					&priv->disp_thread[i].worker,
+					"crtc_commit:%d", priv->disp_thread[i].crtc_id);
+			pr_info("%i to big cluster", priv->disp_thread[i].crtc_id);
+		} else {
+			priv->disp_thread[i].thread =
+				kthread_run(kthread_worker_fn,
+					&priv->disp_thread[i].worker,
+					"crtc_commit:%d", priv->disp_thread[i].crtc_id);
+			pr_info("%i to little cluster", priv->disp_thread[i].crtc_id);
+		}
+		ret = sched_setscheduler(priv->disp_thread[i].thread,
+							SCHED_FIFO, &param);
+		if (ret)
+			pr_warn("display thread priority update failed: %d\n",
+									ret);
 		if (IS_ERR(priv->disp_thread[i].thread)) {
 			dev_err(dev, "failed to create crtc_commit kthread\n");
 			priv->disp_thread[i].thread = NULL;
@@ -655,10 +672,21 @@ static int msm_drm_display_thread_create(struct msm_drm_private *priv, struct dr
 		priv->event_thread[i].crtc_id = priv->crtcs[i]->base.id;
 		kthread_init_worker(&priv->event_thread[i].worker);
 		priv->event_thread[i].dev = ddev;
-		priv->event_thread[i].thread =
-			kthread_run(kthread_worker_fn,
-				&priv->event_thread[i].worker,
-				"crtc_event:%d", priv->event_thread[i].crtc_id);
+		/* Only pin first event thread to big cluster */
+		if (i == 0) {
+			priv->event_thread[i].thread =
+				kthread_run_perf_critical(cpu_prime_mask,
+					kthread_worker_fn,
+					&priv->event_thread[i].worker,
+					"crtc_event:%d", priv->event_thread[i].crtc_id);
+			pr_info("%i to big cluster", priv->event_thread[i].crtc_id);
+		} else {
+			priv->event_thread[i].thread =
+				kthread_run(kthread_worker_fn,
+					&priv->event_thread[i].worker,
+					"crtc_event:%d", priv->event_thread[i].crtc_id);
+			pr_info("%i to little cluster", priv->event_thread[i].crtc_id);
+		}
 		/**
 		 * event thread should also run at same priority as disp_thread
 		 * because it is handling frame_done events. A lower priority
@@ -666,10 +694,11 @@ static int msm_drm_display_thread_create(struct msm_drm_private *priv, struct dr
 		 * frame_pending counters beyond 2. This can lead to commit
 		 * failure at crtc commit level.
 		 */
-		kthread_init_work(&priv->thread_priority_work,
-				  msm_drm_display_thread_priority_worker);
-		kthread_queue_work(&priv->event_thread[i].worker, &priv->thread_priority_work);
-		kthread_flush_work(&priv->thread_priority_work);
+		ret = sched_setscheduler(priv->event_thread[i].thread,
+							SCHED_FIFO, &param);
+		if (ret)
+			pr_warn("display event thread priority update failed: %d\n",
+									ret);
 
 		if (IS_ERR(priv->event_thread[i].thread)) {
 			dev_err(dev, "failed to create crtc_event kthread\n");
@@ -707,6 +736,12 @@ static int msm_drm_display_thread_create(struct msm_drm_private *priv, struct dr
 	kthread_init_work(&priv->thread_priority_work, msm_drm_display_thread_priority_worker);
 	kthread_queue_work(&priv->pp_event_worker, &priv->thread_priority_work);
 	kthread_flush_work(&priv->thread_priority_work);
+
+	ret = sched_setscheduler(priv->pp_event_thread,
+						SCHED_FIFO, &param);
+	if (ret)
+		pr_warn("pp_event thread priority update failed: %d\n",
+								ret);
 
 	if (IS_ERR(priv->pp_event_thread)) {
 		dev_err(dev, "failed to create pp_event kthread\n");
@@ -999,6 +1034,7 @@ static int msm_drm_component_init(struct device *dev)
 	struct msm_drm_private *priv = ddev->dev_private;
 	struct msm_kms *kms = NULL;
 	int ret;
+	struct sched_param param = { 0 };
 	struct drm_crtc *crtc;
 
 	ret = msm_mdss_init(ddev);
@@ -1036,7 +1072,7 @@ static int msm_drm_component_init(struct device *dev)
 	sde_rotator_register();
 	sde_rotator_smmu_driver_register();
 
-	ret = msm_drm_display_thread_create(priv, ddev, dev);
+	ret = msm_drm_display_thread_create(param, priv, ddev, dev);
 	if (ret) {
 		dev_err(dev, "msm_drm_display_thread_create failed\n");
 		goto fail;

@@ -13,11 +13,10 @@
 KBUILD_CFLAGS  +=  -march=armv8-a
 KBUILD_CFLAGS  +=  -mcpu=cortex-a78
 KBUILD_CFLAGS  +=  -mtune=cortex-a78
-KBUILD_AFLAGS  +=  -march=armv8-a
-KBUILD_AFLAGS  +=  -mcpu=cortex-a78
-KBUILD_AFLAGS  +=  -mtune=cortex-a78
-KBUILD_LDFLAGS +=  -mllvm -march=armv8-a
-KBUILD_LDFLAGS +=  -mllvm -mcpu=cortex-a78
+KBUILD_CFLAGS  +=  -fno-rtti
+KBUILD_CFLAGS  +=  -fno-trapping-math
+KBUILD_CFLAGS  +=  -fno-exceptions
+KBUILD_CFLAGS  +=  -fno-math-errno
 
 LDFLAGS_vmlinux	:=--no-undefined -X
 CPPFLAGS_vmlinux.lds = -DTEXT_OFFSET=$(TEXT_OFFSET)

@@ -1,4 +1,17 @@
 # SPDX-License-Identifier: GPL-2.0-only
+# Snapdragon optimization
+KBUILD_CFLAGS  +=  -fno-rtti
+KBUILD_CFLAGS  +=  -fno-trapping-math
+KBUILD_CFLAGS  +=  -fno-exceptions
+KBUILD_CFLAGS  +=  -fno-math-errno
+
+# Machine Instruction Scheduler
+KBUILD_CFLAGS  +=  -mllvm -enable-misched
+KBUILD_CFLAGS  +=  -mllvm -misched-topdown
+KBUILD_CFLAGS  +=  -mllvm -regalloc=greedy
+KBUILD_LDFLAGS  +=  -mllvm -enable-misched
+KBUILD_LDFLAGS  +=  -mllvm -misched-topdown
+KBUILD_LDFLAGS  +=  -mllvm -regalloc=greedy
 
 ccflags-y += -I$(src)
 
