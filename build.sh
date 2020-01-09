@@ -29,7 +29,7 @@ if [[ $1 = "-r" || $1 = "--regen" ]]; then
 	exit
 fi
 
-rm -rf out
+#rm -rf out
 mkdir -p out
 
 make $MAKE_PARAMS $DEFCONFIG
