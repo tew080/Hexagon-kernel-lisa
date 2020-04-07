@@ -5,6 +5,7 @@
 #ifndef _LINUX_PROC_FS_H
 #define _LINUX_PROC_FS_H
 
+#include <linux/compiler.h>
 #include <linux/types.h>
 #include <linux/fs.h>
 
@@ -12,6 +13,38 @@ struct proc_dir_entry;
 struct seq_file;
 struct seq_operations;
 
+<<<<<<< HEAD
+=======
+enum {
+	/*
+	 * All /proc entries using this ->proc_ops instance are never removed.
+	 *
+	 * If in doubt, ignore this flag.
+	 */
+#ifdef MODULE
+	PROC_ENTRY_PERMANENT = 0U,
+#else
+	PROC_ENTRY_PERMANENT = 1U << 0,
+#endif
+};
+
+struct proc_ops {
+	unsigned int proc_flags;
+	int	(*proc_open)(struct inode *, struct file *);
+	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
+	ssize_t	(*proc_write)(struct file *, const char __user *, size_t, loff_t *);
+	loff_t	(*proc_lseek)(struct file *, loff_t, int);
+	int	(*proc_release)(struct inode *, struct file *);
+	__poll_t (*proc_poll)(struct file *, struct poll_table_struct *);
+	long	(*proc_ioctl)(struct file *, unsigned int, unsigned long);
+#ifdef CONFIG_COMPAT
+	long	(*proc_compat_ioctl)(struct file *, unsigned int, unsigned long);
+#endif
+	int	(*proc_mmap)(struct file *, struct vm_area_struct *);
+	unsigned long (*proc_get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+} __randomize_layout;
+
+>>>>>>> b0183a84bd3e (proc: faster open/read/close with "permanent" files)
 #ifdef CONFIG_PROC_FS
 
 typedef int (*proc_write_t)(struct file *, char *, size_t);

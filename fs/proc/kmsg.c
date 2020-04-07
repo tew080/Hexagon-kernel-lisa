@@ -49,12 +49,22 @@ static __poll_t kmsg_poll(struct file *file, poll_table *wait)
 }
 
 
+<<<<<<< HEAD
 static const struct file_operations proc_kmsg_operations = {
 	.read		= kmsg_read,
 	.poll		= kmsg_poll,
 	.open		= kmsg_open,
 	.release	= kmsg_release,
 	.llseek		= generic_file_llseek,
+=======
+static const struct proc_ops kmsg_proc_ops = {
+	.proc_flags	= PROC_ENTRY_PERMANENT,
+	.proc_read	= kmsg_read,
+	.proc_poll	= kmsg_poll,
+	.proc_open	= kmsg_open,
+	.proc_release	= kmsg_release,
+	.proc_lseek	= generic_file_llseek,
+>>>>>>> b0183a84bd3e (proc: faster open/read/close with "permanent" files)
 };
 
 static int __init proc_kmsg_init(void)

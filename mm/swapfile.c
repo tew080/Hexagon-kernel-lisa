@@ -2817,12 +2817,22 @@ static int swaps_open(struct inode *inode, struct file *file)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct file_operations proc_swaps_operations = {
 	.open		= swaps_open,
 	.read		= seq_read,
 	.llseek		= seq_lseek,
 	.release	= seq_release,
 	.poll		= swaps_poll,
+=======
+static const struct proc_ops swaps_proc_ops = {
+	.proc_flags	= PROC_ENTRY_PERMANENT,
+	.proc_open	= swaps_open,
+	.proc_read	= seq_read,
+	.proc_lseek	= seq_lseek,
+	.proc_release	= seq_release,
+	.proc_poll	= swaps_poll,
+>>>>>>> b0183a84bd3e (proc: faster open/read/close with "permanent" files)
 };
 
 static int __init procswaps_init(void)

@@ -4635,11 +4635,20 @@ static int modules_open(struct inode *inode, struct file *file)
 	return err;
 }
 
+<<<<<<< HEAD
 static const struct file_operations proc_modules_operations = {
 	.open		= modules_open,
 	.read		= seq_read,
 	.llseek		= seq_lseek,
 	.release	= seq_release,
+=======
+static const struct proc_ops modules_proc_ops = {
+	.proc_flags	= PROC_ENTRY_PERMANENT,
+	.proc_open	= modules_open,
+	.proc_read	= seq_read,
+	.proc_lseek	= seq_lseek,
+	.proc_release	= seq_release,
+>>>>>>> b0183a84bd3e (proc: faster open/read/close with "permanent" files)
 };
 
 static int __init proc_modules_init(void)
