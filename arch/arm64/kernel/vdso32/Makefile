@@ -13,8 +13,16 @@ include $(srctree)/lib/vdso/Makefile
 ifeq ($(CONFIG_CC_IS_CLANG), y)
 CC_COMPAT ?= $(CC)
 CC_COMPAT += --target=arm-linux-gnueabi
+CC_COMPAT += $(CC_COMPAT_CLANG_FLAGS)
+
+ifeq ($(LLVM),1)
+LD_COMPAT ?= $(LD)
+else
+LD_COMPAT ?= $(CROSS_COMPILE_COMPAT)ld
+endif
 else
 CC_COMPAT ?= $(CROSS_COMPILE_COMPAT)gcc
+LD_COMPAT ?= $(CROSS_COMPILE_COMPAT)ld
 endif
 
 ifeq ($(CONFIG_LD_IS_LLD), y)
