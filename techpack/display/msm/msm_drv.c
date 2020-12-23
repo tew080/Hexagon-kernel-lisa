@@ -346,7 +346,7 @@ u32 msm_readl(const void __iomem *addr)
 	u32 val = readl(addr);
 
 	if (reglog)
-		pr_debug("IO:R %pK %08x\n", addr, val);
+		pr_err("IO:R %pK %08x\n", addr, val);
 	return val;
 }
 
@@ -954,7 +954,7 @@ static int msm_drm_device_init(struct platform_device *pdev,
 
 	ret = sde_power_resource_init(pdev, &priv->phandle);
 	if (ret) {
-		pr_debug("sde power resource init failed\n");
+		pr_err("sde power resource init failed\n");
 		goto power_init_fail;
 	}
 
@@ -1103,7 +1103,7 @@ static int msm_drm_component_init(struct device *dev)
 	if (kms && kms->funcs && kms->funcs->postinit) {
 		ret = kms->funcs->postinit(kms);
 		if (ret) {
-			pr_debug("kms post init failed: %d\n", ret);
+			pr_err("kms post init failed: %d\n", ret);
 			goto fail;
 		}
 	}
@@ -1842,7 +1842,7 @@ int msm_ioctl_power_ctrl(struct drm_device *dev, void *data,
 		if (!ctx->enable_refcnt)
 			vote_req = true;
 	} else {
-		pr_debug("ignoring, unbalanced disable\n");
+		pr_err("ignoring, unbalanced disable\n");
 	}
 
 	if (vote_req) {
