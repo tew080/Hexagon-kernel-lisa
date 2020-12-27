@@ -29,6 +29,7 @@ ccflags-y := -fno-common -fno-builtin -fno-stack-protector \
 	     -ffixed-x18 $(DISABLE_LTO)
 
 ccflags-y += -DDISABLE_BRANCH_PROFILING
+ccflags-y += $(call cc-option, -fno-whole-program)
 
 CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS) $(GCC_PLUGINS_CFLAGS) \
 				$(CC_FLAGS_LTO)
