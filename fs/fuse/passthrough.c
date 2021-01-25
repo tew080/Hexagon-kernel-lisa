@@ -3,6 +3,7 @@
 #include "fuse_i.h"
 
 #include <linux/fuse.h>
+<<<<<<< HEAD
 #include <linux/idr.h>
 #include <linux/uio.h>
 
@@ -264,11 +265,19 @@ err_free_file:
 	fput(passthrough_filp);
 
 	return res;
+=======
+
+int fuse_passthrough_open(struct fuse_dev *fud,
+			  struct fuse_passthrough_out *pto)
+{
+	return -EINVAL;
+>>>>>>> bb6cd5615bd6 (FROMLIST: fuse: Definitions and ioctl for passthrough)
 }
 
 int fuse_passthrough_setup(struct fuse_conn *fc, struct fuse_file *ff,
 			   struct fuse_open_out *openarg)
 {
+<<<<<<< HEAD
 	struct fuse_passthrough *passthrough;
 	int passthrough_fh = openarg->passthrough_fh;
 
@@ -290,10 +299,14 @@ int fuse_passthrough_setup(struct fuse_conn *fc, struct fuse_file *ff,
 	kfree(passthrough);
 
 	return 0;
+=======
+	return -EINVAL;
+>>>>>>> bb6cd5615bd6 (FROMLIST: fuse: Definitions and ioctl for passthrough)
 }
 
 void fuse_passthrough_release(struct fuse_passthrough *passthrough)
 {
+<<<<<<< HEAD
 	if (passthrough->filp) {
 		fput(passthrough->filp);
 		passthrough->filp = NULL;
@@ -302,4 +315,6 @@ void fuse_passthrough_release(struct fuse_passthrough *passthrough)
 		put_cred(passthrough->cred);
 		passthrough->cred = NULL;
 	}
+=======
+>>>>>>> bb6cd5615bd6 (FROMLIST: fuse: Definitions and ioctl for passthrough)
 }
