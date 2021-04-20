@@ -11,6 +11,8 @@ include $(srctree)/lib/vdso/Makefile
 
 # Same as cc-*option, but using CC_COMPAT instead of CC
 ifeq ($(CONFIG_CC_IS_CLANG), y)
+CC_COMPAT_CLANG_FLAGS := --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
+
 CC_COMPAT ?= $(CC)
 CC_COMPAT += --target=arm-linux-gnueabi
 CC_COMPAT += $(CC_COMPAT_CLANG_FLAGS)
