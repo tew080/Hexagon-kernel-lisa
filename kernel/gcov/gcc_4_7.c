@@ -15,7 +15,7 @@
 #include <linux/errno.h>
 #include <linux/slab.h>
 #include <linux/string.h>
-#include <linux/vmalloc.h>
+#include <linux/mm.h>
 #include "gcov.h"
 
 #if (__GNUC__ >= 14)
@@ -367,7 +367,7 @@ void gcov_info_free(struct gcov_info *info)
 		ci_ptr = info->functions[fi_idx]->ctrs;
 
 		for (ct_idx = 0; ct_idx < active; ct_idx++, ci_ptr++)
-			vfree(ci_ptr->values);
+			kvfree(ci_ptr->values);
 
 		kfree(info->functions[fi_idx]);
 	}
