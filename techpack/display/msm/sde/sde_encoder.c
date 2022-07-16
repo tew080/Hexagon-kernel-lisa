@@ -1854,8 +1854,6 @@ skip_wait:
 	SDE_EVT32(DRMID(drm_enc), sw_event, sde_enc->rc_state,
 		SDE_ENC_RC_STATE_MODESET, SDE_EVTLOG_FUNC_CASE5);
 
-        _sde_encoder_set_rc_state(sde_enc, SDE_ENC_RC_STATE_MODESET);
-
 end:
 	mutex_unlock(&sde_enc->rc_lock);
 	return ret;
@@ -1888,8 +1886,6 @@ static int _sde_encoder_rc_post_modeset(struct drm_encoder *drm_enc,
 
 	SDE_EVT32(DRMID(drm_enc), sw_event, sde_enc->rc_state,
 			SDE_ENC_RC_STATE_ON, SDE_EVTLOG_FUNC_CASE6);
-
-        _sde_encoder_set_rc_state(sde_enc, SDE_ENC_RC_STATE_ON);
 
 end:
 	mutex_unlock(&sde_enc->rc_lock);
