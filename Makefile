@@ -789,6 +789,8 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os 
 endif
 
+KBUILD_CFLAGS += -Wno-unused-variable
+
 # Graphite optimisation
 ifdef CONFIG_GCC_GRAPHITE
 KBUILD_CFLAGS	+= -fipa-pta -fgraphite-identity -floop-nest-optimize -fno-semantic-interposition
