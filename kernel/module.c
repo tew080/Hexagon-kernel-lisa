@@ -345,21 +345,6 @@ void __noreturn __module_put_and_exit(struct module *mod, long code)
 }
 EXPORT_SYMBOL(__module_put_and_exit);
 
-/* Find a module section: 0 means not found. */
-static unsigned int find_sec(const struct load_info *info, const char *name)
-{
-	unsigned int i;
-
-	for (i = 1; i < info->hdr->e_shnum; i++) {
-		Elf_Shdr *shdr = &info->sechdrs[i];
-		/* Alloc bit cleared means "ignore it." */
-		if ((shdr->sh_flags & SHF_ALLOC)
-		    && strcmp(info->secstrings + shdr->sh_name, name) == 0)
-			return i;
-	}
-	return 0;
-}
-
 /* Find a module section, or NULL. */
 static void *section_addr(const struct load_info *info, const char *name)
 {
@@ -677,11 +662,6 @@ static int percpu_modalloc(struct module *mod, struct load_info *info)
 static void percpu_modfree(struct module *mod)
 {
 	free_percpu(mod->percpu);
-}
-
-static unsigned int find_pcpusec(struct load_info *info)
-{
-	return find_sec(info, ".data..percpu");
 }
 
 static void percpu_modcopy(struct module *mod,
@@ -1398,7 +1378,6 @@ static inline int same_magic(const char *amagic, const char *bmagic,
 }
 #endif /* CONFIG_MODVERSIONS */
 
-static char *get_modinfo(const struct load_info *info, const char *tag);
 static char *get_next_modinfo(const struct load_info *info, const char *tag,
 			      char *prev);
 
@@ -2604,56 +2583,6 @@ static void set_license(struct module *mod, const char *license)
 	}
 }
 
-/* Parse tag=value strings from .modinfo section */
-static char *next_string(char *string, unsigned long *secsize)
-{
-	/* Skip non-zero chars */
-	while (string[0]) {
-		string++;
-		if ((*secsize)-- <= 1)
-			return NULL;
-	}
-
-	/* Skip any zero padding. */
-	while (!string[0]) {
-		string++;
-		if ((*secsize)-- <= 1)
-			return NULL;
-	}
-	return string;
-}
-
-static char *get_next_modinfo(const struct load_info *info, const char *tag,
-			      char *prev)
-{
-	char *p;
-	unsigned int taglen = strlen(tag);
-	Elf_Shdr *infosec = &info->sechdrs[info->index.info];
-	unsigned long size = infosec->sh_size;
-
-	/*
-	 * get_modinfo() calls made before rewrite_section_headers()
-	 * must use sh_offset, as sh_addr isn't set!
-	 */
-	char *modinfo = (char *)info->hdr + infosec->sh_offset;
-
-	if (prev) {
-		size -= prev - modinfo;
-		modinfo = next_string(prev, &size);
-	}
-
-	for (p = modinfo; p; p = next_string(p, &size)) {
-		if (strncmp(p, tag, taglen) == 0 && p[taglen] == '=')
-			return p + taglen + 1;
-	}
-	return NULL;
-}
-
-static char *get_modinfo(const struct load_info *info, const char *tag)
-{
-	return get_next_modinfo(info, tag, NULL);
-}
-
 static void setup_modinfo(struct module *mod, struct load_info *info)
 {
 	struct module_attribute *attr;
@@ -3208,66 +3137,6 @@ static int rewrite_section_headers(struct load_info *info, int flags)
 	/* Track but don't keep modinfo and version sections. */
 	info->sechdrs[info->index.vers].sh_flags &= ~(unsigned long)SHF_ALLOC;
 	info->sechdrs[info->index.info].sh_flags &= ~(unsigned long)SHF_ALLOC;
-
-	return 0;
-}
-
-/*
- * Set up our basic convenience variables (pointers to section headers,
- * search for module section index etc), and do some basic section
- * verification.
- *
- * Set info->mod to the temporary copy of the module in info->hdr. The final one
- * will be allocated in move_module().
- */
-static int setup_load_info(struct load_info *info, int flags)
-{
-	unsigned int i;
-
-	/* Try to find a name early so we can log errors with a module name */
-	info->index.info = find_sec(info, ".modinfo");
-	if (info->index.info)
-		info->name = get_modinfo(info, "name");
-
-	/* Find internal symbols and strings. */
-	for (i = 1; i < info->hdr->e_shnum; i++) {
-		if (info->sechdrs[i].sh_type == SHT_SYMTAB) {
-			info->index.sym = i;
-			info->index.str = info->sechdrs[i].sh_link;
-			info->strtab = (char *)info->hdr
-				+ info->sechdrs[info->index.str].sh_offset;
-			break;
-		}
-	}
-
-	if (info->index.sym == 0) {
-		pr_warn("%s: module has no symbols (stripped?)\n",
-			info->name ?: "(missing .modinfo section or name field)");
-		return -ENOEXEC;
-	}
-
-	info->index.mod = find_sec(info, ".gnu.linkonce.this_module");
-	if (!info->index.mod) {
-		pr_warn("%s: No module found in object\n",
-			info->name ?: "(missing .modinfo section or name field)");
-		return -ENOEXEC;
-	}
-	/* This is temporary: point mod into copy of data. */
-	info->mod = (void *)info->hdr + info->sechdrs[info->index.mod].sh_offset;
-
-	/*
-	 * If we didn't load the .modinfo 'name' field earlier, fall back to
-	 * on-disk struct mod 'name' field.
-	 */
-	if (!info->name)
-		info->name = info->mod->name;
-
-	if (flags & MODULE_INIT_IGNORE_MODVERSIONS)
-		info->index.vers = 0; /* Pretend no __versions section! */
-	else
-		info->index.vers = find_sec(info, "__versions");
-
-	info->index.pcpu = find_pcpusec(info);
 
 	return 0;
 }
