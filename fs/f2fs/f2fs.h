@@ -640,8 +640,16 @@ enum {
 
 #define DEFAULT_RETRY_IO_COUNT	8	/* maximum retry read IO count */
 
+#ifdef CONFIG_HZ_300
 /* congestion wait timeout value, default: 6ms */
 #define	DEFAULT_IO_TIMEOUT	(msecs_to_jiffies(6))
+#elif defined(CONFIG_HZ_250)
+/* congestion wait timeout value, default: 8ms */
+#define	DEFAULT_IO_TIMEOUT	(msecs_to_jiffies(8))
+#elif defined(CONFIG_HZ_100)
+/* congestion wait timeout value, default: 10ms */
+#define	DEFAULT_IO_TIMEOUT	(msecs_to_jiffies(10))
+#endif
 
 /* maximum retry quota flush count */
 #define DEFAULT_RETRY_QUOTA_FLUSH_COUNT		8
