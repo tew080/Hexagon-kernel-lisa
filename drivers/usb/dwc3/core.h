@@ -1295,6 +1295,7 @@ struct dwc3 {
 #define DWC31_VERSIONTYPE_EA04		0x65613034
 #define DWC31_VERSIONTYPE_EA05		0x65613035
 #define DWC31_VERSIONTYPE_EA06		0x65613036
+#define DWC31_VERSIONTYPE_GA		0x67612a2a
 
 	enum dwc3_ep0_next	ep0_next_event;
 	enum dwc3_ep0_state	ep0state;
@@ -1429,6 +1430,8 @@ struct dwc3 {
 	wait_queue_head_t	wait_linkstate;
 	struct work_struct	remote_wakeup_work;
 	bool			dual_port;
+	struct work_struct 	check_cmd_work;
+	int			gs_cmd_status;
 };
 
 #define INCRX_BURST_MODE 0
@@ -1736,6 +1739,8 @@ enum dwc3_notify_event {
 	DWC3_GSI_EVT_BUF_CLEAR,
 	DWC3_GSI_EVT_BUF_FREE,
 	DWC3_CONTROLLER_NOTIFY_CLEAR_DB,
+	/*USB RESTART EVENT*/
+	DWC3_USB_RESTART_EVENT,
 };
 
 extern void dwc3_set_notifier(void (*notify)(struct dwc3 *dwc3,
