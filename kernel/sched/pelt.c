@@ -29,6 +29,64 @@
 #include "pelt.h"
 
 #include <trace/events/sched.h>
+int pelt_load_avg_period = PELT16_LOAD_AVG_PERIOD;
+int pelt_load_avg_max = PELT16_LOAD_AVG_MAX;
+const u32 *pelt_runnable_avg_yN_inv = pelt16_runnable_avg_yN_inv;
+
+int get_pelt_halflife(void)
+{
+	return pelt_load_avg_period;
+}
+EXPORT_SYMBOL_GPL(get_pelt_halflife);
+
+static int __set_pelt_halflife(void *data)
+{
+	int rc = 0;
+	int num = *(int *)data;
+
+	switch (num) {
+	case PELT8_LOAD_AVG_PERIOD:
+		pelt_load_avg_period = PELT8_LOAD_AVG_PERIOD;
+		pelt_load_avg_max = PELT8_LOAD_AVG_MAX;
+		pelt_runnable_avg_yN_inv = pelt8_runnable_avg_yN_inv;
+		pr_info("PELT half life is set to %dms\n", num);
+		break;
+	case PELT32_LOAD_AVG_PERIOD:
+		pelt_load_avg_period = PELT32_LOAD_AVG_PERIOD;
+		pelt_load_avg_max = PELT32_LOAD_AVG_MAX;
+		pelt_runnable_avg_yN_inv = pelt32_runnable_avg_yN_inv;
+		pr_info("PELT half life is set to %dms\n", num);
+		break;
+	default:
+		rc = -EINVAL;
+		pr_err("Failed to set PELT half life to %dms, the current value is %dms\n",
+			num, pelt_load_avg_period);
+	}
+
+	return rc;
+}
+
+int set_pelt_halflife(int num)
+{
+	return stop_machine(__set_pelt_halflife, &num, NULL);
+}
+EXPORT_SYMBOL_GPL(set_pelt_halflife);
+
+static int __init set_pelt(char *str)
+{
+	int rc, num;
+
+	rc = kstrtoint(str, 0, &num);
+	if (rc) {
+		pr_err("%s: kstrtoint failed. rc=%d\n", __func__, rc);
+		return 0;
+	}
+
+	__set_pelt_halflife(&num);
+	return rc;
+}
+
+early_param("pelt", set_pelt);
 
 /*
  * Approximate:
