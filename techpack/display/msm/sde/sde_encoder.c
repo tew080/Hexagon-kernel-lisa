@@ -1722,8 +1722,6 @@ end:
 	if (!sde_enc->delay_kickoff)
 		_sde_encoder_rc_kickoff_delayed(sde_enc, sw_event);
 
-	msm_idle_set_state(drm_enc, false);
-
 	mutex_unlock(&sde_enc->rc_lock);
 	return ret;
 }
@@ -1733,8 +1731,6 @@ static int _sde_encoder_rc_pre_stop(struct drm_encoder *drm_enc,
 {
 	/* cancel delayed off work, if any */
 	_sde_encoder_rc_cancel_delayed(sde_enc, sw_event);
-
-	msm_idle_set_state(drm_enc, true);
 
 	mutex_lock(&sde_enc->rc_lock);
 
@@ -1858,6 +1854,8 @@ skip_wait:
 	SDE_EVT32(DRMID(drm_enc), sw_event, sde_enc->rc_state,
 		SDE_ENC_RC_STATE_MODESET, SDE_EVTLOG_FUNC_CASE5);
 
+        _sde_encoder_set_rc_state(sde_enc, SDE_ENC_RC_STATE_MODESET);
+
 end:
 	mutex_unlock(&sde_enc->rc_lock);
 	return ret;
@@ -1890,6 +1888,8 @@ static int _sde_encoder_rc_post_modeset(struct drm_encoder *drm_enc,
 
 	SDE_EVT32(DRMID(drm_enc), sw_event, sde_enc->rc_state,
 			SDE_ENC_RC_STATE_ON, SDE_EVTLOG_FUNC_CASE6);
+
+        _sde_encoder_set_rc_state(sde_enc, SDE_ENC_RC_STATE_ON);
 
 end:
 	mutex_unlock(&sde_enc->rc_lock);
