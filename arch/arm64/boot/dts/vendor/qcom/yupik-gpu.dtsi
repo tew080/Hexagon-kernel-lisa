@@ -402,7 +402,7 @@
 
 				qcom,gpu-pwrlevel@0 {
 					reg = <0>;
-					qcom,gpu-freq = <560000000>;
+					qcom,gpu-freq = <550000000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_SVS>;
 
 					qcom,bus-freq-ddr7 = <9>;
