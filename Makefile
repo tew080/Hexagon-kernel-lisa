@@ -368,7 +368,7 @@ include scripts/subarch.include
 # Alternatively CROSS_COMPILE can be set in the environment.
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
-ARCH		?= $(SUBARCH)
+ARCH		:= arm64
 
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
@@ -409,8 +409,8 @@ ifneq ($(LLVM),)
 HOSTCC	= $(CCACHE) clang
 HOSTCXX	= $(CCACHE) clang++
 else
-HOSTCC	= gcc
-HOSTCXX	= g++
+HOSTCC	= $(CCACHE) gcc
+HOSTCXX	= $(CCACHE) g++
 endif
 KBUILD_HOSTCFLAGS   := -Wmissing-prototypes -Wstrict-prototypes -O3 \
 		-fomit-frame-pointer -std=gnu89 -pipe $(HOST_LFS_CFLAGS) \
@@ -423,24 +423,24 @@ KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
 CPP		= $(CC) -E
 ifneq ($(LLVM),)
 CC		= $(CCACHE) clang
-LD		= ld.lld
-AR		= llvm-ar
-NM		= llvm-nm
-OBJCOPY		= llvm-objcopy
-OBJDUMP		= llvm-objdump
-READELF		= llvm-readelf
-OBJSIZE		= llvm-size
-STRIP		= llvm-strip
+LD		= $(CCACHE) ld.lld
+AR		= $(CCACHE) llvm-ar
+NM		= $(CCACHE) llvm-nm
+OBJCOPY		= $(CCACHE) llvm-objcopy
+OBJDUMP		= $(CCACHE) llvm-objdump
+READELF		= $(CCACHE) llvm-readelf
+OBJSIZE		= $(CCACHE) llvm-size
+STRIP		= $(CCACHE) llvm-strip
 else
 CC		= $(CCACHE) $(CROSS_COMPILE)gcc
-LD		= $(CROSS_COMPILE)ld
-AR		= $(CROSS_COMPILE)ar
-NM		= $(CROSS_COMPILE)nm
-OBJCOPY		= $(CROSS_COMPILE)objcopy
-OBJDUMP		= $(CROSS_COMPILE)objdump
-READELF		= $(CROSS_COMPILE)readelf
-OBJSIZE		= $(CROSS_COMPILE)size
-STRIP		= $(CROSS_COMPILE)strip
+LD		= $(CCACHE) $(CROSS_COMPILE)ld
+AR		= $(CCACHE) $(CROSS_COMPILE)ar
+NM		= $(CCACHE) $(CROSS_COMPILE)nm
+OBJCOPY		= $(CCACHE) $(CROSS_COMPILE)objcopy
+OBJDUMP		= $(CCACHE) $(CROSS_COMPILE)objdump
+READELF		= $(CCACHE) $(CROSS_COMPILE)readelf
+OBJSIZE		= $(CCACHE) $(CROSS_COMPILE)size
+STRIP		= $(CCACHE) $(CROSS_COMPILE)strip
 endif
 PAHOLE		= pahole
 LEX		= flex
@@ -776,6 +776,8 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, sizeof-pointer-memaccess)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, unused-result)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, unused-value)
 
+#Enable MLGO for register allocation.
+#KBUILD_CFLAGS   += -mllvm -regalloc-enable-advisor=release
 #Enable hot cold split optimization
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 

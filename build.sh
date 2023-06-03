@@ -5,6 +5,7 @@
 
 SECONDS=0 # builtin bash timer
 TC_DIR="/home/tew404/lisa-Kernel/Clang-20.0.0"
+TC_DIRR="/home/tew404/lisa-Kernel/clang-r530567"
 DEFCONFIG="lisa_defconfig"
 
 ZIPNAME="Hexagon-kernel-lisa-$(date '+%Y%m%d-%H%M').zip"
