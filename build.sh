@@ -2,7 +2,7 @@
 # Compile script for Hexagon-kernel
 
 SECONDS=0 # builtin bash timer
-TC_DIR="/home/tew404/lisa-Kernel/neutron-clang-10032024"
+TC_DIR="/home/tew404/lisa-Kernel/Clang-20.0.0"
 DEFCONFIG="lisa_defconfig"
 ZIPNAME="Hexagon-kernel-lisa-$(date '+%Y%m%d-%H%M').zip"
 
@@ -14,9 +14,9 @@ fi
 MAKE_PARAMS="O=out \
 	ARCH=arm64  \
  	CC=$TC_DIR/bin/clang  \
-	CLANG_TRIPLE=aarch64-linux-gnu- \
-	CROSS_COMPILE=aarch64-linux-gnu-  \
-	CROSS_COMPILE_ARM32=arm-linux-gnueabi-  \
+	CLANG_TRIPLE=$TC_DIR/bin/aarch64-linux-gnu- \
+	CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu-  \
+	CROSS_COMPILE_ARM32=$TC_DIR/bin/arm-linux-gnueabi-  \
 	LLVM=1 \
 	LLVM_IAS=1"
 
@@ -48,11 +48,11 @@ fi
 
 rm -rf AnyKernel3/Image
 rm -rf AnyKernel3/dtb
-#rm -rf AnyKernel3/dtbo.img
+rm -rf AnyKernel3/dtbo.img
 
 cp $kernel AnyKernel3
 cp $dtb AnyKernel3/dtb
-#cp $dtbo AnyKernel3
+cp $dtbo AnyKernel3
 
 cd AnyKernel3
 zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder

@@ -776,42 +776,17 @@ KBUILD_CFLAGS += -O3 -ffast-math
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os 
 endif
-
 # Graphite optimisation
 ifdef CONFIG_GCC_GRAPHITE
 KBUILD_CFLAGS	+= -fipa-pta -fgraphite-identity -floop-nest-optimize -fno-semantic-interposition
 endif
-# Enable MLGO for register allocation.
-KBUILD_CFLAGS   += -ffp-contract=fast -mllvm -regalloc-enable-advisor=release
-# Enable hot cold split optimization
-KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
-# Inlin optimization
-KBUILD_CFLAGS  += -mllvm -inline-threshold=15000
-KBUILD_CFLAGS  += -mllvm -inlinehint-threshold=10000
-# Optimization by Clang 
-KBUILD_CFLAGS  += -mllvm -regalloc=greedy
-KBUILD_CFLAGS  += -mllvm -misched-topdown
-KBUILD_CFLAGS  += -mllvm -unroll-runtime
-KBUILD_CFLAGS  += -mllvm -unroll-threshold=200 -mllvm -unroll-partial-threshold=200
-KBUILD_CFLAGS  += -mllvm -force-vector-width=4 -mllvm -force-vector-interleave=2
-KBUILD_CFLAGS  += -mllvm -enable-load-pre
-KBUILD_CFLAGS  += -mllvm -enable-loop-distribute 
-KBUILD_CFLAGS  += -mllvm -vectorize-loops -mllvm -enable-loopinterchange 
-KBUILD_CFLAGS  += -mllvm -enable-misched
-KBUILD_CFLAGS  += -fPIC
-KBUILD_CFLAGS  += -fstrict-aliasing
 # Snapdragon optimization
-KBUILD_CFLAGS  +=  -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
 KBUILD_CFLAGS  +=  -mcpu=cortex-a78 
 KBUILD_CFLAGS  +=  -mtune=cortex-a78 
-KBUILD_CFLAGS  +=  -mcpu=cortex-a55
-KBUILD_CFLAGS  +=  -mtune=cortex-a55
-KBUILD_CFLAGS  +=  -mfpu=neon-fp-armv8 
-KBUILD_CFLAGS  +=  -mfloat-abi=hard
-KBUILD_CFLAGS  +=  -ftree-vectorize 
-KBUILD_CFLAGS  +=  -funroll-loops
-KBUILD_CFLAGS  +=  -msve-vector-bits=128 
-KBUILD_CFLAGS  +=  -fno-common
+KBUILD_AFLAGS  +=  -mcpu=cortex-a78 
+KBUILD_AFLAGS  +=  -mtune=cortex-a78 
+# Machine Instruction Scheduler
+KBUILD_CFLAGS  +=  -mllvm -enable-misched
 # Polly optimization
 ifdef CONFIG_LLVM_POLLY
 KBUILD_CFLAGS	+= -mllvm -polly \
@@ -832,13 +807,15 @@ KBUILD_CFLAGS	+= -mllvm -polly-loopfusion-greedy=1 \
 else
 KBUILD_CFLAGS	+= -mllvm -polly-opt-fusion=max
 endif
-endif
 
 # Polly may optimise loops with dead paths beyound what the linker
 # can understand. This may negate the effect of the linker's DCE
 # so we tell Polly to perfom proven DCE on the loops it optimises
 # in order to preserve the overall effect of the linker's DCE.
+ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
 POLLY_FLAGS	+= -mllvm -polly-run-dce
+endif
+endif
 
 # Use generated profiles from profiling with CONFIG_PGO_GEN to optimize the kernel
 ifdef  CONFIG_PGO_USE
@@ -1009,8 +986,7 @@ endif
 
 ifdef CONFIG_LTO_CLANG
 ifdef CONFIG_THINLTO
-CC_FLAGS_LTO_CLANG := -funified-lto
-CC_FLAGS_LTO_CLANG := -flto=full $(call cc-option, -fsplit-lto-unit)
+CC_FLAGS_LTO_CLANG := -flto=thin $(call cc-option, -fsplit-lto-unit)
 KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
 else
 CC_FLAGS_LTO_CLANG := -flto
@@ -1020,7 +996,6 @@ KBUILD_LDFLAGS += --lto-O3
 endif
 CC_FLAGS_LTO_CLANG += -fvisibility=default
 KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
-
 # Set O3 optimization level for LTO
 KBUILD_LDFLAGS		+= --plugin-opt=O3
 KBUILD_LDFLAGS      += --lto-O3
