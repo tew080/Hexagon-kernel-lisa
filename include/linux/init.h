@@ -164,7 +164,7 @@ extern bool initcall_debug;
 
 #endif
   
-#ifndef MODULE
+#if !defined(MODULE) || defined(CONFIG_LAZY_INITCALL)
 
 #ifndef __ASSEMBLY__
 
@@ -219,7 +219,7 @@ extern bool initcall_debug;
 #endif
 #endif
 
-#ifdef CONFIG_LAZY_INITCALL
+#if defined(CONFIG_LAZY_INITCALL) && (defined(MODULE) || defined(LAZY_INITCALL_INTERNAL))
 enum lazy_initcall_type {
 	NORMAL,
 	DEFERRED
