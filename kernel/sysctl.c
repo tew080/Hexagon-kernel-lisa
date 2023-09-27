@@ -127,6 +127,9 @@ static int sixty = 60;
 
 static int __maybe_unused neg_one = -1;
 
+static int __maybe_unused two = 2;
+static int __maybe_unused four = 4;
+static int __maybe_unused six = 6;
 static unsigned long zero_ul;
 static unsigned long one_ul = 1;
 static unsigned long long_max = LONG_MAX;
@@ -404,6 +407,7 @@ static struct ctl_table kern_table[] = {
 		.proc_handler	= proc_dointvec_minmax,
 		.extra1		= SYSCTL_ZERO,
 		.extra2		= SYSCTL_FOUR,
+		.extra2		= &six,
 	},
 	{
 		.procname	= "sched_group_upmigrate",
