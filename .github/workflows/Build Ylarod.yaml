@@ -31,7 +31,7 @@ jobs:
     - name: Integrate KernelSU
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/ksu_kernel_xiaomi_lisa
-        curl -LSs "https://raw.githubusercontent.com/Ylarod/KernelSU/main/kernel/setup.sh" > setup.sh
+        curl -LSs "https://raw.githubusercontent.com/Ylarod/KernelSU/main/kernel/setup.sh" | bash -
 
         # edit required commit
         sed -i -e "106ibool result;" KernelSU/kernel/selinux/selinux.c
@@ -60,9 +60,6 @@ jobs:
         sed -i -e "131ireturn result;" KernelSU/kernel/selinux/selinux.c
         sed -i -e "131s/^/\t/" KernelSU/kernel/selinux/selinux.c
         # end of edit
-        
-        chmod +x setup.sh
-        ./setup.sh v0.7.5
         
     - name: Compiling Kernel
       run: |
