@@ -31,7 +31,38 @@ jobs:
     - name: Integrate KernelSU
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/ksu_kernel_xiaomi_lisa
-        curl -LSs "https://raw.githubusercontent.com/Ylarod/KernelSU/main/kernel/setup.sh" | bash -v 0.7.6
+        curl -LSs "https://raw.githubusercontent.com/Ylarod/KernelSU/main/kernel/setup.sh" > setup.sh
+
+        # edit required commit
+        sed -i -e "106ibool result;" KernelSU/kernel/selinux/selinux.c
+        sed -i "106s/^/\t/" KernelSU/kernel/selinux/selinux.c
+
+        sed -i -e "111d" KernelSU/kernel/selinux/selinux.c
+        sed -i -e "111iresult = strncmp(KERNEL_SU_DOMAIN, domain, seclen) == 0;" KernelSU/kernel/selinux/selinux.c
+        sed -i "111s/^/\t/" KernelSU/kernel/selinux/selinux.c
+
+        sed -i -e "112isecurity_release_secctx(domain, seclen);" KernelSU/kernel/selinux/selinux.c
+        sed -i "112s/^/\t/" KernelSU/kernel/selinux/selinux.c
+
+        sed -i -e "113i  return result;" KernelSU/kernel/selinux/selinux.c
+        sed -i "113s/^/\t/" KernelSU/kernel/selinux/selinux.c
+
+        sed -i -e "124ibool result;" KernelSU/kernel/selinux/selinux.c
+        sed -i "124s/^/\t/" KernelSU/kernel/selinux/selinux.c
+
+        sed -i -e "129d" KernelSU/kernel/selinux/selinux.c
+        sed -i -e "129iresult = strncmp("u:r:zygote:s0", domain, seclen) == 0;" KernelSU/kernel/selinux/selinux.c
+        sed -i -e "129s/^/\t/" KernelSU/kernel/selinux/selinux.c
+
+        sed -i -e "130isecurity_release_secctx(domain, seclen);" KernelSU/kernel/selinux/selinux.c
+        sed -i -e "130s/^/\t/" KernelSU/kernel/selinux/selinux.c
+
+        sed -i -e "131ireturn result;" KernelSU/kernel/selinux/selinux.c
+        sed -i -e "131s/^/\t/" KernelSU/kernel/selinux/selinux.c
+        # end of edit
+        
+        chmod +x setup.sh
+        ./setup.sh v0.7.5
         
     - name: Compiling Kernel
       run: |
