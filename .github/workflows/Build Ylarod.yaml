@@ -51,7 +51,7 @@ jobs:
         sed -i "124s/^/\t/" KernelSU/kernel/selinux/selinux.c
 
         sed -i -e "129d" KernelSU/kernel/selinux/selinux.c
-        sed -i -e "129iresult = strncmp("u:r:zygote:s0", domain, seclen) == 0;" KernelSU/kernel/selinux/selinux.c
+        sed -i -e '129iresult = strncmp("u:r:zygote:s0", domain, seclen) == 0;' KernelSU/kernel/selinux/selinux.c
         sed -i -e "129s/^/\t/" KernelSU/kernel/selinux/selinux.c
 
         sed -i -e "130isecurity_release_secctx(domain, seclen);" KernelSU/kernel/selinux/selinux.c
