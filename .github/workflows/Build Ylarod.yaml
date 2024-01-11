@@ -1,4 +1,4 @@
-name: Build Stable
+name: Build Ylarod
 on:
   watch:
     types: [started]
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build KernelSU Stable
+    name: Build KernelSU Stable (Ylarod)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
