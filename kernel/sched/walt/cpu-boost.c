@@ -66,7 +66,7 @@ show_one(input_boost_ms);
 store_one(input_boost_ms);
 cpu_boost_attr_rw(input_boost_ms);
 
-static unsigned int sched_boost_on_input;
+static unsigned int sched_boost_on_input = SCHED_BOOST_ON_INPUT;
 show_one(sched_boost_on_input);
 store_one(sched_boost_on_input);
 cpu_boost_attr_rw(sched_boost_on_input);
@@ -268,7 +268,7 @@ static void do_input_boost(struct kthread_work *work)
 	}
 
 	pr_debug("Wake boost active = %d\n", wake_boost_active);
-	schedule_delayed_work(&input_boost_rem,
+	queue_delayed_work(system_power_efficient_wq,&input_boost_rem,
 		msecs_to_jiffies(wake_boost_active ? wake_boost_ms : input_boost_ms));
 }
 
