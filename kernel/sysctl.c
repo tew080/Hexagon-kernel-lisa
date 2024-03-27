@@ -181,7 +181,6 @@ static const int cap_last_cap = CAP_LAST_CAP;
 
 #ifdef CONFIG_SCHED_BORE
 extern uint sched_bore;
-extern uint sched_burst_score_rounding;
 extern uint sched_burst_smoothness_long;
 extern uint sched_burst_smoothness_short;
 extern uint sched_burst_fork_atavistic;
