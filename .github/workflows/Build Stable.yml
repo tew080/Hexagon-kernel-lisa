@@ -10,7 +10,7 @@ jobs:
     name: Build KernelSU Stable
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup build kernel environment
       run: |
         sudo apt update
@@ -44,7 +44,7 @@ jobs:
         echo "FILENAME=$filename" >> $GITHUB_ENV
         
     - name: Uploading Kernel
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: QuicksilveR_KernelSU
         path: ${{ github.workspace }}/kernel_workspace/ksu_kernel_xiaomi_lisa/${{ env.FILENAME }}
