@@ -16,16 +16,6 @@
 #include <linux/sched/sysctl.h>
 #include <trace/hooks/sched.h>
 
-/*CPU 0*/
-#define UP_RATE_LIMIT_US_CPU_LP 500
-#define DOWN_RATE_LIMIT_US_CPU_LP 20000
-/*CPU 4*/
-#define UP_RATE_LIMIT_US_CPU_PERF 500
-#define DOWN_RATE_LIMIT_US_CPU_PERF 10000
-/*CPU 7*/
-#define UP_RATE_LIMIT_US_CPU_PRIME 500
-#define DOWN_RATE_LIMIT_US_CPU_PRIME 5000
-
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
 	unsigned int		up_rate_limit_us;
