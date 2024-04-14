@@ -17,7 +17,7 @@ fi
 
 MAKE_PARAMS="O=out \
 	ARCH=arm64  \
- 	CC=$TC_DIR/bin/clang  \
+ 	CC=$TC_DIRR/bin/clang  \
 	CLANG_TRIPLE=aarch64-linux-gnu- \
 	CROSS_COMPILE=$TC_DIRR/bin/aarch64-linux-gnu-  \
 	CROSS_COMPILE_ARM32=$TC_DIRR/bin/arm-linux-gnueabi-  \

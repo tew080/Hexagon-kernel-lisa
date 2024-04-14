@@ -54,11 +54,9 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
 endif
 
 ifdef CONFIG_ARCH_LAHAINA
-KBUILD_CFLAGS += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
+KBUILD_CFLAGS += -march=armv8-a \
 										-mcpu=cortex-a78 \
-										-mtune=cortex-a78 \
-										-funroll-loops -ftree-vectorize \
-										-msve-vector-bits=128 -fno-common 				
+										-mtune=cortex-a78 		
 endif
 
 KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)	\

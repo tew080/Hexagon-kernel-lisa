@@ -412,10 +412,10 @@ else
 HOSTCC	= gcc
 HOSTCXX	= g++
 endif
-KBUILD_HOSTCFLAGS   := -Wmissing-prototypes -Wstrict-prototypes -O3 -ffast-math \
+KBUILD_HOSTCFLAGS   := -Wmissing-prototypes -Wstrict-prototypes -O3 \
 		-fomit-frame-pointer -std=gnu89 -pipe $(HOST_LFS_CFLAGS) \
 		$(HOSTCFLAGS)
-KBUILD_HOSTCXXFLAGS := -O3 -ffast-math $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS) -flto=$(BUILDJOBS)
+KBUILD_HOSTCXXFLAGS := -O3 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS) -flto=$(BUILDJOBS)
 KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
 KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
 
@@ -770,8 +770,6 @@ KBUILD_CFLAGS  += -mcpu=kryo
 KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
 KBUILD_CFLAGS  += -mcpu=cortex-a78 
 KBUILD_CFLAGS  += -mtune=cortex-a78 
-#KBUILD_CFLAGS  += -mcpu=cortex-a55
-#KBUILD_CFLAGS  += -mtune=cortex-a55
 KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
 KBUILD_CFLAGS  += -mfloat-abi=hard
 KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
@@ -787,8 +785,8 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os
 endif
 
-ifdef CONFIG_LLVM_POLLY
-KBUILD_CFLAGS	+= -mllvm -polly \
+ifeq ($(CONFIG_LLVM_POLLY), y)
+ KBUILD_CFLAGS	+= -mllvm -polly \
 		   -mllvm -polly-run-inliner \
 		   -mllvm -polly-ast-use-context \
 		   -mllvm -polly-detect-keep-going \
@@ -977,12 +975,23 @@ export CC_FLAGS_SCS
 endif
 
 ifdef CONFIG_LTO_CLANG
+ifdef CONFIG_FULL_LTO
 CC_FLAGS_LTO_CLANG := -flto=full $(call cc-option, -fsplit-lto-unit)
 KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
-KBUILD_LDFLAGS		+= --plugin-opt=O3
-KBUILD_LDFLAGS += --lto-O3 
+else
+CC_FLAGS_LTO_CLANG := -flto
+endif
 CC_FLAGS_LTO_CLANG += -fvisibility=default
+# Limit inlining across translation units to reduce binary size
+LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
+KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
+KBUILD_LDFLAGS_MODULE += $(LD_FLAGS_LTO_CLANG)
+
 KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
+# Set O3 optimization level for LTO
+KBUILD_LDFLAGS	+= --plugin-opt=O3
+else
+KBUILD_LDFLAGS	+= -O3
 endif
 
 ifdef CONFIG_LTO

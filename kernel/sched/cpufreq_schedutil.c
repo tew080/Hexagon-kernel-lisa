@@ -15,12 +15,12 @@
 #include <linux/sched/sysctl.h>
 #include <trace/hooks/sched.h>
 
-#define UP_RATE_LIMIT_US_CPU_LP_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 20000
-#define UP_RATE_LIMIT_US_CPU_PERF_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 10000
-#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 5000
+#define UP_RATE_LIMIT_US_CPU_LP_MASK 0
+#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 0
+#define UP_RATE_LIMIT_US_CPU_PERF_MASK 0
+#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 0
+#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 0
+#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 0
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
