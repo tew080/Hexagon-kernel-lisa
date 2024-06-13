@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Compile script for QuicksilveR kernel
+# Compile script for Geforce-kernel kernel
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
@@ -26,8 +26,6 @@ MAKE_PARAMS="O=out \
 	STRIP=llvm-strip \
  	CC=$TC_DIR/bin/clang  \
 	CLANG_TRIPLE=aarch64-linux-gnu- \
-	CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-zyc-linux-gnu-  \
-	CROSS_COMPILE_ARM32=$GCC_32_DIR/bin/arm-zyc-linux-gnueabi-  \
 	LLVM=1 \
 	LLVM_IAS=1"
 
