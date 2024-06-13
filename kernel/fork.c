@@ -2414,10 +2414,10 @@ long _do_fork(struct kernel_clone_args *args)
 	int trace = 0;
 	long nr;
 
-	/* Boost DDR bus to the max for 50 ms when userspace launches an app */
-	if (task_is_zygote(current) && df_boost_within_input(1500)) {
-		devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 50);
-		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 50);
+	/* Boost DDR bus to the max for 350 ms when userspace launches an app */
+	if (task_is_zygote(current) && df_boost_within_input(1000)) {
+		devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 500);
+		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 500);
 	}
 
 	/*

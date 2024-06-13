@@ -197,6 +197,7 @@ config SCSI_UFS_CRYPTO_QTI
 	 Enabling this allows kernel to use UFS crypto operations defined
 	 and implemented by QTI.
 
+
 config UFSFEATURE
 	bool "UFS feature activate"
 	depends on SCSI_UFSHCD
@@ -222,6 +223,20 @@ config HPB_DEBUG_SYSFS
 	default n
 	---help---
 	UFS HPB Debug Sysfs Enable
+
+config OPLUS_FEATURE_PADL_STATISTICS
+	bool "PA DL Statistics"
+	depends on SCSI_UFSHCD
+	default n
+	---help---
+	UFS PA DL error statistics
+
+config HPB_RELEASE_CHECK
+	bool "HPB Release Check for Mass Test"
+	depends on SCSI_UFSHCD && UFSFEATURE && UFSHPB
+	default n
+	---help---
+	The kernel panic occurs when hpb feature disabled by abnormal behavior.
 
 config HPB_ERR_INJECTION
 	bool "HPB ERROR INJECTION"
@@ -266,6 +281,11 @@ config UFSHID_POC
 	3. set flag bDefragOperation
 	4. debug msg enable (default : disable)
 
+config OPLUS_FEATURE_UFS
+	tristate "Vendor specific UFS common modify"
+	depends on SCSI_UFSHCD
+	help
+	 Vendor specific UFS common modify.
 config SCSI_SKHPB
 	bool "Activate HPB Host-aware Performance Booster"
 	depends on (SCSI_UFSHCD || SCSI_UFSHCD_QTI)

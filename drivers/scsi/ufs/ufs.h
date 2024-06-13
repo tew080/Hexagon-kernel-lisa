@@ -40,6 +40,10 @@
 #include <linux/types.h>
 #include <uapi/scsi/scsi_bsg_ufs.h>
 
+#if defined(CONFIG_UFSFEATURE)
+#define UFSFEATURE_QUERY_OPCODE         0x5500
+#endif
+
 #ifdef CONFIG_SCSI_UFSHCD_QTI
 #define MAX_QUERY_IDN		0x12
 #define MAX_CDB_SIZE		16
@@ -207,7 +211,9 @@ enum attr_idn {
 #endif
 };
 
-#define QUERY_ATTR_IDN_BOOT_LU_EN_MAX	0x02
+#if defined(CONFIG_UFSFEATURE)
+#define QUERY_ATTR_IDN_BOOT_LU_EN_MAX   0x02
+#endif
 
 /* Descriptor idn for Query requests */
 enum desc_idn {
@@ -230,11 +236,20 @@ enum desc_header_offset {
 };
 
 enum ufs_desc_def_size {
-	QUERY_DESC_DEVICE_DEF_SIZE		= 0x5F,
-	QUERY_DESC_CONFIGURATION_DEF_SIZE	= 0xE6,
+#if defined(CONFIG_UFSFEATURE)
+	QUERY_DESC_DEVICE_DEF_SIZE          = 0x5F,
+	QUERY_DESC_CONFIGURATION_DEF_SIZE   = 0xE6,
+#else
+	QUERY_DESC_DEVICE_DEF_SIZE		= 0x59,
+	QUERY_DESC_CONFIGURATION_DEF_SIZE	= 0x90,
+#endif
 	QUERY_DESC_UNIT_DEF_SIZE		= 0x2D,
 	QUERY_DESC_INTERCONNECT_DEF_SIZE	= 0x06,
-	QUERY_DESC_GEOMETRY_DEF_SIZE		= 0x59,
+#if defined(CONFIG_UFSFEATURE)
+	QUERY_DESC_GEOMETRY_DEF_SIZE        = 0x59,
+#else
+	QUERY_DESC_GEOMETRY_DEF_SIZE		= 0x48,
+#endif
 	QUERY_DESC_POWER_DEF_SIZE		= 0x62,
 	QUERY_DESC_HEALTH_DEF_SIZE		= 0x25,
 };

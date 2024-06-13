@@ -91,7 +91,6 @@
 
 	msm_dai_mi2s: qcom,msm-dai-mi2s {
 		compatible = "qcom,msm-dai-mi2s";
-
 		dai_mi2s0_rx: qcom,msm-dai-q6-mi2s-prim-rx {
 			compatible = "qcom,msm-dai-q6-mi2s";
 			qcom,msm-dai-q6-mi2s-dev-id = <0>;

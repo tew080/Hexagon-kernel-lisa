@@ -59,7 +59,7 @@ KBUILD_CFLAGS  += -mcpu=cortex-a55
 endif
 else
 ifeq ($(CONFIG_ARCH_LAHAINA), y)
-KBUILD_CFLAGS  += -mcpu=cortex-a76.cortex-a55
+KBUILD_CFLAGS  += -mcpu=cortex-a78.cortex-a55
 endif
 endif
 

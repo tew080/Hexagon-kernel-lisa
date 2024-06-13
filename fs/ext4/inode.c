@@ -3539,6 +3539,18 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
 		handle_t *handle;
 		int retries = 0;
 
+	/*
+		 * We check here if the blocks are already allocated, then we
+		 * don't need to start a journal txn and we can directly return
+		 * the mapping information. This could boost performance
+		 * especially in multi-threaded overwrite requests.
+		 */
+		if (offset + length <= i_size_read(inode)) {
+			ret = ext4_map_blocks(NULL, inode, &map, 0);
+			if (ret > 0 && (map.m_flags & EXT4_MAP_MAPPED))
+				goto out;
+		}
+
 		/* Trim mapping request to maximum we can map at once for DIO */
 		if (map.m_len > DIO_MAX_BLOCKS)
 			map.m_len = DIO_MAX_BLOCKS;
@@ -3591,6 +3603,7 @@ retry:
 			return ret;
 	}
 
+out:
 	/*
 	 * Writes that span EOF might trigger an I/O size update on completion,
 	 * so consider them to be dirty for the purposes of O_DSYNC, even if
@@ -3813,6 +3826,12 @@ static ssize_t ext4_direct_IO_write(struct kiocb *iocb, struct iov_iter *iter)
 		get_block_func = ext4_dio_get_block_unwritten_async;
 		dio_flags = DIO_LOCKING;
 	}
+
+#ifdef CONFIG_FS_HPB
+	if (ext4_test_inode_state(inode, EXT4_STATE_HPB))
+		dio_flags |= DIO_HPB_IO;
+#endif
+
 	ret = __blockdev_direct_IO(iocb, inode, inode->i_sb->s_bdev, iter,
 				   get_block_func, ext4_end_io_dio, NULL,
 				   dio_flags);
@@ -3895,6 +3914,9 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
 	struct inode *inode = mapping->host;
 	size_t count = iov_iter_count(iter);
 	ssize_t ret;
+#ifdef CONFIG_FS_HPB
+	int dio_flags = 0;
+#endif
 	loff_t offset = iocb->ki_pos;
 	loff_t size = i_size_read(inode);
 
@@ -3917,8 +3939,18 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
 					   iocb->ki_pos + count - 1);
 	if (ret)
 		goto out_unlock;
+
+#if defined(CONFIG_FS_HPB)
+	if (ext4_test_inode_state(inode, EXT4_STATE_HPB))
+		dio_flags |= DIO_HPB_IO;
+
+	ret = __blockdev_direct_IO(iocb, inode, inode->i_sb->s_bdev,
+				   iter, ext4_dio_get_block, NULL, NULL,
+				   dio_flags);
+#else
 	ret = __blockdev_direct_IO(iocb, inode, inode->i_sb->s_bdev,
 				   iter, ext4_dio_get_block, NULL, NULL, 0);
+#endif
 out_unlock:
 	inode_unlock_shared(inode);
 	return ret;
@@ -5808,6 +5840,12 @@ out_mmap_sem:
 
 	if (!error && (ia_valid & ATTR_MODE))
 		rc = posix_acl_chmod(inode, inode->i_mode);
+#ifdef CONFIG_FS_HPB
+		if (__is_hpb_file(dentry->d_name.name, inode))
+			ext4_set_inode_state(inode, EXT4_STATE_HPB);
+		else
+			ext4_clear_inode_state(inode, EXT4_STATE_HPB);
+#endif
 
 err_out:
 	ext4_std_error(inode->i_sb, error);

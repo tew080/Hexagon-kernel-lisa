@@ -25,6 +25,7 @@
 #include <linux/genhd.h>
 #include <linux/highmem.h>
 #include <linux/slab.h>
+#include <linux/swap.h>
 #include <linux/backing-dev.h>
 #include <linux/string.h>
 #include <linux/vmalloc.h>
@@ -1257,7 +1258,7 @@ static int __zram_bvec_read(struct zram *zram, struct page *page, u32 index,
 	src = zs_map_object(zram->mem_pool, handle, ZS_MM_RO);
 	if (size == PAGE_SIZE) {
 		dst = kmap_atomic(page);
-		memcpy(dst, src, PAGE_SIZE);
+		copy_page(dst, src);
 		kunmap_atomic(dst);
 		ret = 0;
 	} else {
@@ -1632,6 +1633,26 @@ static void zram_slot_free_notify(struct block_device *bdev,
 	zram_free_page(zram, index);
 	zram_slot_unlock(zram, index);
 }
+/* check sync_io state on swap entry,
+ * return 0 on wb page, else return 1.
+ */
+#ifdef CONFIG_ZRAM_WRITEBACK
+static int zram_ioctl(struct block_device *bdev, fmode_t mode,
+				 unsigned int cmd, unsigned long index)
+{
+	struct zram *zram;
+	int has_sync_io = 1;
+
+	if (cmd != SWP_SYNCHRONOUS_IO) return -EINVAL;
+
+	zram = bdev->bd_disk->private_data;
+	zram_slot_lock(zram, index);
+	has_sync_io = zram_test_flag(zram, index, ZRAM_WB) ? 0 : 1;
+	zram_slot_unlock(zram, index);
+
+	return has_sync_io;
+}
+#endif
 
 static int zram_rw_page(struct block_device *bdev, sector_t sector,
 		       struct page *page, unsigned int op)
@@ -1721,7 +1742,7 @@ static ssize_t disksize_store(struct device *dev,
 	struct zram *zram = dev_to_zram(dev);
 	int err;
 
-	disksize = memparse(buf, NULL);
+	disksize =  (u64)6 * SZ_1G;
 	if (!disksize)
 		return -EINVAL;
 
@@ -1825,6 +1846,9 @@ static int zram_open(struct block_device *bdev, fmode_t mode)
 static const struct block_device_operations zram_devops = {
 	.open = zram_open,
 	.swap_slot_free_notify = zram_slot_free_notify,
+#ifdef CONFIG_ZRAM_WRITEBACK
+	.ioctl = zram_ioctl,
+#endif
 	.rw_page = zram_rw_page,
 	.owner = THIS_MODULE
 };

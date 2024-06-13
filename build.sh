@@ -4,19 +4,32 @@
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
-TC_DIR="$HOME/tc/clang-r450784d"
-AK3_DIR="$HOME/AnyKernel3"
+TC_DIR="/home/tew404/lisa-Kernel/Clang-19.0.0"
+AK3_DIR="/home/tew404/lisa-Kernel/AnyKernel3"
 DEFCONFIG="lisa_defconfig"
 
-ZIPNAME="QuicksilveR-lisa-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="SM7325-Kernel-lisa-GTX-$(date '+%Y%m%d-%H%M').zip"
 
 if test -z "$(git rev-parse --show-cdup 2>/dev/null)" &&
    head=$(git rev-parse --verify HEAD 2>/dev/null); then
 	ZIPNAME="${ZIPNAME::-4}-$(echo $head | cut -c1-8).zip"
 fi
 
-MAKE_PARAMS="O=out ARCH=arm64 CC=clang CLANG_TRIPLE=aarch64-linux-gnu- LLVM=1 LLVM_IAS=1 \
-	CROSS_COMPILE=$TC_DIR/bin/llvm-"
+MAKE_PARAMS="O=out \
+	ARCH=arm64  \
+	LD=ld.lld \
+	AR=llvm-ar \
+	AS=llvm-as \
+	NM=llvm-nm \
+	OBJCOPY=llvm-objcopy \
+	OBJDUMP=llvm-objdump \
+	STRIP=llvm-strip \
+ 	CC=$TC_DIR/bin/clang  \
+	CLANG_TRIPLE=aarch64-linux-gnu- \
+	CROSS_COMPILE=$GCC_64_DIR/bin/aarch64-zyc-linux-gnu-  \
+	CROSS_COMPILE_ARM32=$GCC_32_DIR/bin/arm-zyc-linux-gnueabi-  \
+	LLVM=1 \
+	LLVM_IAS=1"
 
 export PATH="$TC_DIR/bin:$PATH"
 
@@ -48,14 +61,8 @@ if [ ! -f "$kernel" ] || [ ! -f "$dtb" ] || [ ! -f "$dtbo" ]; then
 	exit 1
 fi
 
-echo -e "\nKernel compiled succesfully! Zipping up...\n"
-if [ -d "$AK3_DIR" ]; then
-	cp -r $AK3_DIR AnyKernel3
-	git -C AnyKernel3 checkout lisa &> /dev/null
-elif ! git clone -q https://github.com/likkai/AnyKernel3 -b lisa; then
-	echo -e "\nAnyKernel3 repo not found locally and couldn't clone from GitHub! Aborting..."
-	exit 1
-fi
+rm -rf AnyKernel3/dtb
+rm -rf AnyKernel3/Image
 cp $kernel AnyKernel3
 cp $dtb AnyKernel3/dtb
 python2 scripts/dtc/libfdt/mkdtboimg.py create AnyKernel3/dtbo.img --page_size=4096 $dtbo
@@ -68,6 +75,5 @@ rm -rf out/arch/arm64/boot out/modules
 cd AnyKernel3
 zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
 cd ..
-rm -rf AnyKernel3
 echo -e "\nCompleted in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s) !"
 echo "Zip: $ZIPNAME"

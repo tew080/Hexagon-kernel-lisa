@@ -12,6 +12,7 @@ obj-$(CONFIG_UFSHID) += ufshid.o
 ufshcd-core-y				+= ufshcd.o ufs-sysfs.o
 ufshcd-core-$(CONFIG_SCSI_UFS_BSG)	+= ufs_bsg.o
 obj-$(CONFIG_SCSI_SKHPB) += ufshpb_skh.o
+obj-$(CONFIG_OPLUS_FEATURE_PADL_STATISTICS) += ufs_signal_quality.o
 obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
 obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
 obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o

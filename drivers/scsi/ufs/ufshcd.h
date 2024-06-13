@@ -81,6 +81,10 @@
 #include "ufshpb_skh.h"
 #endif
 
+#ifdef CONFIG_OPLUS_FEATURE_PADL_STATISTICS
+#include "ufs_signal_quality.h"
+#endif
+
 #define UFSHCD "ufshcd"
 #define UFSHCD_DRIVER_VERSION "0.2"
 
@@ -1074,6 +1078,10 @@ struct ufs_hba {
 	void *crypto_DO_NOT_USE[8];
 #endif /* CONFIG_SCSI_UFS_CRYPTO */
 
+#ifdef CONFIG_OPLUS_FEATURE_PADL_STATISTICS
+	struct unipro_signal_quality_ctrl signalCtrl;
+#endif
+
 	bool wb_buf_flush_enabled;
 	bool wb_enabled;
 	struct delayed_work rpm_dev_flush_recheck_work;
@@ -1187,11 +1195,11 @@ static inline bool ufshcd_is_auto_hibern8_enabled(struct ufs_hba *hba)
 
 static inline bool ufshcd_is_wb_allowed(struct ufs_hba *hba)
 {
-#if defined(CONFIG_UFSTW)
-	if (is_samsung_ufs(hba))
-		return false;
-#endif
+#if defined(CONFIG_UFSFEATURE) && defined(CONFIG_UFSTW)
+	return 0;
+#else
 	return hba->caps & UFSHCD_CAP_WB_EN;
+#endif
 }
 
 #define ufshcd_writel(hba, val, reg)	\

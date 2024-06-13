@@ -246,18 +246,23 @@ struct device *msm_ion_heap_device_by_id(int heap_id)
 }
 EXPORT_SYMBOL(msm_ion_heap_device_by_id);
 
+static bool is_secure_heap_type(int type) {
+    return type == (int)ION_HEAP_TYPE_SECURE_CARVEOUT ||
+           type == (int)ION_HEAP_TYPE_SYSTEM_SECURE ||
+           type == (int)ION_HEAP_TYPE_HYP_CMA;
+}
+
 bool msm_ion_heap_is_secure(int heap_id)
 {
-	struct ion_heap *heap = ion_heap_by_id(heap_id);
+    struct ion_heap *heap = ion_heap_by_id(heap_id);
 
-	if (IS_ERR(heap) || !(heap->type == ION_HEAP_TYPE_SECURE_CARVEOUT ||
-			      heap->type == ION_HEAP_TYPE_SYSTEM_SECURE ||
-			      heap->type == ION_HEAP_TYPE_HYP_CMA))
-		return false;
+    if (IS_ERR(heap) || !is_secure_heap_type((int)heap->type))
+        return false;
 
-	return true;
+    return true;
 }
 EXPORT_SYMBOL(msm_ion_heap_is_secure);
+
 
 int msm_ion_heap_prefetch(int heap_id, struct ion_prefetch_region *regions,
 			  int nr_regions)

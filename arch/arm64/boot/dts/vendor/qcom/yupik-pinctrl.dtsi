@@ -2232,6 +2232,7 @@
 					output-high;
 				};
 			};
+
 			pri_tdm_clk_low_active: pri_tdm_clk_low_active {
 				mux {
 					pins = "gpio97";

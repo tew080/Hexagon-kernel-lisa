@@ -28,14 +28,14 @@ static DEFINE_SPINLOCK(tz_lock);
 static DEFINE_SPINLOCK(sample_lock);
 static DEFINE_SPINLOCK(suspend_lock);
 /*
- * FLOOR is 5msec to capture up to 3 re-draws
- * per frame for 60fps content.
+ * FLOOR is 3msec to capture up to 3 re-draws
+ * per frame for 90fps content.
  */
-#define FLOOR		        5000
+#define FLOOR		        3000
 /*
  * MIN_BUSY is 1 msec for the sample to be sent
  */
-#define MIN_BUSY		1000
+#define MIN_BUSY		500
 #define MAX_TZ_VERSION		0
 
 /*
@@ -355,91 +355,72 @@ static inline int devfreq_get_freq_level(struct devfreq *devfreq,
 
 static int tz_get_target_freq(struct devfreq *devfreq, unsigned long *freq)
 {
-	int result = 0;
-	struct devfreq_msm_adreno_tz_data *priv = devfreq->data;
-	struct devfreq_dev_status *stats = &devfreq->last_status;
-	int val, level = 0;
-	int context_count = 0;
-	u64 busy_time;
+    int result = 0;
+    struct devfreq_msm_adreno_tz_data *priv = devfreq->data;
+    struct devfreq_dev_status *stats = &devfreq->last_status;
+    int val, level = 0;
+    int context_count = 0;
+    u64 busy_time;
 
-	/* keeps stats.private_data == NULL   */
-	result = devfreq_update_stats(devfreq);
-	if (result) {
-		pr_err(TAG "get_status failed %d\n", result);
-		return result;
-	}
+    result = devfreq_update_stats(devfreq);
+    if (result) {
+        pr_err(TAG "get_status failed %d\n", result);
+        return result;
+    }
 
-	*freq = stats->current_frequency;
-	priv->bin.total_time += stats->total_time;
+    *freq = stats->current_frequency;
+    priv->bin.total_time += stats->total_time;
 
-	/* Update gpu busy time as per mod_percent */
-	busy_time = stats->busy_time * priv->mod_percent;
-	do_div(busy_time, 100);
+    busy_time = stats->busy_time * priv->mod_percent;
+    do_div(busy_time, 100);
 
-	/* busy_time should not go over total_time */
-	stats->busy_time = min_t(u64, busy_time, stats->total_time);
+    stats->busy_time = min_t(u64, busy_time, stats->total_time);
+    priv->bin.busy_time += stats->busy_time;
 
-	priv->bin.busy_time += stats->busy_time;
+    if (stats->private_data)
+        context_count = *((int *)stats->private_data);
 
-	if (stats->private_data)
-		context_count =  *((int *)stats->private_data);
+    compute_work_load(stats, priv, devfreq);
 
-	/* Update the GPU load statistics */
-	compute_work_load(stats, priv, devfreq);
-	/*
-	 * Do not waste CPU cycles running this algorithm if
-	 * the GPU just started, or if less than FLOOR time
-	 * has passed since the last run or the gpu hasn't been
-	 * busier than MIN_BUSY or there is only 1 power level
-	 */
-	if ((stats->total_time == 0) ||
-		(priv->bin.total_time < FLOOR) ||
-		(unsigned int) priv->bin.busy_time < MIN_BUSY ||
-		devfreq->profile->max_state == 1) {
-		return 0;
-	}
+    if (stats->total_time == 0 ||
+        priv->bin.total_time < FLOOR ||
+        priv->bin.busy_time < MIN_BUSY ||
+        devfreq->profile->max_state == 1) {
+        return 0;
+    }
 
-	level = devfreq_get_freq_level(devfreq, stats->current_frequency);
-	if (level < 0) {
-		pr_err(TAG "bad freq %ld\n", stats->current_frequency);
-		return level;
-	}
+    level = devfreq_get_freq_level(devfreq, stats->current_frequency);
+    if (level < 0) {
+        pr_err(TAG "bad freq %ld\n", stats->current_frequency);
+        return level;
+    }
 
-	/*
-	 * If there is an extended block of busy processing,
-	 * increase frequency.  Otherwise run the normal algorithm.
-	 */
-	if (!priv->disable_busy_time_burst &&
-			priv->bin.busy_time > CEILING) {
-		val = -1 * level;
-	} else {
+    if (!priv->disable_busy_time_burst && priv->bin.busy_time > CEILING) {
+        val = -1 * level;
+    } else {
 #ifdef CONFIG_QGKI
-		unsigned int refresh_rate = dsi_panel_get_refresh_rate();
+        unsigned int refresh_rate = dsi_panel_get_refresh_rate();
 
-		if (refresh_rate > 60)
-			priv->bin.busy_time = priv->bin.busy_time * refresh_rate / 60;
+        if (refresh_rate > 60)
+            priv->bin.busy_time = priv->bin.busy_time * refresh_rate / 60;
 #endif
+        val = __secure_tz_update_entry3(level, priv->bin.total_time,
+                                        priv->bin.busy_time, context_count, priv);
+    }
 
-		val = __secure_tz_update_entry3(level, priv->bin.total_time,
-			priv->bin.busy_time, context_count, priv);
-	}
+    priv->bin.total_time = 0;
+    priv->bin.busy_time = 0;
 
-	priv->bin.total_time = 0;
-	priv->bin.busy_time = 0;
+    if (val) {
+        level += val;
+        level = max(level, 0);
+        level = min_t(int, level, devfreq->profile->max_state - 1);
+    }
 
-	/*
-	 * If the decision is to move to a different level, make sure the GPU
-	 * frequency changes.
-	 */
-	if (val) {
-		level += val;
-		level = max(level, 0);
-		level = min_t(int, level, devfreq->profile->max_state - 1);
-	}
-
-	*freq = devfreq->profile->freq_table[level];
-	return 0;
+    *freq = devfreq->profile->freq_table[level];
+    return 0;
 }
+
 
 static int tz_notify(struct notifier_block *nb, unsigned long type, void *devp)
 {
