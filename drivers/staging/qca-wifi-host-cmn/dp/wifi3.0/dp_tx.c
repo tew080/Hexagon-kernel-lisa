@@ -809,7 +809,7 @@ static QDF_STATUS dp_tx_prepare_tso(struct dp_vdev *vdev,
 #endif
 
 QDF_COMPILE_TIME_ASSERT(dp_tx_htt_metadata_len_check,
-			(DP_TX_MSDU_INFO_META_DATA_DWORDS * 4 >=
+			(DP_TX_MSDU_INFO_META_DATA_DWORDS * 4 <=
 			 sizeof(struct htt_tx_msdu_desc_ext2_t)));
 
 /**
