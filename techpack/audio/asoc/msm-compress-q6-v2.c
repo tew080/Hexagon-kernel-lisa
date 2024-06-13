@@ -35,6 +35,7 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  */
 
 
@@ -2018,6 +2019,7 @@ static int msm_compr_playback_open(struct snd_compr_stream *cstream)
 	atomic_set(&prtd->start, 0);
 	atomic_set(&prtd->drain, 0);
 #if !IS_ENABLED(CONFIG_AUDIO_QGKI)
+	snd_compr_use_pause_in_draining(cstream);
 	atomic_set(&prtd->partial_drain, 0);
 #endif
 	atomic_set(&prtd->xrun, 0);
@@ -5219,8 +5221,13 @@ static int msm_compr_channel_mixer_cfg_ctl_put(struct snd_kcontrol *kcontrol,
 		if (prtd && prtd->audio_client) {
 			stream_id = prtd->audio_client->session;
 			be_id = chmixer_pspd->port_idx;
+#ifdef CONFIG_PLATFORM_AUTO
+			msm_pcm_routing_set_channel_mixer_runtime(fe_id, be_id,
+					stream_id, session_type, chmixer_pspd);
+#else
 			msm_pcm_routing_set_channel_mixer_runtime(be_id,
 					stream_id, session_type, chmixer_pspd);
+#endif
 		}
 	}
 
