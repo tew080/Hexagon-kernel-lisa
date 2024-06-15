@@ -165,8 +165,8 @@ static inline int which_bucket(unsigned int duration, unsigned long nr_iowaiters
  */
 static inline int performance_multiplier(unsigned long nr_iowaiters)
 {
-	/* for IO wait tasks (per cpu!) we add 10x each */
-	return 1 + 10 * nr_iowaiters;
+	/* for IO wait tasks (per cpu!) we add 2x each */
+	return 1 + 2 * nr_iowaiters;
 }
 
 static DEFINE_PER_CPU(struct menu_device, menu_devices);
