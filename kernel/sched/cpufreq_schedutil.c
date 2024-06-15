@@ -581,11 +581,15 @@ static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
 static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
 #endif /* CONFIG_NO_HZ_COMMON */
 
-#define NL_RATIO 80
-#define DEFAULT_HISPEED_LOAD 85
+#define NL_RATIO 75
+#define DEFAULT_HISPEED_LOAD 90
+#define DEFAULT_UP_RATE_LIMIT_US 500
+#define DEFAULT_DOWN_RATE_LIMIT_US 1000
+#define DEFAULT_HISPEED_FREQ 0
 #define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
 #define DEFAULT_CPU4_RTG_BOOST_FREQ 0
 #define DEFAULT_CPU7_RTG_BOOST_FREQ 0
+
 static void sugov_walt_adjust(struct sugov_cpu *sg_cpu, unsigned long *util,
 			      unsigned long *max)
 {
@@ -1345,10 +1349,10 @@ static int sugov_init(struct cpufreq_policy *policy)
 	tunables->down_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
 	tunables->down_rate_limit_us_screen_off = 
 			cpufreq_policy_transition_delay_us(policy);
-	tunables->up_rate_limit_us = 500;
-	tunables->down_rate_limit_us = 20000;
+	tunables->up_rate_limit_us = DEFAULT_UP_RATE_LIMIT_US;
+	tunables->down_rate_limit_us = DEFAULT_DOWN_RATE_LIMIT_US;
 	tunables->hispeed_load = DEFAULT_HISPEED_LOAD;
-	tunables->hispeed_freq = 0;
+	tunables->hispeed_freq = DEFAULT_HISPEED_FREQ;
 
 	switch (policy->cpu) {
 	default:
