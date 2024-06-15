@@ -186,10 +186,10 @@
 				qcom,gpu-pwrlevel@2 {
 					reg = <2>;
 					qcom,gpu-freq = <453000000>;
-					qcom,level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-					qcom,bus-freq-ddr7 = <8>;
-					qcom,bus-min-ddr7 = <7>;
-					qcom,bus-max-ddr7 = <10>;
+					qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+					qcom,bus-freq-ddr7 = <3>;
+					qcom,bus-min-ddr7 = <1>;
+					qcom,bus-max-ddr7 = <5>;
 					qcom,acd-level = <0x882F5FFD>;
 				};
 
@@ -197,9 +197,9 @@
 					reg = <3>;
 					qcom,gpu-freq = <353000000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-					qcom,bus-freq-ddr7 = <4>;
+					qcom,bus-freq-ddr7 = <2>;
 					qcom,bus-min-ddr7 = <1>;
-					qcom,bus-max-ddr7 = <8>;
+					qcom,bus-max-ddr7 = <4>;
 					qcom,acd-level = <0x882F5FFD>;
 				};
 
@@ -207,9 +207,9 @@
 					reg = <4>;
 					qcom,gpu-freq = <253000000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-					qcom,bus-freq-ddr7 = <2>;
+					qcom,bus-freq-ddr7 = <1>;
 					qcom,bus-min-ddr7 = <1>;
-					qcom,bus-max-ddr7 = <6>;
+					qcom,bus-max-ddr7 = <3>;
 					qcom,acd-level = <0x882F5FFD>;
 				};
 
@@ -217,9 +217,9 @@
 					reg = <5>;
 					qcom,gpu-freq = <163000000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-					qcom,bus-freq-ddr7 = <2>;
+					qcom,bus-freq-ddr7 = <0>;
 					qcom,bus-min-ddr7 = <1>;
-					qcom,bus-max-ddr7 = <5>;
+					qcom,bus-max-ddr7 = <2>;
 					qcom,acd-level = <0x882F5FFD>;
 				};
 
@@ -227,9 +227,9 @@
 					reg = <6>;
 					qcom,gpu-freq = <93000000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-					qcom,bus-freq-ddr7 = <2>;
+					qcom,bus-freq-ddr7 = <0>;
 					qcom,bus-min-ddr7 = <1>;
-					qcom,bus-max-ddr7 = <4>;
+					qcom,bus-max-ddr7 = <1>;
 					qcom,acd-level = <0x882F5FFD>;
 				};
 
@@ -237,9 +237,9 @@
 					reg = <7>;
 					qcom,gpu-freq = <83000000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-					qcom,bus-freq-ddr7 = <1>;
+					qcom,bus-freq-ddr7 = <0>;
 					qcom,bus-min-ddr7 = <1>;
-					qcom,bus-max-ddr7 = <2>;
+					qcom,bus-max-ddr7 = <1>;
 					qcom,acd-level = <0x882F5FFD>;
 				};
 			};
