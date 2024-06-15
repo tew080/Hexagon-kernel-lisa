@@ -49,28 +49,34 @@ struct cpu_sync {
 	unsigned int input_boost_freq;
 };
 
+#define INPUT_BOOST_ENABLED 1
+#define INPUT_BOOST_MS 60
+#define SCHED_BOOST_ON_INPUT 1
+#define WAKE_BOOST_ENABLE 1
+#define WAKE_BOOST_MS 1000
+
 static DEFINE_PER_CPU(struct cpu_sync, sync_info);
 
 static struct kthread_work input_boost_work;
 
-static bool input_boost_enabled = 1;
+static bool input_boost_enabled = INPUT_BOOST_ENABLED;
 
-static unsigned int input_boost_ms = 60;
+static unsigned int input_boost_ms = INPUT_BOOST_MS;
 show_one(input_boost_ms);
 store_one(input_boost_ms);
 cpu_boost_attr_rw(input_boost_ms);
 
-static unsigned int sched_boost_on_input = 1;
+static unsigned int sched_boost_on_input = SCHED_BOOST_ON_INPUT;
 show_one(sched_boost_on_input);
 store_one(sched_boost_on_input);
 cpu_boost_attr_rw(sched_boost_on_input);
 
-static unsigned int wake_boost_enable = 1;
+static unsigned int wake_boost_enable = WAKE_BOOST_ENABLE;
 show_one(wake_boost_enable);
 store_one(wake_boost_enable);
 cpu_boost_attr_rw(wake_boost_enable);
 
-static unsigned int wake_boost_ms = 1000;
+static unsigned int wake_boost_ms = WAKE_BOOST_MS;
 show_one(wake_boost_ms);
 store_one(wake_boost_ms);
 cpu_boost_attr_rw(wake_boost_ms);
