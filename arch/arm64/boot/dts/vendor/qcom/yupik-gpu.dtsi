@@ -187,10 +187,11 @@
 					reg = <2>;
 					qcom,gpu-freq = <450000000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-					qcom,bus-freq-ddr7 = <3>;
-					qcom,bus-min-ddr7 = <1>;
+					qcom,bus-freq-ddr7 = <4>;
+					qcom,bus-min-ddr7 = <2>;
 					qcom,bus-max-ddr7 = <5>;
-					qcom,acd-level = <0x882F5FFD>;
+					qcom,acd-level = <0x802B5FFD>;
+				};
 				};
 
 				qcom,gpu-pwrlevel@3 {
