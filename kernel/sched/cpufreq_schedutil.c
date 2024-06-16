@@ -17,6 +17,14 @@
 #include <drm/mi_disp_notifier.h>
 
 #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
+#define NL_RATIO 75
+#define DEFAULT_HISPEED_LOAD 75
+#define DEFAULT_UP_RATE_LIMIT_US 500
+#define DEFAULT_DOWN_RATE_LIMIT_US 2000
+#define DEFAULT_HISPEED_FREQ 0
+#define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
+#define DEFAULT_CPU4_RTG_BOOST_FREQ 0
+#define DEFAULT_CPU7_RTG_BOOST_FREQ 0
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
@@ -580,15 +588,6 @@ static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
 #else
 static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
 #endif /* CONFIG_NO_HZ_COMMON */
-
-#define NL_RATIO 75
-#define DEFAULT_HISPEED_LOAD 90
-#define DEFAULT_UP_RATE_LIMIT_US 500
-#define DEFAULT_DOWN_RATE_LIMIT_US 1000
-#define DEFAULT_HISPEED_FREQ 0
-#define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
-#define DEFAULT_CPU4_RTG_BOOST_FREQ 0
-#define DEFAULT_CPU7_RTG_BOOST_FREQ 0
 
 static void sugov_walt_adjust(struct sugov_cpu *sg_cpu, unsigned long *util,
 			      unsigned long *max)
