@@ -99,7 +99,6 @@ void sbalance_desc_del(struct irq_desc *desc)
 }
 
 static int bal_irq_move_node_cmp(void *priv, struct list_head *lhs_p, struct list_head *rhs_p)
-				 const struct list_head *rhs_p)
 {
 	const struct bal_irq *lhs = list_entry(lhs_p, typeof(*lhs), move_node);
 	const struct bal_irq *rhs = list_entry(rhs_p, typeof(*rhs), move_node);
@@ -236,13 +235,13 @@ static void balance_irqs(void)
 		 */
 		per_cpu(cpu_cap, cpu) = cpu_rq(cpu)->cpu_capacity;
 
-	/* Get the number of new interrupts on this CPU */
+		/* Get the number of new interrupts on this CPU */
 		bd = per_cpu_ptr(&balance_data, cpu);
 		bd->intrs = kstat_cpu_irqs_sum(cpu) - bd->old_total;
 		bd->old_total += bd->intrs;
 	}
 
-		list_for_each_entry_rcu(bi, &bal_irq_list, node) {
+	list_for_each_entry_rcu(bi, &bal_irq_list, node) {
 		/* Consider this IRQ for balancing if it's movable */
 		if (!__irq_can_set_affinity(bi->desc))
 			continue;
