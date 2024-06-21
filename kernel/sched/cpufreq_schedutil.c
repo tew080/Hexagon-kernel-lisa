@@ -17,7 +17,7 @@
 #include <drm/mi_disp_notifier.h>
 
 #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
-#define NL_RATIO 85
+#define NL_RATIO 90
 #define DEFAULT_HISPEED_LOAD 85
 #define DEFAULT_UP_RATE_LIMIT_US 8000
 #define DEFAULT_DOWN_RATE_LIMIT_US 16000
