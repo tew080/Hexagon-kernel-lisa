@@ -2418,9 +2418,9 @@ long _do_fork(struct kernel_clone_args *args)
 	long nr;
 
 	/* Boost DDR bus to the max for 350 ms when userspace launches an app */
-	if (task_is_zygote(current) && df_boost_within_input(1000)) {
-		devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 500);
-		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 500);
+	if (task_is_zygote(current) && df_boost_within_input(1250)) {
+		devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 1250);
+		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 1250);
 	}
 
 	/*
