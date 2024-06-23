@@ -126,7 +126,7 @@ static const struct a6xx_protected_regs a660_protected_regs[] = {
 
 static const struct adreno_a6xx_core adreno_gpu_core_a642l = {
 	.base = {
-		DEFINE_ADRENO_REV(ADRENO_REV_A660, ANY_ID, ANY_ID, ANY_ID, ANY_ID),
+		DEFINE_ADRENO_REV(ADRENO_REV_A642, ANY_ID, ANY_ID, ANY_ID, ANY_ID),
 		.compatible = "qcom,adreno-gpu-a642l",
 		.features = ADRENO_RPMH | ADRENO_GPMU | ADRENO_APRIV |
 				ADRENO_IOCOHERENT | ADRENO_CONTENT_PROTECTION |
@@ -135,10 +135,10 @@ static const struct adreno_a6xx_core adreno_gpu_core_a642l = {
 		.gpudev = &adreno_a6xx_gmu_gpudev,
 		.perfcounters = &adreno_a6xx_perfcounters,
 		.gmem_size = SZ_512K,
-		.bus_width = 64,
+		.bus_width = 32,
 		.snapshot_size = SZ_2M,
 	},
-	.prim_fifo_threshold = 0x00300000,
+	.prim_fifo_threshold = 0x00200000,
 	.gmu_major = 2,
 	.gmu_minor = 0,
 	.sqefw_name = "a660_sqe.fw",
@@ -148,13 +148,13 @@ static const struct adreno_a6xx_core adreno_gpu_core_a642l = {
 	.hwcg_count = ARRAY_SIZE(a660_hwcg_regs),
 	.vbif = a650_gbif_regs,
 	.vbif_count = ARRAY_SIZE(a650_gbif_regs),
-	.hang_detect_cycles = 0xcfffff,
+	.hang_detect_cycles = 0x3ffff,
 	.veto_fal10 = true,
 	.protected_regs = a660_protected_regs,
 	.disable_tseskip = true,
-	.highest_bank_bit = 16,
+	.highest_bank_bit = 15,
 	.pdc_in_aop = true,
-	.ctxt_record_size = 4096 * 1024,
+	.ctxt_record_size = 2496 * 1024,
 };
 
 static const struct adreno_gpu_core *adreno_gpulist[] = {

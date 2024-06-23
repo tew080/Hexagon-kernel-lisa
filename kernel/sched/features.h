@@ -4,7 +4,7 @@
  * them to run sooner, but does not allow tons of sleepers to
  * rip the spread apart.
  */
-SCHED_FEAT(GENTLE_FAIR_SLEEPERS, false)
+SCHED_FEAT(GENTLE_FAIR_SLEEPERS, true)
 
 /*
  * Place new tasks ahead so that they do not starve already running
@@ -35,7 +35,7 @@ SCHED_FEAT(CACHE_HOT_BUDDY, true)
 /*
  * Allow wakeup-time preemption of the current task:
  */
-SCHED_FEAT(WAKEUP_PREEMPTION, false)
+SCHED_FEAT(WAKEUP_PREEMPTION, true)
 
 SCHED_FEAT(HRTICK, false)
 SCHED_FEAT(DOUBLE_TICK, false)
@@ -54,7 +54,7 @@ SCHED_FEAT(TTWU_QUEUE, false)
 /*
  * When doing wakeups, attempt to limit superfluous scans of the LLC domain.
  */
-SCHED_FEAT(SIS_AVG_CPU, true)
+SCHED_FEAT(SIS_AVG_CPU, false)
 SCHED_FEAT(SIS_PROP, true)
 
 /*
@@ -95,3 +95,4 @@ SCHED_FEAT(UTIL_EST, true)
  */
 SCHED_FEAT(SUGOV_RT_MAX_FREQ, false)
 SCHED_FEAT(UTIL_EST_FASTUP, true)
+

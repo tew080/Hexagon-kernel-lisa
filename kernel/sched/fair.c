@@ -27,16 +27,29 @@
 
 #include "walt/walt.h"
 
-#define SYSCTL_SCHED_LATENCY 6000000ULL
-#define NORMALIZED_SYSCTL_SCHED_LATENCY 6000000ULL
-#define SYSCTL_SCHED_MIN_GRANULARITY 750000ULL
-#define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 750000ULL
+#define SYSCTL_SCHED_LATENCY 5000000ULL
+#define NORMALIZED_SYSCTL_SCHED_LATENCY 5000000ULL
+#define SYSCTL_SCHED_MIN_GRANULARITY 700000ULL
+#define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 700000ULL
 #define SCHED_NR_LATENCY 8
 #define SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY 1
-#define SYSCTL_SCHED_WAKEUP_GRANULARITY 1500000UL
-#define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 1500000UL
+#define SYSCTL_SCHED_WAKEUP_GRANULARITY 1000000UL
+#define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 1000000UL
 #define SYSCTL_SCHED_MIGRATION_COST 500000UL
 #define SYSCTL_SCHED_CFS_BANDWIDTH_SLICE 5000UL
+
+/*
+ * The initial- and re-scaling of tunables is configurable
+ *
+ * Options are:
+ *
+ *   SCHED_TUNABLESCALING_NONE - unscaled, always *1
+ *   SCHED_TUNABLESCALING_LOG - scaled logarithmical, *1+ilog(ncpus)
+ *   SCHED_TUNABLESCALING_LINEAR - scaled linear, *ncpus
+ *
+ * (default SCHED_TUNABLESCALING_LOG = *(1+ilog(ncpus))
+ */
+enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
 
 #ifdef CONFIG_SMP
 static inline bool task_fits_max(struct task_struct *p, int cpu);
@@ -57,19 +70,6 @@ static inline bool task_fits_max(struct task_struct *p, int cpu);
  */
 unsigned int sysctl_sched_latency = SYSCTL_SCHED_LATENCY;
 static unsigned int normalized_sysctl_sched_latency	= NORMALIZED_SYSCTL_SCHED_LATENCY;
-
-/*
- * The initial- and re-scaling of tunables is configurable
- *
- * Options are:
- *
- *   SCHED_TUNABLESCALING_NONE - unscaled, always *1
- *   SCHED_TUNABLESCALING_LOG - scaled logarithmical, *1+ilog(ncpus)
- *   SCHED_TUNABLESCALING_LINEAR - scaled linear, *ncpus
- *
- * (default SCHED_TUNABLESCALING_LOG = *(1+ilog(ncpus))
- */
-enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
 
 /*
  * Minimal preemption granularity for CPU-bound tasks:
@@ -8617,16 +8617,7 @@ static int detach_tasks(struct lb_env *env)
 	int orig_loop = env->loop;
 
 	lockdep_assert_held(&env->src_rq->lock);
-	
-	/*
-	 * Source run queue has been emptied by another CPU, clear
-	 * LBF_ALL_PINNED flag as we will not test any task.
-	 */
-	if (env->src_rq->nr_running <= 1) {
-		env->flags &= ~LBF_ALL_PINNED;
-		return 0;
-	}
-	
+
 	if (env->imbalance <= 0)
 		return 0;
 
@@ -12105,29 +12096,6 @@ static void propagate_entity_cfs_rq(struct sched_entity *se)
 static void propagate_entity_cfs_rq(struct sched_entity *se) { }
 #endif
 
-unsigned int sched_dvfs_headroom = 1280;
-
-unsigned long apply_dvfs_headroom(unsigned long util, int cpu)
-{
-	unsigned long capacity = capacity_orig_of(cpu);
-	unsigned long headroom;
-
-	if (util >= capacity)
-		return util;
-
-	/*
-	 * Taper the boosting at e top end as these are expensive and
-	 * we don't need that much of a big headroom as we approach max
-	 * capacity
-	 *
-	 */
-	headroom = (capacity - util);
-	/* formula: headroom * (1.X - 1) == headroom * 0.X */
-	headroom = headroom *
-		(sched_dvfs_headroom - SCHED_CAPACITY_SCALE) >> SCHED_CAPACITY_SHIFT;
-	return util + headroom;
-}
-
 static void detach_entity_cfs_rq(struct sched_entity *se)
 {
 	struct cfs_rq *cfs_rq = cfs_rq_of(se);
@@ -12482,18 +12450,7 @@ static unsigned int get_rr_interval_fair(struct rq *rq, struct task_struct *task
 
 	return rr_interval;
 }
-#ifdef CONFIG_SCHED_CASS
-#include "cass.c"
 
-#ifndef CONFIG_PREEMPT_RT_FULL
-/* Use CASS. A dummy wrapper ensures the replaced function is still "used". */
-static inline void *select_task_rq_fair_dummy(void)
-{
-	return (void *)select_task_rq_fair;
-}
-#define select_task_rq_fair cass_select_task_rq_fair
-#endif /* CONFIG_PREEMPT_RT_FULL */
-#endif /* CONFIG_SCHED_CASS */
 /*
  * All the scheduling class methods:
  */
