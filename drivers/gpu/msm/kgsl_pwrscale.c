@@ -13,10 +13,10 @@
 
 static struct devfreq_msm_adreno_tz_data adreno_tz_data = {
 	.bus = {
-		.max = 1200,
+		.max = 1600,
 		.floating = true,
 	},
-	.mod_percent = 100,
+	.mod_percent = 95,
 };
 
 /**
@@ -736,13 +736,13 @@ static void pwrscale_of_ca_aware(struct kgsl_device *device)
 	struct device_node *parent = device->pdev->dev.of_node;
 	struct device_node *node, *child;
 
-	pwrscale->ctxt_aware_enable =
+	pwrscale->ctxt_aware_enable = true;
 		of_property_read_bool(parent, "qcom,enable-ca-jump");
 
 	if (!pwrscale->ctxt_aware_enable)
 		return;
 
-	pwrscale->ctxt_aware_busy_penalty = 12000;
+	pwrscale->ctxt_aware_busy_penalty = 10000;
 	of_property_read_u32(parent, "qcom,ca-busy-penalty",
 		&pwrscale->ctxt_aware_busy_penalty);
 

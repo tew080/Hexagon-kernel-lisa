@@ -207,6 +207,7 @@ extern cpumask_t asym_cap_sibling_cpus;
 #define TASK_ON_RQ_QUEUED	1
 #define TASK_ON_RQ_MIGRATING	2
 
+unsigned long apply_dvfs_headroom(unsigned long util, int cpu);
 extern __read_mostly int scheduler_running;
 
 extern unsigned long calc_load_update;

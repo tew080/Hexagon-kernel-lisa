@@ -209,17 +209,17 @@ enum {
 #define CP_PAUSE	0x00000040
 #define CP_RESIZE 	0x00000080
 
-#define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
-#define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
-#define DEF_MIN_DISCARD_ISSUE_TIME	50	/* 50 ms, if exists */
-#define DEF_MID_DISCARD_ISSUE_TIME	500	/* 500 ms, if device busy */
-#define DEF_MAX_DISCARD_ISSUE_TIME	60000	/* 60 s, if no candidates */
-#define DEF_DISCARD_URGENT_UTIL		80	/* do more discard over 80% */
-#define DEF_CP_INTERVAL			60	/* 60 secs */
-#define DEF_IDLE_INTERVAL		5	/* 5 secs */
-#define DEF_DISABLE_INTERVAL		5	/* 5 secs */
-#define DEF_DISABLE_QUICK_INTERVAL	1	/* 1 secs */
-#define DEF_UMOUNT_DISCARD_TIMEOUT	5	/* 5 secs */
+#define MAX_DISCARD_BLOCKS(sbi) BLKS_PER_SEC(sbi)
+#define DEF_MAX_DISCARD_REQUEST 4
+#define DEF_MIN_DISCARD_ISSUE_TIME 100
+#define DEF_MID_DISCARD_ISSUE_TIME 1000
+#define DEF_MAX_DISCARD_ISSUE_TIME 60000
+#define DEF_DISCARD_URGENT_UTIL 80
+#define DEF_CP_INTERVAL 30
+#define DEF_IDLE_INTERVAL 5
+#define DEF_DISABLE_INTERVAL 5
+#define DEF_DISABLE_QUICK_INTERVAL 1
+#define DEF_UMOUNT_DISCARD_TIMEOUT 5
 
 struct cp_control {
 	int reason;

@@ -27,6 +27,17 @@
 
 #include "walt/walt.h"
 
+#define SYSCTL_SCHED_LATENCY 6000000ULL
+#define NORMALIZED_SYSCTL_SCHED_LATENCY 6000000ULL
+#define SYSCTL_SCHED_MIN_GRANULARITY 750000ULL
+#define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 750000ULL
+#define SCHED_NR_LATENCY 8
+#define SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY 1
+#define SYSCTL_SCHED_WAKEUP_GRANULARITY 1500000UL
+#define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 1500000UL
+#define SYSCTL_SCHED_MIGRATION_COST 500000UL
+#define SYSCTL_SCHED_CFS_BANDWIDTH_SLICE 5000UL
+
 #ifdef CONFIG_SMP
 static inline bool task_fits_max(struct task_struct *p, int cpu);
 #endif /* CONFIG_SMP */
@@ -44,8 +55,8 @@ static inline bool task_fits_max(struct task_struct *p, int cpu);
  *
  * (default: 2.5ms * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_latency			= 6000000ULL;
-static unsigned int normalized_sysctl_sched_latency	= 6000000ULL;
+unsigned int sysctl_sched_latency = SYSCTL_SCHED_LATENCY;
+static unsigned int normalized_sysctl_sched_latency	= NORMALIZED_SYSCTL_SCHED_LATENCY;
 
 /*
  * The initial- and re-scaling of tunables is configurable
@@ -58,26 +69,26 @@ static unsigned int normalized_sysctl_sched_latency	= 6000000ULL;
  *
  * (default SCHED_TUNABLESCALING_LOG = *(1+ilog(ncpus))
  */
-enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LINEAR;
+enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
 
 /*
  * Minimal preemption granularity for CPU-bound tasks:
  *
  * (default: 0.25 msec * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_min_granularity			= 750000ULL;
-static unsigned int normalized_sysctl_sched_min_granularity	= 750000ULL;
+unsigned int sysctl_sched_min_granularity = SYSCTL_SCHED_MIN_GRANULARITY;
+static unsigned int normalized_sysctl_sched_min_granularity	= NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY;
 
 /*
  * This value is kept at sysctl_sched_latency/sysctl_sched_min_granularity
  */
-static unsigned int sched_nr_latency = 8;
+static unsigned int sched_nr_latency = SCHED_NR_LATENCY;
 
 /*
  * After fork, child runs first. If set to 0 (default) then
  * parent will (try to) run first.
  */
-unsigned int sysctl_sched_child_runs_first __read_mostly = 0;
+unsigned int sysctl_sched_child_runs_first __read_mostly = SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY;
 
 /*
  * SCHED_OTHER wake-up granularity.
@@ -88,10 +99,10 @@ unsigned int sysctl_sched_child_runs_first __read_mostly = 0;
  *
  * (default: 1 msec * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_wakeup_granularity			= 1500000UL;
-static unsigned int normalized_sysctl_sched_wakeup_granularity	= 1500000UL;
+unsigned int sysctl_sched_wakeup_granularity = SYSCTL_SCHED_WAKEUP_GRANULARITY;
+static unsigned int normalized_sysctl_sched_wakeup_granularity	= NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY;
 
-const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+const_debug unsigned int sysctl_sched_migration_cost = SYSCTL_SCHED_MIGRATION_COST;
 DEFINE_PER_CPU_READ_MOSTLY(int, sched_load_boost);
 
 /*
@@ -128,7 +139,7 @@ int __weak arch_asym_cpu_priority(int cpu)
  *
  * (default: 4 msec, units: microseconds)
  */
-unsigned int sysctl_sched_cfs_bandwidth_slice		= 5000UL;
+unsigned int sysctl_sched_cfs_bandwidth_slice = SYSCTL_SCHED_CFS_BANDWIDTH_SLICE;
 #endif
 
 /* Migration margins */
@@ -8606,15 +8617,6 @@ static int detach_tasks(struct lb_env *env)
 	int orig_loop = env->loop;
 
 	lockdep_assert_held(&env->src_rq->lock);
-
-	/*
-	 * Source run queue has been emptied by another CPU, clear
-	 * LBF_ALL_PINNED flag as we will not test any task.
-	 */
-	if (env->src_rq->nr_running <= 1) {
-		env->flags &= ~LBF_ALL_PINNED;
-		return 0;
-	}
 	
 	if (env->imbalance <= 0)
 		return 0;
@@ -12093,6 +12095,29 @@ static void propagate_entity_cfs_rq(struct sched_entity *se)
 #else
 static void propagate_entity_cfs_rq(struct sched_entity *se) { }
 #endif
+
+unsigned int sched_dvfs_headroom = 1280;
+
+unsigned long apply_dvfs_headroom(unsigned long util, int cpu)
+{
+	unsigned long capacity = capacity_orig_of(cpu);
+	unsigned long headroom;
+
+	if (util >= capacity)
+		return util;
+
+	/*
+	 * Taper the boosting at e top end as these are expensive and
+	 * we don't need that much of a big headroom as we approach max
+	 * capacity
+	 *
+	 */
+	headroom = (capacity - util);
+	/* formula: headroom * (1.X - 1) == headroom * 0.X */
+	headroom = headroom *
+		(sched_dvfs_headroom - SCHED_CAPACITY_SCALE) >> SCHED_CAPACITY_SHIFT;
+	return util + headroom;
+}
 
 static void detach_entity_cfs_rq(struct sched_entity *se)
 {

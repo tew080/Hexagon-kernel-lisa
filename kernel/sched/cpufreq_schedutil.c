@@ -17,14 +17,14 @@
 #include <drm/mi_disp_notifier.h>
 
 #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
-#define NL_RATIO 90
+#define NL_RATIO 85
 #define DEFAULT_HISPEED_LOAD 85
-#define DEFAULT_UP_RATE_LIMIT_US 8000
-#define DEFAULT_DOWN_RATE_LIMIT_US 16000
-#define DEFAULT_HISPEED_FREQ 0
-#define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
-#define DEFAULT_CPU4_RTG_BOOST_FREQ 0
-#define DEFAULT_CPU7_RTG_BOOST_FREQ 0
+#define DEFAULT_UP_RATE_LIMIT_US 500
+#define DEFAULT_DOWN_RATE_LIMIT_US 20000
+#define DEFAULT_HISPEED_FREQ 1700000
+#define DEFAULT_CPU0_RTG_BOOST_FREQ 1500000
+#define DEFAULT_CPU4_RTG_BOOST_FREQ 1700000
+#define DEFAULT_CPU7_RTG_BOOST_FREQ 2100000
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
@@ -130,6 +130,10 @@ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
 		sg_policy->need_freq_update = true;
 		return true;
 	}
+
+	/* If the last frequency wasn't set yet then we can still amend it */
+	if (sg_policy->work_in_progress)
+		return true;
 
 	/* No need to recalculate next freq for min_rate_limit_us
 	 * at least. However we might still decide to further rate
@@ -380,7 +384,7 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
 	 * When there are no CFS RUNNABLE tasks, clamps are released and
 	 * frequency will be gracefully reduced with the utilization decay.
 	 */
-	util = util_cfs + cpu_util_rt(rq);
+	util = apply_dvfs_headroom(util_cfs + cpu_util_rt(rq), cpu);
 	if (type == FREQUENCY_UTIL)
 		util = uclamp_rq_util_with(rq, util, p);
 
@@ -1184,7 +1188,7 @@ static void sugov_policy_free(struct sugov_policy *sg_policy)
 static int sugov_kthread_create(struct sugov_policy *sg_policy)
 {
 	struct task_struct *thread;
-	struct sched_param param = { .sched_priority = MAX_USER_RT_PRIO - 1 };
+	struct sched_param param = { .sched_priority = MAX_RT_PRIO - 1 };
 	struct cpufreq_policy *policy = sg_policy->policy;
 	int ret;
 
