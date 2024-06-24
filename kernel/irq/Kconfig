@@ -136,7 +136,7 @@ config GENERIC_IRQ_DEBUGFS
 
 	  If you don't know what to do here, say N.
 
-		config IRQ_SBALANCE
+	config IRQ_SBALANCE
 		bool "SBalance IRQ balancer"
 		depends on SMP
 		default n
