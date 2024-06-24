@@ -14,8 +14,15 @@
 #include <trace/events/power.h>
 #include <linux/sched/sysctl.h>
 #include <trace/hooks/sched.h>
+#include <linux/binfmts.h>
 
 #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
+
+#define NL_RATIO 75
+#define DEFAULT_HISPEED_LOAD 85
+#define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
+#define DEFAULT_CPU4_RTG_BOOST_FREQ 0
+#define DEFAULT_CPU7_RTG_BOOST_FREQ 0
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
@@ -575,11 +582,6 @@ static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
 static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
 #endif /* CONFIG_NO_HZ_COMMON */
 
-#define NL_RATIO 75
-#define DEFAULT_HISPEED_LOAD 90
-#define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
-#define DEFAULT_CPU4_RTG_BOOST_FREQ 0
-#define DEFAULT_CPU7_RTG_BOOST_FREQ 0
 static void sugov_walt_adjust(struct sugov_cpu *sg_cpu, unsigned long *util,
 			      unsigned long *max)
 {
@@ -888,6 +890,9 @@ static ssize_t up_rate_limit_us_store(struct gov_attr_set *attr_set,
 	struct sugov_policy *sg_policy;
 	unsigned int rate_limit_us;
 
+	if (task_is_zygote(current))
+		return count;
+
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
@@ -907,6 +912,10 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
 	struct sugov_policy *sg_policy;
 	unsigned int rate_limit_us;
+
+
+	if (task_is_zygote(current))
+		return count;
 
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
@@ -1248,6 +1257,23 @@ static int sugov_init(struct cpufreq_policy *policy)
 		tunables->rtg_boost_freq = DEFAULT_CPU7_RTG_BOOST_FREQ;
 		break;
 	}
+
+	if (cpumask_test_cpu(policy->cpu, cpu_lp_mask)) {
+		tunables->up_rate_limit_us = 5000;
+		tunables->down_rate_limit_us = 5000;
+	}
+
+	if (cpumask_test_cpu(policy->cpu, cpu_perf_mask)) {
+		tunables->up_rate_limit_us = 12000;
+		tunables->down_rate_limit_us = 4000;
+	}
+
+#ifndef CONFIG_ARCH_SDM778G
+   if (cpumask_test_cpu(policy->cpu, cpu_prime_mask)) {
+        tunables->up_rate_limit_us = 16000;
+        tunables->down_rate_limit_us = 4000;
+    }
+#endif
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
