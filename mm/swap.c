@@ -1104,17 +1104,11 @@ EXPORT_SYMBOL(pagevec_lookup_range_nr_tag);
  */
 void __init swap_setup(void)
 {
-    unsigned long megs = totalram_pages() >> (20 - PAGE_SHIFT);
-    unsigned long zram_size_mb = min(megs * 3 / 4, 6144UL); 
-    unsigned long effective_ram = megs + zram_size_mb;
+	unsigned long megs = totalram_pages() >> (20 - PAGE_SHIFT);
 
-    static const unsigned char cluster_table[] = {2, 3, 4, 5, 5};
-    unsigned int index = min_t(unsigned int, effective_ram / 4096, 4);
-    
-    page_cluster = cluster_table[index];
-    page_cluster -= (page_cluster > 2 && zram_size_mb > 0);
-    page_cluster = min_t(unsigned char, page_cluster, 5);
-
-    pr_info("Swap setup: RAM %lu MB, zRAM %lu MB, effective RAM %lu MB, page_cluster set to %d\n",
-            megs, zram_size_mb, effective_ram, page_cluster);
+	/* Use a smaller cluster for small-memory machines */
+	if (megs < 16)
+		page_cluster = 2;
+	else
+		page_cluster = 3;
 }

@@ -5687,12 +5687,12 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 	struct sched_entity *se = &p->se;
 	int idle_h_nr_running = task_has_idle_policy(p);
 	int task_new = !(flags & ENQUEUE_WAKEUP);
-
+#ifdef CONFIG_UCLAMP_TASK
 	if (uclamp_can_ignore_uclamp_max(rq, p)) {
 		uclamp_set_ignore_uclamp_max(p);
 		uclamp_rq_dec_id(rq, p, UCLAMP_MAX);
 	}
-
+#endif
 	/*
 	 * The code below (indirectly) updates schedutil which looks at
 	 * the cfs_rq utilization to select a frequency.
