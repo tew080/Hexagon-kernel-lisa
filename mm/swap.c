@@ -42,7 +42,7 @@
 #include <trace/events/pagemap.h>
 
 /* How many pages do we try to swap or page in/out together? */
-int page_cluster = 0;
+int page_cluster;
 
 static DEFINE_PER_CPU(struct pagevec, lru_add_pvec);
 static DEFINE_PER_CPU(struct pagevec, lru_rotate_pvecs);
@@ -1104,8 +1104,33 @@ EXPORT_SYMBOL(pagevec_lookup_range_nr_tag);
  */
 void __init swap_setup(void)
 {
-	/*
-	 * Right now other parts of the system means that we
-	 * _really_ don't want to cluster much more
-	 */
+    unsigned long megs = totalram_pages() >> (20 - PAGE_SHIFT);
+    unsigned long zram_size_mb = 6 * 1024; 
+    unsigned long effective_ram = megs + zram_size_mb;
+
+    /* Use appropriate cluster size based on effective memory */
+    if (effective_ram < 4096) {
+        page_cluster = 2;
+    } else if (effective_ram < 8192) {
+        page_cluster = 3;
+    } else if (effective_ram < 12288) { 
+        page_cluster = 4;
+    } else { 
+        page_cluster = 5;
+    }
+
+    /* Adjust for zram */
+    if (page_cluster > 2 && zram_size_mb > 0) {
+        page_cluster--;
+    }
+
+    /*
+     * Right now other parts of the system means that we
+     * _really_ don't want to cluster much more
+     */
+    if (page_cluster > 5)
+        page_cluster = 5;
+
+    pr_info("Swap setup: RAM %lu MB, zRAM %lu MB, effective RAM %lu MB, page_cluster set to %d\n",
+            megs, zram_size_mb, effective_ram, page_cluster);
 }
