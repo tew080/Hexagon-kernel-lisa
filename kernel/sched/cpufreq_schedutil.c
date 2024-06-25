@@ -23,6 +23,12 @@
 #define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
 #define DEFAULT_CPU4_RTG_BOOST_FREQ 0
 #define DEFAULT_CPU7_RTG_BOOST_FREQ 0
+#define UP_RATE_LIMIT_US_CPU_LP_MASK 5000
+#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 5000
+#define UP_RATE_LIMIT_US_CPU_PERF_MASK 13000
+#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 5000
+#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 16000
+#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 5000
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
@@ -1259,19 +1265,19 @@ static int sugov_init(struct cpufreq_policy *policy)
 	}
 
 	if (cpumask_test_cpu(policy->cpu, cpu_lp_mask)) {
-		tunables->up_rate_limit_us = 500;
-		tunables->down_rate_limit_us = 2000;
+		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_LP_MASK;
+		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_LP_MASK;
 	}
 
 	if (cpumask_test_cpu(policy->cpu, cpu_perf_mask)) {
-		tunables->up_rate_limit_us = 5000;
-		tunables->down_rate_limit_us = 10000;
+		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PERF_MASK;
+		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PERF_MASK;
 	}
 
 #ifndef CONFIG_ARCH_SDM778G
    if (cpumask_test_cpu(policy->cpu, cpu_prime_mask)) {
-        tunables->up_rate_limit_us = 10000;
-        tunables->down_rate_limit_us = 20000;
+        tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PRIME_MASK;
+        tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PRIME_MASK;
     }
 #endif
 

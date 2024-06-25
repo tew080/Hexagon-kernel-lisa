@@ -35,7 +35,7 @@
 #define SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY 
 #define SYSCTL_SCHED_WAKEUP_GRANULARITY 1000000UL
 #define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 1000000UL
-#define SYSCTL_SCHED_MIGRATION_COST 500000UL
+#define SYSCTL_SCHED_MIGRATION_COST 400000UL
 #define SYSCTL_SCHED_CFS_BANDWIDTH_SLICE 4000UL
 
 /*
@@ -144,10 +144,19 @@ unsigned int sysctl_sched_cfs_bandwidth_slice = SYSCTL_SCHED_CFS_BANDWIDTH_SLICE
 
 /* Migration margins */
 unsigned int sched_capacity_margin_up[NR_CPUS] = {
-			[0 ... NR_CPUS-1] = 1078}; /* ~5% margin */
+#ifdef CONFIG_ARCH_SDM778G
+			1280, 1280, 1280, 1280, 1450, 1450, 1450, 1625
+#else
+			1280, 1280, 1280, 1280, 1450, 1450, 1450, 1024
+#endif
+}; 
 unsigned int sched_capacity_margin_down[NR_CPUS] = {
-			[0 ... NR_CPUS-1] = 1205}; /* ~15% margin */
-
+#ifdef CONFIG_ARCH_SDM778G
+			1024, 1024, 1024, 1024, 1500, 1500, 1500, 1796
+#else
+			1024, 1024, 1024, 1024, 1500, 1500, 1500, 1442
+#endif
+}; 
 #ifdef CONFIG_SCHED_WALT
 __read_mostly unsigned int sysctl_sched_prefer_spread;
 unsigned int sysctl_walt_rtg_cfs_boost_prio = 99; /* disabled by default */
