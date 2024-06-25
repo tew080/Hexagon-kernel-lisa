@@ -37,6 +37,8 @@
 
 #include "zram_drv.h"
 
+#define ZRAM_SIZE 6
+
 static DEFINE_IDR(zram_index_idr);
 /* idr index must be protected */
 static DEFINE_MUTEX(zram_index_mutex);
@@ -1742,7 +1744,7 @@ static ssize_t disksize_store(struct device *dev,
 	struct zram *zram = dev_to_zram(dev);
 	int err;
 
-	disksize =  (u64)6 * SZ_1G;
+	disksize =  (u64)ZRAM_SIZE * SZ_1G;
 	if (!disksize)
 		return -EINVAL;
 
