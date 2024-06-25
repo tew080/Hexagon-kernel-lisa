@@ -1105,31 +1105,15 @@ EXPORT_SYMBOL(pagevec_lookup_range_nr_tag);
 void __init swap_setup(void)
 {
     unsigned long megs = totalram_pages() >> (20 - PAGE_SHIFT);
-    unsigned long zram_size_mb = 6 * 1024; 
+    unsigned long zram_size_mb = min(megs * 3 / 4, 6144UL); 
     unsigned long effective_ram = megs + zram_size_mb;
 
-    /* Use appropriate cluster size based on effective memory */
-    if (effective_ram < 4096) {
-        page_cluster = 2;
-    } else if (effective_ram < 8192) {
-        page_cluster = 3;
-    } else if (effective_ram < 12288) { 
-        page_cluster = 4;
-    } else { 
-        page_cluster = 5;
-    }
-
-    /* Adjust for zram */
-    if (page_cluster > 2 && zram_size_mb > 0) {
-        page_cluster--;
-    }
-
-    /*
-     * Right now other parts of the system means that we
-     * _really_ don't want to cluster much more
-     */
-    if (page_cluster > 5)
-        page_cluster = 5;
+    static const unsigned char cluster_table[] = {2, 3, 4, 5, 5};
+    unsigned int index = min_t(unsigned int, effective_ram / 4096, 4);
+    
+    page_cluster = cluster_table[index];
+    page_cluster -= (page_cluster > 2 && zram_size_mb > 0);
+    page_cluster = min_t(unsigned char, page_cluster, 5);
 
     pr_info("Swap setup: RAM %lu MB, zRAM %lu MB, effective RAM %lu MB, page_cluster set to %d\n",
             megs, zram_size_mb, effective_ram, page_cluster);
