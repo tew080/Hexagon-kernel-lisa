@@ -27,16 +27,16 @@
 
 #include "walt/walt.h"
 
-#define SYSCTL_SCHED_LATENCY 4000000ULL
-#define NORMALIZED_SYSCTL_SCHED_LATENCY 4000000ULL
-#define SYSCTL_SCHED_MIN_GRANULARITY 750000ULL
-#define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 750000ULL
-#define SCHED_NR_LATENCY 6
+#define SYSCTL_SCHED_LATENCY 5000000ULL
+#define NORMALIZED_SYSCTL_SCHED_LATENCY 5000000ULL
+#define SYSCTL_SCHED_MIN_GRANULARITY 1000000ULL
+#define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 1000000ULL
+#define SCHED_NR_LATENCY 5
 #define SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY 
-#define SYSCTL_SCHED_WAKEUP_GRANULARITY 1000000UL
-#define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 1000000UL
-#define SYSCTL_SCHED_MIGRATION_COST 500000UL
-#define SYSCTL_SCHED_CFS_BANDWIDTH_SLICE 4000UL
+#define SYSCTL_SCHED_WAKEUP_GRANULARITY 1500000UL
+#define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 1500000UL
+#define SYSCTL_SCHED_MIGRATION_COST 750000UL
+#define SYSCTL_SCHED_CFS_BANDWIDTH_SLICE 5000UL
 
 /*
  * The initial- and re-scaling of tunables is configurable
@@ -145,16 +145,12 @@ unsigned int sysctl_sched_cfs_bandwidth_slice = SYSCTL_SCHED_CFS_BANDWIDTH_SLICE
 /* Migration margins */
 unsigned int sched_capacity_margin_up[NR_CPUS] = {
 #ifdef CONFIG_ARCH_SDM778G
-			1280, 1280, 1280, 1280, 1450, 1450, 1450, 1625
-#else
-			1280, 1280, 1280, 1280, 1450, 1450, 1450, 1024
+			1180, 1180, 1180, 1180, 1400, 1400, 1400, 1550
 #endif
 }; 
 unsigned int sched_capacity_margin_down[NR_CPUS] = {
 #ifdef CONFIG_ARCH_SDM778G
-			1024, 1024, 1024, 1024, 1500, 1500, 1500, 1796
-#else
-			1024, 1024, 1024, 1024, 1500, 1500, 1500, 1442
+			1024, 1024, 1024, 1024, 1400, 1400, 1400, 1650
 #endif
 }; 
 #ifdef CONFIG_SCHED_WALT
@@ -668,7 +664,6 @@ static struct sched_entity *__pick_next_entity(struct sched_entity *se)
 	return rb_entry(next, struct sched_entity, run_node);
 }
 
-#ifdef CONFIG_SCHED_DEBUG
 struct sched_entity *__pick_last_entity(struct cfs_rq *cfs_rq)
 {
 	struct rb_node *last = rb_last(&cfs_rq->tasks_timeline.rb_root);
@@ -705,7 +700,6 @@ int sched_proc_update_handler(struct ctl_table *table, int write,
 
 	return 0;
 }
-#endif
 
 /*
  * delta /= w
@@ -2758,7 +2752,8 @@ static void update_scan_period(struct task_struct *p, int new_cpu)
 	int src_nid = cpu_to_node(task_cpu(p));
 	int dst_nid = cpu_to_node(new_cpu);
 
-	if (!static_branch_likely(&sched_numa_balancing))
+	if (!IS_ENABLED(CONFIG_NUMA_BALANCING) ||
+	    !static_branch_likely(&sched_numa_balancing))
 		return;
 
 	if (!p->mm || !p->numa_faults || (p->flags & PF_EXITING))
@@ -8349,7 +8344,8 @@ static int migrate_degrades_locality(struct task_struct *p, struct lb_env *env)
 	unsigned long src_weight, dst_weight;
 	int src_nid, dst_nid, dist;
 
-	if (!static_branch_likely(&sched_numa_balancing))
+	if (!IS_ENABLED(CONFIG_NUMA_BALANCING) ||
+	    !static_branch_likely(&sched_numa_balancing))
 		return -1;
 
 	if (!p->numa_faults || !(env->sd->flags & SD_NUMA))
@@ -9134,11 +9130,6 @@ void update_group_capacity(struct sched_domain *sd, int cpu)
 	struct sched_domain *child = sd->child;
 	struct sched_group *group, *sdg = sd->groups;
 	unsigned long capacity, min_capacity, max_capacity;
-	unsigned long interval;
-
-	interval = msecs_to_jiffies(sd->balance_interval);
-	interval = clamp(interval, 1UL, max_load_balance_interval);
-	sdg->sgc->next_update = jiffies + interval;
 
 	if (!child) {
 		update_cpu_capacity(sd, cpu);
@@ -9646,9 +9637,7 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
 			sds->local = sg;
 			sgs = local;
 
-			if (env->idle != CPU_NEWLY_IDLE ||
-			    time_after_eq(jiffies, sg->sgc->next_update))
-				update_group_capacity(env->sd, env->dst_cpu);
+			update_group_capacity(env->sd, env->dst_cpu);
 		}
 
 		update_sg_lb_stats(env, sg, sgs, &sg_status);

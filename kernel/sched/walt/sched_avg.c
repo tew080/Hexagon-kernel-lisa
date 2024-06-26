@@ -23,21 +23,21 @@ static DEFINE_PER_CPU(u64, nr_max);
 static DEFINE_PER_CPU(spinlock_t, nr_lock) = __SPIN_LOCK_UNLOCKED(nr_lock);
 static s64 last_get_time;
 
-unsigned int sysctl_sched_busy_hyst_enable_cpus;
-unsigned int sysctl_sched_busy_hyst;
-unsigned int sysctl_sched_coloc_busy_hyst_enable_cpus = 112;
+unsigned int sysctl_sched_busy_hyst_enable_cpus = 255;
+unsigned int sysctl_sched_busy_hyst = 5000000;
+unsigned int sysctl_sched_coloc_busy_hyst_enable_cpus = 240;
 unsigned int sysctl_sched_coloc_busy_hyst_cpu[NR_CPUS] = {
-		[0 ... NR_CPUS-1] = 39000000 };
-unsigned int sysctl_sched_coloc_busy_hyst_max_ms = 5000;
+		[0 ... NR_CPUS-1] = 30000000 };
+unsigned int sysctl_sched_coloc_busy_hyst_max_ms = 4000;
 unsigned int sysctl_sched_coloc_busy_hyst_cpu_busy_pct[NR_CPUS] = {
-		[0 ... NR_CPUS-1] = 10 };
+		[0 ... NR_CPUS-1] = 15 };
 static DEFINE_PER_CPU(atomic64_t, busy_hyst_end_time) = ATOMIC64_INIT(0);
 
 static DEFINE_PER_CPU(u64, hyst_time);
 static DEFINE_PER_CPU(u64, coloc_hyst_busy);
 static DEFINE_PER_CPU(u64, coloc_hyst_time);
 
-#define NR_THRESHOLD_PCT 40
+#define NR_THRESHOLD_PCT 45
 #define MAX_RTGB_TIME (sysctl_sched_coloc_busy_hyst_max_ms * NSEC_PER_MSEC)
 
 /**
