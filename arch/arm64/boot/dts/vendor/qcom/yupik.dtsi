@@ -77,7 +77,7 @@
 			compatible = "qcom,kryo";
 			reg = <0x0 0x0>;
 			enable-method = "psci";
-			cpu-idle-states = <&SLVR_OFF &SLVR_RAIL_OFF>;
+			cpu-idle-states = <&SLVR_OFF &SLVR_RAIL_OFF &CPU_SLVR_DEEPER_SLEEP>;
 			capacity-dmips-mhz = <1024>;
 			dynamic-power-coefficient = <100>;
 			qcom,freq-domain = <&cpufreq_hw 0 4>;
