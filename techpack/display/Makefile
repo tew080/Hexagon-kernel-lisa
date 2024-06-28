@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
 # auto-detect subdirs
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mtune=cortex-a78 -mtune=cortex-a55 -flto=thin -funroll-loops -ftree-vectorize -O3 
+
 ifeq ($(CONFIG_ARCH_KONA), y)
      ifeq ($(CONFIG_QGKI), y)
 		include $(srctree)/techpack/display/config/konadisp.conf

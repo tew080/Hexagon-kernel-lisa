@@ -53,14 +53,8 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
   endif
 endif
 
-ifdef CONFIG_CC_IS_CLANG
-ifeq ($(CONFIG_ARCH_LAHAINA), y)
-KBUILD_CFLAGS  += -mcpu=cortex-a55
-endif
-else
-ifeq ($(CONFIG_ARCH_LAHAINA), y)
-KBUILD_CFLAGS  += -mcpu=cortex-a78.cortex-a55
-endif
+ifdef CONFIG_ARCH_LAHAINA
+KBUILD_CFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 -flto=thin -funroll-loops  -ftree-vectorize -O3 
 endif
 
 KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)	\

@@ -755,22 +755,33 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+KBUILD_CFLAGS += $(KCFLAGS)
+KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -O2
+KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 
+KCFLAGS += -flto=thin  -funroll-loops -ftree-vectorize
+LDFLAGS += -flto=thin
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+KBUILD_CFLAGS += $(KCFLAGS)
+KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -O3
+KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 
+KCFLAGS += -flto=thin  -funroll-loops -ftree-vectorize
+LDFLAGS += -flto=thin
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_QC_LLVM
+KBUILD_CFLAGS += $(KCFLAGS)
+KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -Ofast
+KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 
+KCFLAGS += -flto=thin  -funroll-loops -ftree-vectorize
+LDFLAGS += -flto=thin
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+KBUILD_CFLAGS += $(KCFLAGS)
+KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -Os
-endif
-
-ifeq ($(cc-name),gcc)
-KBUILD_CFLAGS	+= -mcpu=cortex-a78.cortex-a55 -mtune=cortex-a78.cortex-a55
-endif
-ifeq ($(cc-name),clang)
-KBUILD_CFLAGS	+= -mcpu=cortex-a55+crypto -mtune=cortex-a55
-KBUILD_CFLAGS += -mcpu=cortex-a78+crc+crypto -mtune=cortex-a78 -march=armv8.4-a+crc+crypto+lse -O3 -funroll-loops
-KBUILD_AFLAGS += -mcpu=cortex-a78+crc+crypto -mtune=cortex-a78 -march=armv8.4-a+crc+crypto+lse -O3 -funroll-loops
+KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 
+KCFLAGS += -flto=thin  -funroll-loops -ftree-vectorize
+LDFLAGS += -flto=thin
 endif
 
 ifdef CONFIG_LLVM_POLLY

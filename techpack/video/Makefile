@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
 # auto-detect subdirs
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mtune=cortex-a78 -mtune=cortex-a55 -flto=thin -funroll-loops -ftree-vectorize -O3 
+
 ifneq ($(CONFIG_ARCH_QTI_VM), y)
 ifeq ($(CONFIG_ARCH_LAHAINA), y)
 include $(srctree)/techpack/video/config/konavid.conf

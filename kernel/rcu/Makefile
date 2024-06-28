@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0
 # Any varying coverage in these files is non-deterministic
 # and is generally not a function of system call inputs.
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mtune=cortex-a78 -mtune=cortex-a55 -flto=thin -funroll-loops -ftree-vectorize -O3 
+
 KCOV_INSTRUMENT := n
 
 obj-y += update.o sync.o

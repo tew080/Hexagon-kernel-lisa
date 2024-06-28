@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 ccflags-y += -I$(src)
 
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mtune=cortex-a78 -mtune=cortex-a55 -flto=thin -funroll-loops -ftree-vectorize -O3
+
 obj-$(CONFIG_QCOM_KGSL) += msm_kgsl.o
 
 msm_kgsl-y = \

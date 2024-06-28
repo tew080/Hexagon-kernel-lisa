@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 # common clock types
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mtune=cortex-a78 -mtune=cortex-a55 -flto=thin -funroll-loops -ftree-vectorize -O3 
+
 obj-$(CONFIG_HAVE_CLK)		+= clk-devres.o clk-bulk.o
 obj-$(CONFIG_CLKDEV_LOOKUP)	+= clkdev.o
 obj-$(CONFIG_COMMON_CLK)	+= clk.o
