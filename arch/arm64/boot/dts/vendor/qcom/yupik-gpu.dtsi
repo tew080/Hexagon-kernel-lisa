@@ -102,7 +102,7 @@
 
             qcom,l3-pwrlevel@2 {
                 reg = <2>;
-                qcom,l3-freq = <1440000000>;
+                qcom,l3-freq = <1200000000>;
             };
         };
 
@@ -113,7 +113,7 @@
 
 			qcom,gpu-model@0 {
 				qcom,gpu-model-id = <0>;
-				qcom,gpu-model = "Adreno660";
+				qcom,gpu-model = "Adreno642Lv1";
 				qcom,vk-device-id= <0x06030500>;
 			};
 		};
@@ -144,64 +144,69 @@
             };
         };
 
-        qcom,gpu-pwrlevel-bins {
-            #address-cells = <1>;
-            #size-cells = <0>;
-            compatible = "qcom,gpu-pwrlevel-bins";
+		qcom,gpu-pwrlevel-bins {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "qcom,gpu-pwrlevel-bins";
 
-            qcom,gpu-pwrlevels-2 {
-                #address-cells = <1>;
-                #size-cells = <0>;
+			qcom,gpu-pwrlevels-2 {
+				#address-cells = <1>;
+				#size-cells = <0>;
 
-                qcom,speed-bin = <117>;
-                qcom,initial-pwrlevel = <4>;
+				qcom,speed-bin = <117>;
+				qcom,initial-pwrlevel = <3>;
 
-                qcom,gpu-pwrlevel@0 {
-                    reg = <0>;
-                    qcom,gpu-freq = <550000000>;
-                    qcom,level = <RPMH_REGULATOR_LEVEL_NOM>;
-                    qcom,bus-freq-ddr7 = <9>;
-                    qcom,bus-min-ddr7 = <8>;
-                    qcom,bus-max-ddr7 = <10>;
-                };
+				qcom,gpu-pwrlevel@0 {
+					reg = <0>;
+					qcom,gpu-freq = <560000000>;
+					qcom,level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+					qcom,bus-freq-ddr7 = <9>;
+					qcom,bus-min-ddr7 = <8>;
+					qcom,bus-max-ddr7 = <11>;
+					qcom,acd-level = <0x882F5FFD>;
+				};
 
-                qcom,gpu-pwrlevel@1 {
-                    reg = <1>;
-                    qcom,gpu-freq = <450000000>;
-                    qcom,level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-                    qcom,bus-freq-ddr7 = <7>;
-                    qcom,bus-min-ddr7 = <6>;
-                    qcom,bus-max-ddr7 = <9>;
-                };
+				qcom,gpu-pwrlevel@1 {
+					reg = <1>;
+					qcom,gpu-freq = <515000000>;
+					qcom,level = <RPMH_REGULATOR_LEVEL_SVS>;
+					qcom,bus-freq-ddr7 = <8>;
+					qcom,bus-min-ddr7 = <7>;
+					qcom,bus-max-ddr7 = <10>;
+					qcom,acd-level = <0x882F5FFD>;
+				};
 
-                qcom,gpu-pwrlevel@2 {
-                    reg = <2>;
-                    qcom,gpu-freq = <360000000>;
-                    qcom,level = <RPMH_REGULATOR_LEVEL_SVS>;
-                    qcom,bus-freq-ddr7 = <5>;
-                    qcom,bus-min-ddr7 = <4>;
-                    qcom,bus-max-ddr7 = <7>;
-                };
+				qcom,gpu-pwrlevel@2 {
+					reg = <2>;
+					qcom,gpu-freq = <415000000>;
+					qcom,level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+					qcom,bus-freq-ddr7 = <6>;
+					qcom,bus-min-ddr7 = <5>;
+					qcom,bus-max-ddr7 = <8>;
+					qcom,acd-level = <0x882F5FFD>;
+				};
 
-                qcom,gpu-pwrlevel@3 {
-                    reg = <3>;
-                    qcom,gpu-freq = <290000000>;
-                    qcom,level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-                    qcom,bus-freq-ddr7 = <3>;
-                    qcom,bus-min-ddr7 = <2>;
-                    qcom,bus-max-ddr7 = <5>;
-                };
-
-                qcom,gpu-pwrlevel@4 {
-                    reg = <4>;
-                    qcom,gpu-freq = <180000000>;
-                    qcom,level = <RPMH_REGULATOR_LEVEL_LOW_SVS_D1>;
-                    qcom,bus-freq-ddr7 = <1>;
-                    qcom,bus-min-ddr7 = <1>;
-                    qcom,bus-max-ddr7 = <3>;
-                };
-            };
-        };
+				qcom,gpu-pwrlevel@3 {
+					reg = <3>;
+					qcom,gpu-freq = <315000000>;
+					qcom,level = <RPMH_REGULATOR_LEVEL_LOW_SVS_D1>;
+					qcom,bus-freq-ddr7 = <4>;
+					qcom,bus-min-ddr7 = <3>;
+					qcom,bus-max-ddr7 = <6>;
+					qcom,acd-level = <0x882F5FFD>;
+				};
+				
+				qcom,gpu-pwrlevel@4 {
+					reg = <4>;
+					qcom,gpu-freq = <180150000>;
+					qcom,level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
+					qcom,bus-freq-ddr7 = <2>;
+					qcom,bus-min-ddr7 = <1>;
+					qcom,bus-max-ddr7 = <4>;
+					qcom,acd-level = <0x882F5FFD>;
+				};
+			};
+		};
 	};
 
 	kgsl_msm_iommu: qcom,kgsl-iommu@3da0000 {
