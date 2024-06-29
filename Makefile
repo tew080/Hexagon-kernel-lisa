@@ -759,29 +759,41 @@ KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -O2
 KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 
-KCFLAGS += -flto=thin  -funroll-loops -ftree-vectorize
-LDFLAGS += -flto=thin
+KCFLAGS += -funroll-loops -ftree-vectorize
+KCFLAGS += -msve-vector-bits=128
+KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
+KCFLAGS += -falign-functions=64 -falign-loops=64
+KCFLAGS += -mstack-alignment=16
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -O3
 KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 
-KCFLAGS += -flto=thin  -funroll-loops -ftree-vectorize
-LDFLAGS += -flto=thin
+KCFLAGS += -funroll-loops -ftree-vectorize
+KCFLAGS += -msve-vector-bits=128
+KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
+KCFLAGS += -falign-functions=64 -falign-loops=64
+KCFLAGS += -mstack-alignment=16
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_QC_LLVM
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -Ofast
 KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 
-KCFLAGS += -flto=thin  -funroll-loops -ftree-vectorize
-LDFLAGS += -flto=thin
+KCFLAGS += -funroll-loops -ftree-vectorize
+KCFLAGS += -msve-vector-bits=128
+KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
+KCFLAGS += -falign-functions=64 -falign-loops=64
+KCFLAGS += -mstack-alignment=16
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -Os
 KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55  -mtune=cortex-a55 
-KCFLAGS += -flto=thin  -funroll-loops -ftree-vectorize
-LDFLAGS += -flto=thin
+KCFLAGS += -funroll-loops -ftree-vectorize
+KCFLAGS += -msve-vector-bits=128
+KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
+KCFLAGS += -falign-functions=64 -falign-loops=64
+KCFLAGS += -mstack-alignment=16
 endif
 
 ifdef CONFIG_LLVM_POLLY
