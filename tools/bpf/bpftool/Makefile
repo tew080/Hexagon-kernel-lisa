@@ -37,7 +37,7 @@ $(LIBBPF)-clean:
 prefix ?= /usr/local
 bash_compdir ?= /usr/share/bash-completion/completions
 
-CFLAGS += -O2
+CFLAGS += -O3
 CFLAGS += -W -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
 CFLAGS += $(filter-out -Wswitch-enum,$(EXTRA_WARNINGS))
 CFLAGS += -DPACKAGE='"bpftool"' -D__EXPORTED_HEADERS__ \

@@ -6,7 +6,7 @@ ifeq ($(MOUNT_LDLIBS),)
 MOUNT_LDLIBS := -lmount -I/usr/include/libmount
 endif
 
-CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(MOUNT_CFLAGS)
+CFLAGS += -O3 -g -std=gnu99 -Wall -I../../../../usr/include/ $(MOUNT_CFLAGS)
 LDLIBS += $(MOUNT_LDLIBS)
 
 TEST_PROGS := gpio-mockup.sh
