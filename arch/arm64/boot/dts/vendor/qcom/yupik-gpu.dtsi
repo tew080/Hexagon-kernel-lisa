@@ -154,7 +154,7 @@
 				#size-cells = <0>;
 
 				qcom,speed-bin = <117>;
-				qcom,initial-pwrlevel = <3>;
+				qcom,initial-pwrlevel = <4>;
 
 				qcom,gpu-pwrlevel@0 {
 					reg = <0>;
@@ -198,7 +198,7 @@
 				
 				qcom,gpu-pwrlevel@4 {
 					reg = <4>;
-					qcom,gpu-freq = <180150000>;
+					qcom,gpu-freq = <190150000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
 					qcom,bus-freq-ddr7 = <2>;
 					qcom,bus-min-ddr7 = <1>;
