@@ -20,7 +20,6 @@ config MQ_IOSCHED_KYBER
 
 config IOSCHED_BFQ
 	tristate "BFQ I/O scheduler"
-	default y
 	---help---
 	BFQ I/O scheduler for BLK-MQ. BFQ distributes the bandwidth of
 	of the device among all processes according to their weights,
@@ -30,7 +29,6 @@ config IOSCHED_BFQ
 	Documentation/block/bfq-iosched.rst
 
 config BFQ_GROUP_IOSCHED
-	   default y
        bool "BFQ hierarchical scheduling support"
        depends on IOSCHED_BFQ && BLK_CGROUP
        ---help---
