@@ -20,15 +20,11 @@
 
 #define NL_RATIO 80
 #define DEFAULT_HISPEED_LOAD 90
-#define DEFAULT_CPU0_RTG_BOOST_FREQ 1200000
-#define DEFAULT_CPU4_RTG_BOOST_FREQ 1000000
-#define DEFAULT_CPU7_RTG_BOOST_FREQ 800000
-#define UP_RATE_LIMIT_US_CPU_LP_MASK 4000
-#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 6000
-#define UP_RATE_LIMIT_US_CPU_PERF_MASK 10000
-#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 6000
-#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 12000
-#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 6000
+#define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
+#define DEFAULT_CPU4_RTG_BOOST_FREQ 0
+#define DEFAULT_CPU7_RTG_BOOST_FREQ 0
+#define UP_RATE_LIMIT_US 1000
+#define DOWN_RATE_LIMIT 20000
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
@@ -915,12 +911,10 @@ static ssize_t up_rate_limit_us_store(struct gov_attr_set *attr_set,
 	struct sugov_policy *sg_policy;
 	unsigned int rate_limit_us;
 
-	if (task_is_zygote(current))
-		return count;
-
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
+	return count;
 	tunables->up_rate_limit_us = rate_limit_us;
 
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
@@ -938,13 +932,10 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	struct sugov_policy *sg_policy;
 	unsigned int rate_limit_us;
 
-
-	if (task_is_zygote(current))
-		return count;
-
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
+	return count;
 	tunables->down_rate_limit_us = rate_limit_us;
 
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
@@ -1267,6 +1258,8 @@ static int sugov_init(struct cpufreq_policy *policy)
 
 	tunables->up_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
 	tunables->down_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
+	tunables->up_rate_limit_us = UP_RATE_LIMIT_US;
+	tunables->down_rate_limit_us = DOWN_RATE_LIMIT;
 	tunables->hispeed_load = DEFAULT_HISPEED_LOAD;
 	tunables->hispeed_freq = 0;
 
@@ -1282,23 +1275,6 @@ static int sugov_init(struct cpufreq_policy *policy)
 		tunables->rtg_boost_freq = DEFAULT_CPU7_RTG_BOOST_FREQ;
 		break;
 	}
-
-	if (cpumask_test_cpu(policy->cpu, cpu_lp_mask)) {
-		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_LP_MASK;
-		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_LP_MASK;
-	}
-
-	if (cpumask_test_cpu(policy->cpu, cpu_perf_mask)) {
-		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PERF_MASK;
-		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PERF_MASK;
-	}
-
-#ifndef CONFIG_ARCH_SDM778G
-   if (cpumask_test_cpu(policy->cpu, cpu_prime_mask)) {
-        tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PRIME_MASK;
-        tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PRIME_MASK;
-    }
-#endif
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
