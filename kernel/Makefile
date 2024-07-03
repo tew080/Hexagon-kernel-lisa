@@ -2,8 +2,9 @@
 #
 # Makefile for the linux kernel.
 #
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55 -mtune=cortex-a55 -funroll-loops -ftree-vectorize 
-ccflags-y += -Ofast -msve-vector-bits=128 -mfpu=neon-fp-armv8 -mfloat-abi=hard -fno-common
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd -mcpu=cortex-a78 -mtune=cortex-a78  -funroll-loops -ftree-vectorize 
+ccflags-y += -msve-vector-bits=128 -mfpu=neon-fp-armv8 -mfloat-abi=hard -fno-common
+
 obj-y     = fork.o exec_domain.o panic.o \
 	    cpu.o exit.o softirq.o resource.o \
 	    sysctl.o sysctl_binary.o capability.o ptrace.o user.o \

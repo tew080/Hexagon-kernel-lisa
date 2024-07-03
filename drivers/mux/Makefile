@@ -2,7 +2,7 @@
 #
 # Makefile for multiplexer devices.
 #
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55 -mtune=cortex-a55 -funroll-loops -ftree-vectorize 
+
 
 mux-core-objs			:= core.o
 mux-adg792a-objs		:= adg792a.o

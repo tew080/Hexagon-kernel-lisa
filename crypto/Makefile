@@ -2,7 +2,9 @@
 #
 # Cryptographic API
 #
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55 -mtune=cortex-a55 -funroll-loops -ftree-vectorize 
+
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd -mcpu=cortex-a78 -mtune=cortex-a78  -funroll-loops -ftree-vectorize 
+ccflags-y += -msve-vector-bits=128 -mfpu=neon-fp-armv8 -mfloat-abi=hard -fno-common
 
 obj-$(CONFIG_CRYPTO) += crypto.o
 crypto-y := api.o cipher.o compress.o memneq.o
@@ -99,7 +101,7 @@ ifeq ($(ARCH),arm)
 CFLAGS_aegis128-neon-inner.o += -ffreestanding -march=armv8.2-a+crypto+rcpc+dotprod -mfloat-abi=hard
 CFLAGS_aegis128-neon-inner.o += -mfpu=crypto-neon-fp-armv8
 CFLAGS_aegis128-neon-inner.o += -mcpu=cortex-a78 -mtune=cortex-a78
-CFLAGS_aegis128-neon-inner.o +=  -mcpu=cortex-a55 -mtune=cortex-a55
+CFLAGS_aegis128-neon-inner.o +=  
 CFLAGS_aegis128-neon-inner.o +=  -funroll-loops -ftree-vectorize 
 aegis128-$(CONFIG_CRYPTO_AEGIS128_SIMD) += aegis128-neon.o aegis128-neon-inner.o
 endif

@@ -2,7 +2,7 @@
 #
 # Makefile for Kernel-based Virtual Machine module
 #
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55 -mtune=cortex-a55 -funroll-loops -ftree-vectorize 
+
 
 ccflags-y += -I $(srctree)/$(src) -I $(srctree)/virt/kvm/arm/vgic
 CFLAGS_REMOVE_debug.o += $(CC_FLAGS_CFI)

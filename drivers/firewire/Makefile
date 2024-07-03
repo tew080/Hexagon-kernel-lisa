@@ -2,7 +2,7 @@
 #
 # Makefile for the Linux IEEE 1394 implementation
 #
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55 -mtune=cortex-a55 -funroll-loops -ftree-vectorize 
+
 
 firewire-core-y += core-card.o core-cdev.o core-device.o \
                    core-iso.o core-topology.o core-transaction.o

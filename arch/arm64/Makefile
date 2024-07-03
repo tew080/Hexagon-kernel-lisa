@@ -56,7 +56,6 @@ endif
 ifdef CONFIG_ARCH_LAHAINA
 KBUILD_CFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd \
 										-mcpu=cortex-a78 -mtune=cortex-a78 \
-										-mcpu=cortex-a55 -mtune=cortex-a55 \
 										-funroll-loops -ftree-vectorize \
 										-msve-vector-bits=128 -fno-common 
 endif

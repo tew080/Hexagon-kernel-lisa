@@ -13,7 +13,7 @@
 # lastly SCSI peripheral drivers (disk/tape/cdrom/etc.) to
 # satisfy certain initialization assumptions in the SCSI layer.
 # *!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!*!
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55 -mtune=cortex-a55 -funroll-loops -ftree-vectorize 
+
 
 
 CFLAGS_aha152x.o =   -DAHA152X_STAT -DAUTOCONF

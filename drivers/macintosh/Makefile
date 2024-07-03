@@ -4,7 +4,7 @@
 #
 
 # Each configuration option enables a list of files.
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod -mcpu=cortex-a78 -mtune=cortex-a78 -mcpu=cortex-a55 -mtune=cortex-a55 -funroll-loops -ftree-vectorize 
+
 
 obj-$(CONFIG_PPC_PMAC)		+= macio_asic.o macio_sysfs.o
 
