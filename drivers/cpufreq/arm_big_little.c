@@ -38,7 +38,7 @@
 /* Currently we support only two clusters */
 #define A15_CLUSTER	0
 #define A7_CLUSTER	1
-#define MAX_CLUSTERS	2
+#define MAX_CLUSTERS	3
 
 #ifdef CONFIG_BL_SWITCHER
 #include <asm/bL_switcher.h>
