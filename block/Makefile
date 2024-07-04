@@ -2,8 +2,13 @@
 #
 # Makefile for the kernel block layer
 #
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd -mcpu=cortex-a78 -mtune=cortex-a78  -funroll-loops -ftree-vectorize 
-ccflags-y += -msve-vector-bits=128 -mfpu=neon-fp-armv8 -mfloat-abi=hard -fno-common
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd \
+		-mcpu=cortex-a78 -mtune=cortex-a78  \
+		-funroll-loops -ftree-vectorize \
+		-msve-vector-bits=128 -mfpu=neon-fp-armv8 \
+		-mfloat-abi=hard -fno-common 
+	
+
 obj-$(CONFIG_BLOCK) := bio.o elevator.o blk-core.o blk-sysfs.o \
 			blk-flush.o blk-settings.o blk-ioc.o blk-map.o \
 			blk-exec.o blk-merge.o blk-softirq.o blk-timeout.o \

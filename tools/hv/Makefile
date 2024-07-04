@@ -15,7 +15,7 @@ endif
 # (this improves performance and avoids hard-to-debug behaviour);
 MAKEFLAGS += -r
 
-override CFLAGS += -O3 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+override CFLAGS += -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
 
 ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
 ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))

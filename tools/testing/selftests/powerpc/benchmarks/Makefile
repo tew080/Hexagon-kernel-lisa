@@ -2,7 +2,7 @@
 TEST_GEN_PROGS := gettimeofday context_switch fork mmap_bench futex_bench null_syscall
 TEST_GEN_FILES := exec_target
 
-CFLAGS += -O3
+CFLAGS +=
 
 top_srcdir = ../../../../..
 include ../../lib.mk

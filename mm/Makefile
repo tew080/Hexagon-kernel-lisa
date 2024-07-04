@@ -2,8 +2,12 @@
 #
 # Makefile for the linux memory manager.
 #
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd -mcpu=cortex-a78 -mtune=cortex-a78  -funroll-loops -ftree-vectorize 
-ccflags-y += -msve-vector-bits=128 -mfpu=neon-fp-armv8 -mfloat-abi=hard -fno-common
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd \
+		-mcpu=cortex-a78 -mtune=cortex-a78  \
+		-funroll-loops -ftree-vectorize \
+		-msve-vector-bits=128 -mfpu=neon-fp-armv8 \
+		-mfloat-abi=hard -fno-common 
+	
 
 KASAN_SANITIZE_slab_common.o := n
 KASAN_SANITIZE_slab.o := n

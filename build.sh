@@ -4,7 +4,7 @@
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
-TC_DIR="/home/tew404/lisa-Kernel/Clang-19.0.0"
+TC_DIRR="/home/tew404/lisa-Kernel/Clang-19.0.0"
 DEFCONFIG="lisa_defconfig"
 
 ZIPNAME="Geforce-kernel-lisa-$(date '+%Y%m%d-%H%M').zip"
@@ -25,7 +25,7 @@ MAKE_PARAMS="O=out \
 	STRIP=llvm-strip \
  	CC=$TC_DIR/bin/clang  \
 	CLANG_TRIPLE=aarch64-linux-gnu- \
-	CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu-  \
+	CROSS_COMPILE=$TC_DIRR/bin/aarch64-linux-gnu-  \
 	CROSS_COMPILE_ARM32=$TC_DIR/bin/arm-linux-gnueabi-  \
 	LLVM=1 \
 	LLVM_IAS=1"

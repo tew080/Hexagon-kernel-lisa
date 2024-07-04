@@ -22,9 +22,9 @@ CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -fPIC
 
 ifeq ($(DEBUG),0)
 ifeq ($(CC_NO_CLANG), 0)
-  CFLAGS += -O3
+  CFLAGS += 
 else
-  CFLAGS += -O6
+  CFLAGS += 
 endif
 endif
 

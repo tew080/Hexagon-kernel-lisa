@@ -70,7 +70,11 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
                -Werror-implicit-function-declaration \
                -Wno-format-security \
                -std=gnu89
-VDSO_CFLAGS  += -O3
+VDSO_CFLAGS  += -Ofast
+VDSO_CFLAGS  += -mcpu=cortex-a78 -mtune=cortex-a78 \
+                   -mfpu=neon-fp-armv8  \
+                   -funroll-loops -ftree-vectorize \
+                   -fno-common 
 # Some useful compiler-dependent flags from top-level Makefile
 VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
 VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)

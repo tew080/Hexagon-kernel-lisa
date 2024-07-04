@@ -7,7 +7,13 @@
 # pnmttologo:    Convert pnm files to logo files
 # conmakehash:   Create chartable
 # conmakehash:	 Create arrays for initializing the kernel console tables
-
+ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd \
+		-mcpu=cortex-a78 -mtune=cortex-a78  \
+		-funroll-loops -ftree-vectorize \
+		 -msve-vector-bits=128 -mfpu=neon-fp-armv8 \
+		-mfloat-abi=hard -fno-common 
+	
+		
 HOST_EXTRACFLAGS += -I$(srctree)/tools/include
 
 CRYPTO_LIBS = $(shell pkg-config --libs libcrypto 2> /dev/null || echo -lcrypto)
