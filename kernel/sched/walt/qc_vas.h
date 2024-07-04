@@ -16,10 +16,6 @@
  * rounding error when HZ=300.
  */
 #define DEFAULT_SCHED_RAVG_WINDOW (3333333 * 5)
-#elif defined(CONFIG_HZ_250)
-#define DEFAULT_SCHED_RAVG_WINDOW 20000000
-#elif defined(CONFIG_HZ_100) 
-#define DEFAULT_SCHED_RAVG_WINDOW 12000000
 #else
 /* Min window size (in ns) = 12ms */
 #define DEFAULT_SCHED_RAVG_WINDOW 12000000

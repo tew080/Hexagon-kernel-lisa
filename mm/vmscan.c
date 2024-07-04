@@ -4072,7 +4072,7 @@ static bool age_lruvec(struct lruvec *lruvec, struct scan_control *sc, unsigned 
 }
 
 /* to protect the working set of the last N jiffies */
-static unsigned long lru_gen_min_ttl __read_mostly = 1250; //5000ms @ CONFIG_HZ=300
+static unsigned long lru_gen_min_ttl __read_mostly = 5000;
 
 static void lru_gen_age_node(struct pglist_data *pgdat, struct scan_control *sc)
 {
