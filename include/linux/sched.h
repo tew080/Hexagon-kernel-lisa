@@ -858,7 +858,6 @@ struct task_struct {
 	struct sched_dl_entity		dl;
 
 #ifdef CONFIG_UCLAMP_TASK
-	/* Clamp values requested for a scheduling entity */
 	/*
 	 * Clamp values requested for a scheduling entity.
 	 * Must be updated with task_rq_lock() held.
