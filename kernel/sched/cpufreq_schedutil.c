@@ -18,12 +18,18 @@
 #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
 
 #define NL_RATIO 85
-#define DEFAULT_HISPEED_LOAD 85
-#define UP_RATE_LIMIT_US 10000
-#define DOWN_RATE_LIMIT 20000
-#define DEFAULT_CPU0_RTG_BOOST_FREQ 1600000
-#define DEFAULT_CPU4_RTG_BOOST_FREQ 1600000
-#define DEFAULT_CPU7_RTG_BOOST_FREQ 1400000
+#define HISPEED_LOAD_CPU_LP_MASK 85
+#define HISPEED_LOAD_CPU_PERF_MASK 85
+#define HISPEED_LOAD_CPU_PRIME_MASK 95
+#define UP_RATE_LIMIT_US_CPU_LP_MASK 10000
+#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 20000
+#define UP_RATE_LIMIT_US_CPU_PERF_MASK 10000
+#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 20000
+#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 15000
+#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 25000
+#define DEFAULT_CPU0_RTG_BOOST_FREQ 1804000
+#define DEFAULT_CPU4_RTG_BOOST_FREQ 1516000
+#define DEFAULT_CPU7_RTG_BOOST_FREQ 1324000
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
@@ -941,10 +947,12 @@ static ssize_t hispeed_load_store(struct gov_attr_set *attr_set,
 				  const char *buf, size_t count)
 {
 	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
+	unsigned int hispeed_load;
 
-	if (kstrtouint(buf, 10, &tunables->hispeed_load))
+	if (kstrtouint(buf, 10, &hispeed_load))
 		return -EINVAL;
 
+	return count;
 	tunables->hispeed_load = min(100U, tunables->hispeed_load);
 
 	return count;
@@ -1243,21 +1251,29 @@ static int sugov_init(struct cpufreq_policy *policy)
 
 	tunables->up_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
 	tunables->down_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
-	tunables->up_rate_limit_us = UP_RATE_LIMIT_US;
-	tunables->down_rate_limit_us = DOWN_RATE_LIMIT;
-	tunables->hispeed_load = DEFAULT_HISPEED_LOAD;
 	tunables->hispeed_freq = 0;
 
 	switch (policy->cpu) {
 	default:
 	case 0:
 		tunables->rtg_boost_freq = DEFAULT_CPU0_RTG_BOOST_FREQ;
+		tunables->hispeed_load = HISPEED_LOAD_CPU_LP_MASK;
+		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_LP_MASK;
+		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_LP_MASK;
+
+		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_LP_MASK;
 		break;
 	case 4:
 		tunables->rtg_boost_freq = DEFAULT_CPU4_RTG_BOOST_FREQ;
+		tunables->hispeed_load = HISPEED_LOAD_CPU_PERF_MASK;
+		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PERF_MASK;
+		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PERF_MASK;
 		break;
 	case 7:
 		tunables->rtg_boost_freq = DEFAULT_CPU7_RTG_BOOST_FREQ;
+		tunables->hispeed_load = HISPEED_LOAD_CPU_PRIME_MASK;
+        tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PRIME_MASK;
+	    tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PRIME_MASK;
 		break;
 	}
 

@@ -96,7 +96,7 @@ CONFIG_SETEND_EMULATION=y
 # CONFIG_ARM64_PAN is not set
 # CONFIG_ARM64_SVE is not set
 CONFIG_RANDOMIZE_BASE=y
-CONFIG_CMDLINE="ramoops_memreserve=4M cgroup_disable=pressure"
+CONFIG_CMDLINE="ramoops_memreserve=4M cgroup_disable=pressure rcu_nocbs=all"
 CONFIG_CMDLINE_EXTEND=y
 # CONFIG_DMI is not set
 CONFIG_BUILD_ARM64_UNCOMPRESSED_KERNEL=y
@@ -1010,3 +1010,4 @@ CONFIG_TCP_CONG_DCTCP=y
 # CONFIG_DEFAULT_RENO is not set
 CONFIG_DEFAULT_BBR2=y
 CONFIG_DEFAULT_TCP_CONG="bbr2"
+

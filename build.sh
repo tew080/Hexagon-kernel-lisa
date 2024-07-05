@@ -16,13 +16,6 @@ fi
 
 MAKE_PARAMS="O=out \
 	ARCH=arm64  \
-	LD=ld.lld \
-	AR=llvm-ar \
-	AS=llvm-as \
-	NM=llvm-nm \
-	OBJCOPY=llvm-objcopy \
-	OBJDUMP=llvm-objdump \
-	STRIP=llvm-strip \
  	CC=$TC_DIR/bin/clang  \
 	CLANG_TRIPLE=aarch64-linux-gnu- \
 	CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu-  \

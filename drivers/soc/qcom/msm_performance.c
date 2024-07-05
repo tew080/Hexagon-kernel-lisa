@@ -27,6 +27,9 @@
 #include <linux/topology.h>
 #include <linux/scmi_protocol.h>
 
+/*MSM TouchBoost*/
+static int touchboost = 1;
+
 #define POLL_INT 25
 #define NODE_NAME_MAX_CHARS 16
 
@@ -172,6 +175,24 @@ cleanup:
 }
 
 /*******************************sysfs start************************************/
+static int set_touchboost(const char *buf, const struct kernel_param *kp)
+{
+	int val;
+	if (sscanf(buf, "%d\n", &val) != 1)
+		return -EINVAL;
+	touchboost = val;
+	return 0;
+}
+
+static int get_touchboost(char *buf, const struct kernel_param *kp)
+{
+	return snprintf(buf, PAGE_SIZE, "%d", touchboost);
+}
+static const struct kernel_param_ops param_ops_touchboost = {
+	.set = set_touchboost,
+	.get = get_touchboost,
+};
+device_param_cb(touchboost, &param_ops_touchboost, NULL, 0644);
 static int set_cpu_min_freq(const char *buf, const struct kernel_param *kp)
 {
 	int i, j, ntokens = 0;
@@ -191,6 +212,9 @@ static int set_cpu_min_freq(const char *buf, const struct kernel_param *kp)
 		}
 		ready_for_freq_updates = true;
 	}
+
+	if (touchboost == 0)
+		return 0;
 
 	while ((cp = strpbrk(cp + 1, " :")))
 		ntokens++;
@@ -284,6 +308,9 @@ static int set_cpu_max_freq(const char *buf, const struct kernel_param *kp)
 		}
 		ready_for_freq_updates = true;
 	}
+
+	if (touchboost == 0)
+		return 0;
 
 	while ((cp = strpbrk(cp + 1, " :")))
 		ntokens++;
