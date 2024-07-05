@@ -51,7 +51,7 @@ struct cpu_sync {
 
 #define INPUT_BOOST_ENABLED 1
 #define INPUT_BOOST_MS 40
-#define SCHED_BOOST_ON_INPUT 1
+#define SCHED_BOOST_ON_INPUT 0
 #define WAKE_BOOST_ENABLE 1
 #define WAKE_BOOST_MS 1000
 
