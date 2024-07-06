@@ -52,7 +52,7 @@ static int mi_sde_cdev_set_cur_brightness(struct thermal_cooling_device *cdev,
 	disp_cdev->thermal_state = brightness_lvl;
 	if (mi_sde_cdev->panel->mi_cfg.thermal_dimming) {
 		sysfs_notify(&cdev->device.kobj, NULL, "cur_state");
-		pr_info("thermal dimming:set thermal_brightness_limit to %d\n", brightness_lvl);
+		pr_debug("thermal dimming:set thermal_brightness_limit to %d\n", brightness_lvl);
 	} else {
 		blocking_notifier_call_chain(&disp_cdev->notifier_head,
 						brightness_lvl, (void *)disp_cdev->bd);
@@ -106,12 +106,12 @@ int mi_backlight_cdev_register(struct sde_cdev *disp_cdev,
 				bl_node_name, disp_cdev,
 				&mi_sde_cdev_ops);
 	if (IS_ERR_OR_NULL(disp_cdev->cdev)) {
-		pr_err("cooling device register failed\n");
+		pr_debug("cooling device register failed\n");
 		return -ENODEV;
 	}
 	BLOCKING_INIT_NOTIFIER_HEAD(&disp_cdev->notifier_head);
 	blocking_notifier_chain_register(&disp_cdev->notifier_head, n);
-	pr_info("register %s cooling device success\n", bl_node_name);
+	pr_debug("register %s cooling device success\n", bl_node_name);
 	display_count++;
 	return 0;
 }

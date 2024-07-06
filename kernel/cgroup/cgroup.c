@@ -6372,7 +6372,7 @@ static int __init cgroup_disable(char *str)
 				continue;
 
 			static_branch_disable(cgroup_subsys_enabled_key[i]);
-			pr_info("Disabling %s control group subsystem\n",
+			pr_debug("Disabling %s control group subsystem\n",
 				ss->name);
 		}
 
@@ -6380,7 +6380,7 @@ static int __init cgroup_disable(char *str)
 			if (strcmp(token, cgroup_opt_feature_names[i]))
 				continue;
 			cgroup_feature_disable_mask |= 1 << i;
-			pr_info("Disabling %s control group feature\n",
+			pr_debug("Disabling %s control group feature\n",
 				cgroup_opt_feature_names[i]);
 			break;
 		}
@@ -6578,7 +6578,7 @@ void cgroup_sk_alloc_disable(void)
 {
 	if (cgroup_sk_alloc_disabled)
 		return;
-	pr_info("cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation\n");
+	pr_debug("cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation\n");
 	cgroup_sk_alloc_disabled = true;
 }
 

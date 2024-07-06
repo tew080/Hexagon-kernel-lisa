@@ -916,7 +916,7 @@ static int __init msm_ext_disp_audio_codec_rx_init(void)
 
 	rc = platform_driver_register(&msm_ext_disp_audio_codec_rx_driver);
 	if (rc) {
-		pr_err("%s: failed to register ext disp codec driver err:%d\n",
+		pr_debug("%s: failed to register ext disp codec driver err:%d\n",
 		       __func__, rc);
 	}
 

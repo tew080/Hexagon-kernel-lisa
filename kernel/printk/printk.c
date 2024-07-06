@@ -1187,11 +1187,11 @@ static void __init log_buf_add_cpu(void)
 	if (cpu_extra <= __LOG_BUF_LEN / 2)
 		return;
 
-	pr_info("log_buf_len individual max cpu contribution: %d bytes\n",
+	pr_debug("log_buf_len individual max cpu contribution: %d bytes\n",
 		__LOG_CPU_MAX_BUF_LEN);
-	pr_info("log_buf_len total cpu_extra contributions: %d bytes\n",
+	pr_debug("log_buf_len total cpu_extra contributions: %d bytes\n",
 		cpu_extra);
-	pr_info("log_buf_len min size: %d bytes\n", __LOG_BUF_LEN);
+	pr_debug("log_buf_len min size: %d bytes\n", __LOG_BUF_LEN);
 
 	log_buf_len_update(cpu_extra + __LOG_BUF_LEN);
 }
@@ -1245,8 +1245,8 @@ void __init setup_log_buf(int early)
 	memcpy(log_buf, __log_buf, __LOG_BUF_LEN);
 	logbuf_unlock_irqrestore(flags);
 
-	pr_info("log_buf_len: %u bytes\n", log_buf_len);
-	pr_info("early log buf free: %u(%u%%)\n",
+	pr_debug("log_buf_len: %u bytes\n", log_buf_len);
+	pr_debug("early log buf free: %u(%u%%)\n",
 		free, (free * 100) / __LOG_BUF_LEN);
 }
 
@@ -1255,7 +1255,7 @@ static bool __read_mostly ignore_loglevel;
 static int __init ignore_loglevel_setup(char *str)
 {
 	ignore_loglevel = true;
-	pr_info("debug: ignoring loglevel setting.\n");
+	pr_debug("debug: ignoring loglevel setting.\n");
 
 	return 0;
 }
@@ -2321,7 +2321,7 @@ void suspend_console(void)
 {
 	if (!console_suspend_enabled)
 		return;
-	pr_info("Suspending console(s) (use no_console_suspend to debug)\n");
+	pr_debug("Suspending console(s) (use no_console_suspend to debug)\n");
 	console_lock();
 	console_suspended = 1;
 	up_console_sem();
@@ -2704,7 +2704,7 @@ static int __read_mostly keep_bootcon;
 static int __init keep_bootcon_setup(char *str)
 {
 	keep_bootcon = 1;
-	pr_info("debug: skip boot console de-registration.\n");
+	pr_debug("debug: skip boot console de-registration.\n");
 
 	return 0;
 }
@@ -2753,7 +2753,7 @@ void register_console(struct console *newcon)
 		/* find the last or real console */
 		for_each_console(bcon) {
 			if (!(bcon->flags & CON_BOOT)) {
-				pr_info("Too late to register bootconsole %s%d\n",
+				pr_debug("Too late to register bootconsole %s%d\n",
 					newcon->name, newcon->index);
 				return;
 			}
@@ -2880,7 +2880,7 @@ void register_console(struct console *newcon)
 	 * users know there might be something in the kernel's log buffer that
 	 * went to the bootconsole (that they do not see on the real console)
 	 */
-	pr_info("%sconsole [%s%d] enabled\n",
+	pr_debug("%sconsole [%s%d] enabled\n",
 		(newcon->flags & CON_BOOT) ? "boot" : "" ,
 		newcon->name, newcon->index);
 	if (bcon &&
@@ -2901,7 +2901,7 @@ int unregister_console(struct console *console)
         struct console *a, *b;
 	int res;
 
-	pr_info("%sconsole [%s%d] disabled\n",
+	pr_debug("%sconsole [%s%d] disabled\n",
 		(console->flags & CON_BOOT) ? "boot" : "" ,
 		console->name, console->index);
 

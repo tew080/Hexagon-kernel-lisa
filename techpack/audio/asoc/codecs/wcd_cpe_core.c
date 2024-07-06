@@ -288,7 +288,7 @@ static int wcd_cpe_load_each_segment(struct wcd_cpe_core *core,
 	struct cpe_svc_mem_segment *segment;
 
 	if (!core || !phdr) {
-		pr_err("%s: Invalid params\n", __func__);
+		pr_debug("%s: Invalid params\n", __func__);
 		return -EINVAL;
 	}
 
@@ -365,7 +365,7 @@ static int wcd_cpe_enable_cpe_clks(struct wcd_cpe_core *core, bool enable)
 
 	if (!core || !core->cpe_cdc_cb ||
 	    !core->cpe_cdc_cb->cpe_clk_en) {
-		pr_err("%s: invalid handle\n",
+		pr_debug("%s: invalid handle\n",
 			__func__);
 		return -EINVAL;
 	}
@@ -425,7 +425,7 @@ static int wcd_cpe_bus_vote_max_bw(struct wcd_cpe_core *core,
 		bool vote)
 {
 	if (!core || !core->cpe_cdc_cb) {
-		pr_err("%s: Invalid handle to %s\n",
+		pr_debug("%s: Invalid handle to %s\n",
 			__func__,
 			(!core) ? "core" : "codec callbacks");
 		return -EINVAL;
@@ -465,7 +465,7 @@ static int wcd_cpe_load_fw(struct wcd_cpe_core *core,
 	bool load_segment;
 
 	if (!core || !core->cpe_handle) {
-		pr_err("%s: Error CPE core %pK\n", __func__,
+		pr_debug("%s: Error CPE core %pK\n", __func__,
 		       core);
 		return -EINVAL;
 	}
@@ -525,7 +525,7 @@ static int wcd_cpe_load_fw(struct wcd_cpe_core *core,
 				load_segment = true;
 			break;
 		default:
-			pr_err("%s: Invalid load_type 0x%x\n",
+			pr_debug("%s: Invalid load_type 0x%x\n",
 				__func__, load_type);
 			ret = -EINVAL;
 			goto rel_bus_vote;
@@ -573,7 +573,7 @@ static void wcd_cpe_change_online_state(struct wcd_cpe_core *core,
 	unsigned long ret;
 
 	if (!core) {
-		pr_err("%s: Invalid core handle\n",
+		pr_debug("%s: Invalid core handle\n",
 			__func__);
 		return;
 	}
@@ -611,7 +611,7 @@ static void wcd_cpe_load_fw_image(struct work_struct *work)
 	if (!ret)
 		wcd_cpe_change_online_state(core, 1);
 	else
-		pr_err("%s: failed to load instruction section, err = %d\n",
+		pr_debug("%s: failed to load instruction section, err = %d\n",
 			__func__, ret);
 }
 
@@ -627,7 +627,7 @@ void *wcd_cpe_get_core_handle(
 	struct wcd_cpe_core *core = NULL;
 
 	if (!component) {
-		pr_err("%s: Invalid codec handle\n",
+		pr_debug("%s: Invalid codec handle\n",
 			__func__);
 		goto done;
 	}
@@ -661,7 +661,7 @@ static irqreturn_t svass_engine_irq(int irq, void *data)
 	int ret = 0;
 
 	if (!core) {
-		pr_err("%s: Invalid data for interrupt handler\n",
+		pr_debug("%s: Invalid data for interrupt handler\n",
 			__func__);
 		goto done;
 	}
@@ -692,7 +692,7 @@ static ssize_t wcd_cpe_state_read(struct snd_info_entry *entry,
 
 	core = (struct wcd_cpe_core *) entry->private_data;
 	if (!core) {
-		pr_err("%s: CPE core NULL\n", __func__);
+		pr_debug("%s: CPE core NULL\n", __func__);
 		return -EINVAL;
 	}
 	ssr_entry = &core->ssr_entry;
@@ -727,7 +727,7 @@ static unsigned int wcd_cpe_state_poll(struct snd_info_entry *entry,
 
 	core = (struct wcd_cpe_core *) entry->private_data;
 	if (!core) {
-		pr_err("%s: CPE core NULL\n", __func__);
+		pr_debug("%s: CPE core NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -761,7 +761,7 @@ static bool wcd_cpe_is_online_state(void *core_handle)
 	if (core_handle) {
 		return !core->ssr_entry.offline;
 	} else {
-		pr_err("%s: Core handle NULL\n", __func__);
+		pr_debug("%s: Core handle NULL\n", __func__);
 		/* still return 1- offline if core ptr null */
 		return false;
 	}
@@ -923,7 +923,7 @@ static int wcd_cpe_boot_ssr(struct wcd_cpe_core *core)
 	int rc = 0;
 
 	if (!core || !core->cpe_handle) {
-		pr_err("%s: Invalid handle\n", __func__);
+		pr_debug("%s: Invalid handle\n", __func__);
 		rc = -EINVAL;
 		goto fail;
 	}
@@ -1000,7 +1000,7 @@ static void wcd_cpe_ssr_work(struct work_struct *work)
 
 	core = container_of(work, struct wcd_cpe_core, ssr_work);
 	if (!core) {
-		pr_err("%s: Core handle NULL\n", __func__);
+		pr_debug("%s: Core handle NULL\n", __func__);
 		return;
 	}
 
@@ -1059,7 +1059,7 @@ static void wcd_cpe_ssr_work(struct work_struct *work)
 				wcd_cpe_collect_ramdump(core);
 		}
 	} else {
-		pr_err("%s: no cpe users, mark as offline\n", __func__);
+		pr_debug("%s: no cpe users, mark as offline\n", __func__);
 		wcd_cpe_change_online_state(core, 0);
 		wcd_cpe_set_and_complete(core,
 					 WCD_CPE_BLK_READY);
@@ -1101,7 +1101,7 @@ int wcd_cpe_ssr_event(void *core_handle,
 	struct wcd_cpe_core *core = (struct wcd_cpe_core *)core_handle;
 
 	if (!core) {
-		pr_err("%s: Invalid handle to core\n",
+		pr_debug("%s: Invalid handle to core\n",
 			__func__);
 		return -EINVAL;
 	}
@@ -1172,7 +1172,7 @@ static irqreturn_t svass_exception_irq(int irq, void *data)
 	u8 status = 0;
 
 	if (!core || !CPE_ERR_IRQ_CB(core)) {
-		pr_err("%s: Invalid %s\n",
+		pr_debug("%s: Invalid %s\n",
 		       __func__,
 		       (!core) ? "core" : "cdc control");
 		return IRQ_HANDLED;
@@ -1230,12 +1230,12 @@ static void wcd_cpe_cmi_afe_cb(const struct cmi_api_notification *param)
 	u8 port_id;
 
 	if (!param) {
-		pr_err("%s: param is null\n", __func__);
+		pr_debug("%s: param is null\n", __func__);
 		return;
 	}
 
 	if (param->event != CMI_API_MSG) {
-		pr_err("%s: unhandled event 0x%x\n",
+		pr_debug("%s: unhandled event 0x%x\n",
 			__func__, param->event);
 		return;
 	}
@@ -1251,7 +1251,7 @@ static void wcd_cpe_cmi_afe_cb(const struct cmi_api_notification *param)
 	 */
 	port_id = CMI_HDR_GET_SESSION_ID(hdr);
 	if (port_id > WCD_CPE_AFE_MAX_PORTS) {
-		pr_err("%s: invalid port_id %d\n",
+		pr_debug("%s: invalid port_id %d\n",
 			__func__, port_id);
 		return;
 	}
@@ -1272,7 +1272,7 @@ static void wcd_cpe_cmi_afe_cb(const struct cmi_api_notification *param)
 			(struct cpe_cmdrsp_shmem_alloc *) param->message;
 
 		if (cmdrsp_shmem_alloc->addr == 0) {
-			pr_err("%s: Failed AFE shared mem alloc\n", __func__);
+			pr_debug("%s: Failed AFE shared mem alloc\n", __func__);
 			afe_port_d->cmd_result = CMI_SHMEM_ALLOC_FAILED;
 		} else {
 			pr_debug("%s AFE shared mem addr = 0x%x\n",
@@ -1335,20 +1335,20 @@ static void wcd_cpe_svc_event_cb(const struct cpe_svc_notification *param)
 	bool active_sessions;
 
 	if (!param) {
-		pr_err("%s: Invalid event\n", __func__);
+		pr_debug("%s: Invalid event\n", __func__);
 		return;
 	}
 
 	component = param->private_data;
 	if (!component) {
-		pr_err("%s: Invalid handle to codec\n",
+		pr_debug("%s: Invalid handle to codec\n",
 			__func__);
 		return;
 	}
 
 	core = wcd_cpe_get_core_handle(component);
 	if (!core) {
-		pr_err("%s: Invalid handle to core\n",
+		pr_debug("%s: Invalid handle to core\n",
 			__func__);
 		return;
 	}
@@ -1503,7 +1503,7 @@ static int wcd_cpe_get_cal_index(int32_t cal_type)
 	else if (cal_type == ULP_LSM_TOPOLOGY_ID_CAL_TYPE)
 		cal_index = WCD_CPE_LSM_CAL_TOPOLOGY_ID;
 	else
-		pr_err("%s: invalid cal_type %d\n",
+		pr_debug("%s: invalid cal_type %d\n",
 			__func__, cal_type);
 
 	return cal_index;
@@ -1516,7 +1516,7 @@ static int wcd_cpe_alloc_cal(int32_t cal_type, size_t data_size, void *data)
 
 	cal_index = wcd_cpe_get_cal_index(cal_type);
 	if (cal_index < 0) {
-		pr_err("%s: invalid caltype %d\n",
+		pr_debug("%s: invalid caltype %d\n",
 			__func__, cal_type);
 		return -EINVAL;
 	}
@@ -1525,7 +1525,7 @@ static int wcd_cpe_alloc_cal(int32_t cal_type, size_t data_size, void *data)
 				  core_d->cal_data[cal_index],
 				  0, NULL);
 	if (ret < 0)
-		pr_err("%s: cal_utils_alloc_block failed, ret = %d, cal type = %d!\n",
+		pr_debug("%s: cal_utils_alloc_block failed, ret = %d, cal type = %d!\n",
 			__func__, ret, cal_type);
 	return ret;
 }
@@ -1538,7 +1538,7 @@ static int wcd_cpe_dealloc_cal(int32_t cal_type, size_t data_size,
 
 	cal_index = wcd_cpe_get_cal_index(cal_type);
 	if (cal_index < 0) {
-		pr_err("%s: invalid caltype %d\n",
+		pr_debug("%s: invalid caltype %d\n",
 			__func__, cal_type);
 		return -EINVAL;
 	}
@@ -1546,7 +1546,7 @@ static int wcd_cpe_dealloc_cal(int32_t cal_type, size_t data_size,
 	ret = cal_utils_dealloc_cal(data_size, data,
 				    core_d->cal_data[cal_index]);
 	if (ret < 0)
-		pr_err("%s: cal_utils_dealloc_block failed, ret = %d, cal type = %d!\n",
+		pr_debug("%s: cal_utils_dealloc_block failed, ret = %d, cal type = %d!\n",
 			__func__, ret, cal_type);
 	return ret;
 }
@@ -1558,7 +1558,7 @@ static int wcd_cpe_set_cal(int32_t cal_type, size_t data_size, void *data)
 
 	cal_index = wcd_cpe_get_cal_index(cal_type);
 	if (cal_index < 0) {
-		pr_err("%s: invalid caltype %d\n",
+		pr_debug("%s: invalid caltype %d\n",
 			__func__, cal_type);
 		return -EINVAL;
 	}
@@ -1567,7 +1567,7 @@ static int wcd_cpe_set_cal(int32_t cal_type, size_t data_size, void *data)
 				core_d->cal_data[cal_index],
 				0, NULL);
 	if (ret < 0)
-		pr_err("%s: cal_utils_set_cal failed, ret = %d, cal type = %d!\n",
+		pr_debug("%s: cal_utils_set_cal failed, ret = %d, cal type = %d!\n",
 			__func__, ret, cal_type);
 	return ret;
 }
@@ -1597,7 +1597,7 @@ static int wcd_cpe_cal_init(struct wcd_cpe_core *core)
 					 core->cal_data,
 					 cal_type_info);
 	if (ret < 0)
-		pr_err("%s: could not create cal type!\n",
+		pr_debug("%s: could not create cal type!\n",
 		       __func__);
 	return ret;
 }
@@ -1613,7 +1613,7 @@ static int wcd_cpe_vote(struct wcd_cpe_core *core,
 	int ret = 0;
 
 	if (!core) {
-		pr_err("%s: Invalid handle to core\n",
+		pr_debug("%s: Invalid handle to core\n",
 			__func__);
 		ret = -EINVAL;
 		goto done;
@@ -1859,7 +1859,7 @@ static int wcd_cpe_validate_params(
 {
 
 	if (!component) {
-		pr_err("%s: Invalid codec\n", __func__);
+		pr_debug("%s: Invalid codec\n", __func__);
 		return -EINVAL;
 	}
 
@@ -2082,12 +2082,12 @@ static void wcd_cpe_cmi_lsm_callback(const struct cmi_api_notification *param)
 	u8 session_id;
 
 	if (!param) {
-		pr_err("%s: param is null\n", __func__);
+		pr_debug("%s: param is null\n", __func__);
 		return;
 	}
 
 	if (param->event != CMI_API_MSG) {
-		pr_err("%s: unhandled event 0x%x\n", __func__, param->event);
+		pr_debug("%s: unhandled event 0x%x\n", __func__, param->event);
 		return;
 	}
 
@@ -2095,7 +2095,7 @@ static void wcd_cpe_cmi_lsm_callback(const struct cmi_api_notification *param)
 	session_id = CMI_HDR_GET_SESSION_ID(hdr);
 
 	if (session_id > WCD_CPE_LSM_MAX_SESSIONS) {
-		pr_err("%s: invalid lsm session id = %d\n",
+		pr_debug("%s: invalid lsm session id = %d\n",
 			__func__, session_id);
 		return;
 	}
@@ -2116,7 +2116,7 @@ static void wcd_cpe_cmi_lsm_callback(const struct cmi_api_notification *param)
 			(struct cpe_cmdrsp_shmem_alloc *) param->message;
 
 		if (cmdrsp_shmem_alloc->addr == 0) {
-			pr_err("%s: Failed LSM shared mem alloc\n", __func__);
+			pr_debug("%s: Failed LSM shared mem alloc\n", __func__);
 			lsm_session->cmd_err_code = CMI_SHMEM_ALLOC_FAILED;
 
 		} else {
@@ -2135,7 +2135,7 @@ static void wcd_cpe_cmi_lsm_callback(const struct cmi_api_notification *param)
 			(struct cpe_lsm_event_detect_v2 *) param->message;
 
 		if (!lsm_session->priv_d) {
-			pr_err("%s: private data is not present\n",
+			pr_debug("%s: private data is not present\n",
 				__func__);
 			return;
 		}
@@ -2187,7 +2187,7 @@ static int wcd_cpe_cmi_send_lsm_msg(
 	reinit_completion(&session->cmd_comp);
 	ret = cmi_send_msg(message);
 	if (ret) {
-		pr_err("%s: msg opcode (0x%x) send failed (%d)\n",
+		pr_debug("%s: msg opcode (0x%x) send failed (%d)\n",
 			__func__, hdr->opcode, ret);
 		goto rel_bus_vote;
 	}
@@ -2200,13 +2200,13 @@ static int wcd_cpe_cmi_send_lsm_msg(
 		if (session->cmd_err_code == CMI_SHMEM_ALLOC_FAILED)
 			session->cmd_err_code = CPE_ENOMEMORY;
 		if (session->cmd_err_code > 0)
-			pr_err("%s: CPE returned error[%s]\n",
+			pr_debug("%s: CPE returned error[%s]\n",
 				__func__, cpe_err_get_err_str(
 				session->cmd_err_code));
 		ret = cpe_err_get_lnx_err_code(session->cmd_err_code);
 		goto rel_bus_vote;
 	} else {
-		pr_err("%s: command (0x%x) send timed out\n",
+		pr_debug("%s: command (0x%x) send timed out\n",
 			__func__, hdr->opcode);
 		ret = -ETIMEDOUT;
 		goto rel_bus_vote;
@@ -2245,7 +2245,7 @@ static int fill_cmi_header(struct cmi_hdr *hdr,
 	if (!IS_VALID_SESSION_ID(session_id) ||
 	    !IS_VALID_SERVICE_ID(service_id) ||
 	    !IS_VALID_PLD_SIZE(payload_size)) {
-		pr_err("Invalid header creation request\n");
+		pr_debug("Invalid header creation request\n");
 		return -EINVAL;
 	}
 
@@ -2297,7 +2297,7 @@ static int wcd_cpe_is_valid_lsm_session(struct wcd_cpe_core *core,
 		const char *func)
 {
 	if (unlikely(IS_ERR_OR_NULL(core))) {
-		pr_err("%s: invalid handle to core\n",
+		pr_debug("%s: invalid handle to core\n",
 			func);
 		return -EINVAL;
 	}
@@ -2595,7 +2595,7 @@ static int wcd_cpe_send_lsm_cal(
 	int rc = 0;
 
 	if (core->cal_data[WCD_CPE_LSM_CAL_LSM] == NULL) {
-		pr_err("%s: LSM cal not allocated!\n", __func__);
+		pr_debug("%s: LSM cal not allocated!\n", __func__);
 		return -EINVAL;
 	}
 
@@ -2603,7 +2603,7 @@ static int wcd_cpe_send_lsm_cal(
 	lsm_cal = cal_utils_get_only_cal_block(
 			core->cal_data[WCD_CPE_LSM_CAL_LSM]);
 	if (!lsm_cal) {
-		pr_err("%s: failed to get lsm cal block\n", __func__);
+		pr_debug("%s: failed to get lsm cal block\n", __func__);
 		rc = -EINVAL;
 		goto unlock_cal_mutex;
 	}
@@ -2628,7 +2628,7 @@ static int wcd_cpe_send_lsm_cal(
 			lsm_cal->cal_data.size,
 			CPE_LSM_SESSION_CMD_SET_PARAMS);
 	if (rc) {
-		pr_err("%s: invalid params for header, err = %d\n",
+		pr_debug("%s: invalid params for header, err = %d\n",
 			__func__, rc);
 		goto free_msg;
 	}
@@ -2639,7 +2639,7 @@ static int wcd_cpe_send_lsm_cal(
 
 	rc = wcd_cpe_cmi_send_lsm_msg(core, session, inb_msg);
 	if (rc)
-		pr_err("%s: acdb lsm_params send failed, err = %d\n",
+		pr_debug("%s: acdb lsm_params send failed, err = %d\n",
 			__func__, rc);
 
 free_msg:
@@ -2870,7 +2870,7 @@ static int wcd_cpe_send_param_conf_levels(
 			   conf_level_data.num_active_models + pad_bytes,
 			   GFP_KERNEL);
 	if (!message) {
-		pr_err("%s: no memory for conf_level\n", __func__);
+		pr_debug("%s: no memory for conf_level\n", __func__);
 		return -ENOMEM;
 	}
 
@@ -2882,7 +2882,7 @@ static int wcd_cpe_send_param_conf_levels(
 	WCD_CPE_GRAB_LOCK(&session->lsm_lock, "lsm");
 	ret = wcd_cpe_cmi_send_lsm_msg(core, session, message);
 	if (ret)
-		pr_err("%s: lsm_set_conf_levels failed, err = %d\n",
+		pr_debug("%s: lsm_set_conf_levels failed, err = %d\n",
 			__func__, ret);
 	kfree(message);
 	WCD_CPE_REL_LOCK(&session->lsm_lock, "lsm");
@@ -3054,7 +3054,7 @@ static int wcd_cpe_set_one_param(void *core_handle,
 					       data, p_info->param_size);
 		break;
 	default:
-		pr_err("%s: wrong param_type 0x%x\n",
+		pr_debug("%s: wrong param_type 0x%x\n",
 			__func__, param_type);
 	}
 
@@ -3085,7 +3085,7 @@ static int wcd_cpe_lsm_set_params(struct wcd_cpe_core *core,
 	/* Send lsm calibration */
 	ret = wcd_cpe_send_lsm_cal(core, session);
 	if (ret) {
-		pr_err("%s: fail to sent acdb cal, err = %d",
+		pr_debug("%s: fail to sent acdb cal, err = %d",
 			__func__, ret);
 		goto err_ret;
 	}
@@ -3253,7 +3253,7 @@ static int wcd_cpe_lsm_get_afe_out_port_id(void *core_handle,
 	int rc = 0;
 
 	if (!core || !core->component) {
-		pr_err("%s: Invalid handle to %s\n",
+		pr_debug("%s: Invalid handle to %s\n",
 			__func__,
 			(!core) ? "core" : "codec");
 		rc = -EINVAL;
@@ -3495,11 +3495,11 @@ static int wcd_cpe_lsm_config_lab_latency(
 
 	if (fill_lsm_cmd_header_v0_inband(&cpe_lab_latency.hdr, session->id,
 		(u8) pld_size, CPE_LSM_SESSION_CMD_SET_PARAMS_V2)) {
-		pr_err("%s: Failed to create header\n", __func__);
+		pr_debug("%s: Failed to create header\n", __func__);
 		return -EINVAL;
 	}
 	if (latency == 0x00 || latency > WCD_CPE_LAB_MAX_LATENCY) {
-		pr_err("%s: Invalid latency %u\n",
+		pr_debug("%s: Invalid latency %u\n",
 			__func__, latency);
 		return -EINVAL;
 	}
@@ -3520,7 +3520,7 @@ static int wcd_cpe_lsm_config_lab_latency(
 	WCD_CPE_GRAB_LOCK(&session->lsm_lock, "lsm");
 	ret = wcd_cpe_cmi_send_lsm_msg(core, session, &cpe_lab_latency);
 	if (ret != 0)
-		pr_err("%s: lsm_set_params failed, error = %d\n",
+		pr_debug("%s: lsm_set_params failed, error = %d\n",
 		       __func__, ret);
 	WCD_CPE_REL_LOCK(&session->lsm_lock, "lsm");
 	return ret;
@@ -3572,7 +3572,7 @@ static int wcd_cpe_lsm_lab_control(
 	WCD_CPE_GRAB_LOCK(&session->lsm_lock, "lsm");
 	ret = wcd_cpe_cmi_send_lsm_msg(core, session, &cpe_lab_enable);
 	if (ret != 0) {
-		pr_err("%s: lsm_set_params failed, error = %d\n",
+		pr_debug("%s: lsm_set_params failed, error = %d\n",
 			__func__, ret);
 		WCD_CPE_REL_LOCK(&session->lsm_lock, "lsm");
 		goto done;
@@ -3606,7 +3606,7 @@ static int wcd_cpe_lsm_eob(
 	WCD_CPE_GRAB_LOCK(&session->lsm_lock, "lsm");
 	ret = wcd_cpe_cmi_send_lsm_msg(core, session, &lab_eob);
 	if (ret != 0)
-		pr_err("%s: lsm_set_params failed\n", __func__);
+		pr_debug("%s: lsm_set_params failed\n", __func__);
 	WCD_CPE_REL_LOCK(&session->lsm_lock, "lsm");
 
 	return ret;
@@ -3673,7 +3673,7 @@ static int wcd_cpe_lab_ch_setup(void *core_handle,
 	u8 cpe_intr_bits;
 
 	if (!core || !core->component) {
-		pr_err("%s: Invalid handle to %s\n",
+		pr_debug("%s: Invalid handle to %s\n",
 			__func__,
 			(!core) ? "core" : "codec");
 		rc = EINVAL;
@@ -3987,7 +3987,7 @@ static int wcd_cpe_cmi_send_afe_msg(
 
 	ret = cmi_send_msg(message);
 	if (ret) {
-		pr_err("%s: cmd 0x%x send failed, err = %d\n",
+		pr_debug("%s: cmd 0x%x send failed, err = %d\n",
 			__func__, hdr->opcode, ret);
 		goto rel_bus_vote;
 	}
@@ -4000,13 +4000,13 @@ static int wcd_cpe_cmi_send_afe_msg(
 		if (port_d->cmd_result == CMI_SHMEM_ALLOC_FAILED)
 			port_d->cmd_result = CPE_ENOMEMORY;
 		if (port_d->cmd_result > 0)
-			pr_err("%s: CPE returned error[%s]\n",
+			pr_debug("%s: CPE returned error[%s]\n",
 				__func__, cpe_err_get_err_str(
 				port_d->cmd_result));
 		ret = cpe_err_get_lnx_err_code(port_d->cmd_result);
 		goto rel_bus_vote;
 	} else {
-		pr_err("%s: command 0x%x send timed out\n",
+		pr_debug("%s: command 0x%x send timed out\n",
 			__func__, hdr->opcode);
 		ret = -ETIMEDOUT;
 		goto rel_bus_vote;
@@ -4052,7 +4052,7 @@ static int wcd_cpe_afe_shmem_alloc(
 
 	ret = wcd_cpe_cmi_send_afe_msg(core, port_d, &cmd_shmem_alloc);
 	if (ret) {
-		pr_err("%s: afe_shmem_alloc fail,ret = %d\n",
+		pr_debug("%s: afe_shmem_alloc fail,ret = %d\n",
 			__func__, ret);
 		goto end_ret;
 	}
@@ -4095,7 +4095,7 @@ static int wcd_cpe_afe_shmem_dealloc(
 	cmd_dealloc.addr = port_d->mem_handle;
 	ret = wcd_cpe_cmi_send_afe_msg(core, port_d, &cmd_dealloc);
 	if (ret) {
-		pr_err("failed to send shmem_dealloc cmd\n");
+		pr_debug("failed to send shmem_dealloc cmd\n");
 		goto end_ret;
 	}
 	memset(&port_d->mem_handle, 0,
@@ -4124,7 +4124,7 @@ static int wcd_cpe_send_afe_cal(void *core_handle,
 	bool is_obm_msg;
 
 	if (core->cal_data[WCD_CPE_LSM_CAL_AFE] == NULL) {
-		pr_err("%s: LSM cal not allocated!\n",
+		pr_debug("%s: LSM cal not allocated!\n",
 			__func__);
 		rc = -EINVAL;
 		goto rel_cal_mutex;
@@ -4134,7 +4134,7 @@ static int wcd_cpe_send_afe_cal(void *core_handle,
 	afe_cal = cal_utils_get_only_cal_block(
 			core->cal_data[WCD_CPE_LSM_CAL_AFE]);
 	if (!afe_cal) {
-		pr_err("%s: failed to get afe cal block\n",
+		pr_debug("%s: failed to get afe cal block\n",
 			__func__);
 		rc = -EINVAL;
 		goto rel_cal_mutex;
@@ -4220,7 +4220,7 @@ static int wcd_cpe_send_afe_cal(void *core_handle,
 
 	rc = wcd_cpe_cmi_send_afe_msg(core, port_d, msg);
 	if (rc)
-		pr_err("%s: afe cal for listen failed, rc = %d\n",
+		pr_debug("%s: afe cal for listen failed, rc = %d\n",
 			__func__, rc);
 
 	if (is_obm_msg) {
@@ -4248,7 +4248,7 @@ static int wcd_cpe_is_valid_port(struct wcd_cpe_core *core,
 		const char *func)
 {
 	if (unlikely(IS_ERR_OR_NULL(core))) {
-		pr_err("%s: Invalid core handle\n", func);
+		pr_debug("%s: Invalid core handle\n", func);
 		return -EINVAL;
 	}
 

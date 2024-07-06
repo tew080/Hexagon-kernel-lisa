@@ -15,8 +15,8 @@
 
 static void backtrace_test_normal(void)
 {
-	pr_info("Testing a backtrace from process context.\n");
-	pr_info("The following trace is a kernel self test and not a bug!\n");
+	pr_debug("Testing a backtrace from process context.\n");
+	pr_debug("The following trace is a kernel self test and not a bug!\n");
 
 	dump_stack();
 }
@@ -33,8 +33,8 @@ static DECLARE_TASKLET_OLD(backtrace_tasklet, &backtrace_test_irq_callback);
 
 static void backtrace_test_irq(void)
 {
-	pr_info("Testing a backtrace from irq context.\n");
-	pr_info("The following trace is a kernel self test and not a bug!\n");
+	pr_debug("Testing a backtrace from irq context.\n");
+	pr_debug("The following trace is a kernel self test and not a bug!\n");
 
 	init_completion(&backtrace_work);
 	tasklet_schedule(&backtrace_tasklet);
@@ -47,8 +47,8 @@ static void backtrace_test_saved(void)
 	unsigned long entries[8];
 	unsigned int nr_entries;
 
-	pr_info("Testing a saved backtrace.\n");
-	pr_info("The following trace is a kernel self test and not a bug!\n");
+	pr_debug("Testing a saved backtrace.\n");
+	pr_debug("The following trace is a kernel self test and not a bug!\n");
 
 	nr_entries = stack_trace_save(entries, ARRAY_SIZE(entries), 0);
 	stack_trace_print(entries, nr_entries, 0);
@@ -56,19 +56,19 @@ static void backtrace_test_saved(void)
 #else
 static void backtrace_test_saved(void)
 {
-	pr_info("Saved backtrace test skipped.\n");
+	pr_debug("Saved backtrace test skipped.\n");
 }
 #endif
 
 static int backtrace_regression_test(void)
 {
-	pr_info("====[ backtrace testing ]===========\n");
+	pr_debug("====[ backtrace testing ]===========\n");
 
 	backtrace_test_normal();
 	backtrace_test_irq();
 	backtrace_test_saved();
 
-	pr_info("====[ end of backtrace testing ]====\n");
+	pr_debug("====[ end of backtrace testing ]====\n");
 	return 0;
 }
 

@@ -948,7 +948,7 @@ static u32 _sde_crtc_get_displays_affected(struct drm_crtc *crtc,
 	int i;
 
 	if (!crtc || !state) {
-		pr_err("Invalid crtc or state\n");
+		pr_debug("Invalid crtc or state\n");
 		return 0;
 	}
 
@@ -2754,7 +2754,7 @@ static int sde_crtc_config_exposure_dim_layer(struct drm_crtc_state *crtc_state,
 	}
 
 	if (cstate->num_dim_layers == SDE_MAX_DIM_LAYERS - 1) {
-		pr_err("failed to get available dim layer for exposure\n");
+		pr_debug("failed to get available dim layer for exposure\n");
 		return -EINVAL;
 	}
 

@@ -888,14 +888,14 @@ static int qcs405_send_island_vad_config(int32_t be_id)
 		 */
 		rc = afe_send_port_island_mode(port_id);
 		if (rc) {
-			pr_err("%s: afe send island mode failed %d\n",
+			pr_debug("%s: afe send island mode failed %d\n",
 				__func__, rc);
 			return rc;
 		}
 
 		rc = afe_send_port_vad_cfg_params(port_id);
 		if (rc) {
-			pr_err("%s: afe send vad config failed %d\n",
+			pr_debug("%s: afe send vad config failed %d\n",
 				__func__, rc);
 			return rc;
 		}
@@ -1062,7 +1062,7 @@ static int slim_get_port_idx(struct snd_kcontrol *kcontrol)
 					   "SLIM_1_TX", sizeof("SLIM_1_TX"))) {
 		port_id = SLIM_TX_1;
 	} else {
-		pr_err("%s: unsupported channel: %s",
+		pr_debug("%s: unsupported channel: %s",
 			__func__, kcontrol->id.name);
 		return -EINVAL;
 	}
@@ -1135,7 +1135,7 @@ static int slim_tx_sample_rate_put(struct snd_kcontrol *kcontrol,
 
 	sample_rate = slim_get_sample_rate(ucontrol->value.enumerated.item[0]);
 	if (sample_rate == SAMPLING_RATE_44P1KHZ) {
-		pr_err("%s: Unsupported sample rate %d: for Tx path\n",
+		pr_debug("%s: Unsupported sample rate %d: for Tx path\n",
 			__func__, sample_rate);
 		return -EINVAL;
 	}
@@ -1460,7 +1460,7 @@ static int cdc_dma_get_port_idx(struct snd_kcontrol *kcontrol)
 		sizeof("VA_CDC_DMA_TX_1")))
 		idx = VA_CDC_DMA_TX_1;
 	else {
-		pr_err("%s: unsupported port: %s\n",
+		pr_debug("%s: unsupported port: %s\n",
 			__func__, kcontrol->id.name);
 		return -EINVAL;
 	}
@@ -2246,7 +2246,7 @@ static int ext_hdmi_get_port_idx(struct snd_kcontrol *kcontrol)
 		    sizeof("HDMI_RX"))) {
 		idx = HDMI_RX_IDX;
 	} else {
-		pr_err("%s: unsupported BE: %s",
+		pr_debug("%s: unsupported BE: %s",
 			__func__, kcontrol->id.name);
 		idx = -EINVAL;
 	}
@@ -2600,7 +2600,7 @@ static int tdm_get_mode(struct snd_kcontrol *kcontrol)
 		sizeof(kcontrol->id.name))) {
 		mode = TDM_SEN;
 	} else {
-		pr_err("%s: unsupported mode in: %s\n",
+		pr_debug("%s: unsupported mode in: %s\n",
 			__func__, kcontrol->id.name);
 		return -EINVAL;
 	}
@@ -2655,7 +2655,7 @@ static int tdm_get_port_idx(struct snd_kcontrol *kcontrol,
 			   sizeof(kcontrol->id.name))) {
 			port->channel = TDM_7;
 		} else {
-			pr_err("%s: unsupported channel in: %s\n",
+			pr_debug("%s: unsupported channel in: %s\n",
 				__func__, kcontrol->id.name);
 			return -EINVAL;
 		}
@@ -2671,7 +2671,7 @@ static int tdm_rx_sample_rate_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] = tdm_get_sample_rate_val(
@@ -2691,7 +2691,7 @@ static int tdm_rx_sample_rate_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_rx_cfg[port.mode][port.channel].sample_rate =
@@ -2711,7 +2711,7 @@ static int tdm_tx_sample_rate_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] = tdm_get_sample_rate_val(
@@ -2731,7 +2731,7 @@ static int tdm_tx_sample_rate_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_tx_cfg[port.mode][port.channel].sample_rate =
@@ -2793,7 +2793,7 @@ static int tdm_rx_format_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] = tdm_get_format_val(
@@ -2813,7 +2813,7 @@ static int tdm_rx_format_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_rx_cfg[port.mode][port.channel].bit_format =
@@ -2833,7 +2833,7 @@ static int tdm_tx_format_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] = tdm_get_format_val(
@@ -2853,7 +2853,7 @@ static int tdm_tx_format_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_tx_cfg[port.mode][port.channel].bit_format =
@@ -2873,7 +2873,7 @@ static int tdm_rx_ch_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 
@@ -2894,7 +2894,7 @@ static int tdm_rx_ch_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_rx_cfg[port.mode][port.channel].channels =
@@ -2914,7 +2914,7 @@ static int tdm_tx_ch_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] =
@@ -2934,7 +2934,7 @@ static int tdm_tx_ch_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_tx_cfg[port.mode][port.channel].channels =
@@ -3013,7 +3013,7 @@ static int tdm_slot_num_get(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -3031,7 +3031,7 @@ static int tdm_slot_num_put(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -3070,7 +3070,7 @@ static int tdm_slot_width_get(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -3109,7 +3109,7 @@ static int tdm_slot_width_put(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -3129,7 +3129,7 @@ static int tdm_rx_slot_mapping_get(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -3150,7 +3150,7 @@ static int tdm_rx_slot_mapping_put(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -3171,7 +3171,7 @@ static int tdm_tx_slot_mapping_get(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -3192,7 +3192,7 @@ static int tdm_tx_slot_mapping_put(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -3228,7 +3228,7 @@ static int aux_pcm_get_port_idx(struct snd_kcontrol *kcontrol)
 			 sizeof("SENN_AUX_PCM")))
 		idx = SEN_AUX_PCM;
 	else {
-		pr_err("%s: unsupported port: %s",
+		pr_debug("%s: unsupported port: %s",
 			__func__, kcontrol->id.name);
 		idx = -EINVAL;
 	}
@@ -3349,7 +3349,7 @@ static int mi2s_get_port_idx(struct snd_kcontrol *kcontrol)
 		 sizeof("SEN_MI2S_TX")))
 		idx = SEN_MI2S;
 	else {
-		pr_err("%s: unsupported channel: %s",
+		pr_debug("%s: unsupported channel: %s",
 			__func__, kcontrol->id.name);
 		idx = -EINVAL;
 	}
@@ -3808,7 +3808,7 @@ static int msm_meta_mi2s_get_port_idx(struct snd_kcontrol *kcontrol)
 		   sizeof("SEC_META_MI2S_RX"))) {
 		idx = SEC_META_MI2S;
 	} else {
-		pr_err("%s: unsupported port: %s",
+		pr_debug("%s: unsupported port: %s",
 			__func__, kcontrol->id.name);
 		idx = -EINVAL;
 	}
@@ -4023,7 +4023,7 @@ static int spdif_get_port_idx(struct snd_kcontrol *kcontrol)
 		 sizeof("SEC_SPDIF_TX")))
 		idx = SEC_SPDIF_TX;
 	else {
-		pr_err("%s: unsupported channel: %s",
+		pr_debug("%s: unsupported channel: %s",
 			__func__, kcontrol->id.name);
 		idx = -EINVAL;
 	}
@@ -5308,7 +5308,7 @@ static int msm_ext_hdmi_get_idx_from_beid(int32_t be_id)
 		idx = HDMI_RX_IDX;
 		break;
 	default:
-		pr_err("%s: Incorrect ext_hdmi BE id %d\n", __func__, be_id);
+		pr_debug("%s: Incorrect ext_hdmi BE id %d\n", __func__, be_id);
 		idx = -EINVAL;
 		break;
 	}
@@ -5413,7 +5413,7 @@ static int msm_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 	case MSM_BACKEND_DAI_SLIMBUS_5_TX:
 		component = snd_soc_rtdcom_lookup(rtd, "tasha_codec");
 		if (!component) {
-			pr_err("%s: component is NULL\n", __func__);
+			pr_debug("%s: component is NULL\n", __func__);
 			return -EINVAL;
 		}
 
@@ -5426,7 +5426,7 @@ static int msm_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 			rc = afe_set_config(AFE_SLIMBUS_SLAVE_PORT_CONFIG,
 					    config, SLIMBUS_5_TX);
 			if (rc)
-				pr_err("%s: Failed to set slimbus slave port config %d\n",
+				pr_debug("%s: Failed to set slimbus slave port config %d\n",
 					__func__, rc);
 		}
 		break;
@@ -5870,7 +5870,7 @@ static int msm_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 		idx = msm_ext_hdmi_get_idx_from_beid(dai_link->id);
 
 		if (idx < 0) {
-			pr_err("%s: Incorrect ext hdmi idx %d\n",
+			pr_debug("%s: Incorrect ext hdmi idx %d\n",
 			       __func__, idx);
 			rc = idx;
 			goto done;
@@ -5979,7 +5979,7 @@ static int msm_adsp_power_up_config(struct snd_soc_component *component,
 	} while (time_after(timeout, jiffies));
 
 	if (!snd_card_online || !adsp_ready) {
-		pr_err("%s: Timeout. Sound card is %s, ADSP Audio is %s\n",
+		pr_debug("%s: Timeout. Sound card is %s, ADSP Audio is %s\n",
 		       __func__,
 		       snd_card_online ? "Online" : "Offline",
 		       adsp_ready ? "ready" : "not ready");
@@ -5989,7 +5989,7 @@ static int msm_adsp_power_up_config(struct snd_soc_component *component,
 
 	ret = msm_afe_set_config(component);
 	if (ret)
-		pr_err("%s: Failed to set AFE config. err %d\n",
+		pr_debug("%s: Failed to set AFE config. err %d\n",
 			__func__, ret);
 
 	return 0;
@@ -6099,7 +6099,7 @@ static int msm_audrx_init(struct snd_soc_pcm_runtime *rtd)
 	ret = snd_soc_add_component_controls(component, msm_snd_sb_controls,
 					 ARRAY_SIZE(msm_snd_sb_controls));
 	if (ret < 0) {
-		pr_err("%s: add_codec_controls failed, err %d\n",
+		pr_debug("%s: add_codec_controls failed, err %d\n",
 			__func__, ret);
 		return ret;
 	}
@@ -6172,7 +6172,7 @@ static int msm_va_cdc_dma_init(struct snd_soc_pcm_runtime *rtd)
 
 	component = snd_soc_rtdcom_lookup(rtd, "bolero_codec");
 	if (!component) {
-		pr_err("%s: component is NULL\n", __func__);
+		pr_debug("%s: component is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -6227,7 +6227,7 @@ static int msm_wsa_cdc_dma_init(struct snd_soc_pcm_runtime *rtd)
 
 	component = snd_soc_rtdcom_lookup(rtd, "bolero_codec");
 	if (!component) {
-		pr_err("%s: component is NULL\n", __func__);
+		pr_debug("%s: component is NULL\n", __func__);
 		return -EINVAL;
 	}
 	dapm = snd_soc_component_get_dapm(component);
@@ -6312,7 +6312,7 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_get_channel_map(codec_dai,
 					&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
 		if (ret < 0) {
-			pr_err("%s: failed to get codec chan map, err:%d\n",
+			pr_debug("%s: failed to get codec chan map, err:%d\n",
 				__func__, ret);
 			goto err;
 		}
@@ -6336,7 +6336,7 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai, 0, 0,
 						  rx_ch_count, rx_ch);
 		if (ret < 0) {
-			pr_err("%s: failed to set cpu chan map, err:%d\n",
+			pr_debug("%s: failed to set cpu chan map, err:%d\n",
 				__func__, ret);
 			goto err;
 		}
@@ -6347,7 +6347,7 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_get_channel_map(codec_dai,
 					 &tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
 		if (ret < 0) {
-			pr_err("%s: failed to get tx codec chan map, err:%d\n",
+			pr_debug("%s: failed to get tx codec chan map, err:%d\n",
 				__func__, ret);
 			goto err;
 		}
@@ -6369,7 +6369,7 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai,
 						  user_set_tx_ch, tx_ch, 0, 0);
 		if (ret < 0)
-			pr_err("%s: failed to set tx cpu chan map, err:%d\n",
+			pr_debug("%s: failed to set tx cpu chan map, err:%d\n",
 				__func__, ret);
 	}
 
@@ -6385,7 +6385,7 @@ static int msm_snd_auxpcm_startup(struct snd_pcm_substream *substream)
 
 	ret = qcs405_send_island_vad_config(dai_link->id);
 	if (ret) {
-		pr_err("%s: send island/vad cfg failed, err = %d\n",
+		pr_debug("%s: send island/vad cfg failed, err = %d\n",
 		__func__, ret);
 	}
 	return ret;
@@ -6399,7 +6399,7 @@ static int msm_snd_cdc_dma_startup(struct snd_pcm_substream *substream)
 
 	ret = qcs405_send_island_vad_config(dai_link->id);
 	if (ret) {
-		pr_err("%s: send island/vad cfg failed, err = %d\n",
+		pr_debug("%s: send island/vad cfg failed, err = %d\n",
 		__func__, ret);
 	}
 	return ret;
@@ -6424,7 +6424,7 @@ static int msm_snd_cdc_dma_hw_params(struct snd_pcm_substream *substream,
 				&tx_ch_cnt, &tx_ch_cdc_dma, &rx_ch_cnt,
 				&rx_ch_cdc_dma);
 	if (ret < 0) {
-		pr_err("%s: failed to get codec chan map, err:%d\n",
+		pr_debug("%s: failed to get codec chan map, err:%d\n",
 			__func__, ret);
 		goto err;
 	}
@@ -6441,7 +6441,7 @@ static int msm_snd_cdc_dma_hw_params(struct snd_pcm_substream *substream,
 			ret = snd_soc_dai_set_channel_map(cpu_dai, 0, 0,
 					  user_set_rx_ch, &rx_ch_cdc_dma);
 			if (ret < 0) {
-				pr_err("%s: failed to set cpu chan map, err:%d\n",
+				pr_debug("%s: failed to set cpu chan map, err:%d\n",
 				__func__, ret);
 				goto err;
 			}
@@ -6472,7 +6472,7 @@ static int msm_snd_cdc_dma_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai, user_set_tx_ch,
 					&tx_ch_cdc_dma, 0, 0);
 		if (ret < 0) {
-			pr_err("%s: failed to set cpu chan map, err:%d\n",
+			pr_debug("%s: failed to set cpu chan map, err:%d\n",
 			__func__, ret);
 			goto err;
 		}
@@ -6559,7 +6559,7 @@ static int msm_get_port_id(int be_id)
 		afe_port_id = AFE_PORT_ID_SENARY_MI2S_TX;
 		break;
 	default:
-		pr_err("%s: Invalid BE id: %d\n", __func__, be_id);
+		pr_debug("%s: Invalid BE id: %d\n", __func__, be_id);
 		afe_port_id = -EINVAL;
 	}
 
@@ -6675,7 +6675,7 @@ static int msm_tdm_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 		rate->min = rate->max =
 				tdm_rx_cfg[TDM_SEN][TDM_0].sample_rate;
 	} else {
-		pr_err("%s: dai id 0x%x not supported\n",
+		pr_debug("%s: dai id 0x%x not supported\n",
 			__func__, cpu_dai->id);
 		return -EINVAL;
 	}
@@ -6777,7 +6777,7 @@ static int qcs405_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		slot_offset = tdm_tx_slot_offset[TDM_SEN];
 		break;
 	default:
-		pr_err("%s: dai id 0x%x not supported\n",
+		pr_debug("%s: dai id 0x%x not supported\n",
 			__func__, cpu_dai->id);
 		return -EINVAL;
 	}
@@ -6790,13 +6790,13 @@ static int qcs405_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 	}
 
 	if (offset_channels == 0) {
-		pr_err("%s: invalid offset_channels %d\n",
+		pr_debug("%s: invalid offset_channels %d\n",
 			__func__, offset_channels);
 		return -EINVAL;
 	}
 
 	if (channels > offset_channels) {
-		pr_err("%s: channels %d exceed offset_channels %d\n",
+		pr_debug("%s: channels %d exceed offset_channels %d\n",
 			__func__, channels, offset_channels);
 		return -EINVAL;
 	}
@@ -6811,7 +6811,7 @@ static int qcs405_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_tdm_slot(cpu_dai, 0, slot_mask,
 			slots, slot_width);
 		if (ret < 0) {
-			pr_err("%s: failed to set tdm rx slot, err:%d\n",
+			pr_debug("%s: failed to set tdm rx slot, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -6819,7 +6819,7 @@ static int qcs405_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai,
 			0, NULL, channels, slot_offset);
 		if (ret < 0) {
-			pr_err("%s: failed to set tdm rx channel map, err:%d\n",
+			pr_debug("%s: failed to set tdm rx channel map, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -6833,7 +6833,7 @@ static int qcs405_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_tdm_slot(cpu_dai, slot_mask, 0,
 			slots, slot_width);
 		if (ret < 0) {
-			pr_err("%s: failed to set tdm tx slot, err:%d\n",
+			pr_debug("%s: failed to set tdm tx slot, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -6841,13 +6841,13 @@ static int qcs405_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai,
 			channels, slot_offset, 0, NULL);
 		if (ret < 0) {
-			pr_err("%s: failed to set tdm tx channel map, err:%d\n",
+			pr_debug("%s: failed to set tdm tx channel map, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
 	} else {
 		ret = -EINVAL;
-		pr_err("%s: invalid use case, err:%d\n",
+		pr_debug("%s: invalid use case, err:%d\n",
 			__func__, ret);
 		goto end;
 	}
@@ -6856,13 +6856,13 @@ static int qcs405_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 	clk_freq = rate * slot_width * slots;
 	if (clk_freq > TDM_MAX_CLK_FREQ) {
 		ret = -EINVAL;
-		pr_err("%s: clk frequency > 24.576MHz %d\n",
+		pr_debug("%s: clk frequency > 24.576MHz %d\n",
 			__func__, clk_freq);
 		goto end;
 	}
 	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, clk_freq, SND_SOC_CLOCK_OUT);
 	if (ret < 0)
-		pr_err("%s: failed to set tdm clk, err:%d\n",
+		pr_debug("%s: failed to set tdm clk, err:%d\n",
 			__func__, ret);
 
 end:
@@ -6899,7 +6899,7 @@ static int msm_get_tdm_mode(u32 port_id)
 		tdm_mode = TDM_SEN;
 		break;
 	default:
-		pr_err("%s: Invalid port id: %d\n", __func__, port_id);
+		pr_debug("%s: Invalid port id: %d\n", __func__, port_id);
 		tdm_mode = -EINVAL;
 	}
 	return tdm_mode;
@@ -6917,7 +6917,7 @@ static int qcs405_tdm_snd_startup(struct snd_pcm_substream *substream)
 
 	if (tdm_mode >= TDM_INTERFACE_MAX) {
 		ret = -EINVAL;
-		pr_err("%s: Invalid TDM interface %d\n",
+		pr_debug("%s: Invalid TDM interface %d\n",
 			__func__, ret);
 		return ret;
 	}
@@ -6926,7 +6926,7 @@ static int qcs405_tdm_snd_startup(struct snd_pcm_substream *substream)
 		ret = msm_cdc_pinctrl_select_active_state(
 			pdata->mi2s_gpio_p[tdm_mode]);
 		if (ret)
-			pr_err("%s: TDM GPIO pinctrl set active failed with %d\n",
+			pr_debug("%s: TDM GPIO pinctrl set active failed with %d\n",
 				__func__, ret);
 	}
 
@@ -6937,20 +6937,20 @@ static int qcs405_tdm_snd_startup(struct snd_pcm_substream *substream)
 						pdata->tdm_micb_voltage,
 						pdata->tdm_micb_voltage);
 			if (ret) {
-				pr_err("%s: Setting voltage failed, err = %d\n",
+				pr_debug("%s: Setting voltage failed, err = %d\n",
 					__func__, ret);
 				return ret;
 			}
 			ret = regulator_set_load(pdata->tdm_micb_supply,
 						pdata->tdm_micb_current);
 			if (ret) {
-				pr_err("%s: Setting current failed, err = %d\n",
+				pr_debug("%s: Setting current failed, err = %d\n",
 					__func__, ret);
 				return ret;
 			}
 			ret = regulator_enable(pdata->tdm_micb_supply);
 			if (ret) {
-				pr_err("%s: regulator enable failed, err = %d\n",
+				pr_debug("%s: regulator enable failed, err = %d\n",
 					__func__, ret);
 				return ret;
 			}
@@ -6959,7 +6959,7 @@ static int qcs405_tdm_snd_startup(struct snd_pcm_substream *substream)
 
 	ret = qcs405_send_island_vad_config(dai_link->id);
 	if (ret) {
-		pr_err("%s: send island/vad cfg failed, err = %d\n",
+		pr_debug("%s: send island/vad cfg failed, err = %d\n",
 		__func__, ret);
 		return ret;
 	}
@@ -6980,7 +6980,7 @@ static void qcs405_tdm_snd_shutdown(struct snd_pcm_substream *substream)
 		if (pdata->tdm_micb_supply) {
 			ret = regulator_disable(pdata->tdm_micb_supply);
 			if (ret)
-				pr_err("%s: regulator disable failed, err = %d\n",
+				pr_debug("%s: regulator disable failed, err = %d\n",
 					__func__, ret);
 			regulator_set_voltage(pdata->tdm_micb_supply, 0,
 					pdata->tdm_micb_voltage);
@@ -6992,7 +6992,7 @@ static void qcs405_tdm_snd_shutdown(struct snd_pcm_substream *substream)
 		ret = msm_cdc_pinctrl_select_sleep_state(
 			pdata->mi2s_gpio_p[tdm_mode]);
 		if (ret)
-			pr_err("%s: TDM GPIO pinctrl set sleep failed with %d\n",
+			pr_debug("%s: TDM GPIO pinctrl set sleep failed with %d\n",
 				__func__, ret);
 	}
 }
@@ -7109,13 +7109,13 @@ static int msm_mi2s_snd_startup(struct snd_pcm_substream *substream)
 		fmt = SND_SOC_DAIFMT_CBM_CFM;
 	ret = snd_soc_dai_set_fmt(cpu_dai, fmt);
 	if (ret < 0) {
-		pr_err("%s: set fmt cpu dai failed for MI2S (%d), err:%d\n",
+		pr_debug("%s: set fmt cpu dai failed for MI2S (%d), err:%d\n",
 			__func__, index, ret);
 		goto clk_off;
 	}
 	ret = qcs405_send_island_vad_config(dai_link->id);
 	if (ret) {
-		pr_err("%s: send island/vad cfg failed, err = %d\n",
+		pr_debug("%s: send island/vad cfg failed, err = %d\n",
 		__func__, ret);
 		return ret;
 	}
@@ -7180,7 +7180,7 @@ static void msm_mi2s_snd_shutdown(struct snd_pcm_substream *substream)
 	pr_debug("%s(): substream = %s  stream = %d\n", __func__,
 		 substream->name, substream->stream);
 	if (index < PRIM_MI2S || index >= MI2S_MAX) {
-		pr_err("%s:invalid MI2S DAI(%d)\n", __func__, index);
+		pr_debug("%s:invalid MI2S DAI(%d)\n", __func__, index);
 		return;
 	}
 
@@ -7208,7 +7208,7 @@ static void msm_mi2s_snd_shutdown(struct snd_pcm_substream *substream)
 
 		ret = msm_mi2s_set_sclk(substream, false);
 		if (ret < 0)
-			pr_err("%s:clock disable failed for MI2S (%d); ret=%d\n",
+			pr_debug("%s:clock disable failed for MI2S (%d); ret=%d\n",
 				__func__, index, ret);
 	}
 	mutex_unlock(&mi2s_intf_conf[index].lock);
@@ -7332,12 +7332,12 @@ static int msm_meta_mi2s_snd_startup(struct snd_pcm_substream *substream)
 						clk_src_name[CLK_SRC_INTEGRAL]);
 			}
 			if (ret < 0)
-				pr_err("%s: afe_set_source_name fail %d\n",
+				pr_debug("%s: afe_set_source_name fail %d\n",
 					 __func__, ret);
 
 			ret = snd_soc_dai_set_fmt(cpu_dai, fmt);
 			if (ret < 0) {
-				pr_err("%s: set fmt cpu dai failed for META_MI2S (%d), err:%d\n",
+				pr_debug("%s: set fmt cpu dai failed for META_MI2S (%d), err:%d\n",
 					__func__, index, ret);
 				goto clk_off;
 			}
@@ -7377,7 +7377,7 @@ static void msm_meta_mi2s_snd_shutdown(struct snd_pcm_substream *substream)
 	pr_debug("%s(): substream = %s  stream = %d\n", __func__,
 		 substream->name, substream->stream);
 	if (index < PRIM_MI2S || index >= MI2S_MAX) {
-		pr_err("%s:invalid MI2S DAI(%d)\n", __func__, index);
+		pr_debug("%s:invalid MI2S DAI(%d)\n", __func__, index);
 		return;
 	}
 
@@ -7390,7 +7390,7 @@ static void msm_meta_mi2s_snd_shutdown(struct snd_pcm_substream *substream)
 
 		ret = msm_meta_mi2s_set_sclk(substream, member_port, false);
 		if (ret < 0)
-			pr_err("%s:clock disable failed for META MI2S (%d); ret=%d\n",
+			pr_debug("%s:clock disable failed for META MI2S (%d); ret=%d\n",
 				__func__, index, ret);
 	}
 }
@@ -7515,13 +7515,13 @@ static void msm_spdif_snd_shutdown(struct snd_pcm_substream *substream)
 		 substream->name, substream->stream);
 	if (port_id < AFE_PORT_ID_PRIMARY_SPDIF_RX ||
 	    port_id > AFE_PORT_ID_SECONDARY_SPDIF_TX) {
-		pr_err("%s:invalid SPDIF DAI(%d)\n", __func__, port_id);
+		pr_debug("%s:invalid SPDIF DAI(%d)\n", __func__, port_id);
 		return;
 	}
 
 	ret = msm_spdif_set_clk(substream, false);
 	if (ret < 0)
-		pr_err("%s:clock disable failed for SPDIF (%d); ret=%d\n",
+		pr_debug("%s:clock disable failed for SPDIF (%d); ret=%d\n",
 			__func__, port_id, ret);
 }
 
@@ -9386,7 +9386,7 @@ static int msm_snd_card_tasha_late_probe(struct snd_soc_card *card)
 	ret = audio_notifier_register("qcs405", AUDIO_NOTIFIER_ADSP_DOMAIN,
 				      &service_nb);
 	if (ret < 0)
-		pr_err("%s: Audio notifier register failed ret = %d\n",
+		pr_debug("%s: Audio notifier register failed ret = %d\n",
 			__func__, ret);
 
 	return ret;
@@ -9405,7 +9405,7 @@ static int msm_snd_vad_cfg_put(struct snd_kcontrol *kcontrol,
 	if ((preroll_config < 0) || (preroll_config > 1000) ||
 	    (vad_enable < 0) || (vad_enable > 1) ||
 	    (vad_intf > MSM_BACKEND_DAI_MAX)) {
-		pr_err("%s: Invalid arguments\n", __func__);
+		pr_debug("%s: Invalid arguments\n", __func__);
 		ret = -EINVAL;
 		goto done;
 	}
@@ -9415,7 +9415,7 @@ static int msm_snd_vad_cfg_put(struct snd_kcontrol *kcontrol,
 
 	ret = msm_island_vad_get_portid_from_beid(vad_intf, &port_id);
 	if (ret) {
-		pr_err("%s: Invalid vad interface\n", __func__);
+		pr_debug("%s: Invalid vad interface\n", __func__);
 		goto done;
 	}
 
@@ -9469,7 +9469,7 @@ static int msm_populate_dai_link_component_of_node(
 	struct device_node *np;
 
 	if (!cdev) {
-		pr_err("%s: Sound card device memory NULL\n", __func__);
+		pr_debug("%s: Sound card device memory NULL\n", __func__);
 		return -ENODEV;
 	}
 
@@ -9484,7 +9484,7 @@ static int msm_populate_dai_link_component_of_node(
 						"asoc-platform-names",
 						dai_link[i].platform_name);
 			if (index < 0) {
-				pr_err("%s: No match found for platform name: %s\n",
+				pr_debug("%s: No match found for platform name: %s\n",
 					__func__, dai_link[i].platform_name);
 				ret = index;
 				goto err;
@@ -9492,7 +9492,7 @@ static int msm_populate_dai_link_component_of_node(
 			np = of_parse_phandle(cdev->of_node, "asoc-platform",
 					      index);
 			if (!np) {
-				pr_err("%s: retrieving phandle for platform %s, index %d failed\n",
+				pr_debug("%s: retrieving phandle for platform %s, index %d failed\n",
 					__func__, dai_link[i].platform_name,
 					index);
 				ret = -ENODEV;
@@ -9511,7 +9511,7 @@ static int msm_populate_dai_link_component_of_node(
 				np = of_parse_phandle(cdev->of_node, "asoc-cpu",
 						index);
 				if (!np) {
-					pr_err("%s: retrieving phandle for cpu dai %s failed\n",
+					pr_debug("%s: retrieving phandle for cpu dai %s failed\n",
 						__func__,
 						dai_link[i].cpu_dai_name);
 					ret = -ENODEV;
@@ -9532,7 +9532,7 @@ static int msm_populate_dai_link_component_of_node(
 			np = of_parse_phandle(cdev->of_node, "asoc-codec",
 					      index);
 			if (!np) {
-				pr_err("%s: retrieving phandle for codec %s failed\n",
+				pr_debug("%s: retrieving phandle for codec %s failed\n",
 					__func__, dai_link[i].codec_name);
 				ret = -ENODEV;
 				goto err;
@@ -9869,7 +9869,7 @@ static int msm_wsa881x_init(struct snd_soc_component *component)
 	int ret = 0;
 
 	if (!component) {
-		pr_err("%s component is NULL\n", __func__);
+		pr_debug("%s component is NULL\n", __func__);
 		return -EINVAL;
 	}
 	dapm = snd_soc_component_get_dapm(component);
@@ -10099,7 +10099,7 @@ err:
 static int msm_csra66x0_init(struct snd_soc_component *component)
 {
 	if (!component) {
-		pr_err("%s component is NULL\n", __func__);
+		pr_debug("%s component is NULL\n", __func__);
 		return -EINVAL;
 	}
 	return 0;
@@ -10544,7 +10544,7 @@ static int msm_asoc_machine_probe(struct platform_device *pdev)
 		pdata->mi2s_dsd_mode[PRIM_MI2S] =
 			devm_ioremap(&pdev->dev, v_base_addr, 4);
 		if (pdata->mi2s_dsd_mode[PRIM_MI2S] == NULL) {
-			pr_err("%s ioremap failure for muxsel virt addr dsd prim\n",
+			pr_debug("%s ioremap failure for muxsel virt addr dsd prim\n",
 				__func__);
 		}
 	}
@@ -10556,7 +10556,7 @@ static int msm_asoc_machine_probe(struct platform_device *pdev)
 		pdata->mi2s_dsd_mode[QUAT_MI2S] =
 			devm_ioremap(&pdev->dev, v_base_addr, 4);
 		if (pdata->mi2s_dsd_mode[QUAT_MI2S] == NULL) {
-			pr_err("%s ioremap failure for muxsel virt addr dsd quat\n",
+			pr_debug("%s ioremap failure for muxsel virt addr dsd quat\n",
 				__func__);
 		}
 	}

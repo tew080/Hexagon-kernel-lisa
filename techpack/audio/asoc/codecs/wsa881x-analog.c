@@ -212,13 +212,13 @@ static int wsa881x_i2c_write_device(struct wsa881x_pdata *wsa881x,
 
 	wsa881x_index = get_i2c_wsa881x_device_index(reg);
 	if (wsa881x_index < 0) {
-		pr_err_ratelimited("%s:invalid register to write\n", __func__);
+		pr_debug_ratelimited("%s:invalid register to write\n", __func__);
 		return -EINVAL;
 	}
 	if (wsa881x->regmap_flag) {
 		rc = regmap_write(wsa881x->regmap[wsa881x_index], reg, val);
 		for (i = 0; rc && i < ARRAY_SIZE(delay_array_msec); i++) {
-			pr_err_ratelimited("Failed writing reg=%u-retry(%d)\n",
+			pr_debug_ratelimited("Failed writing reg=%u-retry(%d)\n",
 							reg, i);
 			/* retry after delay of increasing order */
 			msleep(delay_array_msec[i]);
@@ -226,7 +226,7 @@ static int wsa881x_i2c_write_device(struct wsa881x_pdata *wsa881x,
 								reg, val);
 		}
 		if (rc)
-			pr_err_ratelimited("Failed writing reg=%u rc=%d\n",
+			pr_debug_ratelimited("Failed writing reg=%u rc=%d\n",
 							reg, rc);
 		else
 			pr_debug("write success register = %x val = %x\n",
@@ -248,7 +248,7 @@ static int wsa881x_i2c_write_device(struct wsa881x_pdata *wsa881x,
 					wsa881x->client[wsa881x_index]->adapter,
 							wsa881x->xfer_msg, 1);
 			if (ret != 1) {
-				pr_err_ratelimited("failed to write the device\n");
+				pr_debug_ratelimited("failed to write the device\n");
 				return ret;
 			}
 		}
@@ -270,13 +270,13 @@ static int wsa881x_i2c_read_device(struct wsa881x_pdata *wsa881x,
 
 	wsa881x_index = get_i2c_wsa881x_device_index(reg);
 	if (wsa881x_index < 0) {
-		pr_err_ratelimited("%s:invalid register to read\n", __func__);
+		pr_debug_ratelimited("%s:invalid register to read\n", __func__);
 		return -EINVAL;
 	}
 	if (wsa881x->regmap_flag) {
 		rc = regmap_read(wsa881x->regmap[wsa881x_index], reg, &val);
 		for (i = 0; rc && i < ARRAY_SIZE(delay_array_msec); i++) {
-			pr_err_ratelimited("Failed reading reg=%u - retry(%d)\n",
+			pr_debug_ratelimited("Failed reading reg=%u - retry(%d)\n",
 								reg, i);
 			/* retry after delay of increasing order */
 			msleep(delay_array_msec[i]);
@@ -284,7 +284,7 @@ static int wsa881x_i2c_read_device(struct wsa881x_pdata *wsa881x,
 						reg, &val);
 		}
 		if (rc) {
-			pr_err_ratelimited("Failed reading reg=%u rc=%d\n",
+			pr_debug_ratelimited("Failed reading reg=%u rc=%d\n",
 								 reg, rc);
 			return rc;
 		}
@@ -313,14 +313,14 @@ static int wsa881x_i2c_read_device(struct wsa881x_pdata *wsa881x,
 				wsa881x->client[wsa881x_index]->adapter,
 						wsa881x->xfer_msg, 2);
 			if (ret != 2) {
-				pr_err_ratelimited("failed to read wsa register:%d\n",
+				pr_debug_ratelimited("failed to read wsa register:%d\n",
 								reg);
 				return ret;
 			}
 		}
 		val = dest[0];
 	} else {
-		pr_err("failed for i2c client is not initilized\n");
+		pr_debug("failed for i2c client is not initilized\n");
 		return -EINVAL;
 	}
 	return val;
@@ -333,7 +333,7 @@ static unsigned int wsa881x_i2c_read(struct snd_soc_component *component,
 	int wsa881x_index;
 
 	if (component == NULL) {
-		pr_err_ratelimited("%s: invalid component\n", __func__);
+		pr_debug_ratelimited("%s: invalid component\n", __func__);
 		return -EINVAL;
 	}
 	wsa881x = snd_soc_component_get_drvdata(component);
@@ -342,7 +342,7 @@ static unsigned int wsa881x_i2c_read(struct snd_soc_component *component,
 
 	wsa881x_index = get_i2c_wsa881x_device_index(reg);
 	if (wsa881x_index < 0) {
-		pr_err_ratelimited("%s:invalid register to read\n", __func__);
+		pr_debug_ratelimited("%s:invalid register to read\n", __func__);
 		return -EINVAL;
 	}
 	return wsa881x_i2c_read_device(wsa881x, reg);
@@ -356,7 +356,7 @@ static int wsa881x_i2c_write(struct snd_soc_component *component,
 	int wsa881x_index;
 
 	if (component == NULL) {
-		pr_err_ratelimited("%s: invalid component\n", __func__);
+		pr_debug_ratelimited("%s: invalid component\n", __func__);
 		return -EINVAL;
 	}
 	wsa881x = snd_soc_component_get_drvdata(component);
@@ -365,7 +365,7 @@ static int wsa881x_i2c_write(struct snd_soc_component *component,
 
 	wsa881x_index = get_i2c_wsa881x_device_index(reg);
 	if (wsa881x_index < 0) {
-		pr_err_ratelimited("%s:invalid register to read\n", __func__);
+		pr_debug_ratelimited("%s:invalid register to read\n", __func__);
 		return -EINVAL;
 	}
 	return wsa881x_i2c_write_device(wsa881x, reg, val);
@@ -738,7 +738,7 @@ static int wsa881x_spkr_pa_ctrl(struct snd_soc_component *component,
 			ret = msm_cdc_pinctrl_select_active_state(
 						wsa881x->wsa_vi_gpio_p);
 			if (ret) {
-				pr_err("%s: gpio set cannot be activated %s\n",
+				pr_debug("%s: gpio set cannot be activated %s\n",
 					__func__, "wsa_vi");
 				return ret;
 			}
@@ -898,7 +898,7 @@ static int wsa881x_rdac_event(struct snd_soc_dapm_widget *w,
 	case SND_SOC_DAPM_PRE_PMU:
 		ret = wsa881x_startup(wsa881x);
 		if (ret) {
-			pr_err("%s: wsa startup failed ret: %d", __func__, ret);
+			pr_debug("%s: wsa startup failed ret: %d", __func__, ret);
 			return ret;
 		}
 		wsa881x_clk_ctrl(component, true);
@@ -946,7 +946,7 @@ static int wsa881x_rdac_event(struct snd_soc_dapm_widget *w,
 			ret = msm_cdc_pinctrl_select_sleep_state(
 						wsa881x->wsa_vi_gpio_p);
 			if (ret) {
-				pr_err("%s: gpio set cannot be suspended %s\n",
+				pr_debug("%s: gpio set cannot be suspended %s\n",
 					__func__, "wsa_vi");
 				return ret;
 			}
@@ -959,13 +959,13 @@ static int wsa881x_rdac_event(struct snd_soc_dapm_widget *w,
 		wsa881x_bandgap_ctrl(component, false);
 		ret = wsa881x_shutdown(wsa881x);
 		if (ret < 0) {
-			pr_err("%s: wsa shutdown failed ret: %d",
+			pr_debug("%s: wsa shutdown failed ret: %d",
 					__func__, ret);
 			return ret;
 		}
 		break;
 	default:
-		pr_err("%s: invalid event:%d\n", __func__, event);
+		pr_debug("%s: invalid event:%d\n", __func__, event);
 		return -EINVAL;
 	}
 	return 0;
@@ -1028,7 +1028,7 @@ static int wsa881x_spkr_pa_event(struct snd_soc_dapm_widget *w,
 				WSA881X_SPKR_OCP_CTL, 0xC0, 0xC0);
 		break;
 	default:
-		pr_err("%s: invalid event:%d\n", __func__, event);
+		pr_debug("%s: invalid event:%d\n", __func__, event);
 		return -EINVAL;
 	}
 	return 0;
@@ -1073,13 +1073,13 @@ static int wsa881x_startup(struct wsa881x_pdata *pdata)
 		return 0;
 	ret = msm_cdc_pinctrl_select_active_state(pdata->wsa_clk_gpio_p);
 	if (ret) {
-		pr_err("%s: gpio set cannot be activated %s\n",
+		pr_debug("%s: gpio set cannot be activated %s\n",
 			__func__, "wsa_clk");
 		return ret;
 	}
 	ret = clk_prepare_enable(pdata->wsa_mclk);
 	if (ret) {
-		pr_err("%s: WSA MCLK enable failed\n",
+		pr_debug("%s: WSA MCLK enable failed\n",
 			__func__);
 		return ret;
 	}
@@ -1097,7 +1097,7 @@ static int wsa881x_shutdown(struct wsa881x_pdata *pdata)
 		return 0;
 	ret = wsa881x_reset(pdata, false);
 	if (ret) {
-		pr_err("%s: wsa reset failed suspend %d\n",
+		pr_debug("%s: wsa reset failed suspend %d\n",
 			__func__, ret);
 		return ret;
 	}
@@ -1107,7 +1107,7 @@ static int wsa881x_shutdown(struct wsa881x_pdata *pdata)
 
 	ret = msm_cdc_pinctrl_select_sleep_state(pdata->wsa_clk_gpio_p);
 	if (ret) {
-		pr_err("%s: gpio set cannot be suspended %s\n",
+		pr_debug("%s: gpio set cannot be suspended %s\n",
 			__func__, "wsa_clk");
 		return ret;
 	}
@@ -1319,21 +1319,21 @@ static int wsa881x_reset(struct wsa881x_pdata *pdata, bool enable)
 		ret = msm_cdc_pinctrl_select_active_state(
 					pdata->wsa_reset_gpio_p);
 		if (ret) {
-			pr_err("%s: gpio set cannot be activated %s\n",
+			pr_debug("%s: gpio set cannot be activated %s\n",
 				__func__, "wsa_reset");
 			return ret;
 		}
 		ret = msm_cdc_pinctrl_select_sleep_state(
 					pdata->wsa_reset_gpio_p);
 		if (ret) {
-			pr_err("%s: gpio set cannot be suspended(powerup) %s\n",
+			pr_debug("%s: gpio set cannot be suspended(powerup) %s\n",
 				__func__, "wsa_reset");
 			return ret;
 		}
 		ret = msm_cdc_pinctrl_select_active_state(
 					pdata->wsa_reset_gpio_p);
 		if (ret) {
-			pr_err("%s: gpio set cannot be activated %s\n",
+			pr_debug("%s: gpio set cannot be activated %s\n",
 				__func__, "wsa_reset");
 			return ret;
 		}
@@ -1344,7 +1344,7 @@ static int wsa881x_reset(struct wsa881x_pdata *pdata, bool enable)
 		ret = msm_cdc_pinctrl_select_sleep_state(
 					pdata->wsa_reset_gpio_p);
 		if (ret) {
-			pr_err("%s: gpio set cannot be suspended %s\n",
+			pr_debug("%s: gpio set cannot be suspended %s\n",
 				__func__, "wsa_reset");
 			return ret;
 		}

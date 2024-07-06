@@ -114,14 +114,14 @@ static int check_free_space(struct bsd_acct_struct *acct)
 		do_div(suspend, 100);
 		if (sbuf.f_bavail <= suspend) {
 			acct->active = 0;
-			pr_info("Process accounting paused\n");
+			pr_debug("Process accounting paused\n");
 		}
 	} else {
 		u64 resume = sbuf.f_blocks * RESUME;
 		do_div(resume, 100);
 		if (sbuf.f_bavail >= resume) {
 			acct->active = 1;
-			pr_info("Process accounting resumed\n");
+			pr_debug("Process accounting resumed\n");
 		}
 	}
 

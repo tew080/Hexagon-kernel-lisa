@@ -332,7 +332,7 @@ static void ufs_hisi_pwr_change_pre_change(struct ufs_hba *hba)
 	}
 
 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_VS_DEBUGSAVECONFIGTIME) {
-		pr_info("ufs flash device must set VS_DebugSaveConfigTime 0x10\n");
+		pr_debug("ufs flash device must set VS_DebugSaveConfigTime 0x10\n");
 		/* VS_DebugSaveConfigTime */
 		ufshcd_dme_set(hba, UIC_ARG_MIB(0xD0A0), 0x10);
 		/* sync length */

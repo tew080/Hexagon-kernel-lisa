@@ -174,12 +174,12 @@ static int klp_find_object_symbol(const char *objname, const char *name,
 	 * otherwise ensure the symbol position count matches sympos.
 	 */
 	if (args.addr == 0)
-		pr_err("symbol '%s' not found in symbol table\n", name);
+		pr_debug("symbol '%s' not found in symbol table\n", name);
 	else if (args.count > 1 && sympos == 0) {
-		pr_err("unresolvable ambiguity for symbol '%s' in object '%s'\n",
+		pr_debug("unresolvable ambiguity for symbol '%s' in object '%s'\n",
 		       name, objname);
 	} else if (sympos != args.count && sympos > 0) {
-		pr_err("symbol position %lu for symbol '%s' in object '%s' not found\n",
+		pr_debug("symbol position %lu for symbol '%s' in object '%s' not found\n",
 		       sympos, name, objname ? objname : "vmlinux");
 	} else {
 		*addr = args.addr;
@@ -217,7 +217,7 @@ static int klp_resolve_symbols(Elf_Shdr *relasec, struct module *pmod)
 	for (i = 0; i < relasec->sh_size / sizeof(Elf_Rela); i++) {
 		sym = pmod->core_kallsyms.symtab + ELF_R_SYM(relas[i].r_info);
 		if (sym->st_shndx != SHN_LIVEPATCH) {
-			pr_err("symbol %s is not marked as a livepatch symbol\n",
+			pr_debug("symbol %s is not marked as a livepatch symbol\n",
 			       strtab + sym->st_name);
 			return -EINVAL;
 		}
@@ -227,7 +227,7 @@ static int klp_resolve_symbols(Elf_Shdr *relasec, struct module *pmod)
 			     ".klp.sym.%55[^.].%191[^,],%lu",
 			     objname, symname, &sympos);
 		if (cnt != 3) {
-			pr_err("symbol %s has an incorrectly formatted name\n",
+			pr_debug("symbol %s has an incorrectly formatted name\n",
 			       strtab + sym->st_name);
 			return -EINVAL;
 		}
@@ -272,7 +272,7 @@ static int klp_write_object_relocations(struct module *pmod,
 		 */
 		cnt = sscanf(secname, ".klp.rela.%55[^.]", sec_objname);
 		if (cnt != 1) {
-			pr_err("section %s has an incorrectly formatted name\n",
+			pr_debug("section %s has an incorrectly formatted name\n",
 			       secname);
 			ret = -EINVAL;
 			break;
@@ -744,7 +744,7 @@ static int klp_init_object_loaded(struct klp_patch *patch,
 		ret = kallsyms_lookup_size_offset((unsigned long)func->old_func,
 						  &func->old_size, NULL);
 		if (!ret) {
-			pr_err("kallsyms size lookup failed for '%s'\n",
+			pr_debug("kallsyms size lookup failed for '%s'\n",
 			       func->old_name);
 			return -ENOENT;
 		}
@@ -755,7 +755,7 @@ static int klp_init_object_loaded(struct klp_patch *patch,
 		ret = kallsyms_lookup_size_offset((unsigned long)func->new_func,
 						  &func->new_size, NULL);
 		if (!ret) {
-			pr_err("kallsyms size lookup failed for '%s' replacement\n",
+			pr_debug("kallsyms size lookup failed for '%s' replacement\n",
 			       func->old_name);
 			return -ENOENT;
 		}
@@ -977,7 +977,7 @@ int klp_enable_patch(struct klp_patch *patch)
 		return -EINVAL;
 
 	if (!is_livepatch_module(patch->mod)) {
-		pr_err("module %s is not marked as a livepatch module\n",
+		pr_debug("module %s is not marked as a livepatch module\n",
 		       patch->mod->name);
 		return -EINVAL;
 	}

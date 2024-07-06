@@ -4579,7 +4579,7 @@ static void _sde_hw_setup_uidle(struct sde_uidle_cfg *uidle_cfg)
 			uidle_cfg->max_fps = SDE_UIDLE_MAX_FPS_90;
 		}
 	} else {
-		pr_err("invalid uidle rev:0x%x, disabling uidle\n",
+		pr_debug("invalid uidle rev:0x%x, disabling uidle\n",
 			uidle_cfg->uidle_rev);
 		uidle_cfg->uidle_rev = 0;
 	}

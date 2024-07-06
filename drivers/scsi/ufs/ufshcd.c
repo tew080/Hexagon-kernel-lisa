@@ -273,7 +273,7 @@ static void create_ufs_debug_clk(struct ufs_hba *hba)
 	struct proc_dir_entry *pdentry, *de;
 
 	if (!hba) {
-		pr_err("%s: NULL hba, exiting\n", __func__);
+		pr_debug("%s: NULL hba, exiting\n", __func__);
 		return;
 	}
 
@@ -7583,7 +7583,7 @@ static u32 ufshcd_get_max_icc_level(int sup_curr_uA, u32 start_scan, char *buff)
 	}
 	if (i < 0) {
 		i = 0;
-		pr_err("%s: Couldn't find valid icc_level = %d", __func__, i);
+		pr_debug("%s: Couldn't find valid icc_level = %d", __func__, i);
 	}
 
 	return (u32)i;
@@ -9254,7 +9254,7 @@ ufshcd_send_request_sense(struct ufs_hba *hba, struct scsi_device *sdp)
 			UFS_SENSE_SIZE, NULL, NULL,
 			msecs_to_jiffies(1000), 3, 0, RQF_PM, NULL);
 	if (ret)
-		pr_err("%s: failed with err %d\n", __func__, ret);
+		pr_debug("%s: failed with err %d\n", __func__, ret);
 
 	kfree(buffer);
 out:

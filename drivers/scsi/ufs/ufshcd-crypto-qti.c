@@ -65,7 +65,7 @@ int ufshcd_crypto_qti_prep_lrbp_crypto(struct ufs_hba *hba,
 			lrbp->data_unit_num = req->bio->bi_iter.bi_sector >>
 					      ICE_CRYPTO_DATA_UNIT_4_KB;
 		} else {
-			pr_err("%s crypto config failed err = %d\n", __func__,
+			pr_debug("%s crypto config failed err = %d\n", __func__,
 			       ret);
 		}
 		return ret;
@@ -105,7 +105,7 @@ void ufshcd_crypto_qti_enable(struct ufs_hba *hba)
 
 	err = crypto_qti_enable(hba->crypto_vops->priv);
 	if (err) {
-		pr_err("%s: Error enabling crypto, err %d\n",
+		pr_debug("%s: Error enabling crypto, err %d\n",
 				__func__, err);
 		ufshcd_crypto_qti_disable(hba);
 	}
@@ -147,14 +147,14 @@ static int ufshcd_crypto_qti_keyslot_program(struct keyslot_manager *ksm,
 		pm_runtime_get_sync(hba->dev);
 	err = ufshcd_hold(hba, false);
 	if (err) {
-		pr_err("%s: failed to enable clocks, err %d\n", __func__, err);
+		pr_debug("%s: failed to enable clocks, err %d\n", __func__, err);
 		goto out;
 	}
 
 	err = crypto_qti_keyslot_program(hba->crypto_vops->priv, key, slot,
 					data_unit_mask, crypto_alg_id);
 	if (err)
-		pr_err("%s: failed with error %d\n", __func__, err);
+		pr_debug("%s: failed with error %d\n", __func__, err);
 
 	ufshcd_release(hba);
 out:
@@ -178,13 +178,13 @@ static int ufshcd_crypto_qti_keyslot_evict(struct keyslot_manager *ksm,
 	pm_runtime_get_sync(hba->dev);
 	err = ufshcd_hold(hba, false);
 	if (err) {
-		pr_err("%s: failed to enable clocks, err %d\n", __func__, err);
+		pr_debug("%s: failed to enable clocks, err %d\n", __func__, err);
 		return err;
 	}
 
 	err = crypto_qti_keyslot_evict(hba->crypto_vops->priv, slot);
 	if (err) {
-		pr_err("%s: failed with error %d\n",
+		pr_debug("%s: failed with error %d\n",
 			__func__, err);
 		ufshcd_release(hba);
 		pm_runtime_put_sync(hba->dev);
@@ -209,7 +209,7 @@ static int ufshcd_crypto_qti_derive_raw_secret(struct keyslot_manager *ksm,
 	pm_runtime_get_sync(hba->dev);
 	err = ufshcd_hold(hba, false);
 	if (err) {
-		pr_err("%s: failed to enable clocks, err %d\n", __func__, err);
+		pr_debug("%s: failed to enable clocks, err %d\n", __func__, err);
 		return err;
 	}
 
@@ -336,7 +336,7 @@ int ufshcd_crypto_qti_init_crypto(struct ufs_hba *hba,
 								"ufs_ice");
 	mmio_base = devm_ioremap_resource(hba->dev, mem_res);
 	if (IS_ERR(mmio_base)) {
-		pr_err("%s: Unable to get ufs_crypto mmio base\n", __func__);
+		pr_debug("%s: Unable to get ufs_crypto mmio base\n", __func__);
 		hba->caps &= ~UFSHCD_CAP_CRYPTO;
 		hba->quirks |= UFSHCD_QUIRK_BROKEN_CRYPTO;
 		return err;
@@ -346,7 +346,7 @@ int ufshcd_crypto_qti_init_crypto(struct ufs_hba *hba,
 						       "ufs_ice_hwkm");
 
 	if (!hwkm_ice_memres) {
-		pr_err("%s: Either no entry in dtsi or no memory available for IORESOURCE\n",
+		pr_debug("%s: Either no entry in dtsi or no memory available for IORESOURCE\n",
 		       __func__);
 	} else {
 		hwkm_ice_mmio = devm_ioremap_resource(hba->dev,
@@ -354,7 +354,7 @@ int ufshcd_crypto_qti_init_crypto(struct ufs_hba *hba,
 
 		if (IS_ERR(hwkm_ice_mmio)) {
 			err = PTR_ERR(hwkm_ice_mmio);
-			pr_err("%s: Error = %d mapping HWKM memory\n",
+			pr_debug("%s: Error = %d mapping HWKM memory\n",
 				__func__, err);
 			return err;
 		}
@@ -362,7 +362,7 @@ int ufshcd_crypto_qti_init_crypto(struct ufs_hba *hba,
 
 	err = ufshcd_hba_init_crypto_qti_spec(hba, &ufshcd_crypto_qti_ksm_ops);
 	if (err) {
-		pr_err("%s: Error initiating crypto capabilities, err %d\n",
+		pr_debug("%s: Error initiating crypto capabilities, err %d\n",
 					__func__, err);
 		return err;
 	}
@@ -370,7 +370,7 @@ int ufshcd_crypto_qti_init_crypto(struct ufs_hba *hba,
 	err = crypto_qti_init_crypto(hba->dev, mmio_base, hwkm_ice_mmio,
 				     (void **)&hba->crypto_vops->priv);
 	if (err) {
-		pr_err("%s: Error initiating crypto, err %d\n",
+		pr_debug("%s: Error initiating crypto, err %d\n",
 					__func__, err);
 	}
 	return err;

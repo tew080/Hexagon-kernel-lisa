@@ -69,7 +69,7 @@
 
 #define HID_DEBUG(hid, msg, args...)					\
 	do { if (hid->hid_debug)					\
-		pr_err("%40s:%3d [%01d%02d%02d] " msg "\n",		\
+		pr_debug("%40s:%3d [%01d%02d%02d] " msg "\n",		\
 		       __func__, __LINE__,				\
 		       hid->hid_trigger,				\
 		       atomic_read(&hid->ufsf->hba->dev->power.usage_count),\

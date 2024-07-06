@@ -734,20 +734,20 @@ static inline bool _sde_encoder_phys_is_dual_ctl(
 	const struct sde_rm_topology_def* def;
 
 	if (!phys_enc) {
-		pr_err("invalid phys_enc\n");
+		pr_debug("invalid phys_enc\n");
 		return false;
 	}
 
 	sde_kms = phys_enc->sde_kms;
 	if (!sde_kms) {
-		pr_err("invalid kms\n");
+		pr_debug("invalid kms\n");
 		return false;
 	}
 
 	topology = sde_connector_get_topology_name(phys_enc->connector);
 	def = sde_rm_topology_get_topology_def(&sde_kms->rm, topology);
 	if (IS_ERR_OR_NULL(def)) {
-		pr_err("invalid topology\n");
+		pr_debug("invalid topology\n");
 		return false;
 	}
 
@@ -765,7 +765,7 @@ static inline bool _sde_encoder_phys_is_ppsplit(
 	enum sde_rm_topology_name topology;
 
 	if (!phys_enc) {
-		pr_err("invalid phys_enc\n");
+		pr_debug("invalid phys_enc\n");
 		return false;
 	}
 

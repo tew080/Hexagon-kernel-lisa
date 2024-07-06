@@ -374,7 +374,7 @@ static int dp_ctrl_link_training_1(struct dp_ctrl_private *ctrl)
 			break;
 
 		if (ctrl->link->phy_params.v_level == DP_LINK_VOLTAGE_MAX) {
-			pr_err_ratelimited("max v_level reached\n");
+			pr_debug_ratelimited("max v_level reached\n");
 			break;
 		}
 

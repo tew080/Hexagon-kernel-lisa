@@ -45,11 +45,11 @@ int msm_lpass_audio_hw_vote_req(struct snd_pcm_substream *substream, bool enable
 				clk_disable_unprepare(
 					pdata->lpass_audio_hw_vote);
 			} else if (pdata->core_audio_vote_count < 0) {
-				pr_err("%s: audio vote mismatch\n", __func__);
+				pr_debug("%s: audio vote mismatch\n", __func__);
 				pdata->core_audio_vote_count = 0;
 			}
 		} else {
-			pr_err("%s: Invalid lpass audio hw node\n", __func__);
+			pr_debug("%s: Invalid lpass audio hw node\n", __func__);
 		}
 	}
 

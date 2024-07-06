@@ -89,7 +89,7 @@ static int sde_power_parse_dt_supply(struct platform_device *pdev,
 	struct device_node *supply_node = NULL;
 
 	if (!pdev || !mp) {
-		pr_err("invalid input param pdev:%pK mp:%pK\n", pdev, mp);
+		pr_debug("invalid input param pdev:%pK mp:%pK\n", pdev, mp);
 		return -EINVAL;
 	}
 
@@ -126,7 +126,7 @@ static int sde_power_parse_dt_supply(struct platform_device *pdev,
 		rc = of_property_read_string(supply_node,
 						"qcom,supply-name", &st);
 		if (rc) {
-			pr_err("error reading name. rc=%d\n", rc);
+			pr_debug("error reading name. rc=%d\n", rc);
 			goto error;
 		}
 
@@ -136,7 +136,7 @@ static int sde_power_parse_dt_supply(struct platform_device *pdev,
 		rc = of_property_read_u32(supply_node,
 					"qcom,supply-min-voltage", &tmp);
 		if (rc) {
-			pr_err("error reading min volt. rc=%d\n", rc);
+			pr_debug("error reading min volt. rc=%d\n", rc);
 			goto error;
 		}
 		mp->vreg_config[i].min_voltage = tmp;
@@ -144,7 +144,7 @@ static int sde_power_parse_dt_supply(struct platform_device *pdev,
 		rc = of_property_read_u32(supply_node,
 					"qcom,supply-max-voltage", &tmp);
 		if (rc) {
-			pr_err("error reading max volt. rc=%d\n", rc);
+			pr_debug("error reading max volt. rc=%d\n", rc);
 			goto error;
 		}
 		mp->vreg_config[i].max_voltage = tmp;
@@ -152,7 +152,7 @@ static int sde_power_parse_dt_supply(struct platform_device *pdev,
 		rc = of_property_read_u32(supply_node,
 					"qcom,supply-enable-load", &tmp);
 		if (rc) {
-			pr_err("error reading enable load. rc=%d\n", rc);
+			pr_debug("error reading enable load. rc=%d\n", rc);
 			goto error;
 		}
 		mp->vreg_config[i].enable_load = tmp;
@@ -160,7 +160,7 @@ static int sde_power_parse_dt_supply(struct platform_device *pdev,
 		rc = of_property_read_u32(supply_node,
 					"qcom,supply-disable-load", &tmp);
 		if (rc) {
-			pr_err("error reading disable load. rc=%d\n", rc);
+			pr_debug("error reading disable load. rc=%d\n", rc);
 			goto error;
 		}
 		mp->vreg_config[i].disable_load = tmp;
@@ -234,7 +234,7 @@ static int sde_power_parse_dt_clock(struct platform_device *pdev,
 	int num_clk = 0;
 
 	if (!pdev || !mp) {
-		pr_err("invalid input param pdev:%pK mp:%pK\n", pdev, mp);
+		pr_debug("invalid input param pdev:%pK mp:%pK\n", pdev, mp);
 		return -EINVAL;
 	}
 
@@ -290,7 +290,7 @@ static int _sde_power_data_bus_set_quota(
 	u32 paths = pdbus->data_paths_cnt;
 
 	if (!paths || paths > DATA_BUS_PATH_MAX) {
-		pr_err("invalid data bus handle, paths %d\n", paths);
+		pr_debug("invalid data bus handle, paths %d\n", paths);
 		return -EINVAL;
 	}
 
@@ -321,7 +321,7 @@ err:
 				kBps_to_icc(div_u64(pdbus->curr_val.ib, 1000)));
 
 	SDE_ATRACE_END("msm_bus_scale_req");
-	pr_err("failed to set data bus vote ab=%llu ib=%llu rc=%d\n",
+	pr_debug("failed to set data bus vote ab=%llu ib=%llu rc=%d\n",
 	       rc, in_ab_quota, in_ib_quota);
 
 	return rc;
@@ -334,7 +334,7 @@ int sde_power_data_bus_set_quota(struct sde_power_handle *phandle,
 	u32 paths;
 
 	if (!phandle || bus_id >= SDE_POWER_HANDLE_DBUS_ID_MAX) {
-		pr_err("invalid parameters\n");
+		pr_debug("invalid parameters\n");
 		return -EINVAL;
 	}
 
@@ -376,7 +376,7 @@ static int sde_power_icc_get(struct platform_device *pdev,
 	*path = of_icc_get(&pdev->dev, bus_name);
 	if (IS_ERR_OR_NULL(*path)) {
 		rc = PTR_ERR(*path);
-		pr_err("bus %s parsing failed, rc:%d\n", bus_name, rc);
+		pr_debug("bus %s parsing failed, rc:%d\n", bus_name, rc);
 		*path = NULL;
 		return rc;
 	}
@@ -412,12 +412,12 @@ static int sde_power_reg_bus_parse(struct platform_device *pdev,
 	vec_arr = of_get_property(pdev->dev.of_node,
 			"qcom,sde-reg-bus,vectors-KBps", &len);
 	if (!vec_arr) {
-		pr_err("%s scale table property not found\n", bus_name);
+		pr_debug("%s scale table property not found\n", bus_name);
 		return -EINVAL;
 	}
 
 	if (len / sizeof(*vec_arr) != VOTE_INDEX_MAX * 2) {
-		pr_err("wrong size for %s vector table\n", bus_name);
+		pr_debug("wrong size for %s vector table\n", bus_name);
 		return -EINVAL;
 	}
 
@@ -447,9 +447,9 @@ static int sde_power_mnoc_bus_parse(struct platform_device *pdev,
 
 	/* at least one databus path is required */
 	if (!pdbus->data_paths_cnt) {
-		pr_info("mnoc interconnect path(s) not defined, rc: %d\n", rc);
+		pr_debug("mnoc interconnect path(s) not defined, rc: %d\n", rc);
 	} else if (rc) {
-		pr_info("ignoring error %d for non-primary data path\n", rc);
+		pr_debug("ignoring error %d for non-primary data path\n", rc);
 		rc = 0;
 	}
 
@@ -463,7 +463,7 @@ static void sde_power_parse_ib_votes(struct platform_device *pdev,
 	u32 tmp = 0;
 
 	if (!pdev || !phandle) {
-		pr_err("invalid input param pdev:%pK phandle:%pK\n", pdev,
+		pr_debug("invalid input param pdev:%pK phandle:%pK\n", pdev,
 						phandle);
 		return;
 	}
@@ -471,7 +471,7 @@ static void sde_power_parse_ib_votes(struct platform_device *pdev,
 	rc = of_property_read_u32(pdev->dev.of_node,
 			"qcom,sde-min-core-ib-kbps", &tmp);
 	if (rc)
-		pr_err("error reading min core ib vote. rc=%d, np=%x\n", rc, pdev->dev.of_node);
+		pr_debug("error reading min core ib vote. rc=%d, np=%x\n", rc, pdev->dev.of_node);
 
 	phandle->ib_quota[SDE_POWER_HANDLE_DBUS_ID_MNOC] = (!rc ? tmp*1000 :
 							SDE_POWER_HANDLE_ENABLE_BUS_IB_QUOTA);
@@ -479,7 +479,7 @@ static void sde_power_parse_ib_votes(struct platform_device *pdev,
 	rc = of_property_read_u32(pdev->dev.of_node,
 			"qcom,sde-min-llcc-ib-kbps", &tmp);
 	if (rc)
-		pr_err("error reading min llcc ib vote. rc=%d\n", rc);
+		pr_debug("error reading min llcc ib vote. rc=%d\n", rc);
 
 	phandle->ib_quota[SDE_POWER_HANDLE_DBUS_ID_LLCC] = (!rc ? tmp*1000 :
 							SDE_POWER_HANDLE_ENABLE_BUS_IB_QUOTA);
@@ -487,7 +487,7 @@ static void sde_power_parse_ib_votes(struct platform_device *pdev,
 	rc = of_property_read_u32(pdev->dev.of_node,
 			"qcom,sde-min-dram-ib-kbps", &tmp);
 	if (rc)
-		pr_err("error reading min dram ib vote. rc=%d\n", rc);
+		pr_debug("error reading min dram ib vote. rc=%d\n", rc);
 
 	phandle->ib_quota[SDE_POWER_HANDLE_DBUS_ID_EBI] = (!rc ? tmp*1000 :
 							SDE_POWER_HANDLE_ENABLE_BUS_IB_QUOTA);
@@ -575,7 +575,7 @@ static int sde_power_reg_bus_update(struct sde_power_reg_bus_handle *reg_bus,
 	}
 
 	if (rc)
-		pr_err("failed to set reg bus vote to index %d, rc=%d\n",
+		pr_debug("failed to set reg bus vote to index %d, rc=%d\n",
 				usecase_ndx, rc);
 	else {
 		reg_bus->curr_idx = usecase_ndx;
@@ -593,7 +593,7 @@ int sde_power_resource_init(struct platform_device *pdev,
 	struct dss_module_power *mp;
 
 	if (!phandle || !pdev) {
-		pr_err("invalid input param\n");
+		pr_debug("invalid input param\n");
 		rc = -EINVAL;
 		goto end;
 	}
@@ -602,38 +602,38 @@ int sde_power_resource_init(struct platform_device *pdev,
 
 	rc = sde_power_parse_dt_clock(pdev, mp);
 	if (rc) {
-		pr_err("device clock parsing failed\n");
+		pr_debug("device clock parsing failed\n");
 		goto end;
 	}
 
 	rc = sde_power_parse_dt_supply(pdev, mp);
 	if (rc) {
-		pr_err("device vreg supply parsing failed\n");
+		pr_debug("device vreg supply parsing failed\n");
 		goto parse_vreg_err;
 	}
 
 	rc = msm_dss_get_vreg(&pdev->dev,
 				mp->vreg_config, mp->num_vreg, 1);
 	if (rc) {
-		pr_err("get config failed rc=%d\n", rc);
+		pr_debug("get config failed rc=%d\n", rc);
 		goto vreg_err;
 	}
 
 	rc = msm_dss_get_clk(&pdev->dev, mp->clk_config, mp->num_clk);
 	if (rc) {
-		pr_err("clock get failed rc=%d\n", rc);
+		pr_debug("clock get failed rc=%d\n", rc);
 		goto clkget_err;
 	}
 
 	rc = msm_dss_clk_set_rate(mp->clk_config, mp->num_clk);
 	if (rc) {
-		pr_err("clock set rate failed rc=%d\n", rc);
+		pr_debug("clock set rate failed rc=%d\n", rc);
 		goto clkset_err;
 	}
 
 	rc = sde_power_bus_parse(pdev, phandle);
 	if (rc) {
-		pr_err("bus parse failed rc=%d\n", rc);
+		pr_debug("bus parse failed rc=%d\n", rc);
 		goto bus_err;
 	}
 
@@ -673,7 +673,7 @@ void sde_power_resource_deinit(struct platform_device *pdev,
 	struct sde_power_event *curr_event, *next_event;
 
 	if (!phandle || !pdev) {
-		pr_err("invalid input param\n");
+		pr_debug("invalid input param\n");
 		return;
 	}
 	mp = &phandle->mp;
@@ -681,7 +681,7 @@ void sde_power_resource_deinit(struct platform_device *pdev,
 	mutex_lock(&phandle->phandle_lock);
 	list_for_each_entry_safe(curr_event, next_event,
 			&phandle->event_list, list) {
-		pr_err("event:%d, client:%s still registered\n",
+		pr_debug("event:%d, client:%s still registered\n",
 				curr_event->event_type,
 				curr_event->client_name);
 		curr_event->active = false;
@@ -737,7 +737,7 @@ int sde_power_resource_enable(struct sde_power_handle *phandle, bool enable)
 	struct dss_module_power *mp;
 
 	if (!phandle) {
-		pr_err("invalid input argument\n");
+		pr_debug("invalid input argument\n");
 		return -EINVAL;
 	}
 
@@ -763,7 +763,7 @@ int sde_power_resource_enable(struct sde_power_handle *phandle, bool enable)
 					SDE_POWER_HANDLE_ENABLE_BUS_AB_QUOTA,
 					phandle->ib_quota[i]);
 				if (rc) {
-					pr_err("failed to set data bus vote id=%d rc=%d\n",
+					pr_debug("failed to set data bus vote id=%d rc=%d\n",
 							i, rc);
 					goto vreg_err;
 				}
@@ -772,26 +772,26 @@ int sde_power_resource_enable(struct sde_power_handle *phandle, bool enable)
 		rc = msm_dss_enable_vreg(mp->vreg_config, mp->num_vreg,
 				enable);
 		if (rc) {
-			pr_err("failed to enable vregs rc=%d\n", rc);
+			pr_debug("failed to enable vregs rc=%d\n", rc);
 			goto vreg_err;
 		}
 
 		rc = sde_power_scale_reg_bus(phandle, VOTE_INDEX_LOW, true);
 		if (rc) {
-			pr_err("failed to set reg bus vote rc=%d\n", rc);
+			pr_debug("failed to set reg bus vote rc=%d\n", rc);
 			goto reg_bus_hdl_err;
 		}
 
 		SDE_EVT32_VERBOSE(enable, SDE_EVTLOG_FUNC_CASE1);
 		rc = sde_power_rsc_update(phandle, true);
 		if (rc) {
-			pr_err("failed to update rsc\n");
+			pr_debug("failed to update rsc\n");
 			goto rsc_err;
 		}
 
 		rc = msm_dss_enable_clk(mp->clk_config, mp->num_clk, enable);
 		if (rc) {
-			pr_err("clock enable failed rc:%d\n", rc);
+			pr_debug("clock enable failed rc:%d\n", rc);
 			goto clk_err;
 		}
 
@@ -851,7 +851,7 @@ int sde_power_clk_set_rate(struct sde_power_handle *phandle, char *clock_name,
 	struct dss_module_power *mp;
 
 	if (!phandle) {
-		pr_err("invalid input power handle\n");
+		pr_debug("invalid input power handle\n");
 		return -EINVAL;
 	}
 
@@ -889,7 +889,7 @@ u64 sde_power_clk_get_rate(struct sde_power_handle *phandle, char *clock_name)
 	u64 rate = -EINVAL;
 
 	if (!phandle) {
-		pr_err("invalid input power handle\n");
+		pr_debug("invalid input power handle\n");
 		return -EINVAL;
 	}
 	mp = &phandle->mp;
@@ -912,7 +912,7 @@ u64 sde_power_clk_get_max_rate(struct sde_power_handle *phandle,
 	u64 rate = 0;
 
 	if (!phandle) {
-		pr_err("invalid input power handle\n");
+		pr_debug("invalid input power handle\n");
 		return 0;
 	}
 	mp = &phandle->mp;
@@ -935,7 +935,7 @@ struct clk *sde_power_clk_get_clk(struct sde_power_handle *phandle,
 	struct clk *clk = NULL;
 
 	if (!phandle) {
-		pr_err("invalid input power handle\n");
+		pr_debug("invalid input power handle\n");
 		return 0;
 	}
 	mp = &phandle->mp;
@@ -958,10 +958,10 @@ struct sde_power_event *sde_power_handle_register_event(
 	struct sde_power_event *event;
 
 	if (!phandle) {
-		pr_err("invalid power handle\n");
+		pr_debug("invalid power handle\n");
 		return ERR_PTR(-EINVAL);
 	} else if (!cb_fnc || !event_type) {
-		pr_err("no callback fnc or event type\n");
+		pr_debug("no callback fnc or event type\n");
 		return ERR_PTR(-EINVAL);
 	}
 
@@ -987,9 +987,9 @@ void sde_power_handle_unregister_event(
 		struct sde_power_event *event)
 {
 	if (!phandle || !event) {
-		pr_err("invalid phandle or event\n");
+		pr_debug("invalid phandle or event\n");
 	} else if (!event->active) {
-		pr_err("power handle deinit already done\n");
+		pr_debug("power handle deinit already done\n");
 		kfree(event);
 	} else {
 		mutex_lock(&phandle->phandle_lock);

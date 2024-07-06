@@ -323,7 +323,7 @@ static int cpe_register_write_repeat(u32 reg, u8 *ptr, u32 to_write)
 
 	ret = wcd9xxx_slim_write_repeat(wcd9xxx, reg, to_write, ptr);
 	if (ret != 0)
-		pr_err("%s: slim_write_repeat failed\n", __func__);
+		pr_debug("%s: slim_write_repeat failed\n", __func__);
 
 	if (ret < 0)
 		return CPE_SVC_FAILED;
@@ -344,7 +344,7 @@ static void cpe_cmd_received(struct cpe_info *t_info)
 	enum cpe_process_result proc_rc = CPE_PROC_SUCCESS;
 
 	if (!t_info) {
-		pr_err("%s: Invalid thread info\n",
+		pr_debug("%s: Invalid thread info\n",
 			__func__);
 		return;
 	}
@@ -367,7 +367,7 @@ static void cpe_cmd_received(struct cpe_info *t_info)
 			break;
 		case CPE_PROC_FAILED:
 			kfree(node);
-			pr_err("%s: cmd failed\n", __func__);
+			pr_debug("%s: cmd failed\n", __func__);
 			break;
 		case CPE_PROC_KILLED:
 			break;
@@ -420,7 +420,7 @@ static void cpe_create_worker_thread(struct cpe_info *t_info)
 static void cpe_cleanup_worker_thread(struct cpe_info *t_info)
 {
 	if (!t_info->thread_handler) {
-		pr_err("%s: thread not created\n", __func__);
+		pr_debug("%s: thread not created\n", __func__);
 		return;
 	}
 
@@ -451,7 +451,7 @@ cpe_send_cmd_to_thread(struct cpe_info *t_info,
 
 	rc = cpe_is_command_valid(t_info, command);
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: Invalid command %d\n",
+		pr_debug("%s: Invalid command %d\n",
 			__func__, command);
 		return rc;
 	}
@@ -505,7 +505,7 @@ cpe_is_command_valid(const struct cpe_info *t_info,
 	if (t_info && t_info->cpe_cmd_validate)
 		rc = t_info->cpe_cmd_validate(t_info, command);
 	else
-		pr_err("%s: invalid handle or callback\n",
+		pr_debug("%s: invalid handle or callback\n",
 			__func__);
 	return rc;
 }
@@ -514,7 +514,7 @@ static void cpe_notify_client(struct cpe_notif_node *client,
 		struct cpe_svc_notification *payload)
 {
 	if (!client || !payload) {
-		pr_err("%s: invalid client or payload\n",
+		pr_debug("%s: invalid client or payload\n",
 			__func__);
 		return;
 	}
@@ -540,7 +540,7 @@ static void cpe_broadcast_notification(const struct cpe_info *t_info,
 	struct cpe_notif_node *n = NULL;
 
 	if (!t_info || !payload) {
-		pr_err("%s: invalid handle\n", __func__);
+		pr_debug("%s: invalid handle\n", __func__);
 		return;
 	}
 
@@ -594,7 +594,7 @@ static enum cpe_svc_result cpe_deregister_generic(struct cpe_info *t_info,
 	struct cpe_notif_node *n = (struct cpe_notif_node *)reg_handle;
 
 	if (!t_info || !reg_handle) {
-		pr_err("%s: invalid handle\n", __func__);
+		pr_debug("%s: invalid handle\n", __func__);
 		return CPE_SVC_INVALID_HANDLE;
 	}
 
@@ -610,7 +610,7 @@ static enum cpe_svc_result cpe_svc_tgt_init(struct cpe_svc_codec_info_v1 *i,
 		struct cpe_svc_tgt_abstraction *abs)
 {
 	if (!i || !abs) {
-		pr_err("%s: Incorrect information provided\n",
+		pr_debug("%s: Incorrect information provided\n",
 			__func__);
 		return CPE_SVC_FAILED;
 	}
@@ -621,7 +621,7 @@ static enum cpe_svc_result cpe_svc_tgt_init(struct cpe_svc_codec_info_v1 *i,
 	case CPE_SVC_CODEC_WCD9335:
 		return cpe_tgt_wcd9335_init(i, abs);
 	default:
-		pr_err("%s: Codec type %d not supported\n",
+		pr_debug("%s: Codec type %d not supported\n",
 			__func__, i->id);
 		return CPE_SVC_FAILED;
 	}
@@ -638,7 +638,7 @@ static void cpe_notify_cmi_client(struct cpe_info *t_info, u8 *payload,
 	u8 service = 0;
 
 	if (!t_info || !payload) {
-		pr_err("%s: invalid payload/handle\n",
+		pr_debug("%s: invalid payload/handle\n",
 			__func__);
 		return;
 	}
@@ -681,7 +681,7 @@ static void cpe_command_cleanup(struct cpe_command_node *command_node)
 		command_node->data = NULL;
 		break;
 	default:
-		pr_err("%s: unhandled command\n",
+		pr_debug("%s: unhandled command\n",
 			__func__);
 		break;
 	}
@@ -812,7 +812,7 @@ static enum cpe_svc_result cpe_process_clk_change_req(
 			CMI_GET_PAYLOAD(t_info->tgt->outbox);
 
 	if (!cpe_d.cpe_change_freq_plan_cb) {
-		pr_err("%s: No support for clk freq change\n",
+		pr_debug("%s: No support for clk freq change\n",
 			__func__);
 		return CPE_SVC_FAILED;
 	}
@@ -839,7 +839,7 @@ static void cpe_process_irq_int(u32 irq,
 	pr_debug("%s: irq = %u\n", __func__, irq);
 
 	if (!t_info) {
-		pr_err("%s: Invalid handle\n",
+		pr_debug("%s: Invalid handle\n",
 			__func__);
 		return;
 	}
@@ -869,7 +869,7 @@ static void cpe_process_irq_int(u32 irq,
 	}
 
 	if (err_irq) {
-		pr_err("%s: CPE error IRQ %u occurred\n",
+		pr_debug("%s: CPE error IRQ %u occurred\n",
 			__func__, irq);
 		CPE_SVC_REL_LOCK(&cpe_d.cpe_api_mutex, "cpe_api");
 		return;
@@ -1000,7 +1000,7 @@ static enum cpe_process_result cpe_boot_initialize(struct cpe_info *t_info,
 	p = (struct cmi_core_svc_event_system_boot *)
 		CMI_GET_PAYLOAD(t_info->tgt->outbox);
 	if (p->status != CPE_BOOT_SUCCESS) {
-		pr_err("%s: cpe boot failed, status = %d\n",
+		pr_debug("%s: cpe boot failed, status = %d\n",
 			__func__, p->status);
 		broacast_boot_failed();
 		return rc;
@@ -1050,7 +1050,7 @@ static void cpe_svc_core_cmi_handler(
 		result = (struct cmi_basic_rsp_result *)
 			((u8 *)parameter->message) + (sizeof(*hdr));
 		if (result->status)
-			pr_err("%s: error response, error code = %u\n",
+			pr_debug("%s: error response, error code = %u\n",
 				__func__, result->status);
 		complete(&cpe_d.cpe_default_handle->core_svc_cmd_compl);
 	}
@@ -1067,7 +1067,7 @@ static void cpe_clk_plan_work(struct work_struct *work)
 
 	t_info = container_of(work, struct cpe_info, clk_plan_work);
 	if (!t_info) {
-		pr_err("%s: Invalid handle for cpe_info\n",
+		pr_debug("%s: Invalid handle for cpe_info\n",
 			__func__);
 		return;
 	}
@@ -1079,7 +1079,7 @@ static void cpe_clk_plan_work(struct work_struct *work)
 
 	/* send the clk plan command */
 	if (!cpe_d.cpe_query_freq_plans_cb) {
-		pr_err("%s: No support for querying clk plans\n",
+		pr_debug("%s: No support for querying clk plans\n",
 			__func__);
 		return;
 	}
@@ -1109,7 +1109,7 @@ static void cpe_clk_plan_work(struct work_struct *work)
 	rc = wait_for_completion_timeout(&t_info->core_svc_cmd_compl,
 					 (10 * HZ));
 	if (!rc) {
-		pr_err("%s: clk plan cmd timed out\n",
+		pr_debug("%s: clk plan cmd timed out\n",
 			__func__);
 		goto cmd_fail;
 	}
@@ -1118,7 +1118,7 @@ static void cpe_clk_plan_work(struct work_struct *work)
 	if (t_info->cpe_start_notification)
 		t_info->cpe_start_notification(t_info);
 	else
-		pr_err("%s: no start notification\n",
+		pr_debug("%s: no start notification\n",
 			 __func__);
 
 cmd_fail:
@@ -1142,7 +1142,7 @@ static enum cpe_process_result cpe_boot_complete(
 	cpe_d.cpe_msg_buffer = p->addr;
 
 	if (cpe_d.cpe_msg_buffer == 0) {
-		pr_err("%s: Invalid cpe buffer for message\n",
+		pr_debug("%s: Invalid cpe buffer for message\n",
 			__func__);
 		broacast_boot_failed();
 		return CPE_PROC_FAILED;
@@ -1157,7 +1157,7 @@ static enum cpe_process_result cpe_boot_complete(
 		if (t_info->cpe_start_notification)
 			t_info->cpe_start_notification(t_info);
 		else
-			pr_err("%s: no start notification\n",
+			pr_debug("%s: no start notification\n",
 				__func__);
 	}
 
@@ -1291,7 +1291,7 @@ static enum cpe_process_result cpe_mt_process_cmd(
 	u8 retries = 0;
 
 	if (!t_info || !command_node) {
-		pr_err("%s: Invalid handle/command node\n",
+		pr_debug("%s: Invalid handle/command node\n",
 			__func__);
 		return CPE_PROC_FAILED;
 	}
@@ -1301,7 +1301,7 @@ static enum cpe_process_result cpe_mt_process_cmd(
 	cpe_rc = cpe_is_command_valid(t_info, command_node->command);
 
 	if (cpe_rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: Invalid command %d, err = %d\n",
+		pr_debug("%s: Invalid command %d, err = %d\n",
 			__func__, command_node->command, cpe_rc);
 		return CPE_PROC_FAILED;
 	}
@@ -1364,13 +1364,13 @@ static enum cpe_process_result cpe_mt_process_cmd(
 		break;
 
 	default:
-		pr_err("%s: unhandled cpe cmd = %d\n",
+		pr_debug("%s: unhandled cpe cmd = %d\n",
 			__func__, command_node->command);
 		break;
 	}
 
 	if (cpe_rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: failed to execute command\n", __func__);
+		pr_debug("%s: failed to execute command\n", __func__);
 		if (t_info->pending) {
 			m = (struct cpe_send_msg *)t_info->pending;
 			cpe_notify_cmi_client(t_info, m->payload,
@@ -1394,7 +1394,7 @@ static enum cpe_svc_result cpe_mt_validate_cmd(
 	enum cpe_svc_result rc = CPE_SVC_SUCCESS;
 
 	if ((t_info == NULL) || t_info->initialized == false) {
-		pr_err("%s: cpe service is not ready\n",
+		pr_debug("%s: cpe service is not ready\n",
 			__func__);
 		return CPE_SVC_NOT_READY;
 	}
@@ -1510,7 +1510,7 @@ static enum cpe_svc_result cpe_mt_validate_cmd(
 	}
 
 	if (rc != CPE_SVC_SUCCESS)
-		pr_err("%s: invalid command %d, state = %d\n",
+		pr_debug("%s: invalid command %d, state = %d\n",
 			__func__, command, t_info->state);
 	return rc;
 }
@@ -1616,7 +1616,7 @@ enum cpe_svc_result cpe_svc_deinitialize(void *cpe_handle)
 	rc = cpe_is_command_valid(t_info, CPE_CMD_DEINITIALIZE);
 
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: Invalid command %d\n",
+		pr_debug("%s: Invalid command %d\n",
 			__func__, CPE_CMD_DEINITIALIZE);
 		return rc;
 	}
@@ -1696,7 +1696,7 @@ enum cpe_svc_result cpe_svc_download_segment(void *cpe_handle,
 	rc = cpe_is_command_valid(t_info, CPE_CMD_DL_SEGMENT);
 
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: cmd validation fail, cmd = %d\n",
+		pr_debug("%s: cmd validation fail, cmd = %d\n",
 			__func__, CPE_CMD_DL_SEGMENT);
 		CPE_SVC_REL_LOCK(&cpe_d.cpe_api_mutex, "cpe_api");
 		return rc;
@@ -1724,7 +1724,7 @@ enum cpe_svc_result cpe_svc_boot(void *cpe_handle, int debug_mode)
 	rc = cpe_is_command_valid(t_info, CPE_CMD_BOOT);
 
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: cmd validation fail, cmd = %d\n",
+		pr_debug("%s: cmd validation fail, cmd = %d\n",
 			__func__, CPE_CMD_BOOT);
 		CPE_SVC_REL_LOCK(&cpe_d.cpe_api_mutex, "cpe_api");
 		return rc;
@@ -1787,7 +1787,7 @@ static enum cpe_svc_result __cpe_svc_shutdown(void *cpe_handle)
 	rc = cpe_is_command_valid(t_info, CPE_CMD_SHUTDOWN);
 
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: cmd validation fail, cmd = %d\n",
+		pr_debug("%s: cmd validation fail, cmd = %d\n",
 			__func__, CPE_CMD_SHUTDOWN);
 		return rc;
 	}
@@ -1854,7 +1854,7 @@ enum cpe_svc_result cpe_svc_reset(void *cpe_handle)
 	rc = cpe_is_command_valid(t_info, CPE_CMD_RESET);
 
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: cmd validation fail, cmd = %d\n",
+		pr_debug("%s: cmd validation fail, cmd = %d\n",
 			__func__, CPE_CMD_RESET);
 		CPE_SVC_REL_LOCK(&cpe_d.cpe_api_mutex, "cpe_api");
 		return rc;
@@ -1884,7 +1884,7 @@ enum cpe_svc_result cpe_svc_ramdump(void *cpe_handle,
 
 	rc = cpe_is_command_valid(t_info, CPE_CMD_RAMDUMP);
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: cmd validation fail, cmd = %d\n",
+		pr_debug("%s: cmd validation fail, cmd = %d\n",
 			__func__, CPE_CMD_RAMDUMP);
 		CPE_SVC_REL_LOCK(&cpe_d.cpe_api_mutex, "cpe_api");
 		return rc;
@@ -1893,7 +1893,7 @@ enum cpe_svc_result cpe_svc_ramdump(void *cpe_handle,
 	if (t_info->tgt) {
 		rc = t_info->tgt->tgt_read_ram(t_info, buffer);
 	} else {
-		pr_err("%s: cpe service not ready\n", __func__);
+		pr_debug("%s: cpe service not ready\n", __func__);
 		rc = CPE_SVC_NOT_READY;
 	}
 	CPE_SVC_REL_LOCK(&cpe_d.cpe_api_mutex, "cpe_api");
@@ -2018,7 +2018,7 @@ enum cmi_api_result cmi_send_msg(void *message)
 			(void *)msg, false);
 
 	if (rc != 0) {
-		pr_err("%s: Failed to queue message\n", __func__);
+		pr_debug("%s: Failed to queue message\n", __func__);
 		kfree(msg->payload);
 		kfree(msg);
 	}
@@ -2041,7 +2041,7 @@ enum cpe_svc_result cpe_svc_ftm_test(void *cpe_handle, u32 *status)
 
 	rc = cpe_is_command_valid(t_info, CPE_CMD_FTM_TEST);
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: cmd validation fail, cmd = %d\n",
+		pr_debug("%s: cmd validation fail, cmd = %d\n",
 			__func__, CPE_CMD_FTM_TEST);
 		goto fail_cmd;
 	}
@@ -2054,7 +2054,7 @@ enum cpe_svc_result cpe_svc_ftm_test(void *cpe_handle, u32 *status)
 		/* CPE reset */
 		rc = t_info->tgt->tgt_reset();
 		if (rc != CPE_SVC_SUCCESS) {
-			pr_err("%s: CPE reset fail! err = %d\n",
+			pr_debug("%s: CPE reset fail! err = %d\n",
 				__func__, rc);
 			goto err_return;
 		}
@@ -2071,7 +2071,7 @@ enum cpe_svc_result cpe_svc_ftm_test(void *cpe_handle, u32 *status)
 
 		rc = t_info->tgt->tgt_read_ram(t_info, &backup_seg);
 		if (rc != CPE_SVC_SUCCESS) {
-			pr_err("%s: Fail to backup CPE IRAM data, err = %d\n",
+			pr_debug("%s: Fail to backup CPE IRAM data, err = %d\n",
 				__func__, rc);
 			goto err_return;
 		}
@@ -2088,7 +2088,7 @@ enum cpe_svc_result cpe_svc_ftm_test(void *cpe_handle, u32 *status)
 
 		rc = t_info->tgt->tgt_write_ram(t_info, &waiti_seg);
 		if (rc != CPE_SVC_SUCCESS) {
-			pr_err("%s: Fail to write the WAITI data, err = %d\n",
+			pr_debug("%s: Fail to write the WAITI data, err = %d\n",
 				__func__, rc);
 			goto restore_iram;
 		}
@@ -2096,7 +2096,7 @@ enum cpe_svc_result cpe_svc_ftm_test(void *cpe_handle, u32 *status)
 		/* Boot up cpe to execute the WAITI instructions */
 		rc = t_info->tgt->tgt_boot(1);
 		if (rc != CPE_SVC_SUCCESS) {
-			pr_err("%s: Fail to boot CPE, err = %d\n",
+			pr_debug("%s: Fail to boot CPE, err = %d\n",
 				__func__, rc);
 			goto reset;
 		}
@@ -2114,7 +2114,7 @@ reset:
 		/* Set the cpe back to reset state */
 		rc = t_info->tgt->tgt_reset();
 		if (rc != CPE_SVC_SUCCESS) {
-			pr_err("%s: CPE reset fail! err = %d\n",
+			pr_debug("%s: CPE reset fail! err = %d\n",
 				__func__, rc);
 			goto restore_iram;
 		}
@@ -2123,7 +2123,7 @@ restore_iram:
 		/* Restore the IRAM 4 bytes data */
 		rc = t_info->tgt->tgt_write_ram(t_info, &backup_seg);
 		if (rc != CPE_SVC_SUCCESS) {
-			pr_err("%s: Fail to restore the IRAM data, err = %d\n",
+			pr_debug("%s: Fail to restore the IRAM data, err = %d\n",
 				__func__, rc);
 			goto err_return;
 		}
@@ -2294,7 +2294,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_boot(int debug_mode)
 	rc |= cpe_update_bits(WCD9335_CPE_SS_CPAR_CTL, 0x01, 0x01);
 
 	if (unlikely(rc)) {
-		pr_err("%s: Failed to boot, err = %d\n",
+		pr_debug("%s: Failed to boot, err = %d\n",
 			__func__, rc);
 		rc = CPE_SVC_FAILED;
 	}
@@ -2336,7 +2336,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_reset(void)
 	rc |= cpe_update_bits(WCD9335_CPE_SS_CPAR_CTL, 0x04, 0x04);
 
 	if (unlikely(rc)) {
-		pr_err("%s: failed to reset cpe, err = %d\n",
+		pr_debug("%s: failed to reset cpe, err = %d\n",
 			__func__, rc);
 		rc = CPE_SVC_FAILED;
 	}
@@ -2362,7 +2362,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_read_mailbox(u8 *buffer,
 	rc = cpe_register_write(WCD9335_CPE_SS_OUTBOX1_ACK, 0x01);
 
 	if (unlikely(rc)) {
-		pr_err("%s: failed to ACK outbox, err = %d\n",
+		pr_debug("%s: failed to ACK outbox, err = %d\n",
 			__func__, rc);
 		rc = CPE_SVC_FAILED;
 	}
@@ -2385,7 +2385,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_write_mailbox(u8 *buffer,
 	}
 
 	if (unlikely(rc)) {
-		pr_err("%s: Error %d writing mailbox registers\n",
+		pr_debug("%s: Error %d writing mailbox registers\n",
 			__func__, rc);
 		return rc;
 	}
@@ -2416,20 +2416,20 @@ static enum cpe_svc_result cpe_wcd9335_get_mem_addr(struct cpe_info *t_info,
 		break;
 
 	default:
-		pr_err("%s: Invalid mem type = %u\n",
+		pr_debug("%s: Invalid mem type = %u\n",
 			__func__, mem_seg->type);
 		return CPE_SVC_INVALID_HANDLE;
 	}
 
 	if (mem_seg->cpe_addr < offset) {
-		pr_err("%s: Invalid addr %x for mem type %u\n",
+		pr_debug("%s: Invalid addr %x for mem type %u\n",
 			__func__, mem_seg->cpe_addr, mem_type);
 		return CPE_SVC_INVALID_HANDLE;
 	}
 
 	address = mem_seg->cpe_addr - offset;
 	if (address + mem_seg->size > mem_sz) {
-		pr_err("%s: wrong size %zu, start address %x, mem_type %u\n",
+		pr_debug("%s: wrong size %zu, start address %x, mem_type %u\n",
 			__func__, mem_seg->size, address, mem_type);
 		return CPE_SVC_INVALID_HANDLE;
 	}
@@ -2453,14 +2453,14 @@ static enum cpe_svc_result cpe_tgt_wcd9335_read_RAM(struct cpe_info *t_info,
 	bool autoinc;
 
 	if (!mem_seg) {
-		pr_err("%s: Invalid buffer\n", __func__);
+		pr_debug("%s: Invalid buffer\n", __func__);
 		return CPE_SVC_INVALID_HANDLE;
 	}
 
 	rc = cpe_wcd9335_get_mem_addr(t_info, mem_seg, &addr, &mem);
 
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: Cannot obtain address, mem_type %u\n",
+		pr_debug("%s: Cannot obtain address, mem_type %u\n",
 			__func__, mem_seg->type);
 		return rc;
 	}
@@ -2511,7 +2511,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_read_RAM(struct cpe_info *t_info,
 	rc |= cpe_register_write(WCD9335_CPE_SS_MEM_CTRL, 0);
 
 	if (rc)
-		pr_err("%s: Failed to read registers, err = %d\n",
+		pr_debug("%s: Failed to read registers, err = %d\n",
 			__func__, rc);
 
 	return rc;
@@ -2529,7 +2529,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_write_RAM(struct cpe_info *t_info,
 	bool autoinc;
 
 	if (!mem_seg) {
-		pr_err("%s: Invalid mem segment\n",
+		pr_debug("%s: Invalid mem segment\n",
 			__func__);
 		return CPE_SVC_INVALID_HANDLE;
 	}
@@ -2537,7 +2537,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_write_RAM(struct cpe_info *t_info,
 	rc = cpe_wcd9335_get_mem_addr(t_info, mem_seg, &addr, &mem);
 
 	if (rc != CPE_SVC_SUCCESS) {
-		pr_err("%s: Cannot obtain address, mem_type %u\n",
+		pr_debug("%s: Cannot obtain address, mem_type %u\n",
 			__func__, mem_seg->type);
 		return rc;
 	}
@@ -2569,7 +2569,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_write_RAM(struct cpe_info *t_info,
 			? CHUNK_SIZE : (mem_seg->size - temp_size);
 
 		if (t_info->state == CPE_STATE_OFFLINE) {
-			pr_err("%s: CPE is offline\n", __func__);
+			pr_debug("%s: CPE is offline\n", __func__);
 			return CPE_SVC_FAILED;
 		}
 
@@ -2582,7 +2582,7 @@ static enum cpe_svc_result cpe_tgt_wcd9335_write_RAM(struct cpe_info *t_info,
 	rc = cpe_register_write(WCD9335_CPE_SS_MEM_CTRL, 0);
 
 	if (rc)
-		pr_err("%s: Failed to write registers, err = %d\n",
+		pr_debug("%s: Failed to write registers, err = %d\n",
 			__func__, rc);
 	return rc;
 }
@@ -2606,13 +2606,13 @@ static enum cpe_svc_result cpe_tgt_wcd9335_route_notification(
 			rc = cpe_update_bits(WCD9335_CPE_SS_CFG, 0x01, 0x00);
 			break;
 		default:
-			pr_err("%s: Invalid destination %d\n",
+			pr_debug("%s: Invalid destination %d\n",
 				__func__, dest);
 			return CPE_SVC_FAILED;
 		}
 		break;
 	default:
-		pr_err("%s: Invalid module %d\n",
+		pr_debug("%s: Invalid module %d\n",
 			__func__, module);
 		rc = CPE_SVC_FAILED;
 		break;

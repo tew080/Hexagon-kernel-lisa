@@ -708,7 +708,7 @@ static int mi_dsi_panel_read_gamma_otp_and_flash(struct dsi_panel *panel,
 
 	rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_MI_GAMMA_OTP_READ_POST);
 	if (rc) {
-		pr_err("Failed to send DSI_CMD_SET_MI_GAMMA_OTP_READ_POST command\n");
+		pr_debug("Failed to send DSI_CMD_SET_MI_GAMMA_OTP_READ_POST command\n");
 		retval = -EAGAIN;
 		goto error;
 	}

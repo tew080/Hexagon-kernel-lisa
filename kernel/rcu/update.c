@@ -829,9 +829,9 @@ static void __init rcu_tasks_bootup_oddness(void)
 {
 #ifdef CONFIG_TASKS_RCU
 	if (rcu_task_stall_timeout != RCU_TASK_STALL_TIMEOUT)
-		pr_info("\tTasks-RCU CPU stall warnings timeout set to %d (rcu_task_stall_timeout).\n", rcu_task_stall_timeout);
+		pr_debug("\tTasks-RCU CPU stall warnings timeout set to %d (rcu_task_stall_timeout).\n", rcu_task_stall_timeout);
 	else
-		pr_info("\tTasks RCU enabled.\n");
+		pr_debug("\tTasks RCU enabled.\n");
 #endif /* #ifdef CONFIG_TASKS_RCU */
 }
 
@@ -850,7 +850,7 @@ static int rcu_self_test_counter;
 static void test_callback(struct rcu_head *r)
 {
 	rcu_self_test_counter++;
-	pr_info("RCU test callback executed %d\n", rcu_self_test_counter);
+	pr_debug("RCU test callback executed %d\n", rcu_self_test_counter);
 }
 
 DEFINE_STATIC_SRCU(early_srcu);
@@ -875,7 +875,7 @@ static void early_boot_test_call_rcu(void)
 
 void rcu_early_boot_tests(void)
 {
-	pr_info("Running RCU self tests\n");
+	pr_debug("Running RCU self tests\n");
 
 	if (rcu_self_test)
 		early_boot_test_call_rcu();
@@ -915,15 +915,15 @@ void rcu_early_boot_tests(void) {}
 void __init rcupdate_announce_bootup_oddness(void)
 {
 	if (rcu_normal)
-		pr_info("\tNo expedited grace period (rcu_normal).\n");
+		pr_debug("\tNo expedited grace period (rcu_normal).\n");
 	else if (rcu_normal_after_boot)
-		pr_info("\tNo expedited grace period (rcu_normal_after_boot).\n");
+		pr_debug("\tNo expedited grace period (rcu_normal_after_boot).\n");
 	else if (rcu_expedited)
-		pr_info("\tAll grace periods are expedited (rcu_expedited).\n");
+		pr_debug("\tAll grace periods are expedited (rcu_expedited).\n");
 	if (rcu_cpu_stall_suppress)
-		pr_info("\tRCU CPU stall warnings suppressed (rcu_cpu_stall_suppress).\n");
+		pr_debug("\tRCU CPU stall warnings suppressed (rcu_cpu_stall_suppress).\n");
 	if (rcu_cpu_stall_timeout != CONFIG_RCU_CPU_STALL_TIMEOUT)
-		pr_info("\tRCU CPU stall warnings timeout set to %d (rcu_cpu_stall_timeout).\n", rcu_cpu_stall_timeout);
+		pr_debug("\tRCU CPU stall warnings timeout set to %d (rcu_cpu_stall_timeout).\n", rcu_cpu_stall_timeout);
 	rcu_tasks_bootup_oddness();
 }
 

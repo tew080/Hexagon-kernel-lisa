@@ -146,7 +146,7 @@ static bool _sde_evtlog_dump_calc_range(struct sde_dbg_evtlog *evtlog,
 	}
 
 	if ((evtlog->last_dump - evtlog->first) > max_entries) {
-		pr_info("evtlog skipping %d entries, last=%d\n",
+		pr_debug("evtlog skipping %d entries, last=%d\n",
 			evtlog->last_dump - evtlog->first -
 			max_entries, evtlog->last_dump - 1);
 		evtlog->first = evtlog->last_dump - max_entries;
@@ -211,7 +211,7 @@ void sde_evtlog_dump_all(struct sde_dbg_evtlog *evtlog)
 
 	while (sde_evtlog_dump_to_buffer(evtlog, buf, sizeof(buf),
 				update_last_entry, false)) {
-		pr_info("%s\n", buf);
+		pr_debug("%s\n", buf);
 		update_last_entry = false;
 	}
 }
@@ -226,7 +226,7 @@ struct sde_dbg_evtlog *sde_evtlog_init(void)
 
 	if (sde_mini_dump_add_region("evt_log", sizeof(*evtlog),
 			evtlog) < 0)
-		pr_err("minidump add region failed for evtlog\n");
+		pr_debug("minidump add region failed for evtlog\n");
 
 	spin_lock_init(&evtlog->spin_lock);
 	evtlog->enable = SDE_EVTLOG_DEFAULT_ENABLE;
@@ -247,7 +247,7 @@ struct sde_dbg_reglog *sde_reglog_init(void)
 	atomic64_set(&reglog->curr, 0);
 	if (sde_mini_dump_add_region("reg_log", sizeof(*reglog),
 			reglog) < 0)
-		pr_err("minidump add region failed for reglog\n");
+		pr_debug("minidump add region failed for reglog\n");
 
 	return reglog;
 }

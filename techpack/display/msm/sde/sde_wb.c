@@ -303,7 +303,7 @@ int sde_wb_get_info(struct drm_connector *connector,
 	u32 max_width = SDE_WB_MODE_MAX_WIDTH;
 
 	if (!info || !wb_dev) {
-		pr_err("invalid params\n");
+		pr_debug("invalid params\n");
 		return -EINVAL;
 	}
 
@@ -338,7 +338,7 @@ int sde_wb_get_mode_info(struct drm_connector *connector,
 
 	if (!drm_mode || !mode_info || !avail_res ||
 			!avail_res->max_mixer_width || !display) {
-		pr_err("invalid params\n");
+		pr_debug("invalid params\n");
 		return -EINVAL;
 	}
 
@@ -777,7 +777,7 @@ static int sde_wb_probe(struct platform_device *pdev)
 	if (!_sde_wb_dev_init(wb_dev)) {
 		ret = component_add(&pdev->dev, &sde_wb_comp_ops);
 		if (ret)
-			pr_err("component add failed\n");
+			pr_debug("component add failed\n");
 	}
 
 	return ret;

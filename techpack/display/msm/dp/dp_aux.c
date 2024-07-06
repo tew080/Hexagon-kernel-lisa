@@ -181,7 +181,7 @@ static int dp_aux_cmd_fifo_tx(struct dp_aux_private *aux,
 	if (aux->aux_error_num == DP_AUX_ERR_NONE) {
 		ret = len;
 	} else {
-		pr_err_ratelimited("aux err: %s\n",
+		pr_debug_ratelimited("aux err: %s\n",
 			dp_aux_get_error(aux->aux_error_num));
 
 		ret = -EINVAL;

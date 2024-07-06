@@ -1228,7 +1228,7 @@ static int kgsl_open(struct inode *inodep, struct file *filep)
 
 	device = kgsl_get_minor(minor);
 	if (device == NULL) {
-		pr_err("kgsl: No device found\n");
+		pr_debug("kgsl: No device found\n");
 		return -ENODEV;
 	}
 
@@ -4426,7 +4426,7 @@ static int _register_device(struct kgsl_device *device)
 	mutex_unlock(&kgsl_driver.devlock);
 
 	if (minor == ARRAY_SIZE(kgsl_driver.devp)) {
-		pr_err("kgsl: minor devices exhausted\n");
+		pr_debug("kgsl: minor devices exhausted\n");
 		return -ENODEV;
 	}
 
@@ -4442,7 +4442,7 @@ static int _register_device(struct kgsl_device *device)
 		kgsl_driver.devp[minor] = NULL;
 		mutex_unlock(&kgsl_driver.devlock);
 		ret = PTR_ERR(device->dev);
-		pr_err("kgsl: device_create(%s): %d\n", device->name, ret);
+		pr_debug("kgsl: device_create(%s): %d\n", device->name, ret);
 		return ret;
 	}
 
@@ -4662,7 +4662,7 @@ static long kgsl_run_one_worker(struct kthread_worker *worker,
 	kthread_init_worker(worker);
 	*thread = kthread_run(kthread_worker_fn, worker, name);
 	if (IS_ERR(*thread)) {
-		pr_err("unable to start %s\n", name);
+		pr_debug("unable to start %s\n", name);
 		return PTR_ERR(thread);
 	}
 	return 0;
@@ -4681,7 +4681,7 @@ int __init kgsl_core_init(void)
 
 	if (result < 0) {
 
-		pr_err("kgsl: alloc_chrdev_region failed err = %d\n", result);
+		pr_debug("kgsl: alloc_chrdev_region failed err = %d\n", result);
 		goto err;
 	}
 
@@ -4692,7 +4692,7 @@ int __init kgsl_core_init(void)
 		ARRAY_SIZE(kgsl_driver.devp));
 
 	if (result) {
-		pr_err("kgsl: cdev_add() failed, dev_num= %d,result= %d\n",
+		pr_debug("kgsl: cdev_add() failed, dev_num= %d,result= %d\n",
 				kgsl_driver.major, result);
 		goto err;
 	}
@@ -4701,7 +4701,7 @@ int __init kgsl_core_init(void)
 
 	if (IS_ERR(kgsl_driver.class)) {
 		result = PTR_ERR(kgsl_driver.class);
-		pr_err("kgsl: failed to create class for kgsl\n");
+		pr_debug("kgsl: failed to create class for kgsl\n");
 		goto err;
 	}
 
@@ -4713,7 +4713,7 @@ int __init kgsl_core_init(void)
 	dev_set_name(&kgsl_driver.virtdev, "kgsl");
 	result = device_register(&kgsl_driver.virtdev);
 	if (result) {
-		pr_err("kgsl: driver_register failed\n");
+		pr_debug("kgsl: driver_register failed\n");
 		goto err;
 	}
 
@@ -4742,7 +4742,7 @@ int __init kgsl_core_init(void)
 		WQ_UNBOUND | WQ_MEM_RECLAIM | WQ_SYSFS, 0);
 
 	if (!kgsl_driver.workqueue) {
-		pr_err("kgsl: Failed to allocate kgsl workqueue\n");
+		pr_debug("kgsl: Failed to allocate kgsl workqueue\n");
 		result = -ENOMEM;
 		goto err;
 	}
@@ -4751,7 +4751,7 @@ int __init kgsl_core_init(void)
 		WQ_UNBOUND | WQ_MEM_RECLAIM, 0);
 
 	if (!kgsl_driver.mem_workqueue) {
-		pr_err("kgsl: Failed to allocate mem workqueue\n");
+		pr_debug("kgsl: Failed to allocate mem workqueue\n");
 		result = -ENOMEM;
 		goto err;
 	}

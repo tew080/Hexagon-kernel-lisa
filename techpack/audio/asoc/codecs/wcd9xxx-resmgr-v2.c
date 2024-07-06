@@ -59,7 +59,7 @@ static int wcd_resmgr_codec_reg_update_bits(struct wcd9xxx_resmgr_v2 *resmgr,
 		if (!ret)
 			ret = change;
 	} else {
-		pr_err("%s: codec/regmap not defined\n", __func__);
+		pr_debug("%s: codec/regmap not defined\n", __func__);
 		ret = -EINVAL;
 	}
 
@@ -86,7 +86,7 @@ static int wcd_resmgr_codec_reg_read(struct wcd9xxx_resmgr_v2 *resmgr,
 		if (ret)
 			val = ret;
 	} else {
-		pr_err("%s: wcd regmap is null\n", __func__);
+		pr_debug("%s: wcd regmap is null\n", __func__);
 		return -EINVAL;
 	}
 
@@ -100,7 +100,7 @@ static int wcd_resmgr_codec_reg_read(struct wcd9xxx_resmgr_v2 *resmgr,
 int wcd_resmgr_get_clk_type(struct wcd9xxx_resmgr_v2 *resmgr)
 {
 	if (!resmgr) {
-		pr_err("%s: resmgr not initialized\n", __func__);
+		pr_debug("%s: resmgr not initialized\n", __func__);
 		return -EINVAL;
 	}
 	return resmgr->clk_type;
@@ -222,7 +222,7 @@ static int wcd_resmgr_enable_clk_mclk(struct wcd9xxx_resmgr_v2 *resmgr)
 {
 	/* Enable mclk requires master bias to be enabled first */
 	if (resmgr->master_bias_users <= 0) {
-		pr_err("%s: Cannot turn on MCLK, BG is not enabled\n",
+		pr_debug("%s: Cannot turn on MCLK, BG is not enabled\n",
 			__func__);
 		return -EINVAL;
 	}
@@ -231,7 +231,7 @@ static int wcd_resmgr_enable_clk_mclk(struct wcd9xxx_resmgr_v2 *resmgr)
 	     (resmgr->clk_type == WCD_CLK_MCLK)) ||
 	    ((resmgr->clk_mclk_users > 0) &&
 	    (resmgr->clk_type != WCD_CLK_MCLK))) {
-		pr_err("%s: Error enabling MCLK, clk_type: %s\n",
+		pr_debug("%s: Error enabling MCLK, clk_type: %s\n",
 			__func__,
 			wcd_resmgr_clk_type_to_str(resmgr->clk_type));
 		return -EINVAL;
@@ -294,7 +294,7 @@ static int wcd_resmgr_enable_clk_mclk(struct wcd9xxx_resmgr_v2 *resmgr)
 static int wcd_resmgr_disable_clk_mclk(struct wcd9xxx_resmgr_v2 *resmgr)
 {
 	if (resmgr->clk_mclk_users <= 0) {
-		pr_err("%s: No mclk users, cannot disable mclk\n", __func__);
+		pr_debug("%s: No mclk users, cannot disable mclk\n", __func__);
 		return -EINVAL;
 	}
 
@@ -434,7 +434,7 @@ static int wcd_resmgr_disable_clk_rco(struct wcd9xxx_resmgr_v2 *resmgr)
 {
 	if ((resmgr->clk_rco_users <= 0) ||
 	    (resmgr->clk_type == WCD_CLK_OFF)) {
-		pr_err("%s: rco_clk_users = %d, clk_type = %d, cannot disable\n",
+		pr_debug("%s: rco_clk_users = %d, clk_type = %d, cannot disable\n",
 			__func__, resmgr->clk_rco_users, resmgr->clk_type);
 		return -EINVAL;
 	}
@@ -500,14 +500,14 @@ int wcd_resmgr_enable_clk_block(struct wcd9xxx_resmgr_v2 *resmgr,
 		ret = wcd_resmgr_enable_clk_rco(resmgr);
 		break;
 	default:
-		pr_err("%s: Unknown Clock type: %s\n", __func__,
+		pr_debug("%s: Unknown Clock type: %s\n", __func__,
 			wcd_resmgr_clk_type_to_str(type));
 		ret = -EINVAL;
 		break;
 	};
 
 	if (ret)
-		pr_err("%s: Enable clock %s failed\n", __func__,
+		pr_debug("%s: Enable clock %s failed\n", __func__,
 			wcd_resmgr_clk_type_to_str(type));
 
 	return ret;
@@ -591,14 +591,14 @@ int wcd_resmgr_disable_clk_block(struct wcd9xxx_resmgr_v2 *resmgr,
 		ret = wcd_resmgr_disable_clk_rco(resmgr);
 		break;
 	default:
-		pr_err("%s: Unknown Clock type: %s\n", __func__,
+		pr_debug("%s: Unknown Clock type: %s\n", __func__,
 			wcd_resmgr_clk_type_to_str(type));
 		ret = -EINVAL;
 		break;
 	};
 
 	if (ret)
-		pr_err("%s: Disable clock %s failed\n", __func__,
+		pr_debug("%s: Disable clock %s failed\n", __func__,
 			wcd_resmgr_clk_type_to_str(type));
 
 	return ret;
@@ -625,7 +625,7 @@ struct wcd9xxx_resmgr_v2 *wcd_resmgr_init(
 	wcd9xxx = container_of(core_res, struct wcd9xxx, core_res);
 	if (!wcd9xxx) {
 		kfree(resmgr);
-		pr_err("%s: Cannot get wcd9xx pointer\n", __func__);
+		pr_debug("%s: Cannot get wcd9xx pointer\n", __func__);
 		return ERR_PTR(-EINVAL);
 	}
 
@@ -666,12 +666,12 @@ int wcd_resmgr_post_init(struct wcd9xxx_resmgr_v2 *resmgr,
 			 struct snd_soc_component *component)
 {
 	if (!resmgr) {
-		pr_err("%s: resmgr not allocated\n", __func__);
+		pr_debug("%s: resmgr not allocated\n", __func__);
 		return -EINVAL;
 	}
 
 	if (!component) {
-		pr_err("%s: Codec memory is NULL, nothing to post init\n",
+		pr_debug("%s: Codec memory is NULL, nothing to post init\n",
 			__func__);
 		return -EINVAL;
 	}

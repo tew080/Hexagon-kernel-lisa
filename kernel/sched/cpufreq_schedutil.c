@@ -1111,7 +1111,7 @@ static int sugov_kthread_create(struct sugov_policy *sg_policy)
 				"sugov:%d",
 				cpumask_first(policy->related_cpus));
 	if (IS_ERR(thread)) {
-		pr_err("failed to create sugov thread: %ld\n", PTR_ERR(thread));
+		pr_debug("failed to create sugov thread: %ld\n", PTR_ERR(thread));
 		return PTR_ERR(thread);
 	}
 
@@ -1312,7 +1312,7 @@ free_sg_policy:
 disable_fast_switch:
 	cpufreq_disable_fast_switch(policy);
 
-	pr_err("initialization failed (error %d)\n", ret);
+	pr_debug("initialization failed (error %d)\n", ret);
 	return ret;
 }
 

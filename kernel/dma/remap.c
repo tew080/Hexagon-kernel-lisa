@@ -155,7 +155,7 @@ struct gen_pool *__init __dma_atomic_pool_init(void)
 		goto remove_mapping;
 	gen_pool_set_algo(pool, gen_pool_first_fit_order_align, NULL);
 
-	pr_info("DMA: preallocated %zu KiB pool for atomic allocations\n",
+	pr_debug("DMA: preallocated %zu KiB pool for atomic allocations\n",
 		atomic_pool_size / 1024);
 	return pool;
 

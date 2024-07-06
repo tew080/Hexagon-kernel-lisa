@@ -1397,7 +1397,7 @@ static int ext_disp_get_port_idx(struct snd_kcontrol *kcontrol)
 		    sizeof("Display Port RX"))) {
 		idx = DP_RX_IDX;
 	} else {
-		pr_err("%s: unsupported BE: %s\n",
+		pr_debug("%s: unsupported BE: %s\n",
 			__func__, kcontrol->id.name);
 		idx = -EINVAL;
 	}
@@ -1772,7 +1772,7 @@ static int tdm_get_mode(struct snd_kcontrol *kcontrol)
 	    sizeof(kcontrol->id.name))) {
 		mode = TDM_HSIF2;
 	} else {
-		pr_err("%s: unsupported mode in: %s",
+		pr_debug("%s: unsupported mode in: %s",
 			__func__, kcontrol->id.name);
 		mode = -EINVAL;
 	}
@@ -1825,7 +1825,7 @@ static int tdm_get_channel(struct snd_kcontrol *kcontrol)
 		   sizeof(kcontrol->id.name))) {
 		channel = TDM_7;
 	} else {
-		pr_err("%s: unsupported channel in: %s",
+		pr_debug("%s: unsupported channel in: %s",
 			__func__, kcontrol->id.name);
 		channel = -EINVAL;
 	}
@@ -1856,7 +1856,7 @@ static int tdm_rx_sample_rate_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] = tdm_get_sample_rate_val(
@@ -1876,7 +1876,7 @@ static int tdm_rx_sample_rate_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_rx_cfg[port.mode][port.channel].sample_rate =
@@ -1896,7 +1896,7 @@ static int tdm_tx_sample_rate_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s",
+		pr_debug("%s: unsupported control: %s",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] = tdm_get_sample_rate_val(
@@ -1916,7 +1916,7 @@ static int tdm_tx_sample_rate_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_tx_cfg[port.mode][port.channel].sample_rate =
@@ -1978,7 +1978,7 @@ static int tdm_rx_format_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] = tdm_get_format_val(
@@ -1998,7 +1998,7 @@ static int tdm_rx_format_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_rx_cfg[port.mode][port.channel].bit_format =
@@ -2018,7 +2018,7 @@ static int tdm_tx_format_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] = tdm_get_format_val(
@@ -2038,7 +2038,7 @@ static int tdm_tx_format_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_tx_cfg[port.mode][port.channel].bit_format =
@@ -2058,7 +2058,7 @@ static int tdm_rx_ch_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 
@@ -2079,7 +2079,7 @@ static int tdm_rx_ch_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_rx_cfg[port.mode][port.channel].channels =
@@ -2099,7 +2099,7 @@ static int tdm_tx_ch_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		ucontrol->value.enumerated.item[0] =
@@ -2119,7 +2119,7 @@ static int tdm_tx_ch_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		tdm_tx_cfg[port.mode][port.channel].channels =
@@ -2168,7 +2168,7 @@ static int tdm_slot_num_get(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -2219,7 +2219,7 @@ static int tdm_slot_num_put(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -2261,7 +2261,7 @@ static int tdm_slot_width_get(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -2303,7 +2303,7 @@ static int tdm_slot_width_put(struct snd_kcontrol *kcontrol,
 	int mode = tdm_get_mode(kcontrol);
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 		return mode;
 	}
@@ -2327,7 +2327,7 @@ static int tdm_rx_slot_mapping_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		slot_offset = tdm_rx_slot_offset[port.mode][port.channel];
@@ -2351,7 +2351,7 @@ static int tdm_rx_slot_mapping_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		slot_offset = tdm_rx_slot_offset[port.mode][port.channel];
@@ -2375,7 +2375,7 @@ static int tdm_tx_slot_mapping_get(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		slot_offset = tdm_tx_slot_offset[port.mode][port.channel];
@@ -2399,7 +2399,7 @@ static int tdm_tx_slot_mapping_put(struct snd_kcontrol *kcontrol,
 	int ret = tdm_get_port_idx(kcontrol, &port);
 
 	if (ret) {
-		pr_err("%s: unsupported control: %s\n",
+		pr_debug("%s: unsupported control: %s\n",
 			__func__, kcontrol->id.name);
 	} else {
 		slot_offset = tdm_tx_slot_offset[port.mode][port.channel];
@@ -2424,7 +2424,7 @@ static int tdm_paired_rx_get(struct snd_kcontrol *kcontrol,
 	*0: Primary , 1: secondary, 2: Tertiary, 3: Quaternary, 4: QUINARY
 	*/
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n", __func__, kcontrol->id.name);
+		pr_debug("%s: unsupported control: %s\n", __func__, kcontrol->id.name);
 		return -EINVAL;
 	}
 	ucontrol->value.enumerated.item[0] = AFE_PORT_ID_INVALID;
@@ -2453,7 +2453,7 @@ static int tdm_paired_rx_put(struct snd_kcontrol *kcontrol,
 	static u32 num_tdm_group_ports;
 
 	if (mode < 0) {
-		pr_err("%s: unsupported control: %s\n", __func__, kcontrol->id.name);
+		pr_debug("%s: unsupported control: %s\n", __func__, kcontrol->id.name);
 		return -EINVAL;
 	} else {
 		memset(&tdm_port, 0, sizeof(tdm_port));
@@ -2464,7 +2464,7 @@ static int tdm_paired_rx_put(struct snd_kcontrol *kcontrol,
 		intf_idx = val / MAX_PORTS_PER_INTF;
 		port_idx = val % MAX_PORTS_PER_INTF;
 		if (mode != intf_idx) {
-			pr_err("%s:Wrong value given for TDM Interface %d", __func__, intf_idx);
+			pr_debug("%s:Wrong value given for TDM Interface %d", __func__, intf_idx);
 			return -EINVAL;
 		}
 		pr_debug("%s:Port Channel = %d Interface = %d", __func__, port_idx, intf_idx);
@@ -2487,24 +2487,24 @@ static int tdm_paired_rx_put(struct snd_kcontrol *kcontrol,
 			node = of_find_node_by_path("/soc/qcom,msm-dai-tdm-quin-rx");
 			break;
 		default:
-			pr_err("%s:Wrong interface present", __func__);
+			pr_debug("%s:Wrong interface present", __func__);
 			return -EINVAL;
 		}
 
 		/* Group Cfg */
 		rc = of_property_read_u32(node,"qcom,msm-cpudai-tdm-group-id",(u32 *)&tdm_group.tdm_cfg.group_id);
 		if (rc) {
-			pr_err("%s:Paired Rx Group Id not in DT File %s\n",__func__,"qcom,msm-cpudai-tdm-group-id");
+			pr_debug("%s:Paired Rx Group Id not in DT File %s\n",__func__,"qcom,msm-cpudai-tdm-group-id");
 			return -EINVAL;
 		}
 
 		rc = of_property_read_u32(node,"qcom,msm-cpudai-tdm-group-num-ports",&num_tdm_group_ports);
 		if (rc) {
-			pr_err("%s:Paired Rx Group Num Ports from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-group-num-ports");
+			pr_debug("%s:Paired Rx Group Num Ports from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-group-num-ports");
 			return -EINVAL;
 		}
 		if (num_tdm_group_ports > AFE_GROUP_DEVICE_NUM_PORTS) {
-			pr_err("%s:Paired Rx Group Num Ports %d greater than Max %d\n",__func__, num_tdm_group_ports,
+			pr_debug("%s:Paired Rx Group Num Ports %d greater than Max %d\n",__func__, num_tdm_group_ports,
 				AFE_GROUP_DEVICE_NUM_PORTS);
 			return -EINVAL;
 		}
@@ -2514,11 +2514,11 @@ static int tdm_paired_rx_put(struct snd_kcontrol *kcontrol,
 		*/
 		port_id_array = of_get_property(node,"qcom,msm-cpudai-tdm-group-port-id",&array_length);
 		if (port_id_array == NULL) {
-			pr_err("%s:Paired rx port_id_array is not valid\n",__func__);
+			pr_debug("%s:Paired rx port_id_array is not valid\n",__func__);
 			return -EINVAL;
 		}
 		if (array_length != sizeof(uint32_t) * num_tdm_group_ports) {
-			pr_err("%s:paired rx array_length is %d, expected is %zd\n",
+			pr_debug("%s:paired rx array_length is %d, expected is %zd\n",
 				__func__, array_length,
 				sizeof(uint32_t) * num_tdm_group_ports);
 			return -EINVAL;
@@ -2547,7 +2547,7 @@ static int tdm_paired_rx_put(struct snd_kcontrol *kcontrol,
 		if (of_find_property(node,"qcom,msm-cpudai-tdm-lane-mask", NULL)) {
 			rc = of_property_read_u16(node,"qcom,msm-cpudai-tdm-lane-mask",&tdm_lane.lane_mask);
 			if (rc) {
-				pr_err("%s: value for tdm lane mask not found %s\n",__func__, "qcom,msm-cpudai-tdm-lane-mask");
+				pr_debug("%s: value for tdm lane mask not found %s\n",__func__, "qcom,msm-cpudai-tdm-lane-mask");
 				return -EINVAL;
 			}
 			pr_debug("%s: tdm lane mask from DT file %d\n",__func__, tdm_lane.lane_mask);
@@ -2563,32 +2563,32 @@ static int tdm_paired_rx_put(struct snd_kcontrol *kcontrol,
 		/* TDM Cfg */
 		rc = of_property_read_u32(node,"qcom,msm-cpudai-tdm-sync-mode",(u32 *)&tdm_port.tdm.sync_mode);
 		if (rc) {
-			pr_err("%s:Paired rx Sync Mode from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-sync-mode");
+			pr_debug("%s:Paired rx Sync Mode from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-sync-mode");
 			return -EINVAL;
 		}
 
 		rc = of_property_read_u32(node,"qcom,msm-cpudai-tdm-sync-src",(u32 *)&tdm_port.tdm.sync_src);
 		if (rc) {
-			pr_err("%s:Paired rx Sync Src from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-sync-src");
+			pr_debug("%s:Paired rx Sync Src from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-sync-src");
 			return -EINVAL;
 		}
 
 		rc = of_property_read_u32(node,"qcom,msm-cpudai-tdm-data-out",(u32 *)&tdm_port.tdm.ctrl_data_out_enable);
 		if (rc) {
-			pr_err("%s:Paired rx Data Out from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-data-out");
+			pr_debug("%s:Paired rx Data Out from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-data-out");
 			return -EINVAL;
 		}
 
 		rc = of_property_read_u32(node,"qcom,msm-cpudai-tdm-invert-sync",(u32 *)&tdm_port.tdm.ctrl_invert_sync_pulse);
 		if (rc) {
-			pr_err("%s:Paired rx Invert Sync from DT file %s\n",
+			pr_debug("%s:Paired rx Invert Sync from DT file %s\n",
 				__func__, "qcom,msm-cpudai-tdm-invert-sync");
 			return -EINVAL;
 		}
 
 		rc = of_property_read_u32(node,"qcom,msm-cpudai-tdm-data-delay",(u32 *)&tdm_port.tdm.ctrl_sync_data_delay);
 		if (rc) {
-			pr_err("%s:Paired rx Data Delay from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-data-delay");
+			pr_debug("%s:Paired rx Data Delay from DT file %s\n",__func__, "qcom,msm-cpudai-tdm-data-delay");
 			return -EINVAL;
 		}
 
@@ -2665,7 +2665,7 @@ static int aux_pcm_get_port_idx(struct snd_kcontrol *kcontrol)
 			 sizeof("QUIN_AUX_PCM")))
 		idx = QUIN_AUX_PCM;
 	else {
-		pr_err("%s: unsupported port: %s\n",
+		pr_debug("%s: unsupported port: %s\n",
 			__func__, kcontrol->id.name);
 		idx = -EINVAL;
 	}
@@ -2780,7 +2780,7 @@ static int mi2s_get_port_idx(struct snd_kcontrol *kcontrol)
 		 sizeof("QUIN_MI2S_TX")))
 		idx = QUIN_MI2S;
 	else {
-		pr_err("%s: unsupported channel: %s\n",
+		pr_debug("%s: unsupported channel: %s\n",
 			__func__, kcontrol->id.name);
 		idx = -EINVAL;
 	}
@@ -4881,7 +4881,7 @@ static int msm_ext_disp_get_idx_from_beid(int32_t be_id)
 		idx = DP_RX_IDX;
 		break;
 	default:
-		pr_err("%s: Incorrect ext_disp BE id %d\n", __func__, be_id);
+		pr_debug("%s: Incorrect ext_disp BE id %d\n", __func__, be_id);
 		idx = -EINVAL;
 		break;
 	}
@@ -4921,7 +4921,7 @@ static int msm_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 	case MSM_BACKEND_DAI_DISPLAY_PORT_RX:
 		idx = msm_ext_disp_get_idx_from_beid(dai_link->id);
 		if (idx < 0) {
-			pr_err("%s: Incorrect ext disp idx %d\n",
+			pr_debug("%s: Incorrect ext disp idx %d\n",
 			       __func__, idx);
 			rc = idx;
 			goto done;
@@ -5244,7 +5244,7 @@ static int msm_get_port_id(int be_id)
 		afe_port_id = AFE_PORT_ID_QUINARY_MI2S_TX;
 		break;
 	default:
-		pr_err("%s: Invalid BE id: %d\n", __func__, be_id);
+		pr_debug("%s: Invalid BE id: %d\n", __func__, be_id);
 		afe_port_id = -EINVAL;
 	}
 
@@ -5330,13 +5330,13 @@ static int msm_set_pinctrl(struct msm_pinctrl_info *pinctrl_info,
 	int curr_state = 0;
 
 	if (pinctrl_info == NULL) {
-		pr_err("%s: pinctrl info is NULL\n", __func__);
+		pr_debug("%s: pinctrl info is NULL\n", __func__);
 		ret = -EINVAL;
 		goto err;
 	}
 
 	if (pinctrl_info->pinctrl == NULL) {
-		pr_err("%s: pinctrl handle is NULL\n", __func__);
+		pr_debug("%s: pinctrl handle is NULL\n", __func__);
 		ret = -EINVAL;
 		goto err;
 	}
@@ -5363,7 +5363,7 @@ static int msm_set_pinctrl(struct msm_pinctrl_info *pinctrl_info,
 		ret = pinctrl_select_state(pinctrl_info->pinctrl,
 					pinctrl_info->active);
 		if (ret) {
-			pr_err("%s: state select to active failed with %d\n",
+			pr_debug("%s: state select to active failed with %d\n",
 				__func__, ret);
 			ret = -EIO;
 			goto err;
@@ -5373,14 +5373,14 @@ static int msm_set_pinctrl(struct msm_pinctrl_info *pinctrl_info,
 		ret = pinctrl_select_state(pinctrl_info->pinctrl,
 					pinctrl_info->sleep);
 		if (ret) {
-			pr_err("%s: state select to sleep failed with %d\n",
+			pr_debug("%s: state select to sleep failed with %d\n",
 				__func__, ret);
 			ret = -EIO;
 			goto err;
 		}
 		break;
 	default:
-		pr_err("%s: pin state is invalid\n", __func__);
+		pr_debug("%s: pin state is invalid\n", __func__);
 		return -EINVAL;
 	}
 
@@ -5428,19 +5428,19 @@ static int msm_get_pinctrl(struct platform_device *pdev)
 
 		pdev_np = of_find_device_by_node(np);
 		if (!pdev_np) {
-			pr_err("%s: platform device not found\n", __func__);
+			pr_debug("%s: platform device not found\n", __func__);
 			continue;
 		}
 
 		pinctrl_info = &pdata->pinctrl_info[i];
 		if (pinctrl_info == NULL) {
-			pr_err("%s: pinctrl info is null\n", __func__);
+			pr_debug("%s: pinctrl info is null\n", __func__);
 			continue;
 		}
 
 		pinctrl = devm_pinctrl_get(&pdev_np->dev);
 		if (IS_ERR_OR_NULL(pinctrl)) {
-			pr_err("%s: fail to get pinctrl handle\n", __func__);
+			pr_debug("%s: fail to get pinctrl handle\n", __func__);
 			goto err;
 		}
 		pinctrl_info->pinctrl = pinctrl;
@@ -5449,13 +5449,13 @@ static int msm_get_pinctrl(struct platform_device *pdev)
 		pinctrl_info->sleep = pinctrl_lookup_state(pinctrl,
 							"default");
 		if (IS_ERR(pinctrl_info->sleep)) {
-			pr_err("%s: could not get sleep pin state\n", __func__);
+			pr_debug("%s: could not get sleep pin state\n", __func__);
 			goto err;
 		}
 		pinctrl_info->active = pinctrl_lookup_state(pinctrl,
 							"active");
 		if (IS_ERR(pinctrl_info->active)) {
-			pr_err("%s: could not get active pin state\n",
+			pr_debug("%s: could not get active pin state\n",
 				__func__);
 			goto err;
 		}
@@ -5464,7 +5464,7 @@ static int msm_get_pinctrl(struct platform_device *pdev)
 		ret = pinctrl_select_state(pinctrl_info->pinctrl,
 						pinctrl_info->sleep);
 		if (ret != 0) {
-			pr_err("%s: set pin state to sleep failed with %d\n",
+			pr_debug("%s: set pin state to sleep failed with %d\n",
 				__func__, ret);
 			ret = -EIO;
 			goto err;
@@ -5508,19 +5508,19 @@ static int msm_pinctrl_mclk_enable(struct platform_device *pdev)
 		}
 		pdev_np = of_find_device_by_node(np);
 		if (!pdev_np) {
-			pr_err("%s: platform device not found\n", __func__);
+			pr_debug("%s: platform device not found\n", __func__);
 			continue;
 		}
 
 		pinctrl_info = &pdata->mclk_pinctrl_info[i];
 		if (pinctrl_info == NULL) {
-			pr_err("%s: pinctrl info is null\n", __func__);
+			pr_debug("%s: pinctrl info is null\n", __func__);
 			continue;
 		}
 
 		pinctrl = devm_pinctrl_get(&pdev_np->dev);
 		if (IS_ERR_OR_NULL(pinctrl)) {
-			pr_err("%s: fail to get pinctrl handle\n", __func__);
+			pr_debug("%s: fail to get pinctrl handle\n", __func__);
 			goto err;
 		}
 		pinctrl_info->pinctrl = pinctrl;
@@ -5528,13 +5528,13 @@ static int msm_pinctrl_mclk_enable(struct platform_device *pdev)
 		pinctrl_info->sleep = pinctrl_lookup_state(pinctrl,
 			"sleep");
 		if (IS_ERR(pinctrl_info->sleep)) {
-			pr_err("%s: could not get sleep pin state\n", __func__);
+			pr_debug("%s: could not get sleep pin state\n", __func__);
 			goto err;
 		}
 		pinctrl_info->active = pinctrl_lookup_state(pinctrl,
 			"default");
 		if (IS_ERR(pinctrl_info->active)) {
-			pr_err("%s: could not get active pin state\n", __func__);
+			pr_debug("%s: could not get active pin state\n", __func__);
 			goto err;
 		}
 
@@ -5542,7 +5542,7 @@ static int msm_pinctrl_mclk_enable(struct platform_device *pdev)
 		ret = afe_set_lpass_clock_v2(AFE_PORT_ID_TDM_PORT_RANGE_START,
 			&internal_mclk[i]);
 		if (ret < 0) {
-			pr_err("%s: afe lpass clock failed to enable clock, err:%d\n",
+			pr_debug("%s: afe lpass clock failed to enable clock, err:%d\n",
 				__func__, ret);
 			ret = -EIO;
 			goto err;
@@ -5550,7 +5550,7 @@ static int msm_pinctrl_mclk_enable(struct platform_device *pdev)
 		mclk_enable_status = true;
 		ret = pinctrl_select_state(pinctrl_info->pinctrl, pinctrl_info->active);
 		if (ret != 0) {
-			pr_err("%s: set pin state to active failed with %d\n",
+			pr_debug("%s: set pin state to active failed with %d\n",
 				__func__, ret);
 			ret = -EIO;
 			goto err;
@@ -6777,7 +6777,7 @@ static int msm_tdm_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 		break;
 
 	default:
-		pr_err("%s: dai id 0x%x not supported\n",
+		pr_debug("%s: dai id 0x%x not supported\n",
 			__func__, cpu_dai->id);
 		return -EINVAL;
 	}
@@ -6795,7 +6795,7 @@ static unsigned int tdm_param_set_slot_mask(int slots)
 	int i = 0;
 
 	if ((slots <= 0) || (slots > 32)) {
-		pr_err("%s: invalid slot number %d\n", __func__, slots);
+		pr_debug("%s: invalid slot number %d\n", __func__, slots);
 		return -EINVAL;
 	}
 
@@ -6821,7 +6821,7 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 
 	channels = params_channels(params);
 	if (channels < 1 || channels > 32) {
-		pr_err("%s: invalid param channels %d\n",
+		pr_debug("%s: invalid param channels %d\n",
 			__func__, channels);
 		return -EINVAL;
 	}
@@ -6835,7 +6835,7 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		 * use 32 bit slot width for max support of
 		 * stream bit width. (slot_width > bit_width)
 		 */
-		pr_err("%s: invalid param format 0x%x\n",
+		pr_debug("%s: invalid param format 0x%x\n",
 			__func__, format);
 		return -EINVAL;
 	}
@@ -7477,7 +7477,7 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		slot_offset = tdm_tx_slot_offset[TDM_HSIF2][TDM_7];
 		break;
 	default:
-		pr_err("%s: dai id 0x%x not supported\n",
+		pr_debug("%s: dai id 0x%x not supported\n",
 			__func__, cpu_dai->id);
 		return -EINVAL;
 	}
@@ -7490,20 +7490,20 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 	}
 
 	if (offset_channels == 0) {
-		pr_err("%s: invalid offset_channels %d\n",
+		pr_debug("%s: invalid offset_channels %d\n",
 			__func__, offset_channels);
 		return -EINVAL;
 	}
 
 	if (channels > offset_channels) {
-		pr_err("%s: channels %d exceed offset_channels %d\n",
+		pr_debug("%s: channels %d exceed offset_channels %d\n",
 			__func__, channels, offset_channels);
 		return -EINVAL;
 	}
 
 	slot_mask = tdm_param_set_slot_mask(slots);
 	if (!slot_mask) {
-		pr_err("%s: invalid slot_mask 0x%x\n",
+		pr_debug("%s: invalid slot_mask 0x%x\n",
 			__func__, slot_mask);
 		return -EINVAL;
 	}
@@ -7512,7 +7512,7 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_tdm_slot(cpu_dai, 0, slot_mask,
 			slots, slot_width);
 		if (ret < 0) {
-			pr_err("%s: failed to set tdm slot, err:%d\n",
+			pr_debug("%s: failed to set tdm slot, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -7520,7 +7520,7 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai,
 			0, NULL, channels, slot_offset);
 		if (ret < 0) {
-			pr_err("%s: failed to set channel map, err:%d\n",
+			pr_debug("%s: failed to set channel map, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -7528,7 +7528,7 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_tdm_slot(cpu_dai, slot_mask, 0,
 			slots, slot_width);
 		if (ret < 0) {
-			pr_err("%s: failed to set tdm slot, err:%d\n",
+			pr_debug("%s: failed to set tdm slot, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -7536,13 +7536,13 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai,
 			channels, slot_offset, 0, NULL);
 		if (ret < 0) {
-			pr_err("%s: failed to set channel map, err:%d\n",
+			pr_debug("%s: failed to set channel map, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
 	} else {
 		ret = -EINVAL;
-		pr_err("%s: invalid use case, err:%d\n",
+		pr_debug("%s: invalid use case, err:%d\n",
 			__func__, ret);
 		goto end;
 	}
@@ -7551,7 +7551,7 @@ static int sa8155_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 	clk_freq = rate * slot_width * slots;
 	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, clk_freq, SND_SOC_CLOCK_OUT);
 	if (ret < 0)
-		pr_err("%s: failed to set tdm clk, err:%d\n",
+		pr_debug("%s: failed to set tdm clk, err:%d\n",
 			__func__, ret);
 
 end:
@@ -7577,7 +7577,7 @@ static int sa8155_tdm_snd_startup(struct snd_pcm_substream *substream)
 	index = msm_tdm_get_intf_idx(cpu_dai->id);
 	if (index < 0) {
 		ret = -EINVAL;
-		pr_err("%s: CPU DAI id (%d) out of range\n",
+		pr_debug("%s: CPU DAI id (%d) out of range\n",
 			__func__, cpu_dai->id);
 		goto err;
 	}
@@ -7595,7 +7595,7 @@ static int sa8155_tdm_snd_startup(struct snd_pcm_substream *substream)
 			ret_pinctrl = msm_set_pinctrl(pinctrl_info,
 						      STATE_ACTIVE);
 			if (ret_pinctrl)
-				pr_err("%s: TDM TLMM pinctrl set failed with %d\n",
+				pr_debug("%s: TDM TLMM pinctrl set failed with %d\n",
 					__func__, ret_pinctrl);
 		}
 	}
@@ -7621,7 +7621,7 @@ static void sa8155_tdm_snd_shutdown(struct snd_pcm_substream *substream)
 
 	index = msm_tdm_get_intf_idx(cpu_dai->id);
 	if (index < 0) {
-		pr_err("%s: CPU DAI id (%d) out of range\n",
+		pr_debug("%s: CPU DAI id (%d) out of range\n",
 			__func__, cpu_dai->id);
 		return;
 	}
@@ -7634,7 +7634,7 @@ static void sa8155_tdm_snd_shutdown(struct snd_pcm_substream *substream)
 			ret_pinctrl = msm_set_pinctrl(pinctrl_info,
 						      STATE_SLEEP);
 			if (ret_pinctrl)
-				pr_err("%s: TDM TLMM pinctrl set failed with %d\n",
+				pr_debug("%s: TDM TLMM pinctrl set failed with %d\n",
 					__func__, ret_pinctrl);
 		}
 	}
@@ -7707,7 +7707,7 @@ static int msm_mi2s_snd_startup(struct snd_pcm_substream *substream)
 			ret_pinctrl = msm_set_pinctrl(pinctrl_info,
 						      STATE_ACTIVE);
 			if (ret_pinctrl)
-				pr_err("%s: MI2S TLMM pinctrl set failed with %d\n",
+				pr_debug("%s: MI2S TLMM pinctrl set failed with %d\n",
 					__func__, ret_pinctrl);
 		}
 	}
@@ -7715,7 +7715,7 @@ static int msm_mi2s_snd_startup(struct snd_pcm_substream *substream)
 		fmt = SND_SOC_DAIFMT_CBM_CFM;
 	ret = snd_soc_dai_set_fmt(cpu_dai, fmt);
 	if (ret < 0) {
-		pr_err("%s: set fmt cpu dai failed for MI2S (%d), err:%d\n",
+		pr_debug("%s: set fmt cpu dai failed for MI2S (%d), err:%d\n",
 			__func__, index, ret);
 		goto clk_off;
 	}
@@ -7745,7 +7745,7 @@ static void msm_mi2s_snd_shutdown(struct snd_pcm_substream *substream)
 	pr_debug("%s(): substream = %s  stream = %d\n", __func__,
 		 substream->name, substream->stream);
 	if (index < PRIM_MI2S || index >= MI2S_MAX) {
-		pr_err("%s:invalid MI2S DAI(%d)\n", __func__, index);
+		pr_debug("%s:invalid MI2S DAI(%d)\n", __func__, index);
 		return;
 	}
 
@@ -7754,7 +7754,7 @@ static void msm_mi2s_snd_shutdown(struct snd_pcm_substream *substream)
 	if (--intf_conf->ref_cnt == 0) {
 		ret = msm_mi2s_set_sclk(substream, false);
 		if (ret < 0)
-			pr_err("%s:clock disable failed for MI2S (%d); ret=%d\n",
+			pr_debug("%s:clock disable failed for MI2S (%d); ret=%d\n",
 				__func__, index, ret);
 
 		pinctrl_info = &pdata->pinctrl_info[index];
@@ -7762,7 +7762,7 @@ static void msm_mi2s_snd_shutdown(struct snd_pcm_substream *substream)
 			ret_pinctrl = msm_set_pinctrl(pinctrl_info,
 						      STATE_SLEEP);
 			if (ret_pinctrl)
-				pr_err("%s: MI2S TLMM pinctrl set failed with %d\n",
+				pr_debug("%s: MI2S TLMM pinctrl set failed with %d\n",
 					__func__, ret_pinctrl);
 		}
 	}
@@ -10581,7 +10581,7 @@ static int msm_populate_dai_link_component_of_node(
 	struct device_node *np;
 
 	if (!cdev) {
-		pr_err("%s: Sound card device memory NULL\n", __func__);
+		pr_debug("%s: Sound card device memory NULL\n", __func__);
 		return -ENODEV;
 	}
 
@@ -10596,7 +10596,7 @@ static int msm_populate_dai_link_component_of_node(
 						"asoc-platform-names",
 						dai_link[i].platforms->name);
 			if (index < 0) {
-				pr_err("%s: No match found for platform name: %s\n",
+				pr_debug("%s: No match found for platform name: %s\n",
 					__func__, dai_link[i].platforms->name);
 				ret = index;
 				goto err;
@@ -10604,7 +10604,7 @@ static int msm_populate_dai_link_component_of_node(
 			np = of_parse_phandle(cdev->of_node, "asoc-platform",
 					      index);
 			if (!np) {
-				pr_err("%s: retrieving phandle for platform %s, index %d failed\n",
+				pr_debug("%s: retrieving phandle for platform %s, index %d failed\n",
 					__func__, dai_link[i].platforms->name,
 					index);
 				ret = -ENODEV;
@@ -10623,7 +10623,7 @@ static int msm_populate_dai_link_component_of_node(
 				np = of_parse_phandle(cdev->of_node, "asoc-cpu",
 						index);
 				if (!np) {
-					pr_err("%s: retrieving phandle for cpu dai %s failed\n",
+					pr_debug("%s: retrieving phandle for cpu dai %s failed\n",
 						__func__,
 						dai_link[i].cpus->dai_name);
 					ret = -ENODEV;
@@ -10650,7 +10650,7 @@ static int msm_populate_dai_link_component_of_node(
 						      "asoc-codec",
 						      index);
 				if (!np) {
-					pr_err("%s: retrieving phandle for codec %s failed\n",
+					pr_debug("%s: retrieving phandle for codec %s failed\n",
 					        __func__, dai_link[i].codecs[j].name);
 					ret = -ENODEV;
 					goto err;
@@ -10953,7 +10953,7 @@ static int sa8155_ssr_enable(struct device *dev, void *data)
 			ret = afe_set_lpass_clock_v2(AFE_PORT_ID_TDM_PORT_RANGE_START,
 			&internal_mclk[i]);
 			if (ret < 0) {
-				pr_err("%s: afe lpass clock failed to enable clock, err:%d\n",
+				pr_debug("%s: afe lpass clock failed to enable clock, err:%d\n",
 					__func__, ret);
 				ret = -EIO;
 				goto err;
@@ -11080,7 +11080,7 @@ static int msm_asoc_machine_probe(struct platform_device *pdev)
 	/* Populate controls of snd card */
 	ret = populate_msm_snd_controls(&pdev->dev, card);
 	if (ret) {
-		pr_err("%s: controls populated failed ret = %d\n",
+		pr_debug("%s: controls populated failed ret = %d\n",
 		       __func__, ret);
 		goto err;
 	}
@@ -11134,7 +11134,7 @@ static int msm_asoc_machine_probe(struct platform_device *pdev)
 
 	ret = msm_audio_ssr_register(&pdev->dev);
 	if (ret)
-		pr_err("%s: Registration with SND event FWK failed ret = %d\n",
+		pr_debug("%s: Registration with SND event FWK failed ret = %d\n",
 			__func__, ret);
 
 	place_marker("M - DRIVER Audio Ready");

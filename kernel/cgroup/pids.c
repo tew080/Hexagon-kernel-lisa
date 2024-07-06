@@ -226,7 +226,7 @@ static int pids_can_fork(struct task_struct *task)
 	if (err) {
 		/* Only log the first time events_limit is incremented. */
 		if (atomic64_inc_return(&pids->events_limit) == 1) {
-			pr_info("cgroup: fork rejected by pids controller in ");
+			pr_debug("cgroup: fork rejected by pids controller in ");
 			pr_cont_cgroup_path(css->cgroup);
 			pr_cont("\n");
 		}

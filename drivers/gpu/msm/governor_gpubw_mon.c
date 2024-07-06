@@ -315,7 +315,7 @@ static void __exit devfreq_gpubw_exit(void)
 
 	ret = devfreq_remove_governor(&devfreq_gpubw);
 	if (ret)
-		pr_err("%s: failed remove governor %d\n", __func__, ret);
+		pr_debug("%s: failed remove governor %d\n", __func__, ret);
 
 }
 module_exit(devfreq_gpubw_exit);

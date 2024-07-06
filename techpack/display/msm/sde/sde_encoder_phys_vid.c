@@ -887,7 +887,7 @@ static int _sde_encoder_phys_vid_wait_for_vblank(
 	struct drm_connector *conn;
 
 	if (!phys_enc) {
-		pr_err("invalid encoder\n");
+		pr_debug("invalid encoder\n");
 		return -EINVAL;
 	}
 

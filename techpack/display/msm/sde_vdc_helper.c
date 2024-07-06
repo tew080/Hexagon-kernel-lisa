@@ -177,7 +177,7 @@ static int _get_vdc_profile_index(struct msm_display_vdc_info *vdc_info)
 			return VDC_YUV_422_10BPC_5PP;
 	}
 
-	pr_err("unsupported bpc:%d, bpp:%d\n", bpc, bpp);
+	pr_debug("unsupported bpc:%d, bpp:%d\n", bpc, bpp);
 
 	return rc;
 }
@@ -371,7 +371,7 @@ static int sde_vdc_populate_lut_params(struct msm_display_vdc_info *vdc_info)
 
 	profile_idx = _get_vdc_profile_index(vdc_info);
 	if (profile_idx == -EINVAL) {
-		pr_err("no matching profile found\n");
+		pr_debug("no matching profile found\n");
 		return profile_idx;
 	}
 
@@ -445,7 +445,7 @@ static int sde_vdc_populate_core_params(struct msm_display_vdc_info *vdc_info,
 	if (!vdc_info->slice_width ||
 			!vdc_info->slice_height ||
 			intf_width < vdc_info->slice_width) {
-		pr_err("invalid input, intf_width=%d slice_width=%d\n",
+		pr_debug("invalid input, intf_width=%d slice_width=%d\n",
 			intf_width, vdc_info->slice_width);
 		return -EINVAL;
 	}
@@ -468,7 +468,7 @@ static int sde_vdc_populate_core_params(struct msm_display_vdc_info *vdc_info,
 
 	/* slice_num_px should be atleast 4096 */
 	if (vdc_info->slice_num_px < 4096) {
-		pr_err("insufficient slice_num_px:%d\n",
+		pr_debug("insufficient slice_num_px:%d\n",
 			vdc_info->slice_num_px);
 		return -EINVAL;
 	}
@@ -775,13 +775,13 @@ int sde_vdc_populate_config(struct msm_display_vdc_info *vdc_info,
 
 	ret = sde_vdc_populate_core_params(vdc_info, intf_width);
 	if (ret) {
-		pr_err("failed to populate vdc core params %d\n", ret);
+		pr_debug("failed to populate vdc core params %d\n", ret);
 		return ret;
 	}
 
 	ret = sde_vdc_populate_lut_params(vdc_info);
 	if (ret) {
-		pr_err("failed to populate lut params %d\n", ret);
+		pr_debug("failed to populate lut params %d\n", ret);
 		return ret;
 	}
 

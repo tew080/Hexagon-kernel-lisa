@@ -702,7 +702,7 @@ static int msm_populate_dai_link_component_of_node(
 	struct device_node *np;
 
 	if (!cdev) {
-		pr_err("%s: Sound card device memory NULL\n", __func__);
+		pr_debug("%s: Sound card device memory NULL\n", __func__);
 		return -ENODEV;
 	}
 
@@ -718,7 +718,7 @@ static int msm_populate_dai_link_component_of_node(
 						"asoc-platform-names",
 						dai_link[i].platforms->name);
 			if (index < 0) {
-				pr_err("%s: No match found for platform name: %s\n index: %i cdev_of_node: %s",
+				pr_debug("%s: No match found for platform name: %s\n index: %i cdev_of_node: %s",
 					__func__, dai_link[i].platforms->name, index, cdev->of_node);
 				ret = index;
 				goto err;
@@ -726,7 +726,7 @@ static int msm_populate_dai_link_component_of_node(
 			np = of_parse_phandle(cdev->of_node, "asoc-platform",
 					      index);
 			if (!np) {
-				pr_err("%s: retrieving phandle for platform %s, index %d failed\n",
+				pr_debug("%s: retrieving phandle for platform %s, index %d failed\n",
 					__func__, dai_link[i].platforms->name,
 					index);
 				ret = -ENODEV;
@@ -742,14 +742,14 @@ static int msm_populate_dai_link_component_of_node(
 			index = of_property_match_string(cdev->of_node,
 						 "asoc-cpu-names",
 						 dai_link[i].cpus->dai_name);
-			pr_err("%s: retrieving cpu_of_node for %s\n",
+			pr_debug("%s: retrieving cpu_of_node for %s\n",
 						__func__,
 						dai_link[i].cpus->dai_name);
 			if (index >= 0) {
 				np = of_parse_phandle(cdev->of_node, "asoc-cpu",
 						index);
 				if (!np) {
-					pr_err("%s: retrieving phandle for cpu dai %s failed\n",
+					pr_debug("%s: retrieving phandle for cpu dai %s failed\n",
 						__func__,
 						dai_link[i].cpus->dai_name);
 					ret = -ENODEV;
@@ -776,7 +776,7 @@ static int msm_populate_dai_link_component_of_node(
 						      "asoc-codec",
 						      index);
 				if (!np) {
-					pr_err("%s: retrieving phandle for codec %s failed\n",
+					pr_debug("%s: retrieving phandle for codec %s failed\n",
 					        __func__, dai_link[i].codecs[j].name);
 					ret = -ENODEV;
 					goto err;
@@ -869,7 +869,7 @@ static long virt_sndcard_ioctl(struct file *f,
 		dev_info(&spdev->dev, "ssr complete, mark sndcard online\n");
 	break;
 	default:
-		pr_err("%s: ioctl not found\n", __func__);
+		pr_debug("%s: ioctl not found\n", __func__);
 		ret = -EFAULT;
 	break;
 	}
@@ -940,12 +940,12 @@ static int msm_asoc_machine_probe(struct platform_device *pdev)
 	} else if (ret) {
 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
 			ret);
-		pr_err("snd_soc_register_card failed (%d)\n",
+		pr_debug("snd_soc_register_card failed (%d)\n",
 			ret);
 		goto err;
 	}
 	dev_info(&pdev->dev, "Sound card %s registered\n", card->name);
-	pr_err("Sound card %s registered\n", card->name);
+	pr_debug("Sound card %s registered\n", card->name);
 
 	place_marker("M - DRIVER Audio Ready");
 
@@ -953,7 +953,7 @@ static int msm_asoc_machine_probe(struct platform_device *pdev)
 
 	ret = misc_register(&virt_sndcard_ctl_misc);
 	if (ret) {
-		pr_err("Audio virtual sndcard ctrl register fail, ret=%d\n", ret);
+		pr_debug("Audio virtual sndcard ctrl register fail, ret=%d\n", ret);
 	}
 	dev_info(&pdev->dev, "Audio virtual sndcard ctrl register complete\n");
 

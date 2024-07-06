@@ -1555,7 +1555,7 @@ static struct firmware_cal *tasha_get_hwdep_fw_cal(struct wcd_mbhc *mbhc,
 	struct snd_soc_component *component = mbhc->component;
 
 	if (!component) {
-		pr_err("%s: NULL component pointer\n", __func__);
+		pr_debug("%s: NULL component pointer\n", __func__);
 		return NULL;
 	}
 	tasha = snd_soc_component_get_drvdata(component);
@@ -2485,7 +2485,7 @@ static int slim_tx_mixer_put(struct snd_kcontrol *kcontrol,
 	case AIF5_CPE_TX:
 		break;
 	default:
-		pr_err("Unknown AIF %d\n", dai_id);
+		pr_debug("Unknown AIF %d\n", dai_id);
 		mutex_unlock(&tasha_p->codec_mutex);
 		return -EINVAL;
 	}
@@ -2608,7 +2608,7 @@ static int slim_rx_mux_put(struct snd_kcontrol *kcontrol,
 			      &tasha_p->dai[AIF_MIX1_PB].wcd9xxx_ch_list);
 		break;
 	default:
-		pr_err("Unknown AIF %d\n", rx_port_value);
+		pr_debug("Unknown AIF %d\n", rx_port_value);
 		goto err;
 	}
 rtn:
@@ -2945,7 +2945,7 @@ static void tasha_codec_enable_int_port(struct wcd9xxx_codec_dai_data *dai,
 	struct tasha_priv *tasha_p;
 
 	if (!dai || !component) {
-		pr_err("%s: Invalid params\n", __func__);
+		pr_debug("%s: Invalid params\n", __func__);
 		return;
 	}
 
@@ -2989,7 +2989,7 @@ static int tasha_codec_enable_slim_chmask(struct wcd9xxx_codec_dai_data *dai,
 		list_for_each_entry(ch, &dai->wcd9xxx_ch_list, list) {
 			ret = wcd9xxx_get_slave_port(ch->ch_num);
 			if (ret < 0) {
-				pr_err("%s: Invalid slave port ID: %d\n",
+				pr_debug("%s: Invalid slave port ID: %d\n",
 				       __func__, ret);
 				ret = -EINVAL;
 			} else {
@@ -3001,7 +3001,7 @@ static int tasha_codec_enable_slim_chmask(struct wcd9xxx_codec_dai_data *dai,
 					 msecs_to_jiffies(
 						TASHA_SLIM_CLOSE_TIMEOUT));
 		if (!ret) {
-			pr_err("%s: Slim close tx/rx wait timeout, ch_mask:0x%lx\n",
+			pr_debug("%s: Slim close tx/rx wait timeout, ch_mask:0x%lx\n",
 				__func__, dai->ch_mask);
 			ret = -ETIMEDOUT;
 		} else {
@@ -3079,7 +3079,7 @@ static int tasha_codec_enable_slimvi_feedback(struct snd_soc_dapm_widget *w,
 	struct wcd9xxx_codec_dai_data *dai = NULL;
 
 	if (!w) {
-		pr_err("%s invalid params\n", __func__);
+		pr_debug("%s invalid params\n", __func__);
 		return -EINVAL;
 	}
 	component = snd_soc_dapm_to_component(w->dapm);
@@ -3099,7 +3099,7 @@ static int tasha_codec_enable_slimvi_feedback(struct snd_soc_dapm_widget *w,
 	dev_dbg(component->dev, "%s(): w->name %s event %d w->shift %d\n",
 		__func__, w->name, event, w->shift);
 	if (w->shift != AIF4_VIFEED) {
-		pr_err("%s Error in enabling the tx path\n", __func__);
+		pr_debug("%s Error in enabling the tx path\n", __func__);
 		ret = -EINVAL;
 		goto out_vi;
 	}
@@ -6447,7 +6447,7 @@ int tasha_codec_enable_standalone_micbias(struct snd_soc_component *component,
 	int rc;
 
 	if (!component) {
-		pr_err("%s: Component memory is NULL\n", __func__);
+		pr_debug("%s: Component memory is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -8452,7 +8452,7 @@ static int tasha_update_vbat_reg_config(struct snd_soc_component *component)
 
 	if ((vbat_writes_size * TASHA_PACKED_REG_SIZE)
 					> vbat_size_remaining) {
-		pr_err("%s: Incorrect Vbat calibration data\n", __func__);
+		pr_debug("%s: Incorrect Vbat calibration data\n", __func__);
 		ret = -EINVAL;
 		goto done;
 	}
@@ -11505,7 +11505,7 @@ static int tasha_get_channel_map(struct snd_soc_dai *dai,
 	case AIF4_PB:
 	case AIF_MIX1_PB:
 		if (!rx_slot || !rx_num) {
-			pr_err("%s: Invalid rx_slot %pK or rx_num %pK\n",
+			pr_debug("%s: Invalid rx_slot %pK or rx_num %pK\n",
 				 __func__, rx_slot, rx_num);
 			return -EINVAL;
 		}
@@ -11524,7 +11524,7 @@ static int tasha_get_channel_map(struct snd_soc_dai *dai,
 	case AIF4_MAD_TX:
 	case AIF4_VIFEED:
 		if (!tx_slot || !tx_num) {
-			pr_err("%s: Invalid tx_slot %pK or tx_num %pK\n",
+			pr_debug("%s: Invalid tx_slot %pK or tx_num %pK\n",
 				 __func__, tx_slot, tx_num);
 			return -EINVAL;
 		}
@@ -11539,7 +11539,7 @@ static int tasha_get_channel_map(struct snd_soc_dai *dai,
 		break;
 
 	default:
-		pr_err("%s: Invalid DAI ID %x\n", __func__, dai->id);
+		pr_debug("%s: Invalid DAI ID %x\n", __func__, dai->id);
 		break;
 	}
 
@@ -11555,14 +11555,14 @@ static int tasha_set_channel_map(struct snd_soc_dai *dai,
 	struct wcd9xxx_codec_dai_data *dai_data = NULL;
 
 	if (!dai) {
-		pr_err("%s: dai is empty\n", __func__);
+		pr_debug("%s: dai is empty\n", __func__);
 		return -EINVAL;
 	}
 	tasha = snd_soc_component_get_drvdata(dai->component);
 	core = dev_get_drvdata(dai->component->dev->parent);
 
 	if (!tx_slot || !rx_slot) {
-		pr_err("%s: Invalid tx_slot=%pK, rx_slot=%pK\n",
+		pr_debug("%s: Invalid tx_slot=%pK, rx_slot=%pK\n",
 			__func__, tx_slot, rx_slot);
 		return -EINVAL;
 	}
@@ -11711,7 +11711,7 @@ static int tasha_set_mix_interpolator_rate(struct snd_soc_dai *dai,
 				  TASHA_RX_PORT_START_NUMBER;
 		if ((int_2_inp < INTn_2_INP_SEL_RX0) ||
 		   (int_2_inp > INTn_2_INP_SEL_RX7)) {
-			pr_err("%s: Invalid RX%u port, Dai ID is %d\n",
+			pr_debug("%s: Invalid RX%u port, Dai ID is %d\n",
 				__func__,
 				(ch->port - TASHA_RX_PORT_START_NUMBER),
 				dai->id);
@@ -11759,7 +11759,7 @@ static int tasha_set_prim_interpolator_rate(struct snd_soc_dai *dai,
 				  TASHA_RX_PORT_START_NUMBER;
 		if ((int_1_mix1_inp < INTn_1_MIX_INP_SEL_RX0) ||
 		   (int_1_mix1_inp > INTn_1_MIX_INP_SEL_RX7)) {
-			pr_err("%s: Invalid RX%u port, Dai ID is %d\n",
+			pr_debug("%s: Invalid RX%u port, Dai ID is %d\n",
 				__func__,
 				(ch->port - TASHA_RX_PORT_START_NUMBER),
 				dai->id);
@@ -11878,7 +11878,7 @@ static int tasha_hw_params(struct snd_pcm_substream *substream,
 	case SNDRV_PCM_STREAM_PLAYBACK:
 		ret = tasha_set_interpolator_rate(dai, params_rate(params));
 		if (ret) {
-			pr_err("%s: cannot set sample rate: %u\n",
+			pr_debug("%s: cannot set sample rate: %u\n",
 				__func__, params_rate(params));
 			return ret;
 		}
@@ -12014,7 +12014,7 @@ static int tasha_hw_params(struct snd_pcm_substream *substream,
 		}
 		break;
 	default:
-		pr_err("%s: Invalid stream type %d\n", __func__,
+		pr_debug("%s: Invalid stream type %d\n", __func__,
 			substream->stream);
 		return -EINVAL;
 	};
@@ -12559,7 +12559,7 @@ static ssize_t tasha_codec_version_read(struct snd_info_entry *entry,
 
 	tasha = (struct tasha_priv *) entry->private_data;
 	if (!tasha) {
-		pr_err("%s: tasha priv is null\n", __func__);
+		pr_debug("%s: tasha priv is null\n", __func__);
 		return -EINVAL;
 	}
 
@@ -12720,7 +12720,7 @@ static int wcd9335_get_micb_vout_ctl_val(u32 micb_mv)
 {
 	/* min micbias voltage is 1V and maximum is 2.85V */
 	if (micb_mv < 1000 || micb_mv > 2850) {
-		pr_err("%s: unsupported micbias voltage\n", __func__);
+		pr_debug("%s: unsupported micbias voltage\n", __func__);
 		return -EINVAL;
 	}
 
@@ -13029,11 +13029,11 @@ static irqreturn_t tasha_slimbus_irq(int irq, void *data)
 				continue;
 		}
 		if (val & TASHA_SLIM_IRQ_OVERFLOW)
-			pr_err_ratelimited(
+			pr_debug_ratelimited(
 			   "%s: overflow error on %s port %d, value %x\n",
 			   __func__, (tx ? "TX" : "RX"), port_id, val);
 		if (val & TASHA_SLIM_IRQ_UNDERFLOW)
-			pr_err_ratelimited(
+			pr_debug_ratelimited(
 			   "%s: underflow error on %s port %d, value %x\n",
 			   __func__, (tx ? "TX" : "RX"), port_id, val);
 		if ((val & TASHA_SLIM_IRQ_OVERFLOW) ||
@@ -13100,7 +13100,7 @@ static int tasha_setup_irqs(struct tasha_priv *tasha)
 	ret = wcd9xxx_request_irq(core_res, WCD9XXX_IRQ_SLIMBUS,
 				  tasha_slimbus_irq, "SLIMBUS Slave", tasha);
 	if (ret)
-		pr_err("%s: Failed to request irq %d\n", __func__,
+		pr_debug("%s: Failed to request irq %d\n", __func__,
 		       WCD9XXX_IRQ_SLIMBUS);
 	else
 		tasha_slim_interface_init_reg(component);
@@ -13517,7 +13517,7 @@ static void tasha_cdc_query_cpe_clk_plan(void *data,
 	u32 cpe_clk_khz;
 
 	if (!component) {
-		pr_err("%s: Invalid component handle\n",
+		pr_debug("%s: Invalid component handle\n",
 			__func__);
 		return;
 	}
@@ -13549,7 +13549,7 @@ static void tasha_cdc_change_cpe_clk(void *data,
 	u32 cpe_clk_khz, req_freq = 0;
 
 	if (!component) {
-		pr_err("%s: Invalid codec handle\n",
+		pr_debug("%s: Invalid codec handle\n",
 			__func__);
 		return;
 	}
@@ -13583,7 +13583,7 @@ static int tasha_codec_slim_reserve_bw(struct snd_soc_component *component,
 	struct wcd9xxx *wcd9xxx;
 
 	if (!component) {
-		pr_err("%s: Invalid handle to codec\n",
+		pr_debug("%s: Invalid handle to codec\n",
 			__func__);
 		return -EINVAL;
 	}
@@ -13978,7 +13978,7 @@ static int tasha_codec_probe(struct snd_soc_component *component)
 	pdata = dev_get_platdata(component->dev->parent);
 	ret = tasha_handle_pdata(tasha, pdata);
 	if (ret < 0) {
-		pr_err("%s: bad pdata\n", __func__);
+		pr_debug("%s: bad pdata\n", __func__);
 		goto err;
 	}
 
@@ -14017,7 +14017,7 @@ static int tasha_codec_probe(struct snd_soc_component *component)
 	ret = wcd_mbhc_init(&tasha->mbhc, component, &mbhc_cb, &intr_ids,
 		      wcd_mbhc_registers, TASHA_ZDET_SUPPORTED);
 	if (ret) {
-		pr_err("%s: mbhc initialization failed\n", __func__);
+		pr_debug("%s: mbhc initialization failed\n", __func__);
 		goto err_hwdep;
 	}
 
@@ -14089,7 +14089,7 @@ static int tasha_codec_probe(struct snd_soc_component *component)
 
 	ret = tasha_setup_irqs(tasha);
 	if (ret) {
-		pr_err("%s: tasha irq setup failed %d\n", __func__, ret);
+		pr_debug("%s: tasha irq setup failed %d\n", __func__, ret);
 		goto err_pdata;
 	}
 
@@ -14220,7 +14220,7 @@ static int tasha_swrm_read(void *handle, int reg)
 	int val, ret;
 
 	if (!handle) {
-		pr_err("%s: NULL handle\n", __func__);
+		pr_debug("%s: NULL handle\n", __func__);
 		return -EINVAL;
 	}
 	tasha = (struct tasha_priv *)handle;
@@ -14235,14 +14235,14 @@ static int tasha_swrm_read(void *handle, int reg)
 	ret = regmap_bulk_write(wcd9xxx->regmap, swr_rd_addr_base,
 				(u8 *)&reg, 4);
 	if (ret < 0) {
-		pr_err("%s: RD Addr Failure\n", __func__);
+		pr_debug("%s: RD Addr Failure\n", __func__);
 		goto err;
 	}
 	/* Check for RD status */
 	ret = regmap_bulk_read(wcd9xxx->regmap, swr_rd_data_base,
 			       (u8 *)&val, 4);
 	if (ret < 0) {
-		pr_err("%s: RD Data Failure\n", __func__);
+		pr_debug("%s: RD Data Failure\n", __func__);
 		goto err;
 	}
 	ret = val;
@@ -14294,11 +14294,11 @@ static int tasha_swrm_bulk_write(void *handle, u32 *reg, u32 *val, size_t len)
 	int i, j, ret;
 
 	if (!handle) {
-		pr_err("%s: NULL handle\n", __func__);
+		pr_debug("%s: NULL handle\n", __func__);
 		return -EINVAL;
 	}
 	if (len <= 0) {
-		pr_err("%s: Invalid size: %zu\n", __func__, len);
+		pr_debug("%s: Invalid size: %zu\n", __func__, len);
 		return -EINVAL;
 	}
 	tasha = (struct tasha_priv *)handle;
@@ -14353,7 +14353,7 @@ static int tasha_swrm_write(void *handle, int reg, int val)
 	int ret;
 
 	if (!handle) {
-		pr_err("%s: NULL handle\n", __func__);
+		pr_debug("%s: NULL handle\n", __func__);
 		return -EINVAL;
 	}
 	tasha = (struct tasha_priv *)handle;
@@ -14381,7 +14381,7 @@ static int tasha_swrm_write(void *handle, int reg, int val)
 	} else {
 		ret = wcd9xxx_slim_bulk_write(wcd9xxx, bulk_reg, 2, false);
 		if (ret < 0)
-			pr_err("%s: WR Data Failure\n", __func__);
+			pr_debug("%s: WR Data Failure\n", __func__);
 	}
 
 	mutex_unlock(&tasha->swr_write_lock);
@@ -14440,7 +14440,7 @@ static int tasha_swrm_handle_irq(void *handle,
 	struct wcd9xxx *wcd9xxx;
 
 	if (!handle) {
-		pr_err("%s: null handle received\n", __func__);
+		pr_debug("%s: null handle received\n", __func__);
 		return -EINVAL;
 	}
 	tasha = (struct tasha_priv *) handle;
@@ -14475,18 +14475,18 @@ static void tasha_add_child_devices(struct work_struct *work)
 	tasha = container_of(work, struct tasha_priv,
 			     tasha_add_child_devices_work);
 	if (!tasha) {
-		pr_err("%s: Memory for WCD9335 does not exist\n",
+		pr_debug("%s: Memory for WCD9335 does not exist\n",
 			__func__);
 		return;
 	}
 	wcd9xxx = tasha->wcd9xxx;
 	if (!wcd9xxx) {
-		pr_err("%s: Memory for WCD9XXX does not exist\n",
+		pr_debug("%s: Memory for WCD9XXX does not exist\n",
 			__func__);
 		return;
 	}
 	if (!wcd9xxx->dev->of_node) {
-		pr_err("%s: DT node for wcd9xxx does not exist\n",
+		pr_debug("%s: DT node for wcd9xxx does not exist\n",
 			__func__);
 		return;
 	}
@@ -14743,7 +14743,7 @@ static int tasha_probe(struct platform_device *pdev)
 	if (!ret) {
 		snd_event_notify(pdev->dev.parent, SND_EVENT_UP);
 	} else {
-		pr_err("%s: Registration with SND event fwk failed ret = %d\n",
+		pr_debug("%s: Registration with SND event fwk failed ret = %d\n",
 			   __func__, ret);
 		ret = 0;
 	}

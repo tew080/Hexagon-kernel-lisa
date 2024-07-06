@@ -195,14 +195,14 @@ static ssize_t swr_slave_reg_show(struct swr_device *pdev, char __user *ubuf,
 		len = snprintf(tmp_buf, sizeof(tmp_buf), "0x%.3x: 0x%.2x\n", i,
 				(reg_val & 0xFF));
 		if (len < 0) {
-			pr_err("%s: fail to fill the buffer\n", __func__);
+			pr_debug("%s: fail to fill the buffer\n", __func__);
 			total = -EFAULT;
 			goto copy_err;
 		}
 		if ((total + len) >= count - 1)
 			break;
 		if (copy_to_user((ubuf + total), tmp_buf, len)) {
-			pr_err("%s: fail to copy reg dump\n", __func__);
+			pr_debug("%s: fail to copy reg dump\n", __func__);
 			total = -EFAULT;
 			goto copy_err;
 		}
@@ -299,7 +299,7 @@ static ssize_t codec_debug_peek_write(struct file *file,
 	if (rc == 0)
 		rc = cnt;
 	else
-		pr_err("%s: rc = %d\n", __func__, rc);
+		pr_debug("%s: rc = %d\n", __func__, rc);
 
 	return rc;
 }
@@ -335,7 +335,7 @@ static ssize_t codec_debug_write(struct file *file,
 	if (rc == 0)
 		rc = cnt;
 	else
-		pr_err("%s: rc = %d\n", __func__, rc);
+		pr_debug("%s: rc = %d\n", __func__, rc);
 
 	return rc;
 }
@@ -511,13 +511,13 @@ static int hap_enable_swr_dac_port(struct snd_soc_dapm_widget *w,
 	int rc;
 
 	if (!swr_hap_comp) {
-		pr_err("%s: swr_hap_component is NULL\n", __func__);
+		pr_debug("%s: swr_hap_component is NULL\n", __func__);
 		return -EINVAL;
 	}
 
 	swr_hap = snd_soc_component_get_drvdata(swr_hap_comp);
 	if (!swr_hap) {
-		pr_err("%s: get swr_haptics_dev failed\n", __func__);
+		pr_debug("%s: get swr_haptics_dev failed\n", __func__);
 		return -ENODEV;
 	}
 
@@ -663,7 +663,7 @@ static int haptics_comp_probe(struct snd_soc_component *component)
 		snd_soc_component_get_drvdata(component);
 
 	if (!swr_hap) {
-		pr_err("%s: get swr_haptics_dev failed\n", __func__);
+		pr_debug("%s: get swr_haptics_dev failed\n", __func__);
 		return -EINVAL;
 	}
 

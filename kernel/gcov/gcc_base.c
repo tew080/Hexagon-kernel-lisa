@@ -20,7 +20,7 @@ void __gcov_init(struct gcov_info *info)
 		 * Printing gcc's version magic may prove useful for debugging
 		 * incompatibility reports.
 		 */
-		pr_info("version magic: 0x%x\n", gcov_version);
+		pr_debug("version magic: 0x%x\n", gcov_version);
 	}
 	/*
 	 * Add new profiling data structure to list and inform event

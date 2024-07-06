@@ -119,7 +119,7 @@ static int msm_cdc_check_supply_param(struct device *dev,
 				      int num_supplies)
 {
 	if (!dev) {
-		pr_err("%s: device is NULL\n", __func__);
+		pr_debug("%s: device is NULL\n", __func__);
 		return -ENODEV;
 	}
 
@@ -154,7 +154,7 @@ bool msm_cdc_is_ondemand_supply(struct device *dev,
 	int ret, i;
 
 	if ((!supply_name) || (!supplies)) {
-		pr_err("%s: either dev or supplies or cdc_vreg is NULL\n",
+		pr_debug("%s: either dev or supplies or cdc_vreg is NULL\n",
 				__func__);
 		return rc;
 	}
@@ -195,7 +195,7 @@ int msm_cdc_set_supply_min_voltage(struct device *dev,
 	int rc = 0, i;
 
 	if ((!supply_name) || (!supplies)) {
-		pr_err("%s: either dev or supplies or cdc_vreg is NULL\n",
+		pr_debug("%s: either dev or supplies or cdc_vreg is NULL\n",
 				__func__);
 		return -EINVAL;
 	}
@@ -240,7 +240,7 @@ int msm_cdc_disable_ondemand_supply(struct device *dev,
 	int rc, i;
 
 	if ((!supply_name) || (!supplies)) {
-		pr_err("%s: either dev or supplies or cdc_vreg is NULL\n",
+		pr_debug("%s: either dev or supplies or cdc_vreg is NULL\n",
 				__func__);
 		return -EINVAL;
 	}
@@ -290,7 +290,7 @@ int msm_cdc_enable_ondemand_supply(struct device *dev,
 	int rc, i;
 
 	if ((!supply_name) || (!supplies)) {
-		pr_err("%s: either dev or supplies or cdc_vreg is NULL\n",
+		pr_debug("%s: either dev or supplies or cdc_vreg is NULL\n",
 				__func__);
 		return -EINVAL;
 	}
@@ -341,7 +341,7 @@ int msm_cdc_set_supplies_lpm_mode(struct device *dev,
 	int rc = 0, i;
 
 	if (!supplies) {
-		pr_err("%s: supplies is NULL\n",
+		pr_debug("%s: supplies is NULL\n",
 				__func__);
 		return -EINVAL;
 	}
@@ -391,7 +391,7 @@ int msm_cdc_disable_static_supplies(struct device *dev,
 	int rc, i;
 
 	if ((!dev) || (!supplies) || (!cdc_vreg)) {
-		pr_err("%s: either dev or supplies or cdc_vreg is NULL\n",
+		pr_debug("%s: either dev or supplies or cdc_vreg is NULL\n",
 				__func__);
 		return -EINVAL;
 	}
@@ -437,7 +437,7 @@ int msm_cdc_release_supplies(struct device *dev,
 	int i;
 
 	if ((!dev) || (!supplies) || (!cdc_vreg)) {
-		pr_err("%s: either dev or supplies or cdc_vreg is NULL\n",
+		pr_debug("%s: either dev or supplies or cdc_vreg is NULL\n",
 				__func__);
 		return -EINVAL;
 	}
@@ -480,7 +480,7 @@ int msm_cdc_enable_static_supplies(struct device *dev,
 	int rc, i;
 
 	if ((!dev) || (!supplies) || (!cdc_vreg)) {
-		pr_err("%s: either dev or supplies or cdc_vreg is NULL\n",
+		pr_debug("%s: either dev or supplies or cdc_vreg is NULL\n",
 				__func__);
 		return -EINVAL;
 	}
@@ -553,7 +553,7 @@ int msm_cdc_init_supplies_v2(struct device *dev,
 	int i;
 
 	if (!dev || !cdc_vreg) {
-		pr_err("%s: device pointer or dce_vreg is NULL\n",
+		pr_debug("%s: device pointer or dce_vreg is NULL\n",
 				__func__);
 		return -EINVAL;
 	}
@@ -646,7 +646,7 @@ int msm_cdc_get_power_supplies(struct device *dev,
 	int rc;
 
 	if (!dev) {
-		pr_err("%s: device pointer is NULL\n", __func__);
+		pr_debug("%s: device pointer is NULL\n", __func__);
 		return -EINVAL;
 	}
 	static_sup_cnt = of_property_count_strings(dev->of_node,
@@ -764,7 +764,7 @@ int msm_cdc_enable_wcd_supply(struct cdc_wcd_supply *cdc_supply, bool enable)
 	int rc;
 
 	if (!component) {
-		pr_err("%s: Component memory is NULL\n", __func__);
+		pr_debug("%s: Component memory is NULL\n", __func__);
 		return -EINVAL;
 	}
 

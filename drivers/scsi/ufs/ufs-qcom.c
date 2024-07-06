@@ -106,7 +106,7 @@ static int ufs_qcom_get_pwr_dev_param(struct ufs_qcom_dev_params *qcom_param,
 	 * HS, thus device and qcom_param don't agree
 	 */
 	if (!is_dev_sup_hs && is_qcom_max_hs) {
-		pr_err("%s: failed to agree on power mode (device doesn't support HS but requested power is HS)\n",
+		pr_debug("%s: failed to agree on power mode (device doesn't support HS but requested power is HS)\n",
 			__func__);
 		return -ENOTSUPP;
 	} else if (is_dev_sup_hs && is_qcom_max_hs) {
@@ -1405,7 +1405,7 @@ static struct qcom_bus_scale_data *ufs_qcom_get_bus_scale_data(struct device
 	ret = of_property_read_u32(of_node, "qcom,ufs-bus-bw,num-cases",
 		&qsd->num_usecase);
 	if (ret) {
-		pr_err("Error: num-usecases not found\n");
+		pr_debug("Error: num-usecases not found\n");
 		goto err;
 	}
 
@@ -1417,14 +1417,14 @@ static struct qcom_bus_scale_data *ufs_qcom_get_bus_scale_data(struct device
 	ret = of_property_read_u32(of_node, "qcom,ufs-bus-bw,num-paths",
 				   &num_paths);
 	if (ret) {
-		pr_err("Error: num_paths not found\n");
+		pr_debug("Error: num_paths not found\n");
 		return NULL;
 	}
 
 	vec_arr = of_get_property(of_node, "qcom,ufs-bus-bw,vectors-KBps",
 				  &len);
 	if (vec_arr == NULL) {
-		pr_err("Error: Vector array not found\n");
+		pr_debug("Error: Vector array not found\n");
 		return NULL;
 	}
 
@@ -1628,7 +1628,7 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
 	int ret = 0;
 
 	if (!dev_req_params) {
-		pr_err("%s: incoming dev_req_params is NULL\n", __func__);
+		pr_debug("%s: incoming dev_req_params is NULL\n", __func__);
 		ret = -EINVAL;
 		goto out;
 	}
@@ -1676,7 +1676,7 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
 						 dev_max_params,
 						 dev_req_params);
 		if (ret) {
-			pr_err("%s: failed to determine capabilities\n",
+			pr_debug("%s: failed to determine capabilities\n",
 					__func__);
 			goto out;
 		}
@@ -2866,7 +2866,7 @@ void ufs_qcom_print_hw_debug_reg_all(struct ufs_hba *hba,
 	struct ufs_qcom_host *host;
 
 	if (unlikely(!hba)) {
-		pr_err("%s: hba is NULL\n", __func__);
+		pr_debug("%s: hba is NULL\n", __func__);
 		return;
 	}
 	if (unlikely(!print_fn)) {

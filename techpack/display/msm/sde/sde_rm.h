@@ -347,7 +347,7 @@ static inline const struct sde_rm_topology_def*
 {
 	if ((!rm) || (topology <= SDE_RM_TOPOLOGY_NONE) ||
 			(topology >= SDE_RM_TOPOLOGY_MAX)) {
-		pr_err("invalid arguments: rm:%d topology:%d\n",
+		pr_debug("invalid arguments: rm:%d topology:%d\n",
 				rm == NULL, topology);
 
 		return ERR_PTR(-EINVAL);
@@ -368,7 +368,7 @@ static inline int sde_rm_topology_get_num_lm(struct sde_rm *rm,
 {
 	if ((!rm) || (topology <= SDE_RM_TOPOLOGY_NONE) ||
 			(topology >= SDE_RM_TOPOLOGY_MAX)) {
-		pr_err("invalid arguments: rm:%d topology:%d\n",
+		pr_debug("invalid arguments: rm:%d topology:%d\n",
 				rm == NULL, topology);
 
 		return -EINVAL;

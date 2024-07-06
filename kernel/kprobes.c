@@ -2619,7 +2619,7 @@ static int arm_all_kprobes(void)
 		pr_warn("Kprobes globally enabled, but failed to arm %d out of %d probes\n",
 			errors, total);
 	else
-		pr_info("Kprobes globally enabled\n");
+		pr_debug("Kprobes globally enabled\n");
 
 already_enabled:
 	mutex_unlock(&kprobe_mutex);
@@ -2662,7 +2662,7 @@ static int disarm_all_kprobes(void)
 		pr_warn("Kprobes globally disabled, but failed to disarm %d out of %d probes\n",
 			errors, total);
 	else
-		pr_info("Kprobes globally disabled\n");
+		pr_debug("Kprobes globally disabled\n");
 
 	mutex_unlock(&kprobe_mutex);
 

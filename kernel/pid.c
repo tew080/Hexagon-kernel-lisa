@@ -549,7 +549,7 @@ void __init pid_idr_init(void)
 				PIDS_PER_CPU_DEFAULT * num_possible_cpus()));
 	pid_max_min = max_t(int, pid_max_min,
 				PIDS_PER_CPU_MIN * num_possible_cpus());
-	pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
+	pr_debug("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
 
 	idr_init(&init_pid_ns.idr);
 

@@ -310,7 +310,7 @@ int dbg_activate_sw_breakpoints(void)
 		error = kgdb_arch_set_breakpoint(&kgdb_break[i]);
 		if (error) {
 			ret = error;
-			pr_info("BP install failed: %lx\n",
+			pr_debug("BP install failed: %lx\n",
 				kgdb_break[i].bpt_addr);
 			continue;
 		}
@@ -373,7 +373,7 @@ int dbg_deactivate_sw_breakpoints(void)
 			continue;
 		error = kgdb_arch_remove_breakpoint(&kgdb_break[i]);
 		if (error) {
-			pr_info("BP remove failed: %lx\n",
+			pr_debug("BP remove failed: %lx\n",
 				kgdb_break[i].bpt_addr);
 			ret = error;
 		}
@@ -1098,7 +1098,7 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
 
 	spin_unlock(&kgdb_registration_lock);
 
-	pr_info("Registered I/O driver %s\n", new_dbg_io_ops->name);
+	pr_debug("Registered I/O driver %s\n", new_dbg_io_ops->name);
 
 	/* Arm KGDB now. */
 	kgdb_register_callbacks();
@@ -1133,7 +1133,7 @@ void kgdb_unregister_io_module(struct kgdb_io *old_dbg_io_ops)
 
 	spin_unlock(&kgdb_registration_lock);
 
-	pr_info("Unregistered I/O driver %s, debugger disabled\n",
+	pr_debug("Unregistered I/O driver %s, debugger disabled\n",
 		old_dbg_io_ops->name);
 }
 EXPORT_SYMBOL_GPL(kgdb_unregister_io_module);

@@ -166,7 +166,7 @@ int zcomp_cpu_up_prepare(unsigned int cpu, struct hlist_node *node)
 	zstrm = per_cpu_ptr(comp->stream, cpu);
 	ret = zcomp_strm_init(zstrm, comp);
 	if (ret)
-		pr_err("Can't allocate a compression stream\n");
+		pr_debug("Can't allocate a compression stream\n");
 	return ret;
 }
 

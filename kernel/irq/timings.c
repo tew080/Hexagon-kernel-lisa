@@ -746,7 +746,7 @@ static int __init irq_timings_test_next_index(struct timings_intervals *ti)
 	i = irq_timings_interval_index(ti->intervals[ti->count - 1]);
 
 	if (index != i) {
-		pr_err("Expected (%d) and computed (%d) next indexes differ\n",
+		pr_debug("Expected (%d) and computed (%d) next indexes differ\n",
 		       i, index);
 		return -EINVAL;
 	}
@@ -760,7 +760,7 @@ static int __init irq_timings_next_index_selftest(void)
 
 	for (i = 0; i < ARRAY_SIZE(tis); i++) {
 
-		pr_info("---> Injecting intervals number #%d (count=%zd)\n",
+		pr_debug("---> Injecting intervals number #%d (count=%zd)\n",
 			i, tis[i].count);
 
 		ret = irq_timings_test_next_index(&tis[i]);
@@ -779,7 +779,7 @@ static int __init irq_timings_test_irqs(struct timings_intervals *ti)
 
 	ret = irq_timings_alloc(irq);
 	if (ret) {
-		pr_err("Failed to allocate irq timings\n");
+		pr_debug("Failed to allocate irq timings\n");
 		return ret;
 	}
 
@@ -800,14 +800,14 @@ static int __init irq_timings_test_irqs(struct timings_intervals *ti)
 		__irq_timings_store(irq, irqs, ti->intervals[i]);
 		if (irqs->circ_timings[i & IRQ_TIMINGS_MASK] != index) {
 			ret = -EBADSLT;
-			pr_err("Failed to store in the circular buffer\n");
+			pr_debug("Failed to store in the circular buffer\n");
 			goto out;
 		}
 	}
 
 	if (irqs->count != ti->count) {
 		ret = -ERANGE;
-		pr_err("Count differs\n");
+		pr_debug("Count differs\n");
 		goto out;
 	}
 
@@ -823,7 +823,7 @@ static int __init irq_timings_irqs_selftest(void)
 	int i, ret;
 
 	for (i = 0; i < ARRAY_SIZE(tis); i++) {
-		pr_info("---> Injecting intervals number #%d (count=%zd)\n",
+		pr_debug("---> Injecting intervals number #%d (count=%zd)\n",
 			i, tis[i].count);
 		ret = irq_timings_test_irqs(&tis[i]);
 		if (ret)
@@ -913,7 +913,7 @@ static int __init irq_timings_irqts_selftest(void)
 
 	for (i = 0; i < ARRAY_SIZE(count); i++) {
 
-		pr_info("---> Checking the timings with %d/%d values\n",
+		pr_debug("---> Checking the timings with %d/%d values\n",
 			count[i], IRQ_TIMINGS_SIZE);
 
 		ret = irq_timings_test_irqts(irqts, count[i]);
@@ -928,7 +928,7 @@ static int __init irq_timings_selftest(void)
 {
 	int ret;
 
-	pr_info("------------------- selftest start -----------------\n");
+	pr_debug("------------------- selftest start -----------------\n");
 
 	/*
 	 * At this point, we don't except any subsystem to use the irq
@@ -949,7 +949,7 @@ static int __init irq_timings_selftest(void)
 
 	ret = irq_timings_next_index_selftest();
 out:
-	pr_info("---------- selftest end with %s -----------\n",
+	pr_debug("---------- selftest end with %s -----------\n",
 		ret ? "failure" : "success");
 
 	return ret;

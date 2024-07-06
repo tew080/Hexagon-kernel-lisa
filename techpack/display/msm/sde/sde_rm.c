@@ -2286,7 +2286,7 @@ bool sde_rm_topology_is_group(struct sde_rm *rm,
 	enum sde_rm_topology_name name;
 
 	if ((!rm) || (!state) || (!state->state)) {
-		pr_err("invalid arguments: rm:%d state:%d atomic state:%d\n",
+		pr_debug("invalid arguments: rm:%d state:%d atomic state:%d\n",
 				!rm, !state, state ? (!state->state) : 0);
 		return false;
 	}

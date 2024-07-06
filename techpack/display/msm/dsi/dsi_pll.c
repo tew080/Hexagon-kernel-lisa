@@ -124,7 +124,7 @@ int dsi_pll_init(struct platform_device *pdev, struct dsi_pll_resource **pll)
 	bool in_trusted_vm = false;
 
 	if (!pdev->dev.of_node) {
-		pr_err("Invalid DSI PHY node\n");
+		pr_debug("Invalid DSI PHY node\n");
 		return -ENOTSUPP;
 	}
 
@@ -189,7 +189,7 @@ int dsi_pll_init(struct platform_device *pdev, struct dsi_pll_resource **pll)
 		return -ENOMEM;
 	}
 
-	pr_info("PLL base=%p\n", pll_res->pll_base);
+	pr_debug("PLL base=%p\n", pll_res->pll_base);
 
 	if (dsi_pll_get_ioresources(pdev, &pll_res->phy_base, "dsi_phy")) {
 		DSI_PLL_ERR(pll_res, "Unable to remap pll phy base resources\n");

@@ -261,7 +261,7 @@ static struct perf_domain *pd_init(int cpu)
 
 	if (!obj) {
 		if (sched_debug())
-			pr_info("%s: no EM found for CPU%d\n", __func__, cpu);
+			pr_debug("%s: no EM found for CPU%d\n", __func__, cpu);
 		return NULL;
 	}
 
@@ -304,11 +304,11 @@ static void sched_energy_set(bool has_eas)
 {
 	if (!has_eas && static_branch_unlikely(&sched_energy_present)) {
 		if (sched_debug())
-			pr_info("%s: stopping EAS\n", __func__);
+			pr_debug("%s: stopping EAS\n", __func__);
 		static_branch_disable_cpuslocked(&sched_energy_present);
 	} else if (has_eas && !static_branch_unlikely(&sched_energy_present)) {
 		if (sched_debug())
-			pr_info("%s: starting EAS\n", __func__);
+			pr_debug("%s: starting EAS\n", __func__);
 		static_branch_enable_cpuslocked(&sched_energy_present);
 	}
 }
@@ -357,7 +357,7 @@ static bool build_perf_domains(const struct cpumask *cpu_map)
 #ifndef CONFIG_SCHED_WALT
 	if (!per_cpu(sd_asym_cpucapacity, cpu)) {
 		if (sched_debug()) {
-			pr_info("rd %*pbl: CPUs do not have asymmetric capacities\n",
+			pr_debug("rd %*pbl: CPUs do not have asymmetric capacities\n",
 					cpumask_pr_args(cpu_map));
 		}
 		goto free;
@@ -1854,9 +1854,9 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
 
 		if (!cpumask_subset(sched_domain_span(child),
 				    sched_domain_span(sd))) {
-			pr_err("BUG: arch topology borken\n");
+			pr_debug("BUG: arch topology borken\n");
 #ifdef CONFIG_SCHED_DEBUG
-			pr_err("     the %s domain not a subset of the %s domain\n",
+			pr_debug("     the %s domain not a subset of the %s domain\n",
 					child->name, sd->name);
 #endif
 			/* Fixup, ensure @sd has at least @child CPUs. */

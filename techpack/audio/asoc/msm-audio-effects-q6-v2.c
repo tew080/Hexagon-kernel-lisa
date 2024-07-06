@@ -126,12 +126,12 @@ int msm_audio_effects_virtualizer_handler(struct audio_client *ac,
 
 	pr_debug("%s\n", __func__);
 	if (!ac || (devices == -EINVAL) || (num_commands == -EINVAL)) {
-		pr_err("%s: cannot set audio effects\n", __func__);
+		pr_debug("%s: cannot set audio effects\n", __func__);
 		return -EINVAL;
 	}
 	params = kzalloc(MAX_INBAND_PARAM_SZ, GFP_KERNEL);
 	if (!params) {
-		pr_err("%s, params memory alloc failed\n", __func__);
+		pr_debug("%s, params memory alloc failed\n", __func__);
 		return -ENOMEM;
 	}
 	pr_debug("%s: device: %d\n", __func__, devices);
@@ -152,7 +152,7 @@ int msm_audio_effects_virtualizer_handler(struct audio_client *ac,
 		switch (command_id) {
 		case VIRTUALIZER_ENABLE:
 			if (length != 1 || index_offset != 0) {
-				pr_err("VIRT ENABLE:invalid params\n");
+				pr_debug("VIRT ENABLE:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -177,7 +177,7 @@ int msm_audio_effects_virtualizer_handler(struct audio_client *ac,
 			break;
 		case VIRTUALIZER_STRENGTH:
 			if (length != 1 || index_offset != 0) {
-				pr_err("VIRT STRENGTH:invalid params\n");
+				pr_debug("VIRT STRENGTH:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -201,7 +201,7 @@ int msm_audio_effects_virtualizer_handler(struct audio_client *ac,
 			break;
 		case VIRTUALIZER_OUT_TYPE:
 			if (length != 1 || index_offset != 0) {
-				pr_err("VIRT OUT_TYPE:invalid params\n");
+				pr_debug("VIRT OUT_TYPE:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -225,7 +225,7 @@ int msm_audio_effects_virtualizer_handler(struct audio_client *ac,
 			break;
 		case VIRTUALIZER_GAIN_ADJUST:
 			if (length != 1 || index_offset != 0) {
-				pr_err("VIRT GAIN_ADJUST: invalid params\n");
+				pr_debug("VIRT GAIN_ADJUST: invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -248,7 +248,7 @@ int msm_audio_effects_virtualizer_handler(struct audio_client *ac,
 			param_data = (u8 *) &virtualizer->gain_adjust;
 			break;
 		default:
-			pr_err_ratelimited("%s: Invalid command to set config\n",
+			pr_debug_ratelimited("%s: Invalid command to set config\n",
 					   __func__);
 			continue;
 		}
@@ -258,7 +258,7 @@ int msm_audio_effects_virtualizer_handler(struct audio_client *ac,
 		rc = q6common_pack_pp_params(updt_params, &param_hdr,
 					     param_data, &packed_data_size);
 		if (rc) {
-			pr_err("%s: Failed to pack params, error %d\n",
+			pr_debug("%s: Failed to pack params, error %d\n",
 			       __func__, rc);
 			goto invalid_config;
 		}
@@ -305,12 +305,12 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 
 	pr_debug("%s\n", __func__);
 	if (!ac || (devices == -EINVAL) || (num_commands == -EINVAL)) {
-		pr_err("%s: cannot set audio effects\n", __func__);
+		pr_debug("%s: cannot set audio effects\n", __func__);
 		return -EINVAL;
 	}
 	params = kzalloc(MAX_INBAND_PARAM_SZ, GFP_KERNEL);
 	if (!params) {
-		pr_err("%s, params memory alloc failed\n", __func__);
+		pr_debug("%s, params memory alloc failed\n", __func__);
 		return -ENOMEM;
 	}
 	pr_debug("%s: device: %d\n", __func__, devices);
@@ -331,7 +331,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 		switch (command_id) {
 		case REVERB_ENABLE:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_ENABLE:invalid params\n");
+				pr_debug("REVERB_ENABLE:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -355,7 +355,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_MODE:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_MODE:invalid params\n");
+				pr_debug("REVERB_MODE:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -378,7 +378,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_PRESET:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_PRESET:invalid params\n");
+				pr_debug("REVERB_PRESET:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -401,7 +401,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_WET_MIX:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_WET_MIX:invalid params\n");
+				pr_debug("REVERB_WET_MIX:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -424,7 +424,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_GAIN_ADJUST:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_GAIN_ADJUST:invalid params\n");
+				pr_debug("REVERB_GAIN_ADJUST:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -448,7 +448,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_ROOM_LEVEL:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_ROOM_LEVEL:invalid params\n");
+				pr_debug("REVERB_ROOM_LEVEL:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -471,7 +471,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_ROOM_HF_LEVEL:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_ROOM_HF_LEVEL:invalid params\n");
+				pr_debug("REVERB_ROOM_HF_LEVEL:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -495,7 +495,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_DECAY_TIME:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_DECAY_TIME:invalid params\n");
+				pr_debug("REVERB_DECAY_TIME:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -518,7 +518,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_DECAY_HF_RATIO:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_DECAY_HF_RATIOinvalid params\n");
+				pr_debug("REVERB_DECAY_HF_RATIOinvalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -542,7 +542,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_REFLECTIONS_LEVEL:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_REFLECTION_LVLinvalid params\n");
+				pr_debug("REVERB_REFLECTION_LVLinvalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -567,7 +567,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_REFLECTIONS_DELAY:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_REFLECTION_DLYinvalid params\n");
+				pr_debug("REVERB_REFLECTION_DLYinvalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -592,7 +592,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_LEVEL:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_LEVEL:invalid params\n");
+				pr_debug("REVERB_LEVEL:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -615,7 +615,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_DELAY:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_DELAY:invalid params\n");
+				pr_debug("REVERB_DELAY:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -638,7 +638,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_DIFFUSION:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_DIFFUSION:invalid params\n");
+				pr_debug("REVERB_DIFFUSION:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -661,7 +661,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			break;
 		case REVERB_DENSITY:
 			if (length != 1 || index_offset != 0) {
-				pr_err("REVERB_DENSITY:invalid params\n");
+				pr_debug("REVERB_DENSITY:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -683,7 +683,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 			param_data = (u8 *) &reverb->density;
 			break;
 		default:
-			pr_err_ratelimited("%s: Invalid command to set config\n",
+			pr_debug_ratelimited("%s: Invalid command to set config\n",
 					   __func__);
 			continue;
 		}
@@ -693,7 +693,7 @@ int msm_audio_effects_reverb_handler(struct audio_client *ac,
 		rc = q6common_pack_pp_params(updt_params, &param_hdr,
 					     param_data, &packed_data_size);
 		if (rc) {
-			pr_err("%s: Failed to pack params, error %d\n",
+			pr_debug("%s: Failed to pack params, error %d\n",
 			       __func__, rc);
 			goto invalid_config;
 		}
@@ -740,12 +740,12 @@ int msm_audio_effects_bass_boost_handler(struct audio_client *ac,
 
 	pr_debug("%s\n", __func__);
 	if (!ac || (devices == -EINVAL) || (num_commands == -EINVAL)) {
-		pr_err("%s: cannot set audio effects\n", __func__);
+		pr_debug("%s: cannot set audio effects\n", __func__);
 		return -EINVAL;
 	}
 	params = kzalloc(MAX_INBAND_PARAM_SZ, GFP_KERNEL);
 	if (!params) {
-		pr_err("%s, params memory alloc failed\n", __func__);
+		pr_debug("%s, params memory alloc failed\n", __func__);
 		return -ENOMEM;
 	}
 	pr_debug("%s: device: %d\n", __func__, devices);
@@ -766,7 +766,7 @@ int msm_audio_effects_bass_boost_handler(struct audio_client *ac,
 		switch (command_id) {
 		case BASS_BOOST_ENABLE:
 			if (length != 1 || index_offset != 0) {
-				pr_err("BASS_BOOST_ENABLE:invalid params\n");
+				pr_debug("BASS_BOOST_ENABLE:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -791,7 +791,7 @@ int msm_audio_effects_bass_boost_handler(struct audio_client *ac,
 			break;
 		case BASS_BOOST_MODE:
 			if (length != 1 || index_offset != 0) {
-				pr_err("BASS_BOOST_MODE:invalid params\n");
+				pr_debug("BASS_BOOST_MODE:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -814,7 +814,7 @@ int msm_audio_effects_bass_boost_handler(struct audio_client *ac,
 			break;
 		case BASS_BOOST_STRENGTH:
 			if (length != 1 || index_offset != 0) {
-				pr_err("BASS_BOOST_STRENGTH:invalid params\n");
+				pr_debug("BASS_BOOST_STRENGTH:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -837,7 +837,7 @@ int msm_audio_effects_bass_boost_handler(struct audio_client *ac,
 			param_data = (u8 *) &bass_boost->strength;
 			break;
 		default:
-			pr_err_ratelimited("%s: Invalid command to set config\n",
+			pr_debug_ratelimited("%s: Invalid command to set config\n",
 					   __func__);
 			continue;
 		}
@@ -847,7 +847,7 @@ int msm_audio_effects_bass_boost_handler(struct audio_client *ac,
 		rc = q6common_pack_pp_params(updt_params, &param_hdr,
 					     param_data, &packed_data_size);
 		if (rc) {
-			pr_err("%s: Failed to pack params, error %d\n",
+			pr_debug("%s: Failed to pack params, error %d\n",
 			       __func__, rc);
 			goto invalid_config;
 		}
@@ -897,12 +897,12 @@ int msm_audio_effects_pbe_handler(struct audio_client *ac,
 
 	pr_debug("%s\n", __func__);
 	if (!ac || (devices == -EINVAL) || (num_commands == -EINVAL)) {
-		pr_err("%s: cannot set audio effects\n", __func__);
+		pr_debug("%s: cannot set audio effects\n", __func__);
 		return -EINVAL;
 	}
 	params = kzalloc(MAX_INBAND_PARAM_SZ, GFP_KERNEL);
 	if (!params) {
-		pr_err("%s, params memory alloc failed\n", __func__);
+		pr_debug("%s, params memory alloc failed\n", __func__);
 		return -ENOMEM;
 	}
 	pr_debug("%s: device: %d\n", __func__, devices);
@@ -924,7 +924,7 @@ int msm_audio_effects_pbe_handler(struct audio_client *ac,
 		case PBE_ENABLE:
 			pr_debug("%s: PBE_ENABLE\n", __func__);
 			if (length != 1 || index_offset != 0) {
-				pr_err("no valid params\n");
+				pr_debug("no valid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -949,7 +949,7 @@ int msm_audio_effects_pbe_handler(struct audio_client *ac,
 			if (length > sizeof(struct pbe_config_t) ||
 				length < PBE_CONFIG_PARAM_LEN ||
 				index_offset != 0) {
-				pr_err("no valid params, len %d\n", length);
+				pr_debug("no valid params, len %d\n", length);
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -1005,7 +1005,7 @@ int msm_audio_effects_pbe_handler(struct audio_client *ac,
 
 			if ((pbe->config.bandpass_filter_order > 3) ||
 				(pbe->config.bandpass_filter_order < 1)) {
-				pr_err("%s: Invalid BPF order\n",
+				pr_debug("%s: Invalid BPF order\n",
 					__func__);
 				rc = -EINVAL;
 				goto invalid_config;
@@ -1037,7 +1037,7 @@ int msm_audio_effects_pbe_handler(struct audio_client *ac,
 			param_data = (u8 *) &pbe->config;
 			break;
 		default:
-			pr_err_ratelimited("%s: Invalid command to set config\n",
+			pr_debug_ratelimited("%s: Invalid command to set config\n",
 					   __func__);
 			continue;
 		}
@@ -1047,7 +1047,7 @@ int msm_audio_effects_pbe_handler(struct audio_client *ac,
 		rc = q6common_pack_pp_params(updt_params, &param_hdr,
 					     param_data, &packed_data_size);
 		if (rc) {
-			pr_err("%s: Failed to pack params, error %d\n",
+			pr_debug("%s: Failed to pack params, error %d\n",
 			       __func__, rc);
 			goto invalid_config;
 		}
@@ -1095,12 +1095,12 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 
 	pr_debug("%s\n", __func__);
 	if (!ac || (devices == -EINVAL) || (num_commands == -EINVAL)) {
-		pr_err("%s: cannot set audio effects\n", __func__);
+		pr_debug("%s: cannot set audio effects\n", __func__);
 		return -EINVAL;
 	}
 	params = kzalloc(MAX_INBAND_PARAM_SZ, GFP_KERNEL);
 	if (!params) {
-		pr_err("%s, params memory alloc failed\n", __func__);
+		pr_debug("%s, params memory alloc failed\n", __func__);
 		return -ENOMEM;
 	}
 	pr_debug("%s: device: %d\n", __func__, devices);
@@ -1124,7 +1124,7 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 		switch (command_id) {
 		case EQ_ENABLE:
 			if (length != 1 || index_offset != 0) {
-				pr_err("EQ_ENABLE:invalid params\n");
+				pr_debug("EQ_ENABLE:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -1148,7 +1148,7 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 			break;
 		case EQ_CONFIG:
 			if (length < EQ_CONFIG_PARAM_LEN || index_offset != 0) {
-				pr_err("EQ_CONFIG:invalid params\n");
+				pr_debug("EQ_CONFIG:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -1164,7 +1164,7 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 			eq->config.num_bands =
 				GET_NEXT(values, param_max_offset, rc);
 			if (eq->config.num_bands > MAX_EQ_BANDS) {
-				pr_err("EQ_CONFIG:invalid num of bands\n");
+				pr_debug("EQ_CONFIG:invalid num of bands\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -1172,14 +1172,14 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 			    (((length - EQ_CONFIG_PARAM_LEN)/
 				EQ_CONFIG_PER_BAND_PARAM_LEN)
 				!= eq->config.num_bands)) {
-				pr_err("EQ_CONFIG:invalid length per band\n");
+				pr_debug("EQ_CONFIG:invalid length per band\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
 			for (j = 0; j < eq->config.num_bands; j++) {
 				idx = GET_NEXT(values, param_max_offset, rc);
 				if (idx >= MAX_EQ_BANDS) {
-					pr_err("EQ_CONFIG:invalid band index\n");
+					pr_debug("EQ_CONFIG:invalid band index\n");
 					rc = -EINVAL;
 					goto invalid_config;
 				}
@@ -1214,7 +1214,7 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 			else
 				memset(eq_config_data, 0, config_param_length);
 			if (!eq_config_data) {
-				pr_err("%s, EQ_CONFIG:memory alloc failed\n",
+				pr_debug("%s, EQ_CONFIG:memory alloc failed\n",
 					__func__);
 				rc = -ENOMEM;
 				goto invalid_config;
@@ -1241,13 +1241,13 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 			break;
 		case EQ_BAND_INDEX:
 			if (length != 1 || index_offset != 0) {
-				pr_err("EQ_BAND_INDEX:invalid params\n");
+				pr_debug("EQ_BAND_INDEX:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
 			idx = GET_NEXT(values, param_max_offset, rc);
 			if (idx > MAX_EQ_BANDS) {
-				pr_err("EQ_BAND_INDEX:invalid band index\n");
+				pr_debug("EQ_BAND_INDEX:invalid band index\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -1269,12 +1269,12 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 			break;
 		case EQ_SINGLE_BAND_FREQ:
 			if (length != 1 || index_offset != 0) {
-				pr_err("EQ_SINGLE_BAND_FREQ:invalid params\n");
+				pr_debug("EQ_SINGLE_BAND_FREQ:invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
 			if (eq->band_index > MAX_EQ_BANDS) {
-				pr_err("EQ_SINGLE_BAND_FREQ:invalid index\n");
+				pr_debug("EQ_SINGLE_BAND_FREQ:invalid index\n");
 				break;
 			}
 			eq->freq_millihertz =
@@ -1296,7 +1296,7 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 			param_data = (u8 *) &eq->freq_millihertz;
 			break;
 		default:
-			pr_err_ratelimited("%s: Invalid command to set config\n",
+			pr_debug_ratelimited("%s: Invalid command to set config\n",
 					   __func__);
 			continue;
 		}
@@ -1306,7 +1306,7 @@ int msm_audio_effects_popless_eq_handler(struct audio_client *ac,
 		rc = q6common_pack_pp_params(updt_params, &param_hdr,
 					     param_data, &packed_data_size);
 		if (rc) {
-			pr_err("%s: Failed to pack params, error %d\n",
+			pr_debug("%s: Failed to pack params, error %d\n",
 			       __func__, rc);
 			goto invalid_config;
 		}
@@ -1345,7 +1345,7 @@ static int __msm_audio_effects_volume_handler(struct audio_client *ac,
 
 	pr_debug("%s: instance: %d\n", __func__, instance);
 	if (!values) {
-		pr_err("%s: set audio effects failed, no valid data\n",
+		pr_debug("%s: set audio effects failed, no valid data\n",
 			__func__);
 		return -EINVAL;
 	}
@@ -1353,12 +1353,12 @@ static int __msm_audio_effects_volume_handler(struct audio_client *ac,
 	devices = GET_NEXT(values, param_max_offset, rc);
 	num_commands = GET_NEXT(values, param_max_offset, rc);
 	if (!ac || (devices == -EINVAL) || (num_commands == -EINVAL)) {
-		pr_err("%s: cannot set audio effects\n", __func__);
+		pr_debug("%s: cannot set audio effects\n", __func__);
 		return -EINVAL;
 	}
 	params = kzalloc(MAX_INBAND_PARAM_SZ, GFP_KERNEL);
 	if (!params) {
-		pr_err("%s, params memory alloc failed\n", __func__);
+		pr_debug("%s, params memory alloc failed\n", __func__);
 		return -ENOMEM;
 	}
 	updt_params = (u8 *) params;
@@ -1378,7 +1378,7 @@ static int __msm_audio_effects_volume_handler(struct audio_client *ac,
 		case SOFT_VOLUME_GAIN_2CH:
 		case SOFT_VOLUME2_GAIN_2CH:
 			if (length != 2 || index_offset != 0) {
-				pr_err("VOLUME_GAIN_2CH: invalid params\n");
+				pr_debug("VOLUME_GAIN_2CH: invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -1399,7 +1399,7 @@ static int __msm_audio_effects_volume_handler(struct audio_client *ac,
 		case SOFT_VOLUME_GAIN_MASTER:
 		case SOFT_VOLUME2_GAIN_MASTER:
 			if (length != 1 || index_offset != 0) {
-				pr_err("VOLUME_GAIN_MASTER: invalid params\n");
+				pr_debug("VOLUME_GAIN_MASTER: invalid params\n");
 				rc = -EINVAL;
 				goto invalid_config;
 			}
@@ -1433,7 +1433,7 @@ static int __msm_audio_effects_volume_handler(struct audio_client *ac,
 					     (u8 *) &vol_gain_2ch,
 					     &packed_data_size);
 		if (rc) {
-			pr_err("%s: Failed to pack params, error %d\n",
+			pr_debug("%s: Failed to pack params, error %d\n",
 			       __func__, rc);
 			goto invalid_config;
 		}
@@ -1448,7 +1448,7 @@ static int __msm_audio_effects_volume_handler(struct audio_client *ac,
 					     (u8 *) &vol->master_gain,
 					     &packed_data_size);
 		if (rc) {
-			pr_err("%s: Failed to pack params, error %d\n",
+			pr_debug("%s: Failed to pack params, error %d\n",
 			       __func__, rc);
 			goto invalid_config;
 		}

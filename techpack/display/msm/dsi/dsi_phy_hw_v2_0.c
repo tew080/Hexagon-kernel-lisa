@@ -621,7 +621,7 @@ int dsi_phy_hw_v2_0_cache_phy_timings(struct dsi_phy_per_lane_cfgs *timings,
 		return -EINVAL;
 
 	if (size != (DSI_LANE_MAX * DSI_MAX_SETTINGS)) {
-		pr_err("size mis-match\n");
+		pr_debug("size mis-match\n");
 		return -EINVAL;
 	}
 

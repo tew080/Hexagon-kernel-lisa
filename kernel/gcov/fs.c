@@ -79,7 +79,7 @@ static int __init gcov_persist_setup(char *str)
 		return 0;
 	}
 	gcov_persist = val;
-	pr_info("setting gcov_persist to %d\n", gcov_persist);
+	pr_debug("setting gcov_persist to %d\n", gcov_persist);
 
 	return 1;
 }

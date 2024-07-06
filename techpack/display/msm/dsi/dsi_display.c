@@ -5762,7 +5762,7 @@ static ssize_t sysfs_dimlayer_exposure_read(struct device *dev,
 
 	display = dev_get_drvdata(dev);
 	if (!display) {
-		pr_err("Invalid display\n");
+		pr_debug("Invalid display\n");
 		return -EINVAL;
 	}
 
@@ -5786,13 +5786,13 @@ static ssize_t sysfs_dimlayer_exposure_write(struct device *dev,
 
 	display = dev_get_drvdata(dev);
 	if (!display) {
-		pr_err("Invalid display\n");
+		pr_debug("Invalid display\n");
 		return -EINVAL;
 	}
 
 	rc = kstrtobool(buf, &status);
 	if (rc) {
-		pr_err("%s: kstrtobool failed. rc=%d\n", __func__, rc);
+		pr_debug("%s: kstrtobool failed. rc=%d\n", __func__, rc);
 		return rc;
 	}
 
@@ -5828,7 +5828,7 @@ static int dsi_display_sysfs_init(struct dsi_display *display)
 
 	rc = sysfs_create_group(&dev->kobj, &display_fs_attrs_group);
 	if (rc)
-		pr_err("failed to create display device attributes");
+		pr_debug("failed to create display device attributes");
 
 	return rc;
 }
@@ -6807,7 +6807,7 @@ static struct mipi_dsi_host_ops dsi_host_ext_ops = {
 struct drm_panel *dsi_display_get_drm_panel(struct dsi_display *display)
 {
 	if (!display || !display->panel) {
-		pr_err("invalid param(s)\n");
+		pr_debug("invalid param(s)\n");
 		return NULL;
 	}
 
@@ -8523,7 +8523,7 @@ int dsi_display_pre_commit(void *display,
 	int rc = 0;
 
 	if (!display || !params) {
-		pr_err("Invalid params\n");
+		pr_debug("Invalid params\n");
 		return -EINVAL;
 	}
 
@@ -8531,7 +8531,7 @@ int dsi_display_pre_commit(void *display,
 		enable = (params->qsync_mode > 0) ? true : false;
 		rc = dsi_display_qsync(display, enable);
 		if (rc)
-			pr_err("%s failed to send qsync commands\n",
+			pr_debug("%s failed to send qsync commands\n",
 				__func__);
 		SDE_EVT32(params->qsync_mode, rc);
 	}

@@ -1101,7 +1101,7 @@ static int __init taskstats_init(void)
 		return rc;
 
 	family_registered = 1;
-	pr_info("registered taskstats version %d\n", TASKSTATS_GENL_VERSION);
+	pr_debug("registered taskstats version %d\n", TASKSTATS_GENL_VERSION);
 	return 0;
 }
 

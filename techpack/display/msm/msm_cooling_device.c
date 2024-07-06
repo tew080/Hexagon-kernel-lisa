@@ -82,7 +82,7 @@ struct sde_cdev *backlight_cdev_register(struct device *dev,
 				(char *)dev_name(&bd->dev), disp_cdev,
 				&sde_cdev_ops);
 	if (IS_ERR_OR_NULL(disp_cdev->cdev)) {
-		pr_err("cooling device register failed\n");
+		pr_debug("cooling device register failed\n");
 		return (void *)disp_cdev->cdev;
 	}
 	BLOCKING_INIT_NOTIFIER_HEAD(&disp_cdev->notifier_head);

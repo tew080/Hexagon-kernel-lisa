@@ -1441,7 +1441,7 @@ int wcd9335_regmap_register_patch(struct regmap *regmap, int version)
 	int rc;
 
 	if (!regmap) {
-		pr_err("%s: regmap struct is NULL\n", __func__);
+		pr_debug("%s: regmap struct is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -1460,7 +1460,7 @@ int wcd9335_regmap_register_patch(struct regmap *regmap, int version)
 		regcache_cache_only(regmap, false);
 		break;
 	default:
-		pr_err("%s: unknown version: %d\n", __func__, version);
+		pr_debug("%s: unknown version: %d\n", __func__, version);
 		rc = -EINVAL;
 		break;
 	}

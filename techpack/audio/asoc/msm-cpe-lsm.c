@@ -188,7 +188,7 @@ static struct cpe_priv *cpe_get_private_data(
 	struct snd_soc_pcm_runtime *rtd;
 
 	if (!substream || !substream->private_data) {
-		pr_err("%s: %s is invalid\n",
+		pr_debug("%s: %s is invalid\n",
 			__func__,
 			(!substream) ? "substream" : "private_data");
 		goto err_ret;
@@ -197,7 +197,7 @@ static struct cpe_priv *cpe_get_private_data(
 	rtd = substream->private_data;
 
 	if (!rtd || !rtd->platform) {
-		pr_err("%s: %s is invalid\n",
+		pr_debug("%s: %s is invalid\n",
 			 __func__,
 			(!rtd) ? "runtime" : "platform");
 		goto err_ret;
@@ -587,7 +587,7 @@ static int msm_cpe_lab_thread(void *data)
 	}
 
 	if (!cpe || !cpe->core_handle) {
-		pr_err("%s: Handle to %s is invalid\n",
+		pr_debug("%s: Handle to %s is invalid\n",
 			__func__,
 			(!cpe) ? "cpe" : "core");
 		rc = -EINVAL;
@@ -599,7 +599,7 @@ static int msm_cpe_lab_thread(void *data)
 		dma_data = snd_soc_dai_get_dma_data(rtd->cpu_dai,
 					substream);
 	if (!dma_data || !dma_data->dai_channel_ctl) {
-		pr_err("%s: dma_data is not set\n", __func__);
+		pr_debug("%s: dma_data is not set\n", __func__);
 		rc = -EINVAL;
 		goto done;
 	}
@@ -769,7 +769,7 @@ static int msm_cpe_lsm_open(struct snd_pcm_substream *substream)
 				SNDRV_PCM_HW_PARAM_RATE,
 				&constraints_sample_rates);
 	if (rc < 0) {
-		pr_err("snd_pcm_hw_constraint_list failed rc %d\n", rc);
+		pr_debug("snd_pcm_hw_constraint_list failed rc %d\n", rc);
 		return -EINVAL;
 	}
 
@@ -777,7 +777,7 @@ static int msm_cpe_lsm_open(struct snd_pcm_substream *substream)
 	rc = snd_pcm_hw_constraint_integer(runtime,
 					   SNDRV_PCM_HW_PARAM_PERIODS);
 	if (rc < 0) {
-		pr_err("%s: Unable to set pcm_param_periods, rc %d\n",
+		pr_debug("%s: Unable to set pcm_param_periods, rc %d\n",
 			__func__, rc);
 		return -EINVAL;
 	}
@@ -787,7 +787,7 @@ static int msm_cpe_lsm_open(struct snd_pcm_substream *substream)
 		LISTEN_MIN_NUM_PERIODS * LISTEN_MIN_PERIOD_SIZE,
 		LISTEN_MAX_NUM_PERIODS * LISTEN_MAX_PERIOD_SIZE);
 	if (rc < 0) {
-		pr_err("%s: Unable to set pcm constraints, rc %d\n",
+		pr_debug("%s: Unable to set pcm constraints, rc %d\n",
 			__func__, rc);
 		return -EINVAL;
 	}
@@ -956,7 +956,7 @@ static int msm_cpe_lsm_get_conf_levels(
 	if (copy_from_user(session->conf_levels,
 			   conf_levels_ptr,
 			   session->num_confidence_levels)) {
-		pr_err("%s: copy_from_user failed for confidence levels %u\n",
+		pr_debug("%s: copy_from_user failed for confidence levels %u\n",
 			__func__, session->num_confidence_levels);
 		kfree(session->conf_levels);
 		session->conf_levels = NULL;
@@ -1570,7 +1570,7 @@ static int msm_cpe_lsm_lab_start(struct snd_pcm_substream *substream,
 	int rc;
 
 	if (!substream || !substream->private_data) {
-		pr_err("%s: invalid substream (%pK)\n",
+		pr_debug("%s: invalid substream (%pK)\n",
 			__func__, substream);
 		return -EINVAL;
 	}
@@ -1660,7 +1660,7 @@ static bool msm_cpe_lsm_is_valid_stream(struct snd_pcm_substream *substream,
 	struct wcd_cpe_lsm_ops *lsm_ops;
 
 	if (!substream || !substream->private_data) {
-		pr_err("%s: invalid substream (%pK)\n",
+		pr_debug("%s: invalid substream (%pK)\n",
 			func, substream);
 		return false;
 	}
@@ -2087,7 +2087,7 @@ static int msm_cpe_lsm_process_params(struct snd_pcm_substream *substream,
 			break;
 		}
 		if (rc) {
-			pr_err("%s: set_param fail for param_type %d\n",
+			pr_debug("%s: set_param fail for param_type %d\n",
 				__func__, p_info->param_type);
 			return rc;
 		}
@@ -2109,7 +2109,7 @@ static int msm_cpe_lsm_ioctl(struct snd_pcm_substream *substream,
 	struct wcd_cpe_lsm_ops *lsm_ops;
 
 	if (!substream || !substream->private_data) {
-		pr_err("%s: invalid substream (%pK)\n",
+		pr_debug("%s: invalid substream (%pK)\n",
 			__func__, substream);
 		return -EINVAL;
 	}
@@ -2434,7 +2434,7 @@ static int msm_cpe_lsm_ioctl_compat(struct snd_pcm_substream *substream,
 	struct wcd_cpe_lsm_ops *lsm_ops;
 
 	if (!substream || !substream->private_data) {
-		pr_err("%s: invalid substream (%pK)\n",
+		pr_debug("%s: invalid substream (%pK)\n",
 			__func__, substream);
 		return -EINVAL;
 	}
@@ -2895,7 +2895,7 @@ static int msm_cpe_lsm_prepare(struct snd_pcm_substream *substream)
 	}
 	if (runtime->status->state == SNDRV_PCM_STATE_XRUN ||
 	    runtime->status->state == SNDRV_PCM_STATE_PREPARED) {
-		pr_err("%s: XRUN ignore for now\n", __func__);
+		pr_debug("%s: XRUN ignore for now\n", __func__);
 		return 0;
 	}
 
@@ -3149,7 +3149,7 @@ static int msm_cpe_lsm_copy(struct snd_pcm_substream *substream, int a,
 
 	if (runtime->status->state == SNDRV_PCM_STATE_XRUN ||
 	   runtime->status->state == SNDRV_PCM_STATE_PREPARED) {
-		pr_err("%s: XRUN ignore for now\n", __func__);
+		pr_debug("%s: XRUN ignore for now\n", __func__);
 		return 0;
 	}
 	session = lsm_d->lsm_session;
@@ -3183,11 +3183,11 @@ static int msm_cpe_lsm_copy(struct snd_pcm_substream *substream, int a,
 		return -EIO;
 	}
 	if (lab_d->thread_status != MSM_LSM_LAB_THREAD_RUNNING) {
-		pr_err("%s: Lab stopped\n", __func__);
+		pr_debug("%s: Lab stopped\n", __func__);
 		return -EIO;
 	}
 	if (!rc) {
-		pr_err("%s:LAB err wait_event_timeout\n", __func__);
+		pr_debug("%s:LAB err wait_event_timeout\n", __func__);
 		rc = -EAGAIN;
 		goto fail;
 	}
@@ -3198,7 +3198,7 @@ static int msm_cpe_lsm_copy(struct snd_pcm_substream *substream, int a,
 		 __func__,  lab_d->buf_idx, pcm_buf);
 	if (pcm_buf) {
 		if (copy_to_user(buf, pcm_buf, fbytes)) {
-			pr_err("Failed to copy buf to user\n");
+			pr_debug("Failed to copy buf to user\n");
 			rc = -EFAULT;
 			goto fail;
 		}
@@ -3232,7 +3232,7 @@ static int msm_asoc_cpe_lsm_probe(struct snd_soc_component *component)
 	int ret = 0;
 
 	if (!component || !component->card) {
-		pr_err("%s: Invalid component or card\n",
+		pr_debug("%s: Invalid component or card\n",
 			__func__);
 		return -EINVAL;
 	}

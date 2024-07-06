@@ -194,7 +194,7 @@ static char *wdsp_get_ssr_type_string(enum wdsp_ssr_type type)
 	case WDSP_SSR_TYPE_CDC_UP:
 		return "CDC_UP";
 	default:
-		pr_err("%s: Invalid ssr_type %d\n",
+		pr_debug("%s: Invalid ssr_type %d\n",
 			__func__, type);
 		return "Invalid";
 	}
@@ -210,7 +210,7 @@ static char *wdsp_get_cmpnt_type_string(enum wdsp_cmpnt_type type)
 	case WDSP_CMPNT_TRANSPORT:
 		return "transport";
 	default:
-		pr_err("%s: Invalid component type %d\n",
+		pr_debug("%s: Invalid component type %d\n",
 			__func__, type);
 		return "Invalid";
 	}
@@ -463,7 +463,7 @@ static void wdsp_load_fw_image(struct work_struct *work)
 
 	wdsp = container_of(work, struct wdsp_mgr_priv, load_fw_work);
 	if (!wdsp) {
-		pr_err("%s: Invalid private_data\n", __func__);
+		pr_debug("%s: Invalid private_data\n", __func__);
 		return;
 	}
 
@@ -707,7 +707,7 @@ static void wdsp_ssr_work_fn(struct work_struct *work)
 
 	wdsp = container_of(work, struct wdsp_mgr_priv, ssr_work);
 	if (!wdsp) {
-		pr_err("%s: Invalid private_data\n", __func__);
+		pr_debug("%s: Invalid private_data\n", __func__);
 		return;
 	}
 
@@ -984,7 +984,7 @@ static int wdsp_suspend(struct device *wdsp_dev)
 	int rc = 0, i;
 
 	if (!wdsp_dev) {
-		pr_err("%s: Invalid handle to device\n", __func__);
+		pr_debug("%s: Invalid handle to device\n", __func__);
 		return -EINVAL;
 	}
 
@@ -1008,7 +1008,7 @@ static int wdsp_resume(struct device *wdsp_dev)
 	int rc = 0, i;
 
 	if (!wdsp_dev) {
-		pr_err("%s: Invalid handle to device\n", __func__);
+		pr_debug("%s: Invalid handle to device\n", __func__);
 		return -EINVAL;
 	}
 

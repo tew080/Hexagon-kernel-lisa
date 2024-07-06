@@ -849,7 +849,7 @@ int __irq_set_trigger(struct irq_desc *desc, unsigned long flags)
 		ret = 0;
 		break;
 	default:
-		pr_err("Setting trigger mode %lu for irq %u failed (%pS)\n",
+		pr_debug("Setting trigger mode %lu for irq %u failed (%pS)\n",
 		       flags, irq_desc_get_irq(desc), chip->irq_set_type);
 	}
 	if (unmask)
@@ -1086,7 +1086,7 @@ static void irq_thread_dtor(struct callback_head *unused)
 
 	action = kthread_data(tsk);
 
-	pr_err("exiting task \"%s\" (%d) is an active IRQ thread (irq %d)\n",
+	pr_debug("exiting task \"%s\" (%d) is an active IRQ thread (irq %d)\n",
 	       tsk->comm, tsk->pid, action->irq);
 
 
@@ -1586,7 +1586,7 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
 	if (!desc->action) {
 		ret = irq_request_resources(desc);
 		if (ret) {
-			pr_err("Failed to request resources for %s (irq %d) on irqchip %s\n",
+			pr_debug("Failed to request resources for %s (irq %d) on irqchip %s\n",
 			       new->name, irq, desc->irq_data.chip->name);
 			goto out_bus_unlock;
 		}
@@ -1613,7 +1613,7 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
 		unsigned int oldtype;
 
 		if (desc->istate & IRQS_NMI) {
-			pr_err("Invalid attempt to share NMI for %s (irq %d) on irqchip %s.\n",
+			pr_debug("Invalid attempt to share NMI for %s (irq %d) on irqchip %s.\n",
 				new->name, irq, desc->irq_data.chip->name);
 			ret = -EINVAL;
 			goto out_unlock;
@@ -1707,7 +1707,7 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
 		 * has. The type flags are unreliable as the
 		 * underlying chip implementation can override them.
 		 */
-		pr_err("Threaded irq requested with handler=NULL and !ONESHOT for irq %d\n",
+		pr_debug("Threaded irq requested with handler=NULL and !ONESHOT for irq %d\n",
 		       irq);
 		ret = -EINVAL;
 		goto out_unlock;
@@ -1821,7 +1821,7 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
 
 mismatch:
 	if (!(new->flags & IRQF_PROBE_SHARED)) {
-		pr_err("Flags mismatch irq %d. %08x (%s) vs. %08x (%s)\n",
+		pr_debug("Flags mismatch irq %d. %08x (%s) vs. %08x (%s)\n",
 		       irq, new->flags, new->name, old->flags, old->name);
 #ifdef CONFIG_DEBUG_SHIRQ
 		dump_stack();
@@ -2795,7 +2795,7 @@ int prepare_percpu_nmi(unsigned int irq)
 
 	ret = irq_nmi_setup(desc);
 	if (ret) {
-		pr_err("Failed to setup NMI delivery: irq %u\n", irq);
+		pr_debug("Failed to setup NMI delivery: irq %u\n", irq);
 		goto out;
 	}
 

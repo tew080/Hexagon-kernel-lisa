@@ -971,7 +971,7 @@ void __init register_nosave_region(unsigned long start_pfn, unsigned long end_pf
 	region->end_pfn = end_pfn;
 	list_add_tail(&region->list, &nosave_regions);
  Report:
-	pr_info("Registered nosave memory: [mem %#010llx-%#010llx]\n",
+	pr_debug("Registered nosave memory: [mem %#010llx-%#010llx]\n",
 		(unsigned long long) start_pfn << PAGE_SHIFT,
 		((unsigned long long) end_pfn << PAGE_SHIFT) - 1);
 }
@@ -1156,7 +1156,7 @@ void clear_free_pages(void)
 			pfn = memory_bm_next_pfn(bm);
 		}
 		memory_bm_position_reset(bm);
-		pr_info("free pages cleared after restore\n");
+		pr_debug("free pages cleared after restore\n");
 	}
 }
 
@@ -1698,7 +1698,7 @@ int hibernate_preallocate_memory(void)
 	ktime_t start, stop;
 	int error;
 
-	pr_info("Preallocating image memory... ");
+	pr_debug("Preallocating image memory... ");
 	start = ktime_get();
 
 	error = memory_bm_create(&orig_bm, GFP_IMAGE, PG_ANY);
@@ -1969,12 +1969,12 @@ asmlinkage __visible int swsusp_save(void)
 {
 	unsigned int nr_pages, nr_highmem;
 
-	pr_info("Creating hibernation image:\n");
+	pr_debug("Creating hibernation image:\n");
 
 	drain_local_pages(NULL);
 	nr_pages = count_data_pages();
 	nr_highmem = count_highmem_pages();
-	pr_info("Need to copy %u pages\n", nr_pages + nr_highmem);
+	pr_debug("Need to copy %u pages\n", nr_pages + nr_highmem);
 
 	if (!enough_free_mem(nr_pages, nr_highmem)) {
 		pr_err("Not enough free memory\n");
@@ -2003,7 +2003,7 @@ asmlinkage __visible int swsusp_save(void)
 	nr_copy_pages = nr_pages;
 	nr_meta_pages = DIV_ROUND_UP(nr_pages * sizeof(long), PAGE_SIZE);
 
-	pr_info("Hibernation image created (%d pages copied)\n", nr_pages);
+	pr_debug("Hibernation image created (%d pages copied)\n", nr_pages);
 
 	return 0;
 }

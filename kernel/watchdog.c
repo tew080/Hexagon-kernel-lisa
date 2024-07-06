@@ -819,7 +819,7 @@ int proc_watchdog_cpumask(struct ctl_table *table, int write,
 void __init lockup_detector_init(void)
 {
 	if (tick_nohz_full_enabled())
-		pr_info("Disabling watchdog on nohz_full cores by default\n");
+		pr_debug("Disabling watchdog on nohz_full cores by default\n");
 
 	cpumask_copy(&watchdog_cpumask,
 		     housekeeping_cpumask(HK_FLAG_TIMER));

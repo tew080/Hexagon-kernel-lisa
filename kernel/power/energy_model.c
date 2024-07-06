@@ -88,13 +88,13 @@ static int __init em_debug_init(void)
 
 		pd = em_cpu_get(cpu);
 		if (!pd) {
-			pr_info("Power domains not created yet\n");
+			pr_debug("Power domains not created yet\n");
 			break;
 		}
 
 		snprintf(name, sizeof(name), "pd%d", cpu);
 		if (debugfs_lookup(name, rootdir)) {
-			pr_info("Power domains already created\n");
+			pr_debug("Power domains already created\n");
 			break;
 		}
 

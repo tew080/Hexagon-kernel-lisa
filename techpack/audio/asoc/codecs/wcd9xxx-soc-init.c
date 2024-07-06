@@ -15,11 +15,11 @@ static int __init wcd9xxx_soc_init(void)
 	if (!ret) {
 		ret = audio_ref_clk_platform_init();
 		if (ret) {
-			pr_err("%s: init extclk fail: %d\n", __func__, ret);
+			pr_debug("%s: init extclk fail: %d\n", __func__, ret);
 			wcd_dsp_mgr_exit();
 		}
 	} else {
-		pr_err("%s: init dsp mgr fail: %d\n", __func__, ret);
+		pr_debug("%s: init dsp mgr fail: %d\n", __func__, ret);
 	}
 
 	return ret;

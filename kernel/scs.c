@@ -203,7 +203,7 @@ static void scs_check_usage(struct task_struct *tsk)
 		prev = cmpxchg_relaxed(&highest, curr, used);
 
 		if (prev == curr) {
-			pr_info("%s (%d): highest shadow stack usage: %lu bytes\n",
+			pr_debug("%s (%d): highest shadow stack usage: %lu bytes\n",
 				tsk->comm, task_pid_nr(tsk), used);
 			break;
 		}

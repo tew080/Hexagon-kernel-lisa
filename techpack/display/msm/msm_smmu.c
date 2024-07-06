@@ -67,7 +67,7 @@ static int msm_smmu_attach(struct msm_mmu *mmu, const char * const *names,
 	int rc = 0;
 
 	if (!client) {
-		pr_err("undefined smmu client\n");
+		pr_debug("undefined smmu client\n");
 		return -EINVAL;
 	}
 
@@ -101,7 +101,7 @@ static void msm_smmu_detach(struct msm_mmu *mmu, const char * const *names,
 	struct msm_smmu_client *client = msm_smmu_to_client(smmu);
 
 	if (!client) {
-		pr_err("undefined smmu client\n");
+		pr_debug("undefined smmu client\n");
 		return;
 	}
 
@@ -153,7 +153,7 @@ static int msm_smmu_one_to_one_unmap(struct msm_mmu *mmu,
 
 	ret = iommu_unmap(client->domain, dest_address, size);
 	if (ret != size)
-		pr_err("smmu unmap failed\n");
+		pr_debug("smmu unmap failed\n");
 
 	return 0;
 }
@@ -171,7 +171,7 @@ static int msm_smmu_one_to_one_map(struct msm_mmu *mmu, uint32_t iova,
 	ret = iommu_map(client->domain, dest_address, dest_address,
 			size, prot);
 	if (ret)
-		pr_err("smmu map failed\n");
+		pr_debug("smmu map failed\n");
 
 	return ret;
 }
@@ -349,7 +349,7 @@ static struct msm_smmu_client *msm_smmu_get_smmu(const char *compat)
 	bool found = false;
 
 	if (!compat) {
-		pr_err("invalid param\n");
+		pr_debug("invalid param\n");
 		return ERR_PTR(-EINVAL);
 	}
 
@@ -539,7 +539,7 @@ static int msm_smmu_probe(struct platform_device *pdev)
 
 	ret = component_add(&pdev->dev, &msm_smmu_comp_ops);
 	if (ret)
-		pr_err("component add failed\n");
+		pr_debug("component add failed\n");
 
 	return ret;
 }
@@ -580,7 +580,7 @@ int __init msm_smmu_driver_init(void)
 
 	ret = platform_driver_register(&msm_smmu_driver);
 	if (ret)
-		pr_err("mdss_smmu_register_driver() failed!\n");
+		pr_debug("mdss_smmu_register_driver() failed!\n");
 
 	return ret;
 }

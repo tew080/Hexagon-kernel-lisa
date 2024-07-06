@@ -533,14 +533,14 @@ static int sde_hw_intr_enable_irq_nolock(struct sde_hw_intr *intr, int irq_idx)
 		return -EINVAL;
 
 	if (irq_idx < 0 || irq_idx >= intr->sde_irq_map_size) {
-		pr_err("invalid IRQ index: [%d]\n", irq_idx);
+		pr_debug("invalid IRQ index: [%d]\n", irq_idx);
 		return -EINVAL;
 	}
 
 	irq = &intr->sde_irq_map[irq_idx];
 	reg_idx = irq->reg_idx;
 	if (reg_idx < 0 || reg_idx > intr->sde_irq_size) {
-		pr_err("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
+		pr_debug("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
 		return -EINVAL;
 	}
 
@@ -579,14 +579,14 @@ static int sde_hw_intr_disable_irq_nolock(struct sde_hw_intr *intr, int irq_idx)
 		return -EINVAL;
 
 	if (irq_idx < 0 || irq_idx >= intr->sde_irq_map_size) {
-		pr_err("invalid IRQ index: [%d]\n", irq_idx);
+		pr_debug("invalid IRQ index: [%d]\n", irq_idx);
 		return -EINVAL;
 	}
 
 	irq = &intr->sde_irq_map[irq_idx];
 	reg_idx = irq->reg_idx;
 	if (reg_idx < 0 || reg_idx > intr->sde_irq_size) {
-		pr_err("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
+		pr_debug("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
 		return -EINVAL;
 	}
 
@@ -682,13 +682,13 @@ static void sde_hw_intr_clear_intr_status_force_mask(struct sde_hw_intr *intr,
 		return;
 
 	if (irq_idx >= intr->sde_irq_map_size || irq_idx < 0) {
-		pr_err("invalid IRQ index: [%d]\n", irq_idx);
+		pr_debug("invalid IRQ index: [%d]\n", irq_idx);
 		return;
 	}
 
 	reg_idx = intr->sde_irq_map[irq_idx].reg_idx;
 	if (reg_idx < 0 || reg_idx > intr->sde_irq_size) {
-		pr_err("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
+		pr_debug("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
 		return;
 	}
 
@@ -708,13 +708,13 @@ static void sde_hw_intr_clear_intr_status_nolock(struct sde_hw_intr *intr,
 		return;
 
 	if (irq_idx >= intr->sde_irq_map_size || irq_idx < 0) {
-		pr_err("invalid IRQ index: [%d]\n", irq_idx);
+		pr_debug("invalid IRQ index: [%d]\n", irq_idx);
 		return;
 	}
 
 	reg_idx = intr->sde_irq_map[irq_idx].reg_idx;
 	if (reg_idx < 0 || reg_idx > intr->sde_irq_size) {
-		pr_err("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
+		pr_debug("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
 		return;
 	}
 
@@ -736,7 +736,7 @@ static void sde_hw_intr_clear_interrupt_status(struct sde_hw_intr *intr,
 
 	reg_idx = intr->sde_irq_map[irq_idx].reg_idx;
 	if (reg_idx < 0 || reg_idx > intr->sde_irq_size) {
-		pr_err("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
+		pr_debug("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
 		return;
 	}
 
@@ -756,13 +756,13 @@ static u32 sde_hw_intr_get_intr_status_nolock(struct sde_hw_intr *intr,
 		return 0;
 
 	if (irq_idx >= intr->sde_irq_map_size || irq_idx < 0) {
-		pr_err("invalid IRQ index: [%d]\n", irq_idx);
+		pr_debug("invalid IRQ index: [%d]\n", irq_idx);
 		return 0;
 	}
 
 	reg_idx = intr->sde_irq_map[irq_idx].reg_idx;
 	if (reg_idx < 0 || reg_idx > intr->sde_irq_size) {
-		pr_err("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
+		pr_debug("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
 		return 0;
 	}
 
@@ -790,13 +790,13 @@ static u32 sde_hw_intr_get_interrupt_status(struct sde_hw_intr *intr,
 		return 0;
 
 	if (irq_idx >= intr->sde_irq_map_size || irq_idx < 0) {
-		pr_err("invalid IRQ index: [%d]\n", irq_idx);
+		pr_debug("invalid IRQ index: [%d]\n", irq_idx);
 		return 0;
 	}
 
 	reg_idx = intr->sde_irq_map[irq_idx].reg_idx;
 	if (reg_idx < 0 || reg_idx > intr->sde_irq_size) {
-		pr_err("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
+		pr_debug("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
 		return 0;
 	}
 
@@ -825,13 +825,13 @@ static u32 sde_hw_intr_get_intr_status_nomask(struct sde_hw_intr *intr,
 		return 0;
 
 	if (irq_idx >= intr->sde_irq_map_size || irq_idx < 0) {
-		pr_err("invalid IRQ index: [%d]\n", irq_idx);
+		pr_debug("invalid IRQ index: [%d]\n", irq_idx);
 		return 0;
 	}
 
 	reg_idx = intr->sde_irq_map[irq_idx].reg_idx;
 	if (reg_idx < 0 || reg_idx > intr->sde_irq_size) {
-		pr_err("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
+		pr_debug("invalid irq reg:%d irq:%d\n", reg_idx, irq_idx);
 		return 0;
 	}
 
@@ -869,7 +869,7 @@ static int _set_sde_irq_tbl_offset_top(struct sde_intr_reg *sde_irq,
 		sde_irq->status_off = base_offset + HIST_INTR_STATUS;
 		break;
 	default:
-		pr_err("invalid TOP intr for instance %d\n",
+		pr_debug("invalid TOP intr for instance %d\n",
 				item->instance_idx);
 		return -EINVAL;
 	}
@@ -912,7 +912,7 @@ static int _set_sde_irq_tbl_offset(struct sde_intr_reg *sde_irq,
 		sde_irq->status_off = base_offset + MDP_LTM_INTR_STATUS_OFF;
 		break;
 	default:
-		pr_err("unrecognized intr blk type %d\n",
+		pr_debug("unrecognized intr blk type %d\n",
 				item->type);
 		rc = -EINVAL;
 	}
@@ -977,7 +977,7 @@ static inline u32 _get_irq_map_size_top(enum sde_intr_top_intr inst)
 		ret = ARRAY_SIZE(sde_irq_hist_map);
 		break;
 	default:
-		pr_err("invalid top inst:%d\n", inst);
+		pr_debug("invalid top inst:%d\n", inst);
 	}
 
 	return ret;
@@ -1004,7 +1004,7 @@ static inline u32 _get_irq_map_size(struct sde_intr_irq_offsets *item)
 		ret = ARRAY_SIZE(sde_irq_ltm_map);
 		break;
 	default:
-		pr_err("invalid type: %d\n", item->type);
+		pr_debug("invalid type: %d\n", item->type);
 	}
 
 	return ret;
@@ -1026,7 +1026,7 @@ static inline struct sde_irq_type *_get_irq_map_addr_top(
 		ret = sde_irq_hist_map;
 		break;
 	default:
-		pr_err("invalid top inst:%d\n", inst);
+		pr_debug("invalid top inst:%d\n", inst);
 	}
 
 	return ret;
@@ -1054,7 +1054,7 @@ static inline struct sde_irq_type *_get_irq_map_addr(
 		ret = sde_irq_ltm_map;
 		break;
 	default:
-		pr_err("invalid type: %d\n", item->type);
+		pr_debug("invalid type: %d\n", item->type);
 	}
 
 	return ret;
@@ -1072,7 +1072,7 @@ static int _sde_copy_regs(struct sde_irq_type *sde_irq_map, u32 size,
 
 	if (low_idx >= size || high_idx > size ||
 		(high_idx - low_idx > src_size)) {
-		pr_err("invalid size l:%d h:%d dst:%d src:%d\n",
+		pr_debug("invalid size l:%d h:%d dst:%d src:%d\n",
 			low_idx, high_idx, size, src_size);
 		return -EINVAL;
 	}
@@ -1173,7 +1173,7 @@ struct sde_hw_intr *sde_hw_intr_init(void __iomem *addr,
 	list_for_each_entry(item, &m->irq_offset_list, list) {
 		size = _get_irq_map_size(item);
 		if (!size || irq_map_count >= UINT_MAX - size) {
-			pr_err("wrong map cnt idx:%d blk:%d/%d sz:%d cnt:%d\n",
+			pr_debug("wrong map cnt idx:%d blk:%d/%d sz:%d cnt:%d\n",
 				irq_regs_count, item->type, item->instance_idx,
 				size, irq_map_count);
 			ret = -EINVAL;
@@ -1185,7 +1185,7 @@ struct sde_hw_intr *sde_hw_intr_init(void __iomem *addr,
 	}
 
 	if (irq_regs_count == 0 || irq_map_count == 0) {
-		pr_err("invalid irq map: %d %d\n",
+		pr_debug("invalid irq map: %d %d\n",
 				irq_regs_count, irq_map_count);
 		ret = -EINVAL;
 		goto exit;

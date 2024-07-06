@@ -737,7 +737,7 @@ kdb_printit:
 		if (printk_get_level(kdb_buffer) || src == KDB_MSGSRC_PRINTK)
 			printk("%s", kdb_buffer);
 		else
-			pr_info("%s", kdb_buffer);
+			pr_debug("%s", kdb_buffer);
 	}
 
 	if (KDB_STATE(PAGER)) {

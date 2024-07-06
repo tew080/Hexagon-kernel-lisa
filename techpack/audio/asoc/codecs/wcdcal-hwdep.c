@@ -31,18 +31,18 @@ struct firmware_cal *wcdcal_get_fw_cal(struct fw_info *fw_data,
 					enum wcd_cal_type type)
 {
 	if (!fw_data) {
-		pr_err("%s: fw_data is NULL\n", __func__);
+		pr_debug("%s: fw_data is NULL\n", __func__);
 		return NULL;
 	}
 	if (type >= WCD9XXX_MAX_CAL ||
 		type < WCD9XXX_MIN_CAL) {
-		pr_err("%s: wrong cal type sent %d\n", __func__, type);
+		pr_debug("%s: wrong cal type sent %d\n", __func__, type);
 		return NULL;
 	}
 	mutex_lock(&fw_data->lock);
 	if (!test_bit(WCDCAL_RECIEVED,
 		&fw_data->wcdcal_state[type])) {
-		pr_err("%s: cal not sent by userspace %d\n",
+		pr_debug("%s: cal not sent by userspace %d\n",
 			__func__, type);
 		mutex_unlock(&fw_data->lock);
 		return NULL;
@@ -61,19 +61,19 @@ static int wcdcal_hwdep_ioctl_shared(struct snd_hwdep *hw,
 	void *data;
 
 	if (!test_bit(fw_user.cal_type, fw_data->cal_bit)) {
-		pr_err("%s: codec didn't set this %d!!\n",
+		pr_debug("%s: codec didn't set this %d!!\n",
 				__func__, fw_user.cal_type);
 		return -EFAULT;
 	}
 	if (fw_user.cal_type >= WCD9XXX_MAX_CAL ||
 		fw_user.cal_type < WCD9XXX_MIN_CAL) {
-		pr_err("%s: wrong cal type sent %d\n",
+		pr_debug("%s: wrong cal type sent %d\n",
 				__func__, fw_user.cal_type);
 		return -EFAULT;
 	}
 	if (fw_user.size > cal_size_info[fw_user.cal_type] ||
 		fw_user.size <= 0) {
-		pr_err("%s: incorrect firmware size %d for %s\n",
+		pr_debug("%s: incorrect firmware size %d for %s\n",
 			__func__, fw_user.size,
 			cal_name_info[fw_user.cal_type]);
 		return -EFAULT;
@@ -110,11 +110,11 @@ static int wcdcal_hwdep_ioctl_compat(struct snd_hwdep *hw, struct file *file,
 	struct wcdcal_ioctl_buffer fw_user_compat;
 
 	if (cmd != SNDRV_CTL_IOCTL_HWDEP_CAL_TYPE32) {
-		pr_err("%s: wrong ioctl command sent %u!\n", __func__, cmd);
+		pr_debug("%s: wrong ioctl command sent %u!\n", __func__, cmd);
 		return -ENOIOCTLCMD;
 	}
 	if (copy_from_user(&fw_user32, argp, sizeof(fw_user32))) {
-		pr_err("%s: failed to copy\n", __func__);
+		pr_debug("%s: failed to copy\n", __func__);
 		return -EFAULT;
 	}
 	fw_user_compat.size = fw_user32.size;
@@ -135,11 +135,11 @@ static int wcdcal_hwdep_ioctl(struct snd_hwdep *hw, struct file *file,
 	struct wcdcal_ioctl_buffer fw_user;
 
 	if (cmd != SNDRV_CTL_IOCTL_HWDEP_CAL_TYPE) {
-		pr_err("%s: wrong ioctl command sent %d!\n", __func__, cmd);
+		pr_debug("%s: wrong ioctl command sent %d!\n", __func__, cmd);
 		return -ENOIOCTLCMD;
 	}
 	if (copy_from_user(&fw_user, argp, sizeof(fw_user))) {
-		pr_err("%s: failed to copy\n", __func__);
+		pr_debug("%s: failed to copy\n", __func__);
 		return -EFAULT;
 	}
 	return wcdcal_hwdep_ioctl_shared(hw, fw_user);
@@ -167,7 +167,7 @@ int wcd_cal_create_hwdep(void *data, int node,
 	int err, cal_bit;
 
 	if (!fw_data || !component) {
-		pr_err("%s: wrong arguments passed\n", __func__);
+		pr_debug("%s: wrong arguments passed\n", __func__);
 		return -EINVAL;
 	}
 

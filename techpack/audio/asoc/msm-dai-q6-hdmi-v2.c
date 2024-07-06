@@ -68,7 +68,7 @@ static int msm_dai_q6_ext_disp_format_put(struct snd_kcontrol *kcontrol,
 	int value = ucontrol->value.integer.value[0];
 
 	if (!dai_data) {
-		pr_err("%s: dai_data is NULL\n", __func__);
+		pr_debug("%s: dai_data is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -84,7 +84,7 @@ static int msm_dai_q6_ext_disp_format_get(struct snd_kcontrol *kcontrol,
 	struct msm_dai_q6_hdmi_dai_data *dai_data = kcontrol->private_data;
 
 	if (!dai_data) {
-		pr_err("%s: dai_data is NULL\n", __func__);
+		pr_debug("%s: dai_data is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -102,7 +102,7 @@ static int msm_dai_q6_ext_disp_device_idx_put(struct snd_kcontrol *kcontrol,
 	struct msm_dai_q6_hdmi_dai_data *dai_data = kcontrol->private_data;
 
 	if (!dai_data) {
-		pr_err("%s: dai_data is NULL\n", __func__);
+		pr_debug("%s: dai_data is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -110,7 +110,7 @@ static int msm_dai_q6_ext_disp_device_idx_put(struct snd_kcontrol *kcontrol,
 		(ucontrol->value.integer.value[1] > (DP_STREAM_MAX - 1)) ||
 		(ucontrol->value.integer.value[0] < 0) ||
 		(ucontrol->value.integer.value[1] < 0)) {
-		pr_err("%s: DP control index invalid\n", __func__);
+		pr_debug("%s: DP control index invalid\n", __func__);
 		return -EINVAL;
 	}
 
@@ -128,7 +128,7 @@ static int msm_dai_q6_ext_disp_device_idx_get(struct snd_kcontrol *kcontrol,
 	struct msm_dai_q6_hdmi_dai_data *dai_data = kcontrol->private_data;
 
 	if (!dai_data) {
-		pr_err("%s: dai_data is NULL\n", __func__);
+		pr_debug("%s: dai_data is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -146,7 +146,7 @@ static int msm_dai_q6_ext_disp_ca_put(struct snd_kcontrol *kcontrol,
 	struct msm_dai_q6_hdmi_dai_data *dai_data = kcontrol->private_data;
 
 	if (!dai_data) {
-		pr_err("%s: dai_data is NULL\n", __func__);
+		pr_debug("%s: dai_data is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -162,7 +162,7 @@ static int msm_dai_q6_ext_disp_ca_get(struct snd_kcontrol *kcontrol,
 	struct msm_dai_q6_hdmi_dai_data *dai_data = kcontrol->private_data;
 
 	if (!dai_data) {
-		pr_err("%s: dai_data is NULL\n", __func__);
+		pr_debug("%s: dai_data is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -210,7 +210,7 @@ static int msm_dai_q6_ext_disp_drift_get(struct snd_kcontrol *kcontrol,
 	memset(&timing_stats, 0, sizeof(struct afe_param_id_dev_timing_stats));
 	ret = afe_get_av_dev_drift(&timing_stats, get_port_id(dai->id));
 	if (ret) {
-		pr_err("%s: Error getting AFE Drift for port %d, err=%d\n",
+		pr_debug("%s: Error getting AFE Drift for port %d, err=%d\n",
 			__func__, get_port_id(dai->id), ret);
 
 		ret = -EINVAL;
@@ -422,7 +422,7 @@ static int msm_dai_q6_hdmi_dai_probe(struct snd_soc_dai *dai)
 	struct snd_soc_dapm_context *dapm;
 
 	if (!dai || !dai->driver) {
-		pr_err("%s: dai or dai->driver is NULL\n", __func__);
+		pr_debug("%s: dai or dai->driver is NULL\n", __func__);
 		return -EINVAL;
 	}
 	dai_data = kzalloc(sizeof(struct msm_dai_q6_hdmi_dai_data),

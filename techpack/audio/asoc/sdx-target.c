@@ -339,14 +339,14 @@ static void mdm_mi2s_shutdown(struct snd_pcm_substream *substream)
 	if (atomic_dec_return(&(pdata->mi2s_gpio_ref_count[PRI_MI2S])) == 0) {
 		ret = mdm_mi2s_clk_ctl(rtd, false, 0, pdata->prim_mi2s_mode);
 		if (ret < 0)
-			pr_err("%s Clock disable failed\n", __func__);
+			pr_debug("%s Clock disable failed\n", __func__);
 
 		if (pdata->prim_mi2s_mode == 1)
 			ret = msm_cdc_pinctrl_select_sleep_state(pdata->mi2s_gpio_p[PRI_MI2S]);
 		else
 			ret = msm_cdc_pinctrl_select_sleep_state(pdata->mi2s_gpio_p[PRI_MI2S_SLAVE]);
 		if (ret)
-			pr_err("%s: failed to set pri gpios to sleep: %d\n",
+			pr_debug("%s: failed to set pri gpios to sleep: %d\n",
 					__func__, ret);
 	}
 }
@@ -400,7 +400,7 @@ static int mdm_mi2s_startup(struct snd_pcm_substream *substream)
 		if (pdata->prim_mi2s_mode == 1) {
 			ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[PRI_MI2S]);
 			if (ret < 0) {
-				pr_err("%s pinctrl set failed\n", __func__);
+				pr_debug("%s pinctrl set failed\n", __func__);
 				goto err;
 			}
 			ret = mdm_mi2s_clk_ctl(rtd, true, mdm_mi2s_rate,
@@ -433,7 +433,7 @@ static int mdm_mi2s_startup(struct snd_pcm_substream *substream)
 			ret = snd_soc_dai_set_sysclk(cpu_dai,
 					0, pdata->mclk_freq, SND_SOC_CLOCK_OUT);
 			if (ret < 0)
-				pr_err("%s Set sysclk for enti failed\n",
+				pr_debug("%s Set sysclk for enti failed\n",
 					__func__);
 		} else {
 			/*
@@ -442,7 +442,7 @@ static int mdm_mi2s_startup(struct snd_pcm_substream *substream)
 			 */
 			ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[PRI_MI2S_SLAVE]);
 			if (ret < 0) {
-				pr_err("%s pinctrl set failed\n", __func__);
+				pr_debug("%s pinctrl set failed\n", __func__);
 				goto err;
 			}
 			ret = mdm_mi2s_clk_ctl(rtd, false, 0,
@@ -487,14 +487,14 @@ static void mdm_sec_mi2s_shutdown(struct snd_pcm_substream *substream)
 		ret = mdm_sec_mi2s_clk_ctl(rtd, false,
 					0, pdata->sec_mi2s_mode);
 		if (ret < 0)
-			pr_err("%s Clock disable failed\n", __func__);
+			pr_debug("%s Clock disable failed\n", __func__);
 
 		if (pdata->sec_mi2s_mode == 1)
 			ret = msm_cdc_pinctrl_select_sleep_state(pdata->mi2s_gpio_p[SEC_MI2S]);
 		else
 			ret = msm_cdc_pinctrl_select_sleep_state(pdata->mi2s_gpio_p[SEC_MI2S_SLAVE]);
 		if (ret)
-			pr_err("%s: failed to set sec gpios to sleep: %d\n",
+			pr_debug("%s: failed to set sec gpios to sleep: %d\n",
 				__func__, ret);
 	}
 }
@@ -548,7 +548,7 @@ static int mdm_sec_mi2s_startup(struct snd_pcm_substream *substream)
 		if (pdata->sec_mi2s_mode == 1) {
 			ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[SEC_MI2S]);
 			if (ret < 0) {
-				pr_err("%s pinctrl set failed\n", __func__);
+				pr_debug("%s pinctrl set failed\n", __func__);
 				goto err;
 			}
 			ret = mdm_sec_mi2s_clk_ctl(rtd, true,
@@ -575,7 +575,7 @@ static int mdm_sec_mi2s_startup(struct snd_pcm_substream *substream)
 			 */
 			ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[SEC_MI2S_SLAVE]);
 			if (ret < 0) {
-				pr_err("%s pinctrl set failed\n", __func__);
+				pr_debug("%s pinctrl set failed\n", __func__);
 				goto err;
 			}
 			ret = mdm_sec_mi2s_clk_ctl(rtd, false, 0,
@@ -1489,7 +1489,7 @@ static void mdm_auxpcm_shutdown(struct snd_pcm_substream *substream)
 	else
 		ret = msm_cdc_pinctrl_select_sleep_state(pdata->mi2s_gpio_p[PRI_MI2S]);
 	if (ret)
-		pr_err("%s: failed to set prim gpios to sleep: %d\n",
+		pr_debug("%s: failed to set prim gpios to sleep: %d\n",
 				__func__, ret);
 }
 
@@ -1531,11 +1531,11 @@ static int mdm_auxpcm_startup(struct snd_pcm_substream *substream)
 	if (pdata->prim_auxpcm_mode == 1) {
 		ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[PRI_MI2S]);
 		if (ret < 0)
-			pr_err("%s pinctrl set failed\n", __func__);
+			pr_debug("%s pinctrl set failed\n", __func__);
 	} else {
 		ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[PRI_MI2S]);
 		if (ret < 0)
-			pr_err("%s pinctrl set failed\n", __func__);
+			pr_debug("%s pinctrl set failed\n", __func__);
 	}
 	afe_enable_lpass_core_shared_clock(MI2S_RX, CLOCK_OFF);
 done:
@@ -1559,7 +1559,7 @@ static void mdm_sec_auxpcm_shutdown(struct snd_pcm_substream *substream)
 	else
 		ret = msm_cdc_pinctrl_select_sleep_state(pdata->mi2s_gpio_p[SEC_MI2S]);
 	if (ret)
-		pr_err("%s: failed to set sec gpios to sleep: %d\n",
+		pr_debug("%s: failed to set sec gpios to sleep: %d\n",
 			__func__, ret);
 }
 
@@ -1602,11 +1602,11 @@ static int mdm_sec_auxpcm_startup(struct snd_pcm_substream *substream)
 	if (pdata->sec_auxpcm_mode == 1) {
 		ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[SEC_MI2S]);
 		if (ret < 0)
-			pr_err("%s pinctrl set failed\n", __func__);
+			pr_debug("%s pinctrl set failed\n", __func__);
 	} else {
 		ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[SEC_MI2S]);
 		if (ret < 0)
-			pr_err("%s pinctrl set failed\n", __func__);
+			pr_debug("%s pinctrl set failed\n", __func__);
 	}
 	afe_enable_lpass_core_shared_clock(MI2S_RX, CLOCK_OFF);
 done:
@@ -1828,7 +1828,7 @@ static int mdm_tdm_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
 		rate->min = rate->max = mdm_sec_tdm_tx_0_sample_rate;
 		break;
 	default:
-		pr_err("%s: dai id 0x%x not supported\n",
+		pr_debug("%s: dai id 0x%x not supported\n",
 			__func__, cpu_dai->id);
 		return -EINVAL;
 	}
@@ -1919,7 +1919,7 @@ static int mdm_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 			slot_width = 32;
 			break;
 		default:
-			pr_err("%s: invalid param format 0x%x\n",
+			pr_debug("%s: invalid param format 0x%x\n",
 				__func__, params_format(params));
 			return -EINVAL;
 		}
@@ -1927,13 +1927,13 @@ static int mdm_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		slot_mask = tdm_param_set_slot_mask(cpu_dai->id,
 			slot_width, slots);
 		if (!slot_mask) {
-			pr_err("%s: invalid slot_mask 0x%x\n",
+			pr_debug("%s: invalid slot_mask 0x%x\n",
 				__func__, slot_mask);
 			return -EINVAL;
 		}
 		break;
 	default:
-		pr_err("%s: invalid param channels %d\n",
+		pr_debug("%s: invalid param channels %d\n",
 			__func__, channels);
 		return -EINVAL;
 	}
@@ -1951,7 +1951,7 @@ static int mdm_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		slot_offset = tdm_slot_offset[SECONDARY_TDM_TX_0];
 		break;
 	default:
-		pr_err("%s: dai id 0x%x not supported\n",
+		pr_debug("%s: dai id 0x%x not supported\n",
 			__func__, cpu_dai->id);
 		return -EINVAL;
 	}
@@ -1963,13 +1963,13 @@ static int mdm_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 			break;
 	}
 	if (offset_channels == 0) {
-		pr_err("%s: slot offset not supported, offset_channels %d\n",
+		pr_debug("%s: slot offset not supported, offset_channels %d\n",
 			__func__, offset_channels);
 		return -EINVAL;
 	}
 
 	if (channels > offset_channels) {
-		pr_err("%s: channels %d exceed offset_channels %d\n",
+		pr_debug("%s: channels %d exceed offset_channels %d\n",
 			__func__, channels, offset_channels);
 		return -EINVAL;
 	}
@@ -1978,7 +1978,7 @@ static int mdm_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_tdm_slot(cpu_dai, 0, slot_mask,
 			slots, slot_width);
 		if (ret < 0) {
-			pr_err("%s: failed to set tdm slot, err:%d\n",
+			pr_debug("%s: failed to set tdm slot, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -1986,7 +1986,7 @@ static int mdm_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai,
 			0, NULL, channels, slot_offset);
 		if (ret < 0) {
-			pr_err("%s: failed to set channel map, err:%d\n",
+			pr_debug("%s: failed to set channel map, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -1994,7 +1994,7 @@ static int mdm_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_tdm_slot(cpu_dai, slot_mask, 0,
 			slots, slot_width);
 		if (ret < 0) {
-			pr_err("%s: failed to set tdm slot, err:%d\n",
+			pr_debug("%s: failed to set tdm slot, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -2002,7 +2002,7 @@ static int mdm_tdm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai,
 			channels, slot_offset, 0, NULL);
 		if (ret < 0) {
-			pr_err("%s: failed to set channel map, err:%d\n",
+			pr_debug("%s: failed to set channel map, err:%d\n",
 				__func__, ret);
 			goto end;
 		}
@@ -2081,13 +2081,13 @@ static int mdm_tdm_startup(struct snd_pcm_substream *substream)
 					pdata->lpass_mux_mic_ctl_virt_addr);
 				}
 			} else {
-				pr_err("%s lpass_mux_mic_ctl_virt_addr is NULL\n",
+				pr_debug("%s lpass_mux_mic_ctl_virt_addr is NULL\n",
 					__func__);
 				ret = -EINVAL;
 				goto err;
 			}
 		} else {
-			pr_err("%s lpaif_sec_muxsel_virt_addr is NULL\n",
+			pr_debug("%s lpaif_sec_muxsel_virt_addr is NULL\n",
 					__func__);
 			ret = -EINVAL;
 			goto done;
@@ -2095,13 +2095,13 @@ static int mdm_tdm_startup(struct snd_pcm_substream *substream)
 		if (pdata->sec_tdm_mode == 1) {
 			ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[SEC_MI2S]);
 			if (ret < 0) {
-				pr_err("%s pinctrl set failed\n", __func__);
+				pr_debug("%s pinctrl set failed\n", __func__);
 				goto err;
 			}
 		} else {
 			ret = msm_cdc_pinctrl_select_active_state(pdata->mi2s_gpio_p[SEC_MI2S]);
 			if (ret < 0) {
-				pr_err("%s pinctrl set failed\n", __func__);
+				pr_debug("%s pinctrl set failed\n", __func__);
 				goto err;
 			}
 		}
@@ -2109,7 +2109,7 @@ static int mdm_tdm_startup(struct snd_pcm_substream *substream)
 	}
 		break;
 	default:
-		pr_err("%s: dai id 0x%x not supported\n",
+		pr_debug("%s: dai id 0x%x not supported\n",
 		       __func__, cpu_dai->id);
 		break;
 		return -EINVAL;
@@ -2171,7 +2171,7 @@ static void mdm_tdm_shutdown(struct snd_pcm_substream *substream)
 			else
 				ret = msm_cdc_pinctrl_select_sleep_state(pdata->mi2s_gpio_p[SEC_MI2S]);
 			if (ret)
-				pr_err("failed to set sec gpios to sleep:%d\n",
+				pr_debug("failed to set sec gpios to sleep:%d\n",
 					ret);
 		}
 		break;
@@ -2205,7 +2205,7 @@ static int mdm_mi2s_audrx_init(struct snd_soc_pcm_runtime *rtd)
 
 	component = snd_soc_rtdcom_lookup(rtd, "tasha_codec");
 	if (!component) {
-		pr_err("%s: tasha_codec component is NULL\n", __func__);
+		pr_debug("%s: tasha_codec component is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -2214,7 +2214,7 @@ static int mdm_mi2s_audrx_init(struct snd_soc_pcm_runtime *rtd)
 	ret = snd_soc_add_component_controls(component, mdm_snd_controls,
 				ARRAY_SIZE(mdm_snd_controls));
 	if (ret < 0) {
-		pr_err("%s: add_codec_controls failed, %d\n",
+		pr_debug("%s: add_codec_controls failed, %d\n",
 			__func__, ret);
 		goto done;
 	}
@@ -2311,7 +2311,7 @@ static int mdm_mi2s_audrx_init(struct snd_soc_pcm_runtime *rtd)
         if (pdata->wsa_max_devs > 0) {
 		component = snd_soc_rtdcom_lookup(rtd, "wsa-codec.1");
 		if (!component) {
-			pr_err("%s: wsa-codec.1 component is NULL\n", __func__);
+			pr_debug("%s: wsa-codec.1 component is NULL\n", __func__);
 			return -EINVAL;
 		}
 
@@ -2330,7 +2330,7 @@ static int mdm_mi2s_audrx_init(struct snd_soc_pcm_runtime *rtd)
         if (pdata->wsa_max_devs > 1) {
 		component = snd_soc_rtdcom_lookup(rtd, "wsa-codec.2");
 		if (!component) {
-			pr_err("%s: wsa-codec.2 component is NULL\n", __func__);
+			pr_debug("%s: wsa-codec.2 component is NULL\n", __func__);
 			return -EINVAL;
 		}
 
@@ -3569,7 +3569,7 @@ static int mdm_asoc_machine_probe(struct platform_device *pdev)
 
 	pdata->lpaif_pri_muxsel_virt_addr = ioremap(LPAIF_PRI_MODE_MUXSEL, 4);
 	if (pdata->lpaif_pri_muxsel_virt_addr == NULL) {
-		pr_err("%s Pri muxsel virt addr is null\n", __func__);
+		pr_debug("%s Pri muxsel virt addr is null\n", __func__);
 
 		ret = -EINVAL;
 		goto err;
@@ -3577,7 +3577,7 @@ static int mdm_asoc_machine_probe(struct platform_device *pdev)
 	pdata->lpass_mux_spkr_ctl_virt_addr =
 				ioremap(LPASS_CSR_GP_IO_MUX_SPKR_CTL, 4);
 	if (pdata->lpass_mux_spkr_ctl_virt_addr == NULL) {
-		pr_err("%s lpass spkr ctl virt addr is null\n", __func__);
+		pr_debug("%s lpass spkr ctl virt addr is null\n", __func__);
 
 		ret = -EINVAL;
 		goto err1;
@@ -3585,7 +3585,7 @@ static int mdm_asoc_machine_probe(struct platform_device *pdev)
 
 	pdata->lpaif_sec_muxsel_virt_addr = ioremap(LPAIF_SEC_MODE_MUXSEL, 4);
 	if (pdata->lpaif_sec_muxsel_virt_addr == NULL) {
-		pr_err("%s Sec muxsel virt addr is null\n", __func__);
+		pr_debug("%s Sec muxsel virt addr is null\n", __func__);
 		ret = -EINVAL;
 		goto err2;
 	}
@@ -3593,7 +3593,7 @@ static int mdm_asoc_machine_probe(struct platform_device *pdev)
 	pdata->lpass_mux_mic_ctl_virt_addr =
 				ioremap(LPASS_CSR_GP_IO_MUX_MIC_CTL, 4);
 	if (pdata->lpass_mux_mic_ctl_virt_addr == NULL) {
-		pr_err("%s lpass_mux_mic_ctl_virt_addr is null\n",
+		pr_debug("%s lpass_mux_mic_ctl_virt_addr is null\n",
 			__func__);
 		ret = -EINVAL;
 		goto err3;

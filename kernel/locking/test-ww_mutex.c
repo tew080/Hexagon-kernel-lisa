@@ -84,7 +84,7 @@ static int __test_mutex(unsigned int flags)
 	ww_acquire_fini(&ctx);
 
 	if (ret) {
-		pr_err("%s(flags=%x): mutual exclusion failure\n",
+		pr_debug("%s(flags=%x): mutual exclusion failure\n",
 		       __func__, flags);
 		ret = -EINVAL;
 	}
@@ -121,7 +121,7 @@ static int test_aa(void)
 	ww_mutex_lock(&mutex, &ctx);
 
 	if (ww_mutex_trylock(&mutex))  {
-		pr_err("%s: trylocked itself!\n", __func__);
+		pr_debug("%s: trylocked itself!\n", __func__);
 		ww_mutex_unlock(&mutex);
 		ret = -EINVAL;
 		goto out;
@@ -129,7 +129,7 @@ static int test_aa(void)
 
 	ret = ww_mutex_lock(&mutex, &ctx);
 	if (ret != -EALREADY) {
-		pr_err("%s: missed deadlock for recursing, ret=%d\n",
+		pr_debug("%s: missed deadlock for recursing, ret=%d\n",
 		       __func__, ret);
 		if (!ret)
 			ww_mutex_unlock(&mutex);
@@ -220,13 +220,13 @@ static int test_abba(bool resolve)
 	ret = 0;
 	if (resolve) {
 		if (err || abba.result) {
-			pr_err("%s: failed to resolve ABBA deadlock, A err=%d, B err=%d\n",
+			pr_debug("%s: failed to resolve ABBA deadlock, A err=%d, B err=%d\n",
 			       __func__, err, abba.result);
 			ret = -EINVAL;
 		}
 	} else {
 		if (err != -EDEADLK && abba.result != -EDEADLK) {
-			pr_err("%s: missed ABBA deadlock, A err=%d, B err=%d\n",
+			pr_debug("%s: missed ABBA deadlock, A err=%d, B err=%d\n",
 			       __func__, err, abba.result);
 			ret = -EINVAL;
 		}
@@ -313,7 +313,7 @@ static int __test_cycle(unsigned int nthreads)
 		if (!cycle->result)
 			continue;
 
-		pr_err("cyclic deadlock not resolved, ret[%d/%d] = %d\n",
+		pr_debug("cyclic deadlock not resolved, ret[%d/%d] = %d\n",
 		       n, nthreads, cycle->result);
 		ret = -EINVAL;
 		break;
@@ -417,7 +417,7 @@ retry:
 		}
 
 		if (err) {
-			pr_err_once("stress (%s) failed with %d\n",
+			pr_debug_once("stress (%s) failed with %d\n",
 				    __func__, err);
 			break;
 		}
@@ -470,7 +470,7 @@ static void stress_reorder_work(struct work_struct *work)
 				ww_mutex_unlock(ln->lock);
 
 			if (err != -EDEADLK) {
-				pr_err_once("stress (%s) failed with %d\n",
+				pr_debug_once("stress (%s) failed with %d\n",
 					    __func__, err);
 				break;
 			}
@@ -505,7 +505,7 @@ static void stress_one_work(struct work_struct *work)
 			dummy_load(stress);
 			ww_mutex_unlock(lock);
 		} else {
-			pr_err_once("stress (%s) failed with %d\n",
+			pr_debug_once("stress (%s) failed with %d\n",
 				    __func__, err);
 			break;
 		}

@@ -60,13 +60,13 @@ int wcd9xxx_init_slimslave(struct wcd9xxx *wcd9xxx, u8 wcd9xxx_pgd_la,
 
 	ret = wcd9xxx_configure_ports(wcd9xxx);
 	if (ret) {
-		pr_err("%s: Failed to configure register address offset\n",
+		pr_debug("%s: Failed to configure register address offset\n",
 		       __func__);
 		goto err;
 	}
 
 	if (!rx_num || rx_num > wcd9xxx->num_rx_port) {
-		pr_err("%s: invalid rx num %d\n", __func__, rx_num);
+		pr_debug("%s: invalid rx num %d\n", __func__, rx_num);
 		return -EINVAL;
 	}
 	if (wcd9xxx->rx_chs) {
@@ -80,19 +80,19 @@ int wcd9xxx_init_slimslave(struct wcd9xxx *wcd9xxx, u8 wcd9xxx_pgd_la,
 						wcd9xxx->rx_chs,
 						SLIM_SINK);
 		if (ret) {
-			pr_err("%s: Failed to alloc %d rx slimbus channels\n",
+			pr_debug("%s: Failed to alloc %d rx slimbus channels\n",
 				__func__, wcd9xxx->num_rx_port);
 			kfree(wcd9xxx->rx_chs);
 			wcd9xxx->rx_chs = NULL;
 			wcd9xxx->num_rx_port = 0;
 		}
 	} else {
-		pr_err("Not able to allocate memory for %d slimbus rx ports\n",
+		pr_debug("Not able to allocate memory for %d slimbus rx ports\n",
 			wcd9xxx->num_rx_port);
 	}
 
 	if (!tx_num || tx_num > wcd9xxx->num_tx_port) {
-		pr_err("%s: invalid tx num %d\n", __func__, tx_num);
+		pr_debug("%s: invalid tx num %d\n", __func__, tx_num);
 		return -EINVAL;
 	}
 	if (wcd9xxx->tx_chs) {
@@ -106,14 +106,14 @@ int wcd9xxx_init_slimslave(struct wcd9xxx *wcd9xxx, u8 wcd9xxx_pgd_la,
 						wcd9xxx->tx_chs,
 						SLIM_SRC);
 		if (ret) {
-			pr_err("%s: Failed to alloc %d tx slimbus channels\n",
+			pr_debug("%s: Failed to alloc %d tx slimbus channels\n",
 				__func__, wcd9xxx->num_tx_port);
 			kfree(wcd9xxx->tx_chs);
 			wcd9xxx->tx_chs = NULL;
 			wcd9xxx->num_tx_port = 0;
 		}
 	} else {
-		pr_err("Not able to allocate memory for %d slimbus tx ports\n",
+		pr_debug("Not able to allocate memory for %d slimbus tx ports\n",
 			wcd9xxx->num_tx_port);
 	}
 	return 0;
@@ -162,7 +162,7 @@ static int wcd9xxx_alloc_slim_sh_ch(struct wcd9xxx *wcd9xxx,
 			channels[ch_idx].port,
 			ch_idx, channels[ch_idx].sph, path);
 		if (ret < 0) {
-			pr_err("%s: slave port failure id[%d] ret[%d]\n",
+			pr_debug("%s: slave port failure id[%d] ret[%d]\n",
 				__func__, channels[ch_idx].ch_num, ret);
 			goto err;
 		}
@@ -171,7 +171,7 @@ static int wcd9xxx_alloc_slim_sh_ch(struct wcd9xxx *wcd9xxx,
 				    channels[ch_idx].ch_num,
 				    &channels[ch_idx].ch_h);
 		if (ret < 0) {
-			pr_err("%s: slim_query_ch failed ch-num[%d] ret[%d]\n",
+			pr_debug("%s: slim_query_ch failed ch-num[%d] ret[%d]\n",
 				__func__, channels[ch_idx].ch_num, ret);
 			goto err;
 		}
@@ -189,7 +189,7 @@ static int wcd9xxx_dealloc_slim_sh_ch(struct slim_device *slim,
 	for (idx = 0; idx < cnt; idx++) {
 		ret = slim_dealloc_ch(slim, channels[idx].ch_h);
 		if (ret < 0) {
-			pr_err("%s: slim_dealloc_ch fail ret[%d] ch_h[%d]\n",
+			pr_debug("%s: slim_dealloc_ch fail ret[%d] ch_h[%d]\n",
 				__func__, ret, channels[idx].ch_h);
 		}
 	}
@@ -221,7 +221,7 @@ int wcd9xxx_cfg_slim_sch_rx(struct wcd9xxx *wcd9xxx,
 			pr_debug("list ch->ch_h %d ch->sph %d\n",
 				 rx->ch_h, rx->sph);
 		} else {
-			pr_err("%s: allocated channel number %u is out of max rangae %d\n",
+			pr_debug("%s: allocated channel number %u is out of max rangae %d\n",
 			       __func__, ch_cnt,
 			       size);
 			ret = EINVAL;
@@ -250,7 +250,7 @@ int wcd9xxx_cfg_slim_sch_rx(struct wcd9xxx *wcd9xxx,
 	ret = slim_define_ch(wcd9xxx->slim, &prop, ch_h, ch_cnt,
 			     true, grph);
 	if (ret < 0) {
-		pr_err("%s: slim_define_ch failed ret[%d]\n",
+		pr_debug("%s: slim_define_ch failed ret[%d]\n",
 		       __func__, ret);
 		goto err;
 	}
@@ -274,7 +274,7 @@ int wcd9xxx_cfg_slim_sch_rx(struct wcd9xxx *wcd9xxx,
 				payload);
 
 		if (ret < 0) {
-			pr_err("%s:Intf-dev fail reg[%d] payload[%d] ret[%d]\n",
+			pr_debug("%s:Intf-dev fail reg[%d] payload[%d] ret[%d]\n",
 				__func__,
 				SB_PGD_RX_PORT_MULTI_CHANNEL_0(
 				sh_ch.rx_port_ch_reg_base, codec_port),
@@ -287,13 +287,13 @@ int wcd9xxx_cfg_slim_sch_rx(struct wcd9xxx *wcd9xxx,
 				sh_ch.port_rx_cfg_reg_base, codec_port),
 				WATER_MARK_VAL);
 		if (ret < 0) {
-			pr_err("%s:watermark set failure for port[%d] ret[%d]",
+			pr_debug("%s:watermark set failure for port[%d] ret[%d]",
 				__func__, codec_port, ret);
 		}
 
 		ret = slim_connect_sink(wcd9xxx->slim, &rx->sph, 1, rx->ch_h);
 		if (ret < 0) {
-			pr_err("%s: slim_connect_sink failed ret[%d]\n",
+			pr_debug("%s: slim_connect_sink failed ret[%d]\n",
 				__func__, ret);
 			goto err_close_slim_sch;
 		}
@@ -302,7 +302,7 @@ int wcd9xxx_cfg_slim_sch_rx(struct wcd9xxx *wcd9xxx,
 	ret = slim_control_ch(wcd9xxx->slim, *grph, SLIM_CH_ACTIVATE,
 			      true);
 	if (ret < 0) {
-		pr_err("%s: slim_control_ch failed ret[%d]\n",
+		pr_debug("%s: slim_control_ch failed ret[%d]\n",
 			__func__, ret);
 		goto err_close_slim_sch;
 	}
@@ -338,7 +338,7 @@ int wcd9xxx_cfg_slim_sch_tx(struct wcd9xxx *wcd9xxx,
 			ch_h[ch_cnt] = tx->ch_h;
 			ch_cnt++;
 		} else {
-			pr_err("%s: allocated channel number %u is out of max rangae %d\n",
+			pr_debug("%s: allocated channel number %u is out of max rangae %d\n",
 			       __func__, ch_cnt,
 			       size);
 			ret = EINVAL;
@@ -356,7 +356,7 @@ int wcd9xxx_cfg_slim_sch_tx(struct wcd9xxx *wcd9xxx,
 	ret = slim_define_ch(wcd9xxx->slim, &prop, ch_h, ch_cnt,
 			     true, grph);
 	if (ret < 0) {
-		pr_err("%s: slim_define_ch failed ret[%d]\n",
+		pr_debug("%s: slim_define_ch failed ret[%d]\n",
 		       __func__, ret);
 		goto err;
 	}
@@ -372,7 +372,7 @@ int wcd9xxx_cfg_slim_sch_tx(struct wcd9xxx *wcd9xxx,
 				SB_PGD_TX_PORT_MULTI_CHANNEL_0(codec_port),
 				payload & 0x00FF);
 		if (ret < 0) {
-			pr_err("%s:Intf-dev fail reg[%d] payload[%d] ret[%d]\n",
+			pr_debug("%s:Intf-dev fail reg[%d] payload[%d] ret[%d]\n",
 				__func__,
 				SB_PGD_TX_PORT_MULTI_CHANNEL_0(codec_port),
 				payload, ret);
@@ -383,7 +383,7 @@ int wcd9xxx_cfg_slim_sch_tx(struct wcd9xxx *wcd9xxx,
 				SB_PGD_TX_PORT_MULTI_CHANNEL_1(codec_port),
 				(payload & 0xFF00)>>8);
 		if (ret < 0) {
-			pr_err("%s:Intf-dev fail reg[%d] payload[%d] ret[%d]\n",
+			pr_debug("%s:Intf-dev fail reg[%d] payload[%d] ret[%d]\n",
 				__func__,
 				SB_PGD_TX_PORT_MULTI_CHANNEL_1(codec_port),
 				payload, ret);
@@ -395,14 +395,14 @@ int wcd9xxx_cfg_slim_sch_tx(struct wcd9xxx *wcd9xxx,
 				sh_ch.port_tx_cfg_reg_base, codec_port),
 				WATER_MARK_VAL);
 		if (ret < 0) {
-			pr_err("%s:watermark set failure for port[%d] ret[%d]",
+			pr_debug("%s:watermark set failure for port[%d] ret[%d]",
 				__func__, codec_port, ret);
 		}
 
 		ret = slim_connect_src(wcd9xxx->slim, tx->sph, tx->ch_h);
 
 		if (ret < 0) {
-			pr_err("%s: slim_connect_src failed ret[%d]\n",
+			pr_debug("%s: slim_connect_src failed ret[%d]\n",
 			       __func__, ret);
 			goto err;
 		}
@@ -411,7 +411,7 @@ int wcd9xxx_cfg_slim_sch_tx(struct wcd9xxx *wcd9xxx,
 	ret = slim_control_ch(wcd9xxx->slim, *grph, SLIM_CH_ACTIVATE,
 			      true);
 	if (ret < 0) {
-		pr_err("%s: slim_control_ch failed ret[%d]\n",
+		pr_debug("%s: slim_control_ch failed ret[%d]\n",
 			__func__, ret);
 		goto err;
 	}
@@ -441,7 +441,7 @@ int wcd9xxx_close_slim_sch_rx(struct wcd9xxx *wcd9xxx,
 	pr_debug("%s before slim_control_ch grph %d\n", __func__, grph);
 	ret = slim_control_ch(wcd9xxx->slim, grph, SLIM_CH_REMOVE, true);
 	if (ret < 0) {
-		pr_err("%s: slim_control_ch failed ret[%d]\n", __func__, ret);
+		pr_debug("%s: slim_control_ch failed ret[%d]\n", __func__, ret);
 		goto err;
 	}
 err:
@@ -467,7 +467,7 @@ int wcd9xxx_close_slim_sch_tx(struct wcd9xxx *wcd9xxx,
 	/* slim_control_ch (REMOVE) */
 	ret = slim_control_ch(wcd9xxx->slim, grph, SLIM_CH_REMOVE, true);
 	if (ret < 0) {
-		pr_err("%s: slim_control_ch failed ret[%d]\n",
+		pr_debug("%s: slim_control_ch failed ret[%d]\n",
 			__func__, ret);
 		goto err;
 	}
@@ -483,7 +483,7 @@ int wcd9xxx_get_slave_port(unsigned int ch_num)
 	ret = (ch_num - BASE_CH_NUM);
 	pr_debug("%s: ch_num[%d] slave port[%d]\n", __func__, ch_num, ret);
 	if (ret < 0) {
-		pr_err("%s: Error:- Invalid slave port found = %d\n",
+		pr_debug("%s: Error:- Invalid slave port found = %d\n",
 			__func__, ret);
 		return -EINVAL;
 	}
@@ -505,7 +505,7 @@ int wcd9xxx_disconnect_port(struct wcd9xxx *wcd9xxx,
 	/* slim_disconnect_port */
 	ret = slim_disconnect_ports(wcd9xxx->slim, sph, ch_cnt);
 	if (ret < 0) {
-		pr_err("%s: slim_disconnect_ports failed ret[%d]\n",
+		pr_debug("%s: slim_disconnect_ports failed ret[%d]\n",
 			__func__, ret);
 	}
 	return ret;
@@ -556,7 +556,7 @@ int wcd9xxx_tx_vport_validation(u32 table, u32 port_id,
 						__func__, index, ch->port,
 						vtable);
 				if (ch->port == port_id) {
-					pr_err("%s: TX%u is used by AIF%u_CAP Mixer\n",
+					pr_debug("%s: TX%u is used by AIF%u_CAP Mixer\n",
 							__func__, port_id + 1,
 							(index + 1)/2);
 					ret = -EINVAL;
@@ -564,7 +564,7 @@ int wcd9xxx_tx_vport_validation(u32 table, u32 port_id,
 				}
 			}
 		} else {
-			pr_err("%s: Invalid index %d of codec dai",
+			pr_debug("%s: Invalid index %d of codec dai",
 					__func__, index);
 			ret = -EINVAL;
 		}

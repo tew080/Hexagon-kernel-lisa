@@ -453,7 +453,7 @@ static void adjust_jiffies_till_sched_qs(void)
 		      2 * READ_ONCE(jiffies_till_next_fqs);
 	if (j < HZ / 10 + nr_cpu_ids / RCU_JIFFIES_FQS_DIV)
 		j = HZ / 10 + nr_cpu_ids / RCU_JIFFIES_FQS_DIV;
-	pr_info("RCU calculated value of scheduler-enlistment delay is %ld jiffies.\n", j);
+	pr_debug("RCU calculated value of scheduler-enlistment delay is %ld jiffies.\n", j);
 	WRITE_ONCE(jiffies_to_sched_qs, j);
 }
 
@@ -1033,14 +1033,14 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
 		struct rcu_node *rnp1;
 
 		WARN_ON(1);  /* Offline CPUs are supposed to report QS! */
-		pr_info("%s: grp: %d-%d level: %d ->gp_seq %ld ->completedqs %ld\n",
+		pr_debug("%s: grp: %d-%d level: %d ->gp_seq %ld ->completedqs %ld\n",
 			__func__, rnp->grplo, rnp->grphi, rnp->level,
 			(long)rnp->gp_seq, (long)rnp->completedqs);
 		for (rnp1 = rnp; rnp1; rnp1 = rnp1->parent)
-			pr_info("%s: %d:%d ->qsmask %#lx ->qsmaskinit %#lx ->qsmaskinitnext %#lx ->rcu_gp_init_mask %#lx\n",
+			pr_debug("%s: %d:%d ->qsmask %#lx ->qsmaskinit %#lx ->qsmaskinitnext %#lx ->rcu_gp_init_mask %#lx\n",
 				__func__, rnp1->grplo, rnp1->grphi, rnp1->qsmask, rnp1->qsmaskinit, rnp1->qsmaskinitnext, rnp1->rcu_gp_init_mask);
 		onl = !!(rdp->grpmask & rcu_rnp_online_cpus(rnp));
-		pr_info("%s %d: %c online: %ld(%d) offline: %ld(%d)\n",
+		pr_debug("%s %d: %c online: %ld(%d) offline: %ld(%d)\n",
 			__func__, rdp->cpu, ".o"[onl],
 			(long)rdp->rcu_onl_gp_seq, rdp->rcu_onl_gp_flags,
 			(long)rdp->rcu_ofl_gp_seq, rdp->rcu_ofl_gp_flags);
@@ -3862,7 +3862,7 @@ void rcu_init_geometry(void)
 	if (rcu_fanout_leaf == RCU_FANOUT_LEAF &&
 	    nr_cpu_ids == NR_CPUS)
 		return;
-	pr_info("Adjusting geometry for rcu_fanout_leaf=%d, nr_cpu_ids=%u\n",
+	pr_debug("Adjusting geometry for rcu_fanout_leaf=%d, nr_cpu_ids=%u\n",
 		rcu_fanout_leaf, nr_cpu_ids);
 
 	/*
@@ -3922,12 +3922,12 @@ static void __init rcu_dump_rcu_node_tree(void)
 	int level = 0;
 	struct rcu_node *rnp;
 
-	pr_info("rcu_node tree layout dump\n");
-	pr_info(" ");
+	pr_debug("rcu_node tree layout dump\n");
+	pr_debug(" ");
 	rcu_for_each_node_breadth_first(rnp) {
 		if (rnp->level != level) {
 			pr_cont("\n");
-			pr_info(" ");
+			pr_debug(" ");
 			level = rnp->level;
 		}
 		pr_cont("%d:%d ^%d  ", rnp->grplo, rnp->grphi, rnp->grpnum);

@@ -153,7 +153,7 @@ static int sdm845_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = sdm845_tdm_snd_hw_params(substream, params);
 		break;
 	default:
-		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
+		pr_debug("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
 		break;
 	}
 	return ret;
@@ -297,7 +297,7 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
 		break;
 
 	default:
-		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
+		pr_debug("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
 		break;
 	}
 	return 0;
@@ -341,7 +341,7 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
 		break;
 
 	default:
-		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
+		pr_debug("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
 		break;
 	}
 }

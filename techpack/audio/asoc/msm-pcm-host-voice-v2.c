@@ -178,7 +178,7 @@ static char *hpcm_get_sess_name(int sess_indx)
 	else if (sess_indx == VOMMODE2_INDEX)
 		sess_name = VOICEMMODE2_NAME;
 	else
-		pr_err("%s:, Invalid sess_index\n", __func__);
+		pr_debug("%s:, Invalid sess_index\n", __func__);
 
 	return sess_name;
 }
@@ -200,25 +200,25 @@ static bool hpcm_is_valid_config(int sess_indx, int tap_point,
 				 uint16_t direction, uint16_t samplerate)
 {
 	if (sess_indx < VOICE_INDEX || sess_indx > VOMMODE2_INDEX) {
-		pr_err("%s: invalid sess_indx :%d\n", __func__, sess_indx);
+		pr_debug("%s: invalid sess_indx :%d\n", __func__, sess_indx);
 		goto error;
 	}
 
 	if (samplerate != VSS_IVPCM_SAMPLING_RATE_8K &&
 	    samplerate != VSS_IVPCM_SAMPLING_RATE_16K) {
-		pr_err("%s: invalid sample rate :%d\n", __func__, samplerate);
+		pr_debug("%s: invalid sample rate :%d\n", __func__, samplerate);
 		goto error;
 	}
 
 	if ((tap_point != RX) && (tap_point != TX)) {
-		pr_err("%s: invalid tappoint :%d\n", __func__, tap_point);
+		pr_debug("%s: invalid tappoint :%d\n", __func__, tap_point);
 		goto error;
 	}
 
 	if ((direction != VSS_IVPCM_TAP_POINT_DIR_IN) &&
 	    (direction != VSS_IVPCM_TAP_POINT_DIR_OUT) &&
 	    (direction != VSS_IVPCM_TAP_POINT_DIR_OUT_IN)) {
-		pr_err("%s: invalid direction :%d\n", __func__, direction);
+		pr_debug("%s: invalid direction :%d\n", __func__, direction);
 		goto error;
 	}
 
@@ -290,7 +290,7 @@ static struct dai_data *hpcm_get_dai_data(char *pcm_id, struct hpcm_drv *prtd)
 		&prtd->session[VOMMODE2_INDEX].rx_tap_point.playback_dai_data;
 
 		} else {
-			pr_err("%s: Wrong dai id\n", __func__);
+			pr_debug("%s: Wrong dai id\n", __func__);
 		}
 	}
 
@@ -342,7 +342,7 @@ static struct tap_point *hpcm_get_tappoint_data(char *pcm_id,
 		} else if (strnstr(pcm_id, VoMMode2_RX_PLAYBACK_DAI_ID, size)) {
 			tp = &prtd->session[VOMMODE2_INDEX].rx_tap_point;
 		} else {
-			pr_err("%s: wrong dai id\n", __func__);
+			pr_debug("%s: wrong dai id\n", __func__);
 		}
 	}
 
@@ -413,7 +413,7 @@ static bool hpcm_all_dais_are_ready(uint16_t direction, struct tap_point *tp,
 		break;
 
 	default:
-		pr_err("invalid direction\n");
+		pr_debug("invalid direction\n");
 	}
 
 	return dais_started;
@@ -524,7 +524,7 @@ static int hpcm_allocate_shared_memory(struct hpcm_drv *prtd)
 				     &mem_len,
 				     &sess->sess_kvaddr);
 	if (result) {
-		pr_err("%s: msm_audio_ion_alloc error, rc = %d\n",
+		pr_debug("%s: msm_audio_ion_alloc error, rc = %d\n",
 			__func__, result);
 		sess->sess_paddr = 0;
 		sess->sess_kvaddr = 0;
@@ -541,7 +541,7 @@ static int hpcm_allocate_shared_memory(struct hpcm_drv *prtd)
 			&sess->tp_mem_table.data);
 
 	if (result) {
-		pr_err("%s: msm_audio_ion_alloc error, rc = %d\n",
+		pr_debug("%s: msm_audio_ion_alloc error, rc = %d\n",
 			__func__, result);
 		msm_audio_ion_free(sess->dma_buf);
 		sess->dma_buf = NULL;
@@ -628,7 +628,7 @@ static int hpcm_start_vocpcm(char *pcm_id, struct hpcm_drv *prtd,
 	}
 
 	if (*no_of_tp != no_of_tp_req && *no_of_tp > 2) {
-		pr_err("%s:: Invalid hpcm start request\n", __func__);
+		pr_debug("%s:: Invalid hpcm start request\n", __func__);
 		memset(&prtd->start_cmd, 0, sizeof(struct start_cmd));
 		return -EINVAL;
 	}
@@ -665,7 +665,7 @@ static void hpcm_copy_playback_data_from_queue(struct dai_data *dai_data,
 		*len = buf_node->frame.len;
 
 		if (*len > HPCM_MAX_VOC_PKT_SIZE) {
-			pr_err("%s: Playback data len %d overflow\n",
+			pr_debug("%s: Playback data len %d overflow\n",
 				__func__, *len);
 			return;
 		}
@@ -681,7 +681,7 @@ static void hpcm_copy_playback_data_from_queue(struct dai_data *dai_data,
 	} else {
 		*len = 0;
 		spin_unlock_irqrestore(&dai_data->dsp_lock, dsp_flags);
-		pr_err("IN data not available\n");
+		pr_debug("IN data not available\n");
 	}
 
 	wake_up(&dai_data->queue_wait);
@@ -698,7 +698,7 @@ static void hpcm_copy_capture_data_to_queue(struct dai_data *dai_data,
 		return;
 
 	if (len > HPCM_MAX_VOC_PKT_SIZE) {
-		pr_err("%s: Copy capture data len %d overflow\n",
+		pr_debug("%s: Copy capture data len %d overflow\n",
 			__func__, len);
 		return;
 	}
@@ -720,7 +720,7 @@ static void hpcm_copy_capture_data_to_queue(struct dai_data *dai_data,
 		snd_pcm_period_elapsed(dai_data->substream);
 	} else {
 		spin_unlock_irqrestore(&dai_data->dsp_lock, dsp_flags);
-		pr_err("OUTPUT data dropped\n");
+		pr_debug("OUTPUT data dropped\n");
 	}
 
 	wake_up(&dai_data->queue_wait);
@@ -740,14 +740,14 @@ void hpcm_notify_evt_processing(uint8_t *data, char *session,
 
 	/* If it's not a timetick, it's a error notification, drop the event */
 	if ((notify_evt->notify_mask & VSS_IVPCM_NOTIFY_MASK_TIMETICK) == 0) {
-		pr_err("%s: Error notification. mask=%d\n", __func__,
+		pr_debug("%s: Error notification. mask=%d\n", __func__,
 			notify_evt->notify_mask);
 		return;
 	}
 
 	if (prtd->mixer_conf.sess_indx < VOICE_INDEX ||
 		prtd->mixer_conf.sess_indx >= MAX_SESSION) {
-		pr_err("%s:: Invalid session idx %d\n",
+		pr_debug("%s:: Invalid session idx %d\n",
 			__func__, prtd->mixer_conf.sess_indx);
 		return;
 	}
@@ -761,7 +761,7 @@ void hpcm_notify_evt_processing(uint8_t *data, char *session,
 	}
 
 	if (tp == NULL || tmd == NULL) {
-		pr_err("%s: tp = %pK or tmd = %pK is null\n", __func__,
+		pr_debug("%s: tp = %pK or tmd = %pK is null\n", __func__,
 		       tp, tmd);
 
 		return;
@@ -852,7 +852,7 @@ static int msm_hpcm_configure_voice_put(struct snd_kcontrol *kcontrol,
 
 	if (!hpcm_is_valid_config(VOICE_INDEX, tap_point, direction,
 				  sample_rate)) {
-		pr_err("Invalid vpcm mixer control voice values\n");
+		pr_debug("Invalid vpcm mixer control voice values\n");
 		ret = -EINVAL;
 		goto done;
 	}
@@ -888,7 +888,7 @@ static int msm_hpcm_configure_vmmode1_put(struct snd_kcontrol *kcontrol,
 
 	if (!hpcm_is_valid_config(VOMMODE1_INDEX, tap_point, direction,
 				  sample_rate)) {
-		pr_err("Invalid vpcm mixer control voice values\n");
+		pr_debug("Invalid vpcm mixer control voice values\n");
 		ret = -EINVAL;
 		goto done;
 	}
@@ -924,7 +924,7 @@ static int msm_hpcm_configure_vmmode2_put(struct snd_kcontrol *kcontrol,
 
 	if (!hpcm_is_valid_config(VOMMODE2_INDEX, tap_point, direction,
 				  sample_rate)) {
-		pr_err("Invalid vpcm mixer control voice values\n");
+		pr_debug("Invalid vpcm mixer control voice values\n");
 		ret = -EINVAL;
 		goto done;
 	}
@@ -960,7 +960,7 @@ static int msm_hpcm_configure_volte_put(struct snd_kcontrol *kcontrol,
 
 	if (!hpcm_is_valid_config(VOLTE_INDEX, tap_point, direction,
 				  sample_rate)) {
-		pr_err("Invalid vpcm mixer control volte values\n");
+		pr_debug("Invalid vpcm mixer control volte values\n");
 		ret = -EINVAL;
 		goto done;
 	}
@@ -1021,7 +1021,7 @@ static int msm_pcm_close(struct snd_pcm_substream *substream)
 	char *sess_name = NULL;
 
 	if (substream == NULL) {
-		pr_err("substream is NULL\n");
+		pr_debug("substream is NULL\n");
 		return -EINVAL;
 	}
 
@@ -1032,7 +1032,7 @@ static int msm_pcm_close(struct snd_pcm_substream *substream)
 	dai_data = hpcm_get_dai_data(substream->pcm->id, prtd);
 
 	if (dai_data == NULL) {
-		pr_err("%s, dai_data is NULL\n", __func__);
+		pr_debug("%s, dai_data is NULL\n", __func__);
 
 		ret = -EINVAL;
 		return ret;
@@ -1107,7 +1107,7 @@ static int msm_pcm_playback_copy(struct snd_pcm_substream *substream, int a,
 	unsigned long dsp_flags = 0;
 
 	if (dai_data == NULL) {
-		pr_err("%s, dai_data is null\n", __func__);
+		pr_debug("%s, dai_data is null\n", __func__);
 
 		ret = -EINVAL;
 		goto done;
@@ -1132,15 +1132,15 @@ static int msm_pcm_playback_copy(struct snd_pcm_substream *substream, int a,
 			list_add_tail(&buf_node->list, &dai_data->filled_queue);
 			spin_unlock_irqrestore(&dai_data->dsp_lock, dsp_flags);
 		} else {
-			pr_err("%s: Write cnt %lu is > HPCM_MAX_VOC_PKT_SIZE\n",
+			pr_debug("%s: Write cnt %lu is > HPCM_MAX_VOC_PKT_SIZE\n",
 				__func__, fbytes);
 			ret = -ENOMEM;
 		}
 	} else if (ret == 0) {
-		pr_err("%s: No free Playback buffer\n", __func__);
+		pr_debug("%s: No free Playback buffer\n", __func__);
 		ret = -ETIMEDOUT;
 	} else {
-		pr_err("%s: playback copy  was interrupted\n", __func__);
+		pr_debug("%s: playback copy  was interrupted\n", __func__);
 	}
 
 done:
@@ -1159,7 +1159,7 @@ static int msm_pcm_capture_copy(struct snd_pcm_substream *substream,
 	unsigned long dsp_flags = 0;
 
 	if (dai_data == NULL) {
-		pr_err("%s, dai_data is null\n", __func__);
+		pr_debug("%s, dai_data is null\n", __func__);
 
 		ret = -EINVAL;
 		goto done;
@@ -1180,7 +1180,7 @@ static int msm_pcm_capture_copy(struct snd_pcm_substream *substream,
 			ret = copy_to_user(buf, &buf_node->frame.voc_pkt,
 					   buf_node->frame.len);
 			if (ret) {
-				pr_err("%s: Copy to user returned %d\n",
+				pr_debug("%s: Copy to user returned %d\n",
 					__func__, ret);
 				ret = -EFAULT;
 			}
@@ -1189,16 +1189,16 @@ static int msm_pcm_capture_copy(struct snd_pcm_substream *substream,
 			spin_unlock_irqrestore(&dai_data->dsp_lock, dsp_flags);
 
 		} else {
-			pr_err("%s: Read count %lu > HPCM_MAX_VOC_PKT_SIZE\n",
+			pr_debug("%s: Read count %lu > HPCM_MAX_VOC_PKT_SIZE\n",
 				__func__, fbytes);
 			ret = -ENOMEM;
 		}
 
 	} else if (ret == 0) {
-		pr_err("%s: No Caputre data available\n", __func__);
+		pr_debug("%s: No Caputre data available\n", __func__);
 		ret = -ETIMEDOUT;
 	} else {
-		pr_err("%s: Read was interrupted\n", __func__);
+		pr_debug("%s: Read was interrupted\n", __func__);
 		ret = -ERESTARTSYS;
 	}
 
@@ -1232,7 +1232,7 @@ static snd_pcm_uframes_t msm_pcm_pointer(struct snd_pcm_substream *substream)
 	dai_data = hpcm_get_dai_data(substream->pcm->id, prtd);
 
 	if (dai_data == NULL) {
-		pr_err("%s, dai_data is null\n", __func__);
+		pr_debug("%s, dai_data is null\n", __func__);
 
 		ret = 0;
 		goto done;
@@ -1256,7 +1256,7 @@ static int msm_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 			hpcm_get_dai_data(substream->pcm->id, prtd);
 
 	if (dai_data == NULL) {
-		pr_err("%s, dai_data is null\n", __func__);
+		pr_debug("%s, dai_data is null\n", __func__);
 
 		ret = -EINVAL;
 		goto done;
@@ -1298,7 +1298,7 @@ static int msm_pcm_prepare(struct snd_pcm_substream *substream)
 	dai_data = hpcm_get_dai_data(substream->pcm->id, prtd);
 
 	if (dai_data == NULL) {
-		pr_err("%s, dai_data is null\n", __func__);
+		pr_debug("%s, dai_data is null\n", __func__);
 
 		ret = -EINVAL;
 		goto done;
@@ -1319,11 +1319,11 @@ static int msm_pcm_prepare(struct snd_pcm_substream *substream)
 	if (tp != NULL) {
 		ret = hpcm_start_vocpcm(substream->pcm->id, prtd, tp);
 		if (ret) {
-			pr_err("error sending start cmd err=%d\n", ret);
+			pr_debug("error sending start cmd err=%d\n", ret);
 			goto done;
 		}
 	} else {
-		pr_err("%s tp is NULL\n", __func__);
+		pr_debug("%s tp is NULL\n", __func__);
 	}
 done:
 	mutex_unlock(&prtd->lock);
@@ -1345,13 +1345,13 @@ static int msm_pcm_hw_params(struct snd_pcm_substream *substream,
 	if (prtd->session[prtd->mixer_conf.sess_indx].sess_paddr == 0) {
 		ret = hpcm_allocate_shared_memory(prtd);
 		if (ret) {
-			pr_err("error creating shared memory err=%d\n", ret);
+			pr_debug("error creating shared memory err=%d\n", ret);
 			goto done;
 		}
 
 		ret = hpcm_map_vocpcm_memory(prtd);
 		if (ret) {
-			pr_err("error mapping shared memory err=%d\n", ret);
+			pr_debug("error mapping shared memory err=%d\n", ret);
 			hpcm_free_allocated_mem(prtd);
 			goto done;
 		}
@@ -1369,7 +1369,7 @@ static int msm_pcm_hw_params(struct snd_pcm_substream *substream,
 			&dma_buf->addr, GFP_KERNEL);
 
 	if (!dma_buf->area) {
-		pr_err("%s:MSM dma_alloc failed\n", __func__);
+		pr_debug("%s:MSM dma_alloc failed\n", __func__);
 		ret = -ENOMEM;
 		goto done;
 	}
@@ -1402,7 +1402,7 @@ static int msm_pcm_open(struct snd_pcm_substream *substream)
 	dai_data = hpcm_get_dai_data(substream->pcm->id, prtd);
 
 	if (dai_data == NULL) {
-		pr_err("%s, dai_data is null\n", __func__);
+		pr_debug("%s, dai_data is null\n", __func__);
 
 		ret = -EINVAL;
 		goto done;

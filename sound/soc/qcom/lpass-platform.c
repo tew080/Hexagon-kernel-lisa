@@ -485,7 +485,7 @@ static irqreturn_t lpass_platform_lpaif_irq(int irq, void *data)
 	rv = regmap_read(drvdata->lpaif_map,
 			LPAIF_IRQSTAT_REG(v, LPAIF_IRQ_PORT_HOST), &irqs);
 	if (rv) {
-		pr_err("error reading from irqstat reg: %d\n", rv);
+		pr_debug("error reading from irqstat reg: %d\n", rv);
 		return IRQ_NONE;
 	}
 

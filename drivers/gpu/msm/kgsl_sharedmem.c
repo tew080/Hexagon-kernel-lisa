@@ -581,7 +581,7 @@ static int lock_sgt(struct sg_table *sgt, u64 size)
 		 * system.
 		 */
 		if (ret == -EADDRNOTAVAIL)
-			pr_err("Failure to lock secure GPU memory 0x%llx bytes will not be recoverable\n",
+			pr_debug("Failure to lock secure GPU memory 0x%llx bytes will not be recoverable\n",
 				size);
 
 		return ret;
@@ -1036,7 +1036,7 @@ static void kgsl_free_secure_system_pages(struct kgsl_memdesc *memdesc)
 		 * Give up on the buffer and don't return it to the
 		 * pool.
 		 */
-		pr_err("kgsl: secure buf unlock failed: gpuaddr: %llx size: %llx ret: %d\n",
+		pr_debug("kgsl: secure buf unlock failed: gpuaddr: %llx size: %llx ret: %d\n",
 			memdesc->gpuaddr, memdesc->size, ret);
 		return;
 	}
@@ -1075,7 +1075,7 @@ static void kgsl_free_secure_pool_pages(struct kgsl_memdesc *memdesc)
 		 * Give up on the buffer and don't return it to the
 		 * pool.
 		 */
-		pr_err("kgsl: secure buf unlock failed: gpuaddr: %llx size: %llx ret: %d\n",
+		pr_debug("kgsl: secure buf unlock failed: gpuaddr: %llx size: %llx ret: %d\n",
 			memdesc->gpuaddr, memdesc->size, ret);
 		return;
 	}

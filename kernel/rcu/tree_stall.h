@@ -581,7 +581,7 @@ void show_rcu_gp_kthreads(void)
 	ja = j - READ_ONCE(rcu_state.gp_activity);
 	jr = j - READ_ONCE(rcu_state.gp_req_activity);
 	jw = j - READ_ONCE(rcu_state.gp_wake_time);
-	pr_info("%s: wait state: %s(%d) ->state: %#lx delta ->gp_activity %lu ->gp_req_activity %lu ->gp_wake_time %lu ->gp_wake_seq %ld ->gp_seq %ld ->gp_seq_needed %ld ->gp_flags %#x\n",
+	pr_debug("%s: wait state: %s(%d) ->state: %#lx delta ->gp_activity %lu ->gp_req_activity %lu ->gp_wake_time %lu ->gp_wake_seq %ld ->gp_seq %ld ->gp_seq_needed %ld ->gp_flags %#x\n",
 		rcu_state.name, gp_state_getname(rcu_state.gp_state),
 		rcu_state.gp_state,
 		rcu_state.gp_kthread ? rcu_state.gp_kthread->state : 0x1ffffL,
@@ -592,7 +592,7 @@ void show_rcu_gp_kthreads(void)
 	rcu_for_each_node_breadth_first(rnp) {
 		if (ULONG_CMP_GE(rcu_state.gp_seq, rnp->gp_seq_needed))
 			continue;
-		pr_info("\trcu_node %d:%d ->gp_seq %ld ->gp_seq_needed %ld\n",
+		pr_debug("\trcu_node %d:%d ->gp_seq %ld ->gp_seq_needed %ld\n",
 			rnp->grplo, rnp->grphi, (long)rnp->gp_seq,
 			(long)rnp->gp_seq_needed);
 		if (!rcu_is_leaf_node(rnp))
@@ -603,7 +603,7 @@ void show_rcu_gp_kthreads(void)
 			    ULONG_CMP_GE(rcu_state.gp_seq,
 					 rdp->gp_seq_needed))
 				continue;
-			pr_info("\tcpu %d ->gp_seq_needed %ld\n",
+			pr_debug("\tcpu %d ->gp_seq_needed %ld\n",
 				cpu, (long)rdp->gp_seq_needed);
 		}
 	}
@@ -684,11 +684,11 @@ void rcu_fwd_progress_check(unsigned long j)
 	struct rcu_data *rdp;
 
 	if (rcu_gp_in_progress()) {
-		pr_info("%s: GP age %lu jiffies\n",
+		pr_debug("%s: GP age %lu jiffies\n",
 			__func__, jiffies - rcu_state.gp_start);
 		show_rcu_gp_kthreads();
 	} else {
-		pr_info("%s: Last GP end %lu jiffies ago\n",
+		pr_debug("%s: Last GP end %lu jiffies ago\n",
 			__func__, jiffies - rcu_state.gp_end);
 		preempt_disable();
 		rdp = this_cpu_ptr(&rcu_data);
@@ -700,7 +700,7 @@ void rcu_fwd_progress_check(unsigned long j)
 		if (!cbs)
 			continue;
 		if (max_cpu < 0)
-			pr_info("%s: callbacks", __func__);
+			pr_debug("%s: callbacks", __func__);
 		pr_cont(" %d: %lu", cpu, cbs);
 		if (cbs <= max_cbs)
 			continue;

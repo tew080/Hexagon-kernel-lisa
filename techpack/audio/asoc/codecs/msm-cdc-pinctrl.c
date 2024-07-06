@@ -40,13 +40,13 @@ static struct msm_cdc_pinctrl_info *msm_cdc_pinctrl_get_gpiodata(
 	struct msm_cdc_pinctrl_info *gpio_data;
 
 	if (!np) {
-		pr_err("%s: device node is null\n", __func__);
+		pr_debug("%s: device node is null\n", __func__);
 		return NULL;
 	}
 
 	pdev = of_find_device_by_node(np);
 	if (!pdev) {
-		pr_err("%s: platform device not found!\n", __func__);
+		pr_debug("%s: platform device not found!\n", __func__);
 		return NULL;
 	}
 
@@ -95,7 +95,7 @@ int msm_cdc_pinctrl_select_sleep_state(struct device_node *np)
 		return -EINVAL;
 
 	if (!gpio_data->pinctrl_sleep) {
-		pr_err("%s: pinctrl sleep state is null\n", __func__);
+		pr_debug("%s: pinctrl sleep state is null\n", __func__);
 		return -EINVAL;
 	}
 	gpio_data->state = false;
@@ -120,7 +120,7 @@ int msm_cdc_pinctrl_select_alt_active_state(struct device_node *np)
 		return -EINVAL;
 
 	if (!gpio_data->pinctrl_alt_active) {
-		pr_err("%s: pinctrl alt_active state is null\n", __func__);
+		pr_debug("%s: pinctrl alt_active state is null\n", __func__);
 		return -EINVAL;
 	}
 	gpio_data->state = true;
@@ -145,7 +145,7 @@ int msm_cdc_pinctrl_select_active_state(struct device_node *np)
 		return -EINVAL;
 
 	if (!gpio_data->pinctrl_active) {
-		pr_err("%s: pinctrl active state is null\n", __func__);
+		pr_debug("%s: pinctrl active state is null\n", __func__);
 		return -EINVAL;
 	}
 	gpio_data->state = true;

@@ -323,7 +323,7 @@ int dsi_bridge_interface_enable(int timeout)
 		!atomic_read(&resume_pending),
 		msecs_to_jiffies(WAIT_RESUME_TIMEOUT));
 	if (!ret) {
-		pr_info("Primary fb resume timeout\n");
+		pr_debug("Primary fb resume timeout\n");
 		return -ETIMEDOUT;
 	}
 
@@ -1242,7 +1242,7 @@ int dsi_conn_prepare_commit(void *display,
 		struct msm_display_conn_params *params)
 {
 	if (!display || !params) {
-		pr_err("Invalid params\n");
+		pr_debug("Invalid params\n");
 		return -EINVAL;
 	}
 

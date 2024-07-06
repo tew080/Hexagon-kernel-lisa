@@ -360,7 +360,7 @@ int ufshcd_get_pwr_dev_param(struct ufs_dev_params *pltfrm_param,
 	 * thus device and pltfrm_param don't agree
 	 */
 	if (!is_dev_sup_hs && is_pltfrm_max_hs) {
-		pr_info("%s: device doesn't support HS\n",
+		pr_debug("%s: device doesn't support HS\n",
 			__func__);
 		return -ENOTSUPP;
 	} else if (is_dev_sup_hs && is_pltfrm_max_hs) {

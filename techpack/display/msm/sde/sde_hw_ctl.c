@@ -688,7 +688,7 @@ static inline u32 sde_hw_ctl_get_intf_v1(struct sde_hw_ctl *ctx)
 	u32 intf_active;
 
 	if (!ctx) {
-		pr_err("Invalid input argument\n");
+		pr_debug("Invalid input argument\n");
 		return 0;
 	}
 
@@ -705,7 +705,7 @@ static inline u32 sde_hw_ctl_get_intf(struct sde_hw_ctl *ctx)
 	u32 intf_active = 0;
 
 	if (!ctx) {
-		pr_err("Invalid input argument\n");
+		pr_debug("Invalid input argument\n");
 		return 0;
 	}
 
@@ -803,7 +803,7 @@ static int sde_hw_ctl_wait_reset_status(struct sde_hw_ctl *ctx)
 
 	pr_debug("hw ctl reset is set for ctl:%d\n", ctx->idx);
 	if (sde_hw_ctl_poll_reset_status(ctx, SDE_REG_WAIT_RESET_TIMEOUT_US)) {
-		pr_err("hw recovery is not complete for ctl:%d\n", ctx->idx);
+		pr_debug("hw recovery is not complete for ctl:%d\n", ctx->idx);
 		return -EINVAL;
 	}
 
@@ -1231,7 +1231,7 @@ static int sde_hw_ctl_intf_cfg(struct sde_hw_ctl *ctx,
 		intf_cfg |= ((cfg->stream_sel & 0x3) << 15);
 		break;
 	default:
-		pr_err("unknown interface type %d\n", cfg->intf_mode_sel);
+		pr_debug("unknown interface type %d\n", cfg->intf_mode_sel);
 		return -EINVAL;
 	}
 
@@ -1263,7 +1263,7 @@ static inline u32 sde_hw_ctl_read_ctl_top(struct sde_hw_ctl *ctx)
 	u32 ctl_top;
 
 	if (!ctx) {
-		pr_err("Invalid input argument\n");
+		pr_debug("Invalid input argument\n");
 		return 0;
 	}
 	c = &ctx->hw;
@@ -1277,7 +1277,7 @@ static inline u32 sde_hw_ctl_read_ctl_layers(struct sde_hw_ctl *ctx, int index)
 	u32 ctl_top;
 
 	if (!ctx) {
-		pr_err("Invalid input argument\n");
+		pr_debug("Invalid input argument\n");
 		return 0;
 	}
 	c = &ctx->hw;
@@ -1292,7 +1292,7 @@ static inline bool sde_hw_ctl_read_active_status(struct sde_hw_ctl *ctx,
 	struct sde_hw_blk_reg_map *c;
 
 	if (!ctx) {
-		pr_err("Invalid input argument\n");
+		pr_debug("Invalid input argument\n");
 		return 0;
 	}
 
@@ -1315,7 +1315,7 @@ static inline bool sde_hw_ctl_read_active_status(struct sde_hw_ctl *ctx,
 		return (SDE_REG_READ(c, CTL_INTF_ACTIVE) &
 			BIT(index - INTF_0)) ? true : false;
 	default:
-		pr_err("unsupported blk %d\n", blk);
+		pr_debug("unsupported blk %d\n", blk);
 		return false;
 	};
 
@@ -1417,7 +1417,7 @@ struct sde_hw_ctl *sde_hw_ctl_init(enum sde_ctl idx,
 	cfg = _ctl_offset(idx, m, addr, &c->hw);
 	if (IS_ERR_OR_NULL(cfg)) {
 		kfree(c);
-		pr_err("failed to create sde_hw_ctl %d\n", idx);
+		pr_debug("failed to create sde_hw_ctl %d\n", idx);
 		return ERR_PTR(-EINVAL);
 	}
 

@@ -97,7 +97,7 @@ static int audio_ext_clk_prepare(struct clk_hw *hw)
 			if (ret == 0) {
 				goto prepare_pinctrl;
 			} else if (ret == -EOPNOTSUPP) {
-				pr_err_ratelimited("%s: ext mclk prepare failed; falling back to internal clk\n",
+				pr_debug_ratelimited("%s: ext mclk prepare failed; falling back to internal clk\n",
 						   __func__);
 			} else {
 				goto err;
@@ -114,7 +114,7 @@ prepare_pinctrl:
 		ret = pinctrl_select_state(pnctrl_info->pinctrl,
 			pnctrl_info->active);
 		if (ret) {
-			pr_err("%s: active state select failed with %d\n",
+			pr_debug("%s: active state select failed with %d\n",
 				__func__, ret);
 			return -EIO;
 		}
@@ -125,7 +125,7 @@ prepare_pinctrl:
 
 err:
 	if (__ratelimit(&rtl))
-		pr_err_ratelimited("%s: afe_set_lpass_clk_cfg_ext_mclk failed with %d\n",
+		pr_debug_ratelimited("%s: afe_set_lpass_clk_cfg_ext_mclk failed with %d\n",
 					__func__, ret);
 	return ret;
 
@@ -142,7 +142,7 @@ static void audio_ext_clk_unprepare(struct clk_hw *hw)
 		ret = pinctrl_select_state(pnctrl_info->pinctrl,
 			pnctrl_info->sleep);
 		if (ret) {
-			pr_err("%s: active state select failed with %d\n",
+			pr_debug("%s: active state select failed with %d\n",
 				__func__, ret);
 			return;
 		}
@@ -161,7 +161,7 @@ static void audio_ext_clk_unprepare(struct clk_hw *hw)
 			if (ret == 0) {
 				goto exit;
 			} else if (ret == -EOPNOTSUPP) {
-				pr_err_ratelimited("%s: ext mclk unprepare failed; falling back to internal clk\n",
+				pr_debug_ratelimited("%s: ext mclk unprepare failed; falling back to internal clk\n",
 							__func__);
 			} else {
 				goto exit;
@@ -174,7 +174,7 @@ static void audio_ext_clk_unprepare(struct clk_hw *hw)
 
 exit:
 	if (ret && __ratelimit(&rtl))
-		pr_err_ratelimited("%s: afe_set_lpass_clk_cfg failed, ret = %d\n",
+		pr_debug_ratelimited("%s: afe_set_lpass_clk_cfg failed, ret = %d\n",
 					__func__, ret);
 }
 
@@ -209,7 +209,7 @@ static int lpass_hw_vote_prepare(struct clk_hw *hw)
 			"LPASS_HW_MACRO",
 			&clk_priv->lpass_core_hwvote_client_handle);
 		if (ret < 0) {
-			pr_err("%s lpass core hw vote failed %d\n",
+			pr_debug("%s lpass core hw vote failed %d\n",
 				__func__, ret);
 			return ret;
 		}
@@ -223,7 +223,7 @@ static int lpass_hw_vote_prepare(struct clk_hw *hw)
 			&clk_priv->lpass_audio_hwvote_client_handle);
 		if (ret < 0) {
 			if (__ratelimit(&rtl))
-				pr_err("%s lpass audio hw vote failed %d\n",
+				pr_debug("%s lpass audio hw vote failed %d\n",
 				__func__, ret);
 			return ret;
 		}
@@ -244,7 +244,7 @@ static void lpass_hw_vote_unprepare(struct clk_hw *hw)
 			AFE_LPASS_CORE_HW_MACRO_BLOCK,
 			clk_priv->lpass_core_hwvote_client_handle);
 		if (ret < 0) {
-			pr_err("%s lpass core hw vote failed %d\n",
+			pr_debug("%s lpass core hw vote failed %d\n",
 				__func__, ret);
 		}
 	}
@@ -256,7 +256,7 @@ static void lpass_hw_vote_unprepare(struct clk_hw *hw)
 			AFE_LPASS_CORE_HW_DCODEC_BLOCK,
 			clk_priv->lpass_audio_hwvote_client_handle);
 		if (ret < 0) {
-			pr_err("%s lpass audio hw unvote failed %d\n",
+			pr_debug("%s lpass audio hw unvote failed %d\n",
 				__func__, ret);
 		}
 	}

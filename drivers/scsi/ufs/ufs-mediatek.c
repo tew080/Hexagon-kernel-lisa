@@ -390,7 +390,7 @@ static int ufs_mtk_pre_pwr_change(struct ufs_hba *hba,
 				       dev_max_params,
 				       dev_req_params);
 	if (ret) {
-		pr_info("%s: failed to determine capabilities\n",
+		pr_debug("%s: failed to determine capabilities\n",
 			__func__);
 	}
 

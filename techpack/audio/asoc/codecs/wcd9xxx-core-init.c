@@ -16,15 +16,15 @@ static int __init wcd9xxx_core_init(void)
 
 	ret[0] = msm_cdc_pinctrl_drv_init();
 	if (ret[0])
-		pr_err("%s: Failed init pinctrl drv: %d\n", __func__, ret[0]);
+		pr_debug("%s: Failed init pinctrl drv: %d\n", __func__, ret[0]);
 
 	ret[1] = wcd9xxx_irq_drv_init();
 	if (ret[1])
-		pr_err("%s: Failed init irq drv: %d\n", __func__, ret[1]);
+		pr_debug("%s: Failed init irq drv: %d\n", __func__, ret[1]);
 
 	ret[2] = wcd9xxx_init();
 	if (ret[2])
-		pr_err("%s: Failed wcd core drv: %d\n", __func__, ret[2]);
+		pr_debug("%s: Failed wcd core drv: %d\n", __func__, ret[2]);
 
 	for (i = 0; i < NUM_DRIVERS_REG_RET; i++) {
 		if (ret[i])

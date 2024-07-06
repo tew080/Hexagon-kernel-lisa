@@ -1506,7 +1506,7 @@ static void sde_kms_complete_commit(struct msm_kms *kms,
 
 		rc = c_conn->ops.post_kickoff(connector, &params);
 		if (rc) {
-			pr_err("Connector Post kickoff failed rc=%d\n",
+			pr_debug("Connector Post kickoff failed rc=%d\n",
 					 rc);
 		}
 #if 0
@@ -4487,7 +4487,7 @@ static int _sde_kms_get_splash_data(struct sde_kms *sde_kms,
 	SDE_DEBUG("splash mem num_regions:%d\n", num_regions);
 	if (num_displays > num_regions) {
 		share_splash_mem = true;
-		pr_info(":%d displays share same splash buf\n", num_displays);
+		pr_debug(":%d displays share same splash buf\n", num_displays);
 	}
 
 	for (i = 0; i < num_displays; i++) {
@@ -4662,7 +4662,7 @@ static int _sde_kms_hw_init_blocks(struct sde_kms *sde_kms,
 	}
 	sde_kms->core_rev = sde_kms->catalog->hwversion;
 
-	pr_info("sde hardware revision:0x%x\n", sde_kms->core_rev);
+	pr_debug("sde hardware revision:0x%x\n", sde_kms->core_rev);
 
 	/* initialize power domain if defined */
 	rc = _sde_kms_hw_init_power_helper(dev, sde_kms);

@@ -192,7 +192,7 @@ static struct irq_domain *__irq_domain_create(struct fwnode_handle *fwnode,
 
 	if (!domain->name) {
 		if (fwnode)
-			pr_err("Invalid fwnode type for irqdomain\n");
+			pr_debug("Invalid fwnode type for irqdomain\n");
 		domain->name = kasprintf(GFP_KERNEL, "unknown-%d",
 					 atomic_inc_return(&unknown_domains));
 		if (!domain->name) {
@@ -358,7 +358,7 @@ struct irq_domain *irq_domain_add_simple(struct device_node *of_node,
 			int rc = irq_alloc_descs(first_irq, first_irq, size,
 						 of_node_to_nid(of_node));
 			if (rc < 0)
-				pr_info("Cannot allocate irq_descs @ IRQ%d, assuming pre-allocated\n",
+				pr_debug("Cannot allocate irq_descs @ IRQ%d, assuming pre-allocated\n",
 					first_irq);
 		}
 		irq_domain_associate_many(domain, first_irq, 0, size);
@@ -585,7 +585,7 @@ static int irq_domain_associate_locked(struct irq_domain *domain, unsigned int v
 			 * be mapped. Don't bother telling the user about it.
 			 */
 			if (ret != -EPERM) {
-				pr_info("%s didn't like hwirq-0x%lx to VIRQ%i mapping (rc=%d)\n",
+				pr_debug("%s didn't like hwirq-0x%lx to VIRQ%i mapping (rc=%d)\n",
 				       domain->name, hwirq, virq, ret);
 			}
 			irq_data->domain = NULL;
@@ -660,7 +660,7 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
 		return 0;
 	}
 	if (virq >= domain->revmap_direct_max_irq) {
-		pr_err("ERROR: no free irqs available below %i maximum\n",
+		pr_debug("ERROR: no free irqs available below %i maximum\n",
 			domain->revmap_direct_max_irq);
 		irq_free_desc(virq);
 		return 0;

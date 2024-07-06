@@ -195,7 +195,7 @@ static void msm_ds2_dap_check_and_update_ramp_wait(int port_id, int copp_idx,
 	update_params_value = kzalloc(params_length + param_payload_len,
 				      GFP_KERNEL);
 	if (!update_params_value) {
-		pr_err("%s: params memory alloc failed\n", __func__);
+		pr_debug("%s: params memory alloc failed\n", __func__);
 		goto end;
 	}
 
@@ -234,20 +234,20 @@ static int msm_ds2_dap_set_vspe_vdhe(int dev_map_idx,
 	int rc = 0;
 
 	if (dev_map_idx < 0 || dev_map_idx >= DS2_DEVICES_ALL) {
-		pr_err("%s: invalid dev map index %d\n", __func__, dev_map_idx);
+		pr_debug("%s: invalid dev map index %d\n", __func__, dev_map_idx);
 		rc = -EINVAL;
 		goto end;
 	}
 
 	if (dev_map[dev_map_idx].port_id == DOLBY_INVALID_PORT_ID) {
-		pr_err("%s: Invalid port id\n", __func__);
+		pr_debug("%s: Invalid port id\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
 
 	if ((dev_map[dev_map_idx].copp_idx < 0) ||
 		(dev_map[dev_map_idx].copp_idx >= MAX_COPPS_PER_PORT)) {
-		pr_err("%s: Invalid copp_idx\n", __func__);
+		pr_debug("%s: Invalid copp_idx\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -288,7 +288,7 @@ static int msm_ds2_dap_set_vspe_vdhe(int dev_map_idx,
 	rc = q6common_pack_pp_params(packed_param_data, &param_hdr, param_data,
 				     &param_size);
 	if (rc) {
-		pr_err("%s: Failed to pack params for dolby vdhe, error %d\n",
+		pr_debug("%s: Failed to pack params for dolby vdhe, error %d\n",
 			__func__, rc);
 		goto end;
 	}
@@ -308,7 +308,7 @@ static int msm_ds2_dap_set_vspe_vdhe(int dev_map_idx,
 	rc = q6common_pack_pp_params(packed_param_data + packed_param_size,
 				     &param_hdr, param_data, &param_size);
 	if (rc) {
-		pr_err("%s: Failed to pack params for dolby vspe, error %d\n",
+		pr_debug("%s: Failed to pack params for dolby vspe, error %d\n",
 			__func__, rc);
 		goto end;
 	}
@@ -318,7 +318,7 @@ static int msm_ds2_dap_set_vspe_vdhe(int dev_map_idx,
 			       dev_map[dev_map_idx].copp_idx, NULL,
 			       packed_param_data, packed_param_size);
 	if (rc) {
-		pr_err("%s: send vdhe/vspe params failed with rc=%d\n",
+		pr_debug("%s: send vdhe/vspe params failed with rc=%d\n",
 		       __func__, rc);
 		rc = -EINVAL;
 		goto end;
@@ -397,7 +397,7 @@ int qti_set_custom_stereo_on(int port_id, int copp_idx,
 	rc = adm_pack_and_set_one_pp_param(port_id, copp_idx, param_hdr,
 					   (u8 *) &custom_stereo);
 	if (rc) {
-		pr_err("%s: send params failed rc=%d\n", __func__, rc);
+		pr_debug("%s: send params failed rc=%d\n", __func__, rc);
 		return -EINVAL;
 	}
 
@@ -437,7 +437,7 @@ static int dap_set_custom_stereo_onoff(int dev_map_idx,
 					   dev_map[dev_map_idx].copp_idx,
 					   param_hdr, (u8 *) &enable);
 	if (rc) {
-		pr_err("%s: set custom stereo enable failed with rc=%d\n",
+		pr_debug("%s: set custom stereo enable failed with rc=%d\n",
 		       __func__, rc);
 		rc = -EINVAL;
 	}
@@ -456,20 +456,20 @@ static int set_custom_stereo_onoff(int dev_map_idx,
 		 is_custom_stereo_enabled);
 
 	if (dev_map_idx < 0 || dev_map_idx >= DS2_DEVICES_ALL) {
-		pr_err("%s: invalid dev map index %d\n", __func__, dev_map_idx);
+		pr_debug("%s: invalid dev map index %d\n", __func__, dev_map_idx);
 		rc = -EINVAL;
 		goto end;
 	}
 
 	if (dev_map[dev_map_idx].port_id == DOLBY_INVALID_PORT_ID) {
-		pr_err("%s: invalid port id\n", __func__);
+		pr_debug("%s: invalid port id\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
 
 	if ((dev_map[dev_map_idx].copp_idx < 0) ||
 		(dev_map[dev_map_idx].copp_idx >= MAX_COPPS_PER_PORT)) {
-		pr_err("%s: invalid copp idx\n", __func__);
+		pr_debug("%s: invalid copp idx\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -481,7 +481,7 @@ static int set_custom_stereo_onoff(int dev_map_idx,
 					      dev_map[dev_map_idx].copp_idx,
 					      is_custom_stereo_enabled);
 		if (rc < 0) {
-			pr_err("%s:qti_set_custom_stereo_on_copp failed C.S %d",
+			pr_debug("%s:qti_set_custom_stereo_on_copp failed C.S %d",
 				__func__, is_custom_stereo_enabled);
 		}
 		goto end;
@@ -492,7 +492,7 @@ static int set_custom_stereo_onoff(int dev_map_idx,
 		rc = dap_set_custom_stereo_onoff(dev_map_idx,
 						 is_custom_stereo_enabled);
 		if (rc < 0) {
-			pr_err("%s:qti_set_custom_stereo_on_copp failed C.S %d",
+			pr_debug("%s:qti_set_custom_stereo_on_copp failed C.S %d",
 				__func__, is_custom_stereo_enabled);
 		}
 		goto end;
@@ -511,7 +511,7 @@ static int msm_ds2_dap_alloc_and_store_cal_data(int dev_map_idx, int path,
 		__func__, path, perf_mode, dev_map_idx);
 
 	if (dev_map_idx < 0 || dev_map_idx >= DS2_DEVICES_ALL) {
-		pr_err("%s: invalid dev map index %d\n", __func__, dev_map_idx);
+		pr_debug("%s: invalid dev map index %d\n", __func__, dev_map_idx);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -527,7 +527,7 @@ static int msm_ds2_dap_alloc_and_store_cal_data(int dev_map_idx, int path,
 				ADM_AUDPROC_CAL, aud_cal_data->aud_proc_data,
 				&aud_cal_data->aud_proc_size);
 	if (rc < 0) {
-		pr_err("%s: store cal data err %d\n", __func__, rc);
+		pr_debug("%s: store cal data err %d\n", __func__, rc);
 		kfree(aud_cal_data);
 		goto end;
 	}
@@ -537,7 +537,7 @@ static int msm_ds2_dap_alloc_and_store_cal_data(int dev_map_idx, int path,
 				ADM_AUDVOL_CAL, aud_cal_data->aud_vol_data,
 				&aud_cal_data->aud_vol_size);
 	if (rc < 0) {
-		pr_err("%s: store cal data err %d\n", __func__, rc);
+		pr_debug("%s: store cal data err %d\n", __func__, rc);
 		kfree(aud_cal_data);
 		goto end;
 	}
@@ -556,7 +556,7 @@ static int msm_ds2_dap_free_cal_data(int dev_map_idx)
 
 	pr_debug("%s: dev_map_idx %d\n", __func__, dev_map_idx);
 	if (dev_map_idx < 0 || dev_map_idx >= DS2_DEVICES_ALL) {
-		pr_err("%s: invalid dev map index %d\n", __func__, dev_map_idx);
+		pr_debug("%s: invalid dev map index %d\n", __func__, dev_map_idx);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -576,13 +576,13 @@ static int msm_ds2_dap_send_cal_data(int dev_map_idx)
 
 	pr_debug("%s: devmap index %d\n", __func__, dev_map_idx);
 	if (dev_map_idx < 0 || dev_map_idx >= DS2_DEVICES_ALL) {
-		pr_err("%s: invalid dev map index %d\n", __func__, dev_map_idx);
+		pr_debug("%s: invalid dev map index %d\n", __func__, dev_map_idx);
 		rc = -EINVAL;
 		goto end;
 	}
 
 	if (dev_map[dev_map_idx].cal_data == NULL) {
-		pr_err("%s: No valid calibration data stored for idx %d\n",
+		pr_debug("%s: No valid calibration data stored for idx %d\n",
 			__func__, dev_map_idx);
 		rc = -EINVAL;
 		goto end;
@@ -598,7 +598,7 @@ static int msm_ds2_dap_send_cal_data(int dev_map_idx)
 				  aud_cal_data->aud_proc_data,
 				  aud_cal_data->aud_proc_size);
 	if (rc < 0) {
-		pr_err("%s: adm_send_calibration failed %d\n", __func__, rc);
+		pr_debug("%s: adm_send_calibration failed %d\n", __func__, rc);
 		goto end;
 	}
 
@@ -610,7 +610,7 @@ static int msm_ds2_dap_send_cal_data(int dev_map_idx)
 				  aud_cal_data->aud_vol_data,
 				  aud_cal_data->aud_vol_size);
 	if (rc < 0)
-		pr_err("%s: adm_send_calibration failed %d\n", __func__, rc);
+		pr_debug("%s: adm_send_calibration failed %d\n", __func__, rc);
 end:
 	pr_debug("%s: return  %d\n", __func__, rc);
 	return rc;
@@ -637,7 +637,7 @@ static int msm_ds2_dap_init_modules_in_topology(int dev_map_idx)
 	int mod_inst_info_sz = 0;
 
 	if (dev_map_idx < 0 || dev_map_idx >= DS2_DEVICES_ALL) {
-		pr_err("%s: invalid dev map index %d\n", __func__, dev_map_idx);
+		pr_debug("%s: invalid dev map index %d\n", __func__, dev_map_idx);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -649,7 +649,7 @@ static int msm_ds2_dap_init_modules_in_topology(int dev_map_idx)
 	update_param_val =
 		kzalloc(ADM_GET_TOPO_MODULE_INSTANCE_LIST_LENGTH, GFP_KERNEL);
 	if (!update_param_val) {
-		pr_err("%s, param memory alloc failed\n", __func__);
+		pr_debug("%s, param memory alloc failed\n", __func__);
 		rc = -ENOMEM;
 		goto end;
 	}
@@ -661,13 +661,13 @@ static int msm_ds2_dap_init_modules_in_topology(int dev_map_idx)
 			ADM_GET_TOPO_MODULE_INSTANCE_LIST_LENGTH,
 			update_param_val);
 		if (rc < 0) {
-			pr_err("%s:topo list port %d, err %d,copp_idx %d\n",
+			pr_debug("%s:topo list port %d, err %d,copp_idx %d\n",
 				__func__, port_id, copp_idx, rc);
 			goto end;
 		}
 
 		if (update_param_val[0] > (param_sz - 1)) {
-			pr_err("%s:max modules exp/ret [%d: %d]\n",
+			pr_debug("%s:max modules exp/ret [%d: %d]\n",
 				__func__, (param_sz - 1),
 				update_param_val[0]);
 			rc = -EINVAL;
@@ -758,7 +758,7 @@ static int msm_ds2_dap_map_device_to_dolby_cache_devices(int32_t device_id)
 		cache_dev = DOLBY_WFD_CACHE;
 		break;
 	default:
-		pr_err("%s: invalid cache device\n", __func__);
+		pr_debug("%s: invalid cache device\n", __func__);
 	}
 	pr_debug("%s: cache device %d\n", __func__, cache_dev);
 	return cache_dev;
@@ -772,7 +772,7 @@ static int msm_ds2_dap_update_num_devices(struct dolby_param_data *dolby_data,
 	int supported_devices = 0;
 
 	if (!array_size) {
-		pr_err("%s: array size zero\n", __func__);
+		pr_debug("%s: array size zero\n", __func__);
 		return -EINVAL;
 	}
 
@@ -896,7 +896,7 @@ static int msm_ds2_dap_handle_bypass(struct dolby_param_data *dolby_data)
 	mod_list =
 		kzalloc(ADM_GET_TOPO_MODULE_INSTANCE_LIST_LENGTH, GFP_KERNEL);
 	if (!mod_list) {
-		pr_err("%s: param memory alloc failed\n", __func__);
+		pr_debug("%s: param memory alloc failed\n", __func__);
 		rc = -ENOMEM;
 		goto end;
 	}
@@ -908,14 +908,14 @@ static int msm_ds2_dap_handle_bypass(struct dolby_param_data *dolby_data)
 			copp_idx = dev_map[i].copp_idx;
 
 			if (port_id == DOLBY_INVALID_PORT_ID) {
-				pr_err("%s: invalid port\n", __func__);
+				pr_debug("%s: invalid port\n", __func__);
 				rc = 0;
 				goto end;
 			}
 
 			if ((copp_idx < 0) ||
 				(copp_idx >= MAX_COPPS_PER_PORT)) {
-				pr_err("%s: Invalid copp_idx\n", __func__);
+				pr_debug("%s: Invalid copp_idx\n", __func__);
 				rc = 0;
 				goto end;
 			}
@@ -926,14 +926,14 @@ static int msm_ds2_dap_handle_bypass(struct dolby_param_data *dolby_data)
 				ADM_GET_TOPO_MODULE_INSTANCE_LIST_LENGTH,
 				mod_list);
 			if (rc < 0) {
-				pr_err("%s:adm get topo list port %d",
+				pr_debug("%s:adm get topo list port %d",
 					__func__, port_id);
-				pr_err("copp_idx %d, err %d\n",
+				pr_debug("copp_idx %d, err %d\n",
 					copp_idx, rc);
 				goto end;
 			}
 			if (mod_list[0] > (param_sz - 1)) {
-				pr_err("%s:max modules exp/ret [%d: %d]\n",
+				pr_debug("%s:max modules exp/ret [%d: %d]\n",
 					__func__, (param_sz - 1),
 					mod_list[0]);
 				rc = -EINVAL;
@@ -1125,7 +1125,7 @@ static int msm_ds2_dap_send_end_point(int dev_map_idx, int endp_idx)
 	int rc = 0;
 
 	if (dev_map_idx < 0 || dev_map_idx >= DS2_DEVICES_ALL) {
-		pr_err("%s: invalid dev map index %d\n", __func__, dev_map_idx);
+		pr_debug("%s: invalid dev map index %d\n", __func__, dev_map_idx);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -1139,14 +1139,14 @@ static int msm_ds2_dap_send_end_point(int dev_map_idx, int endp_idx)
 		 &ds2_dap_params[cache_device], ds2_ap_params_obj);
 
 	if (dev_map[dev_map_idx].port_id == DOLBY_INVALID_PORT_ID) {
-		pr_err("%s: invalid port\n", __func__);
+		pr_debug("%s: invalid port\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
 
 	if ((dev_map[dev_map_idx].copp_idx < 0) ||
 		(dev_map[dev_map_idx].copp_idx >= MAX_COPPS_PER_PORT)) {
-		pr_err("%s: Invalid copp_idx\n", __func__);
+		pr_debug("%s: Invalid copp_idx\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -1166,12 +1166,12 @@ static int msm_ds2_dap_send_end_point(int dev_map_idx, int endp_idx)
 					   dev_map[dev_map_idx].copp_idx,
 					   param_hdr, (u8 *) &offset);
 	if (rc) {
-		pr_err("%s: send dolby params failed rc %d\n", __func__, rc);
+		pr_debug("%s: send dolby params failed rc %d\n", __func__, rc);
 		rc = -EINVAL;
 	}
 	modified_param = ds2_ap_params_obj->dap_params_modified;
 	if (modified_param == NULL) {
-		pr_err("%s: modified param structure invalid\n",
+		pr_debug("%s: modified param structure invalid\n",
 		       __func__);
 		rc = -EINVAL;
 		goto end;
@@ -1197,7 +1197,7 @@ static int msm_ds2_dap_send_cached_params(int dev_map_idx,
 	int32_t *modified_param = NULL;
 
 	if (dev_map_idx < 0 || dev_map_idx >= DS2_DEVICES_ALL) {
-		pr_err("%s: invalid dev map index %d\n", __func__, dev_map_idx);
+		pr_debug("%s: invalid dev map index %d\n", __func__, dev_map_idx);
 		ret = -EINVAL;
 		goto end;
 	}
@@ -1227,14 +1227,14 @@ static int msm_ds2_dap_send_cached_params(int dev_map_idx,
 		return -ENOMEM;
 
 	if (dev_map[dev_map_idx].port_id == DOLBY_INVALID_PORT_ID) {
-		pr_err("%s: invalid port id\n", __func__);
+		pr_debug("%s: invalid port id\n", __func__);
 		ret = -EINVAL;
 		goto end;
 	}
 
 	if ((dev_map[dev_map_idx].copp_idx < 0) ||
 		(dev_map[dev_map_idx].copp_idx >= MAX_COPPS_PER_PORT)) {
-		pr_err("%s: Invalid copp_idx\n", __func__);
+		pr_debug("%s: Invalid copp_idx\n", __func__);
 		ret = -EINVAL;
 		goto end;
 	}
@@ -1244,7 +1244,7 @@ static int msm_ds2_dap_send_cached_params(int dev_map_idx,
 		/*get the pointer to the param modified array in the cache*/
 		modified_param = ds2_ap_params_obj->dap_params_modified;
 		if (modified_param == NULL) {
-			pr_err("%s: modified param structure invalid\n",
+			pr_debug("%s: modified param structure invalid\n",
 			       __func__);
 			ret = -EINVAL;
 			goto end;
@@ -1265,7 +1265,7 @@ static int msm_ds2_dap_send_cached_params(int dev_map_idx,
 			(u8 *) &ds2_ap_params_obj->params_val[idx],
 			&param_size);
 		if (ret) {
-			pr_err("%s: Failed to pack params, error %d\n",
+			pr_debug("%s: Failed to pack params, error %d\n",
 			       __func__, ret);
 			goto end;
 		}
@@ -1280,7 +1280,7 @@ static int msm_ds2_dap_send_cached_params(int dev_map_idx,
 					dev_map[dev_map_idx].copp_idx, NULL,
 					packed_params, packed_params_size);
 		if (ret) {
-			pr_err("%s: send dolby params failed ret %d\n",
+			pr_debug("%s: send dolby params failed ret %d\n",
 				__func__, ret);
 			ret = -EINVAL;
 			goto end;
@@ -1289,7 +1289,7 @@ static int msm_ds2_dap_send_cached_params(int dev_map_idx,
 			/*get pointer to the param modified array in the cache*/
 			modified_param = ds2_ap_params_obj->dap_params_modified;
 			if (modified_param == NULL) {
-				pr_err("%s: modified param struct invalid\n",
+				pr_debug("%s: modified param struct invalid\n",
 					__func__);
 				ret = -EINVAL;
 				goto end;
@@ -1324,7 +1324,7 @@ static int msm_ds2_dap_commit_params(struct dolby_param_data *dolby_data,
 			break;
 	}
 	if (idx >= MAX_DS2_PARAMS || idx < 0) {
-		pr_err("%s: index of DS2 Param not found idx %d\n",
+		pr_debug("%s: index of DS2 Param not found idx %d\n",
 			__func__, idx);
 		ret = -EINVAL;
 		goto end;
@@ -1356,7 +1356,7 @@ static int msm_ds2_dap_commit_params(struct dolby_param_data *dolby_data,
 			/*get the pointer to the param modified array in cache*/
 			modified_param = ds2_ap_params_obj->dap_params_modified;
 			if (modified_param == NULL) {
-				pr_err("%s: modified_param NULL\n", __func__);
+				pr_debug("%s: modified_param NULL\n", __func__);
 				ret = -EINVAL;
 				goto end;
 			}
@@ -1372,7 +1372,7 @@ static int msm_ds2_dap_commit_params(struct dolby_param_data *dolby_data,
 			}
 			ret = msm_ds2_dap_send_cached_params(i, commit);
 			if (ret < 0) {
-				pr_err("%s: send cached param %d\n",
+				pr_debug("%s: send cached param %d\n",
 					__func__, ret);
 				goto end;
 			}
@@ -1452,7 +1452,7 @@ static int msm_ds2_dap_handle_commands(u32 cmd, void *arg)
 		msm_ds2_dap_update_dev_map_port_id(dolby_data->device_id,
 					   port_id);
 		if (port_id == DOLBY_INVALID_PORT_ID) {
-			pr_err("%s: invalid port id %d\n", __func__, port_id);
+			pr_debug("%s: invalid port id %d\n", __func__, port_id);
 			ret = -EINVAL;
 			goto end;
 		}
@@ -1474,7 +1474,7 @@ static int msm_ds2_dap_set_param(u32 cmd, void *arg)
 	rc = msm_ds2_dap_update_num_devices(dolby_data, &num_device, dev_arr,
 				   DS2_DSP_SUPPORTED_ENDP_DEVICE);
 	if (num_device == 0 || rc < 0) {
-		pr_err("%s: num devices 0\n", __func__);
+		pr_debug("%s: num devices 0\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -1487,7 +1487,7 @@ static int msm_ds2_dap_set_param(u32 cmd, void *arg)
 		cdev = msm_ds2_dap_map_device_to_dolby_cache_devices(
 							  dev_arr[i]);
 		if (cdev < 0 || cdev >= DOLBY_MAX_CACHE) {
-			pr_err("%s: Invalid cache device %d for device 0x%x\n",
+			pr_debug("%s: Invalid cache device %d for device 0x%x\n",
 				__func__, cdev, dev_arr[i]);
 			rc = -EINVAL;
 			goto end;
@@ -1501,7 +1501,7 @@ static int msm_ds2_dap_set_param(u32 cmd, void *arg)
 				break;
 		}
 		if (idx > MAX_DS2_PARAMS-1) {
-			pr_err("%s: invalid param id 0x%x at idx %d\n",
+			pr_debug("%s: invalid param id 0x%x at idx %d\n",
 				__func__, dolby_data->param_id, idx);
 			rc = -EINVAL;
 			goto end;
@@ -1510,7 +1510,7 @@ static int msm_ds2_dap_set_param(u32 cmd, void *arg)
 		off = ds2_dap_params_offset[idx];
 		if ((dolby_data->length <= 0) ||
 			(dolby_data->length > TOTAL_LENGTH_DS2_PARAM - off)) {
-			pr_err("%s: invalid length %d at idx %d\n",
+			pr_debug("%s: invalid length %d at idx %d\n",
 				__func__, dolby_data->length, idx);
 			rc = -EINVAL;
 			goto end;
@@ -1548,7 +1548,7 @@ static int msm_ds2_dap_get_param(u32 cmd, void *arg)
 
 	/* Return error on get param in soft or hard bypass */
 	if (ds2_dap_params_states.dap_bypass == true) {
-		pr_err("%s: called in bypass_type %d bypass %d\n", __func__,
+		pr_debug("%s: called in bypass_type %d bypass %d\n", __func__,
 			ds2_dap_params_states.dap_bypass_type,
 			ds2_dap_params_states.dap_bypass);
 		rc = -EINVAL;
@@ -1559,7 +1559,7 @@ static int msm_ds2_dap_get_param(u32 cmd, void *arg)
 	if ((dolby_data->length >
 	      (DOLBY_MAX_LENGTH_INDIVIDUAL_PARAM - DOLBY_PARAM_PAYLOAD_SIZE)) ||
 	      (dolby_data->length <= 0)) {
-		pr_err("Invalid length %d", dolby_data->length);
+		pr_debug("Invalid length %d", dolby_data->length);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -1574,13 +1574,13 @@ static int msm_ds2_dap_get_param(u32 cmd, void *arg)
 	}
 
 	if (port_id == DOLBY_INVALID_PORT_ID) {
-		pr_err("%s: Invalid port\n", __func__);
+		pr_debug("%s: Invalid port\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
 
 	if ((copp_idx < 0) || (copp_idx >= MAX_COPPS_PER_PORT)) {
-		pr_err("%s: Invalid copp_idx\n", __func__);
+		pr_debug("%s: Invalid copp_idx\n", __func__);
 		rc = -EINVAL;
 		goto end;
 	}
@@ -1605,7 +1605,7 @@ static int msm_ds2_dap_get_param(u32 cmd, void *arg)
 				dolby_data->param_id)
 				break;
 		if (i > MAX_DS2_PARAMS-1) {
-			pr_err("%s: invalid param id 0x%x at id %d\n", __func__,
+			pr_debug("%s: invalid param id 0x%x at id %d\n", __func__,
 				dolby_data->param_id, i);
 			rc = -EINVAL;
 			goto end;
@@ -1623,14 +1623,14 @@ static int msm_ds2_dap_get_param(u32 cmd, void *arg)
 	rc = adm_get_pp_params(port_id, copp_idx, ADM_CLIENT_ID_DEFAULT, NULL,
 			       &param_hdr, (u8 *) params_value);
 	if (rc) {
-		pr_err("%s: get parameters failed rc %d\n", __func__, rc);
+		pr_debug("%s: get parameters failed rc %d\n", __func__, rc);
 		rc = -EINVAL;
 		goto end;
 	}
 	if (copy_to_user((void __user *) dolby_data->data,
 			 &params_value[DOLBY_PARAM_PAYLOAD_SIZE],
 			 (dolby_data->length * sizeof(uint32_t)))) {
-		pr_err("%s: error getting param\n", __func__);
+		pr_debug("%s: error getting param\n", __func__);
 		rc = -EFAULT;
 		goto end;
 	}
@@ -1663,7 +1663,7 @@ static int msm_ds2_dap_param_visualizer_control_get(u32 cmd, void *arg)
 		(copp_idx < 0) || (copp_idx >= MAX_COPPS_PER_PORT)) {
 		ret = 0;
 		dolby_data->length = 0;
-		pr_err("%s: no device active\n", __func__);
+		pr_debug("%s: no device active\n", __func__);
 		goto end;
 	}
 
@@ -1673,7 +1673,7 @@ static int msm_ds2_dap_param_visualizer_control_get(u32 cmd, void *arg)
 	if (length > DOLBY_PARAM_VCNB_MAX_LENGTH || length <= 0) {
 		ret = 0;
 		dolby_data->length = 0;
-		pr_err("%s Incorrect VCNB length", __func__);
+		pr_debug("%s Incorrect VCNB length", __func__);
 		return -EINVAL;
 	}
 
@@ -1682,7 +1682,7 @@ static int msm_ds2_dap_param_visualizer_control_get(u32 cmd, void *arg)
 
 	visualizer_data = kzalloc(params_length, GFP_KERNEL);
 	if (!visualizer_data) {
-		pr_err("%s: params memory alloc failed\n", __func__);
+		pr_debug("%s: params memory alloc failed\n", __func__);
 		ret = -ENOMEM;
 		dolby_data->length = 0;
 		goto end;
@@ -1708,7 +1708,7 @@ static int msm_ds2_dap_param_visualizer_control_get(u32 cmd, void *arg)
 				&param_hdr,
 				(((char *) (visualizer_data)) + offset));
 	if (ret) {
-		pr_err("%s: get parameters failed ret %d\n", __func__, ret);
+		pr_debug("%s: get parameters failed ret %d\n", __func__, ret);
 		ret = -EINVAL;
 		dolby_data->length = 0;
 		goto end;
@@ -1722,7 +1722,7 @@ static int msm_ds2_dap_param_visualizer_control_get(u32 cmd, void *arg)
 				&param_hdr,
 				(((char *) (visualizer_data)) + offset));
 	if (ret) {
-		pr_err("%s: get parameters failed ret %d\n", __func__, ret);
+		pr_debug("%s: get parameters failed ret %d\n", __func__, ret);
 		ret = -EINVAL;
 		dolby_data->length = 0;
 		goto end;
@@ -1733,7 +1733,7 @@ static int msm_ds2_dap_param_visualizer_control_get(u32 cmd, void *arg)
 	if (copy_to_user((void *)dolby_data->data,
 			(void *)update_visualizer_data,
 			(dolby_data->length * sizeof(uint32_t)))) {
-		pr_err("%s: copy to user failed for data\n", __func__);
+		pr_debug("%s: copy to user failed for data\n", __func__);
 		dolby_data->length = 0;
 		ret = -EFAULT;
 		goto end;
@@ -1782,7 +1782,7 @@ int msm_ds2_dap_update_port_parameters(struct snd_hwdep *hw,  struct file *file,
 				    dev_map[i].device_id);
 		if (dev_map[i].cache_dev < 0 ||
 				dev_map[i].cache_dev >= DOLBY_MAX_CACHE)
-			pr_err("%s: Invalid cache device %d for device 0x%x\n",
+			pr_debug("%s: Invalid cache device %d for device 0x%x\n",
 						__func__,
 						dev_map[i].cache_dev,
 						dev_map[i].device_id);
@@ -1822,7 +1822,7 @@ int msm_ds2_dap_ioctl_shared(struct snd_hwdep *hw, struct file *file,
 		ret = msm_ds2_dap_param_visualizer_control_get(cmd, arg);
 	break;
 	default:
-		pr_err("%s: called with invalid control 0x%x\n", __func__, cmd);
+		pr_debug("%s: called with invalid control 0x%x\n", __func__, cmd);
 		ret = -EINVAL;
 	}
 	return ret;
@@ -1836,7 +1836,7 @@ int msm_ds2_dap_ioctl(struct snd_hwdep *hw, struct file *file,
 
 	pr_debug("%s: cmd: 0x%x\n", __func__, cmd);
 	if (!arg) {
-		pr_err("%s: Invalid params event status\n", __func__);
+		pr_debug("%s: Invalid params event status\n", __func__);
 		ret = -EINVAL;
 		goto end;
 	}
@@ -1847,7 +1847,7 @@ int msm_ds2_dap_ioctl(struct snd_hwdep *hw, struct file *file,
 
 		if (copy_from_user((void *)&dolby_data, (void *)arg,
 				sizeof(struct dolby_param_data))) {
-			pr_err("%s: Copy from user failed\n", __func__);
+			pr_debug("%s: Copy from user failed\n", __func__);
 			ret =  -EFAULT;
 			goto end;
 		}
@@ -1859,7 +1859,7 @@ int msm_ds2_dap_ioctl(struct snd_hwdep *hw, struct file *file,
 
 		if (copy_from_user((void *)&dolby_license, (void *)arg,
 				sizeof(struct dolby_param_license))) {
-			pr_err("%s: Copy from user failed\n", __func__);
+			pr_debug("%s: Copy from user failed\n", __func__);
 			ret = -EFAULT;
 			goto end;
 		}
@@ -1872,24 +1872,24 @@ int msm_ds2_dap_ioctl(struct snd_hwdep *hw, struct file *file,
 
 		if (copy_from_user((void *)&dolby_data, (void *)arg,
 				sizeof(struct dolby_param_data))) {
-			pr_err("%s: Copy from user failed\n", __func__);
+			pr_debug("%s: Copy from user failed\n", __func__);
 			ret =  -EFAULT;
 			goto end;
 		}
 		ret = msm_ds2_dap_ioctl_shared(hw, file, cmd, &dolby_data);
 		if (ret < 0)
-			pr_err("%s: ioctl cmd %d returned err %d\n",
+			pr_debug("%s: ioctl cmd %d returned err %d\n",
 				__func__, cmd, ret);
 		if (copy_to_user((void *)arg, &dolby_data,
 			sizeof(struct dolby_param_data))) {
-			pr_err("%s: Copy to user failed\n", __func__);
+			pr_debug("%s: Copy to user failed\n", __func__);
 			ret = -EFAULT;
 			goto end;
 		}
 		break;
 	}
 	default:
-		pr_err("%s: called with invalid control 0x%x\n", __func__, cmd);
+		pr_debug("%s: called with invalid control 0x%x\n", __func__, cmd);
 		ret = -EINVAL;
 	}
 end:
@@ -1918,7 +1918,7 @@ handle_set_ioctl:
 		memset(&dolby_data, 0, sizeof(dolby_data));
 		if (copy_from_user(&dolby_data32, (void *)arg,
 				sizeof(struct dolby_param_data32))) {
-			pr_err("%s: Copy from user failed\n", __func__);
+			pr_debug("%s: Copy from user failed\n", __func__);
 			ret =  -EFAULT;
 			goto end;
 		}
@@ -1946,7 +1946,7 @@ handle_get_ioctl:
 		memset(&dolby_data, 0, sizeof(dolby_data));
 		if (copy_from_user(&dolby_data32, (void *)arg,
 				sizeof(struct dolby_param_data32))) {
-			pr_err("%s: Copy from user failed\n", __func__);
+			pr_debug("%s: Copy from user failed\n", __func__);
 			ret =  -EFAULT;
 			goto end;
 		}
@@ -1959,12 +1959,12 @@ handle_get_ioctl:
 
 		ret = msm_ds2_dap_ioctl_shared(hw, file, cmd, &dolby_data);
 		if (ret < 0)
-			pr_err("%s: ioctl cmd %d, returned err %d\n",
+			pr_debug("%s: ioctl cmd %d, returned err %d\n",
 				__func__, cmd, ret);
 		dolby_data32.length = dolby_data.length;
 		if (copy_to_user((void *)arg, &dolby_data32,
 			sizeof(struct dolby_param_data32))) {
-			pr_err("%s: Copy to user failed\n", __func__);
+			pr_debug("%s: Copy to user failed\n", __func__);
 			ret = -EFAULT;
 			goto end;
 		}
@@ -1977,7 +1977,7 @@ handle_get_ioctl:
 		cmd = SNDRV_DEVDEP_DAP_IOCTL_DAP_LICENSE;
 		if (copy_from_user((void *)&dolby_license32, (void *)arg,
 			sizeof(struct dolby_param_license32))) {
-			pr_err("%s: Copy from user failed\n", __func__);
+			pr_debug("%s: Copy from user failed\n", __func__);
 			ret = -EFAULT;
 			goto end;
 		}
@@ -1987,7 +1987,7 @@ handle_get_ioctl:
 		break;
 	}
 	default:
-		pr_err("%s: called with invalid control 0x%x\n",
+		pr_debug("%s: called with invalid control 0x%x\n",
 			__func__, cmd);
 		ret = -EINVAL;
 	}
@@ -2028,7 +2028,7 @@ int msm_ds2_dap_init(int port_id, int copp_idx, int channels,
 			}
 		}
 		if (idx < 0) {
-			pr_err("%s: invalid index for port %d\n",
+			pr_debug("%s: invalid index for port %d\n",
 				__func__, port_id);
 			ret = -EINVAL;
 			goto end;
@@ -2052,7 +2052,7 @@ int msm_ds2_dap_init(int port_id, int copp_idx, int channels,
 				ret = msm_ds2_dap_alloc_and_store_cal_data(idx,
 						       ADM_PATH_PLAYBACK, 0);
 				if (ret < 0) {
-					pr_err("%s: Failed to alloc and store cal data for idx %d, device %d, copp_idx %d",
+					pr_debug("%s: Failed to alloc and store cal data for idx %d, device %d, copp_idx %d",
 					       __func__,
 					       idx, dev_map[idx].device_id,
 					       dev_map[idx].copp_idx);
@@ -2064,7 +2064,7 @@ int msm_ds2_dap_init(int port_id, int copp_idx, int channels,
 				ret = adm_set_softvolume(port_id, copp_idx,
 							 &softvol);
 				if (ret < 0) {
-					pr_err("%s: Soft volume ret error %d\n",
+					pr_debug("%s: Soft volume ret error %d\n",
 						__func__, ret);
 					dev_map[idx].active = false;
 					dev_map[idx].copp_idx = -1;
@@ -2074,7 +2074,7 @@ int msm_ds2_dap_init(int port_id, int copp_idx, int channels,
 				ret = msm_ds2_dap_init_modules_in_topology(
 							idx);
 				if (ret < 0) {
-					pr_err("%s: Failed to init modules in topolofy for idx %d, device %d, copp_idx %d\n",
+					pr_debug("%s: Failed to init modules in topolofy for idx %d, device %d, copp_idx %d\n",
 					       __func__, idx,
 					       dev_map[idx].device_id,
 					       dev_map[idx].copp_idx);
@@ -2136,7 +2136,7 @@ void msm_ds2_dap_deinit(int port_id)
 			}
 		}
 		if (idx < 0) {
-			pr_err("%s: invalid index for port %d\n",
+			pr_debug("%s: invalid index for port %d\n",
 				__func__, port_id);
 			return;
 		}
@@ -2179,7 +2179,7 @@ int msm_ds2_dap_set_custom_stereo_onoff(int port_id, int copp_idx,
 			}
 		}
 		if (idx < 0) {
-			pr_err("%s: invalid index for port %d\n",
+			pr_debug("%s: invalid index for port %d\n",
 				__func__, port_id);
 			return rc;
 		}
@@ -2188,7 +2188,7 @@ int msm_ds2_dap_set_custom_stereo_onoff(int port_id, int copp_idx,
 		rc = set_custom_stereo_onoff(idx,
 					is_custom_stereo_enabled);
 		if (rc < 0) {
-			pr_err("%s: Custom stereo err %d on port %d\n",
+			pr_debug("%s: Custom stereo err %d on port %d\n",
 				__func__, rc, port_id);
 		}
 	}

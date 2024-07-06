@@ -500,7 +500,7 @@ int kgsl_pool_alloc_pages(u64 size, struct page ***pages, struct device *dev)
 			kvfree(local);
 
 			if (!kgsl_sharedmem_get_noretry())
-				pr_err_ratelimited("kgsl: out of memory: only allocated %lldKb of %lldKb requested\n",
+				pr_debug_ratelimited("kgsl: out of memory: only allocated %lldKb of %lldKb requested\n",
 					(size - len) >> 10, size >> 10);
 
 			return -ENOMEM;
@@ -610,7 +610,7 @@ static int kgsl_of_parse_mempool(struct kgsl_page_pool *pool,
 	order = get_order(size);
 
 	if (order > 8) {
-		pr_err("kgsl: %pOF: pool order %d is too big\n", node, order);
+		pr_debug("kgsl: %pOF: pool order %d is too big\n", node, order);
 		return -EINVAL;
 	}
 

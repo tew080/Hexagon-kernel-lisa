@@ -569,7 +569,7 @@ void sde_encoder_helper_update_intf_cfg(
 
 	/* setup interface configuration */
 	if (intf_cfg->intf_count >= MAX_INTF_PER_CTL_V1) {
-		pr_err("invalid inf_count %d\n", intf_cfg->intf_count);
+		pr_debug("invalid inf_count %d\n", intf_cfg->intf_count);
 		return;
 	}
 	intf_cfg->intf[intf_cfg->intf_count++] = phys_enc->intf_idx;
@@ -1156,7 +1156,7 @@ int sde_encoder_helper_switch_vsync(struct drm_encoder *drm_enc,
 	struct msm_display_info disp_info;
 
 	if (!drm_enc) {
-		pr_err("invalid drm encoder\n");
+		pr_debug("invalid drm encoder\n");
 		return -EINVAL;
 	}
 
@@ -2433,13 +2433,13 @@ static int _sde_encoder_input_connect(struct input_handler *handler,
 
 	rc = input_register_handle(handle);
 	if (rc) {
-		pr_err("failed to register input handle\n");
+		pr_debug("failed to register input handle\n");
 		goto error;
 	}
 
 	rc = input_open_device(handle);
 	if (rc) {
-		pr_err("failed to open input device\n");
+		pr_debug("failed to open input device\n");
 		goto error_unregister;
 	}
 
@@ -3053,7 +3053,7 @@ void sde_encoder_perf_uidle_status(struct sde_kms *sde_kms,
 	struct sde_uidle_status status;
 
 	if (!sde_kms || !crtc || !sde_kms->hw_uidle) {
-		pr_err("invalid params %d %d\n",
+		pr_debug("invalid params %d %d\n",
 			!sde_kms, !crtc);
 		return;
 	}

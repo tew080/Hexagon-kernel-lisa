@@ -217,7 +217,7 @@ static int msm_voip_mute_put(struct snd_kcontrol *kcontrol,
 	int ramp_duration = ucontrol->value.integer.value[1];
 
 	if ((mute < 0) || (mute > 1) || (ramp_duration < 0)) {
-		pr_err(" %s Invalid arguments", __func__);
+		pr_debug(" %s Invalid arguments", __func__);
 
 		ret = -EINVAL;
 		goto done;
@@ -241,7 +241,7 @@ static int msm_voip_gain_put(struct snd_kcontrol *kcontrol,
 	int ramp_duration = ucontrol->value.integer.value[1];
 
 	if ((volume < 0) || (ramp_duration < 0)) {
-		pr_err(" %s Invalid arguments", __func__);
+		pr_debug(" %s Invalid arguments", __func__);
 
 		ret = -EINVAL;
 		goto done;
@@ -337,7 +337,7 @@ static void voip_ssr_cb_fn(uint32_t opcode, void *private_data)
 		wake_up(&prtd->in_wait);
 
 	} else {
-		pr_err("%s: Invalid opcode during reset : %d\n",
+		pr_debug("%s: Invalid opcode during reset : %d\n",
 			__func__, opcode);
 	}
 }
@@ -367,7 +367,7 @@ static void voip_process_ul_pkt(uint8_t *voc_pkt,
 		case MODE_AMR_WB:
 		case MODE_AMR: {
 			if (pkt_len <= DSP_FRAME_HDR_LEN) {
-				pr_err("%s: pkt_len %d is < required len\n",
+				pr_debug("%s: pkt_len %d is < required len\n",
 						__func__, pkt_len);
 				spin_unlock_irqrestore(&prtd->dsp_ul_lock,
 							dsp_flags);
@@ -394,7 +394,7 @@ static void voip_process_ul_pkt(uint8_t *voc_pkt,
 		case MODE_4GV_WB:
 		case MODE_4GV_NW: {
 			if (pkt_len <= DSP_FRAME_HDR_LEN) {
-				pr_err("%s: pkt_len %d is < required len\n",
+				pr_debug("%s: pkt_len %d is < required len\n",
 						__func__, pkt_len);
 				spin_unlock_irqrestore(&prtd->dsp_ul_lock,
 							dsp_flags);
@@ -438,7 +438,7 @@ static void voip_process_ul_pkt(uint8_t *voc_pkt,
 			voc_pkt = voc_pkt + DSP_FRAME_HDR_LEN;
 
 			if (pkt_len <= 2 * DSP_FRAME_HDR_LEN) {
-				pr_err("%s: pkt_len %d is < required len\n",
+				pr_debug("%s: pkt_len %d is < required len\n",
 						__func__, pkt_len);
 				spin_unlock_irqrestore(&prtd->dsp_ul_lock,
 							dsp_flags);
@@ -480,7 +480,7 @@ static void voip_process_ul_pkt(uint8_t *voc_pkt,
 				voc_pkt = voc_pkt + DSP_FRAME_HDR_LEN;
 
 				if (pkt_len <= 2 * DSP_FRAME_HDR_LEN) {
-					pr_err("%s: pkt_len %d is < required len\n",
+					pr_debug("%s: pkt_len %d is < required len\n",
 							__func__, pkt_len);
 					spin_unlock_irqrestore(&prtd->dsp_ul_lock,
 								dsp_flags);
@@ -501,7 +501,7 @@ static void voip_process_ul_pkt(uint8_t *voc_pkt,
 					      &prtd->out_queue);
 			} else {
 				/* Drop the second frame */
-				pr_err("%s: UL data dropped, read is slow\n",
+				pr_debug("%s: UL data dropped, read is slow\n",
 				       __func__);
 			}
 			break;
@@ -527,7 +527,7 @@ static void voip_process_ul_pkt(uint8_t *voc_pkt,
 		snd_pcm_period_elapsed(prtd->capture_substream);
 	} else {
 		spin_unlock_irqrestore(&prtd->dsp_ul_lock, dsp_flags);
-		pr_err("UL data dropped\n");
+		pr_debug("UL data dropped\n");
 	}
 
 	wake_up(&prtd->out_wait);
@@ -572,7 +572,7 @@ static void voip_process_dl_pkt(uint8_t *voc_pkt, void *private_data)
 			if (frame_rate) {
 				if (voip_get_rate_type(prtd->mode, frame_rate,
 						       &rate_type)) {
-					pr_err("%s(): fail at getting rate_type\n",
+					pr_debug("%s(): fail at getting rate_type\n",
 						__func__);
 				} else
 					prtd->rate_type = rate_type;
@@ -694,7 +694,7 @@ static void voip_process_dl_pkt(uint8_t *voc_pkt, void *private_data)
 	} else {
 		*((uint32_t *)voc_pkt) = 0;
 		spin_unlock_irqrestore(&prtd->dsp_lock, dsp_flags);
-		pr_err_ratelimited("DL data not available\n");
+		pr_debug_ratelimited("DL data not available\n");
 	}
 	wake_up(&prtd->in_wait);
 }
@@ -838,7 +838,7 @@ static int msm_pcm_playback_copy(struct snd_pcm_substream *substream, int a,
 				ret = copy_from_user(&buf_node->frame.voc_pkt,
 							buf, fbytes);
 				if (ret) {
-					pr_err("%s: copy from user failed %d\n",
+					pr_debug("%s: copy from user failed %d\n",
 					       __func__, ret);
 					return -EFAULT;
 				}
@@ -847,7 +847,7 @@ static int msm_pcm_playback_copy(struct snd_pcm_substream *substream, int a,
 				ret = copy_from_user(&buf_node->frame,
 							buf, fbytes);
 				if (ret) {
-					pr_err("%s: copy from user failed %d\n",
+					pr_debug("%s: copy from user failed %d\n",
 					       __func__, ret);
 					return -EFAULT;
 				}
@@ -860,16 +860,16 @@ static int msm_pcm_playback_copy(struct snd_pcm_substream *substream, int a,
 			list_add_tail(&buf_node->list, &prtd->in_queue);
 			spin_unlock_irqrestore(&prtd->dsp_lock, dsp_flags);
 		} else {
-			pr_err("%s: Write cnt %lu is > VOIP_MAX_VOC_PKT_SIZE\n",
+			pr_debug("%s: Write cnt %lu is > VOIP_MAX_VOC_PKT_SIZE\n",
 				__func__, fbytes);
 			ret = -ENOMEM;
 		}
 
 	} else if (ret == 0) {
-		pr_err("%s: No free DL buffs\n", __func__);
+		pr_debug("%s: No free DL buffs\n", __func__);
 		ret = -ETIMEDOUT;
 	} else {
-		pr_err("%s: playback copy was interrupted %d\n", __func__, ret);
+		pr_debug("%s: playback copy was interrupted %d\n", __func__, ret);
 	}
 
 	return  ret;
@@ -924,7 +924,7 @@ static int msm_pcm_capture_copy(struct snd_pcm_substream *substream,
 						   size);
 			}
 			if (ret) {
-				pr_err("%s: Copy to user returned %d\n",
+				pr_debug("%s: Copy to user returned %d\n",
 					__func__, ret);
 				ret = -EFAULT;
 			}
@@ -933,17 +933,17 @@ static int msm_pcm_capture_copy(struct snd_pcm_substream *substream,
 						&prtd->free_out_queue);
 			spin_unlock_irqrestore(&prtd->dsp_ul_lock, dsp_flags);
 		} else {
-			pr_err("%s: Read fbytes %lu > VOIP_MAX_VOC_PKT_SIZE\n",
+			pr_debug("%s: Read fbytes %lu > VOIP_MAX_VOC_PKT_SIZE\n",
 				__func__, fbytes);
 			ret = -ENOMEM;
 		}
 
 
 	} else if (ret == 0) {
-		pr_err_ratelimited("%s: No UL data available\n", __func__);
+		pr_debug_ratelimited("%s: No UL data available\n", __func__);
 		ret = -ETIMEDOUT;
 	} else {
-		pr_err("%s: Read was interrupted\n", __func__);
+		pr_debug("%s: Read was interrupted\n", __func__);
 		ret = -ERESTARTSYS;
 	}
 	return ret;
@@ -974,7 +974,7 @@ static int msm_pcm_close(struct snd_pcm_substream *substream)
 	unsigned long dsp_flags = 0;
 
 	if (substream == NULL) {
-		pr_err("substream is NULL\n");
+		pr_debug("substream is NULL\n");
 		return -EINVAL;
 	}
 	runtime = substream->runtime;
@@ -1086,7 +1086,7 @@ static int voip_config_vocoder(struct snd_pcm_substream *substream)
 	    (prtd->mode == MODE_IS127) || (prtd->mode == MODE_4GV_NB) ||
 	    (prtd->mode == MODE_4GV_WB) || (prtd->mode == MODE_4GV_NW) ||
 	    (prtd->mode == MODE_G711) || (prtd->mode == MODE_G711A))) {
-		pr_err("%s(): mode:%d and format:%u are not matched\n",
+		pr_debug("%s(): mode:%d and format:%u are not matched\n",
 			__func__, prtd->mode, (uint32_t)runtime->format);
 
 		ret =  -EINVAL;
@@ -1094,7 +1094,7 @@ static int voip_config_vocoder(struct snd_pcm_substream *substream)
 	}
 
 	if (runtime->format != FORMAT_S16_LE && (prtd->mode == MODE_PCM)) {
-		pr_err("%s(): mode:%d and format:%u are not matched\n",
+		pr_debug("%s(): mode:%d and format:%u are not matched\n",
 		       __func__, prtd->mode, runtime->format);
 
 		ret =  -EINVAL;
@@ -1110,7 +1110,7 @@ static int voip_config_vocoder(struct snd_pcm_substream *substream)
 					 prtd->rate,
 					 &rate_type);
 		if (ret < 0) {
-			pr_err("%s(): fail at getting rate_type, ret=%d\n",
+			pr_debug("%s(): fail at getting rate_type, ret=%d\n",
 				__func__, ret);
 
 			ret = -EINVAL;
@@ -1127,7 +1127,7 @@ static int voip_config_vocoder(struct snd_pcm_substream *substream)
 					 prtd->evrc_min_rate,
 					 &evrc_min_rate_type);
 		if (ret < 0) {
-			pr_err("%s(): fail at getting min rate, ret=%d\n",
+			pr_debug("%s(): fail at getting min rate, ret=%d\n",
 				__func__, ret);
 
 			ret = -EINVAL;
@@ -1140,7 +1140,7 @@ static int voip_config_vocoder(struct snd_pcm_substream *substream)
 					 prtd->evrc_max_rate,
 					 &evrc_max_rate_type);
 		if (ret < 0) {
-			pr_err("%s(): fail at getting max rate, ret=%d\n",
+			pr_debug("%s(): fail at getting max rate, ret=%d\n",
 				__func__, ret);
 
 			ret = -EINVAL;
@@ -1150,7 +1150,7 @@ static int voip_config_vocoder(struct snd_pcm_substream *substream)
 			evrc_max_rate_type = VOC_1_RATE;
 
 		if (evrc_max_rate_type < evrc_min_rate_type) {
-			pr_err("%s(): Invalid EVRC min max rates: %d, %d\n",
+			pr_debug("%s(): Invalid EVRC min max rates: %d, %d\n",
 				__func__, evrc_min_rate_type,
 				evrc_max_rate_type);
 
@@ -1165,7 +1165,7 @@ static int voip_config_vocoder(struct snd_pcm_substream *substream)
 				  prtd->play_samp_rate,
 				  &media_type);
 	if (ret < 0) {
-		pr_err("%s(): fail at getting media_type, ret=%d\n",
+		pr_debug("%s(): fail at getting media_type, ret=%d\n",
 		       __func__, ret);
 
 		ret = -EINVAL;
@@ -1211,7 +1211,7 @@ static int msm_pcm_prepare(struct snd_pcm_substream *substream)
 	    && (prtd->state != VOIP_STARTED)) {
 		ret = voip_config_vocoder(substream);
 		if (ret < 0) {
-			pr_err("%s(): fail at configuring vocoder for voip, ret=%d\n",
+			pr_debug("%s(): fail at configuring vocoder for voip, ret=%d\n",
 				__func__, ret);
 
 			goto done;
@@ -1226,7 +1226,7 @@ static int msm_pcm_prepare(struct snd_pcm_substream *substream)
 				voc_get_session_id(VOIP_SESSION_NAME));
 
 		if (ret < 0) {
-			pr_err("%s: voc_start_voice_call() failed err %d",
+			pr_debug("%s: voc_start_voice_call() failed err %d",
 			       __func__, ret);
 
 			goto done;
@@ -1307,7 +1307,7 @@ static int msm_pcm_hw_params(struct snd_pcm_substream *substream,
 			runtime->hw.buffer_bytes_max,
 			&dma_buf->addr, GFP_KERNEL);
 	if (!dma_buf->area) {
-		pr_err("%s:MSM VOIP dma_alloc failed\n", __func__);
+		pr_debug("%s:MSM VOIP dma_alloc failed\n", __func__);
 		mutex_unlock(&voip_info.lock);
 		return -ENOMEM;
 	}
@@ -1383,7 +1383,7 @@ static int msm_voip_rate_config_put(struct snd_kcontrol *kcontrol,
 			ret = voip_config_vocoder(
 					voip_info.capture_substream);
 			if (ret) {
-				pr_err("%s:Failed to configure vocoder, ret=%d\n",
+				pr_debug("%s:Failed to configure vocoder, ret=%d\n",
 					__func__, ret);
 
 				goto done;
@@ -1392,7 +1392,7 @@ static int msm_voip_rate_config_put(struct snd_kcontrol *kcontrol,
 			ret = voc_update_amr_vocoder_rate(
 					voc_get_session_id(VOIP_SESSION_NAME));
 			if (ret) {
-				pr_err("%s:Failed to update AMR rate, ret=%d\n",
+				pr_debug("%s:Failed to update AMR rate, ret=%d\n",
 					__func__, ret);
 			}
 		}
@@ -1466,7 +1466,7 @@ static int voip_get_rate_type(uint32_t mode, uint32_t rate,
 			*rate_type = AMR_RATE_12200;
 			break;
 		default:
-			pr_err("wrong rate for AMR NB.\n");
+			pr_debug("wrong rate for AMR NB.\n");
 			ret = -EINVAL;
 			break;
 		}
@@ -1502,7 +1502,7 @@ static int voip_get_rate_type(uint32_t mode, uint32_t rate,
 			*rate_type = AMR_RATE_23850 - AMR_RATE_6600;
 			break;
 		default:
-			pr_err("wrong rate for AMR_WB.\n");
+			pr_debug("wrong rate for AMR_WB.\n");
 			ret = -EINVAL;
 			break;
 		}
@@ -1524,7 +1524,7 @@ static int voip_get_rate_type(uint32_t mode, uint32_t rate,
 			*rate_type = rate;
 			break;
 		default:
-			pr_err("wrong rate for IS127/4GV_NB/WB.\n");
+			pr_debug("wrong rate for IS127/4GV_NB/WB.\n");
 			ret = -EINVAL;
 			break;
 		}
@@ -1541,7 +1541,7 @@ static int voip_get_rate_type(uint32_t mode, uint32_t rate,
 			*rate_type = rate;
 			break;
 		default:
-			pr_err("wrong rate for 4GV_NW.\n");
+			pr_debug("wrong rate for 4GV_NW.\n");
 			ret = -EINVAL;
 			break;
 		}
@@ -1552,7 +1552,7 @@ static int voip_get_rate_type(uint32_t mode, uint32_t rate,
 		*rate_type = rate;
 		break;
 	default:
-		pr_err("wrong mode type.\n");
+		pr_debug("wrong mode type.\n");
 		ret = -EINVAL;
 	}
 	pr_debug("%s, mode=%d, rate=%u, rate_type=%d\n",
@@ -1663,13 +1663,13 @@ static int msm_pcm_probe(struct platform_device *pdev)
 
 		goto done;
 	} else if (rc < 0) {
-		pr_err("%s: memory allocation for calibration failed %d\n",
+		pr_debug("%s: memory allocation for calibration failed %d\n",
 		       __func__, rc);
 	}
 
 	rc = voc_alloc_voip_shared_memory();
 	if (rc < 0) {
-		pr_err("%s: error allocating shared mem err %d\n",
+		pr_debug("%s: error allocating shared mem err %d\n",
 		       __func__, rc);
 	}
 

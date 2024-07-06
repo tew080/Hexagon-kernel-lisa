@@ -40,7 +40,7 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
 	ret = snd_soc_dai_get_channel_map(codec_dai,
 				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
 	if (ret != 0 && ret != -ENOTSUPP) {
-		pr_err("failed to get codec chan map, err:%d\n", ret);
+		pr_debug("failed to get codec chan map, err:%d\n", ret);
 		goto end;
 	} else if (ret == -ENOTSUPP) {
 		return 0;
@@ -53,7 +53,7 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
 		ret = snd_soc_dai_set_channel_map(cpu_dai, tx_ch_cnt, tx_ch,
 						  0, NULL);
 	if (ret != 0 && ret != -ENOTSUPP)
-		pr_err("Failed to set cpu chan map, err:%d\n", ret);
+		pr_debug("Failed to set cpu chan map, err:%d\n", ret);
 	else if (ret == -ENOTSUPP)
 		ret = 0;
 end:

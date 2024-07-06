@@ -27,7 +27,7 @@ static int kp_pre_handler(struct kprobe *p, struct pt_regs *regs)
 {
 	if (preemptible()) {
 		handler_errors++;
-		pr_err("pre-handler is preemptible\n");
+		pr_debug("pre-handler is preemptible\n");
 	}
 	preh_val = (rand1 / div_factor);
 	return 0;
@@ -38,11 +38,11 @@ static void kp_post_handler(struct kprobe *p, struct pt_regs *regs,
 {
 	if (preemptible()) {
 		handler_errors++;
-		pr_err("post-handler is preemptible\n");
+		pr_debug("post-handler is preemptible\n");
 	}
 	if (preh_val != (rand1 / div_factor)) {
 		handler_errors++;
-		pr_err("incorrect value in post_handler\n");
+		pr_debug("incorrect value in post_handler\n");
 	}
 	posth_val = preh_val + div_factor;
 }
@@ -59,7 +59,7 @@ static int test_kprobe(void)
 
 	ret = register_kprobe(&kp);
 	if (ret < 0) {
-		pr_err("register_kprobe returned %d\n", ret);
+		pr_debug("register_kprobe returned %d\n", ret);
 		return ret;
 	}
 
@@ -67,12 +67,12 @@ static int test_kprobe(void)
 	unregister_kprobe(&kp);
 
 	if (preh_val == 0) {
-		pr_err("kprobe pre_handler not called\n");
+		pr_debug("kprobe pre_handler not called\n");
 		handler_errors++;
 	}
 
 	if (posth_val == 0) {
-		pr_err("kprobe post_handler not called\n");
+		pr_debug("kprobe post_handler not called\n");
 		handler_errors++;
 	}
 
@@ -95,7 +95,7 @@ static void kp_post_handler2(struct kprobe *p, struct pt_regs *regs,
 {
 	if (preh_val != (rand1 / div_factor) + 1) {
 		handler_errors++;
-		pr_err("incorrect value in post_handler2\n");
+		pr_debug("incorrect value in post_handler2\n");
 	}
 	posth_val = preh_val + div_factor;
 }
@@ -116,7 +116,7 @@ static int test_kprobes(void)
 	kp.flags = 0;
 	ret = register_kprobes(kps, 2);
 	if (ret < 0) {
-		pr_err("register_kprobes returned %d\n", ret);
+		pr_debug("register_kprobes returned %d\n", ret);
 		return ret;
 	}
 
@@ -125,12 +125,12 @@ static int test_kprobes(void)
 	ret = target(rand1);
 
 	if (preh_val == 0) {
-		pr_err("kprobe pre_handler not called\n");
+		pr_debug("kprobe pre_handler not called\n");
 		handler_errors++;
 	}
 
 	if (posth_val == 0) {
-		pr_err("kprobe post_handler not called\n");
+		pr_debug("kprobe post_handler not called\n");
 		handler_errors++;
 	}
 
@@ -139,12 +139,12 @@ static int test_kprobes(void)
 	ret = target2(rand1);
 
 	if (preh_val == 0) {
-		pr_err("kprobe pre_handler2 not called\n");
+		pr_debug("kprobe pre_handler2 not called\n");
 		handler_errors++;
 	}
 
 	if (posth_val == 0) {
-		pr_err("kprobe post_handler2 not called\n");
+		pr_debug("kprobe post_handler2 not called\n");
 		handler_errors++;
 	}
 
@@ -160,7 +160,7 @@ static int entry_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
 {
 	if (preemptible()) {
 		handler_errors++;
-		pr_err("kretprobe entry handler is preemptible\n");
+		pr_debug("kretprobe entry handler is preemptible\n");
 	}
 	krph_val = (rand1 / div_factor);
 	return 0;
@@ -172,15 +172,15 @@ static int return_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
 
 	if (preemptible()) {
 		handler_errors++;
-		pr_err("kretprobe return handler is preemptible\n");
+		pr_debug("kretprobe return handler is preemptible\n");
 	}
 	if (ret != (rand1 / div_factor)) {
 		handler_errors++;
-		pr_err("incorrect value in kretprobe handler\n");
+		pr_debug("incorrect value in kretprobe handler\n");
 	}
 	if (krph_val == 0) {
 		handler_errors++;
-		pr_err("call to kretprobe entry handler failed\n");
+		pr_debug("call to kretprobe entry handler failed\n");
 	}
 
 	krph_val = rand1;
@@ -199,14 +199,14 @@ static int test_kretprobe(void)
 
 	ret = register_kretprobe(&rp);
 	if (ret < 0) {
-		pr_err("register_kretprobe returned %d\n", ret);
+		pr_debug("register_kretprobe returned %d\n", ret);
 		return ret;
 	}
 
 	ret = target(rand1);
 	unregister_kretprobe(&rp);
 	if (krph_val != rand1) {
-		pr_err("kretprobe handler not called\n");
+		pr_debug("kretprobe handler not called\n");
 		handler_errors++;
 	}
 
@@ -219,11 +219,11 @@ static int return_handler2(struct kretprobe_instance *ri, struct pt_regs *regs)
 
 	if (ret != (rand1 / div_factor) + 1) {
 		handler_errors++;
-		pr_err("incorrect value in kretprobe handler2\n");
+		pr_debug("incorrect value in kretprobe handler2\n");
 	}
 	if (krph_val == 0) {
 		handler_errors++;
-		pr_err("call to kretprobe entry handler failed\n");
+		pr_debug("call to kretprobe entry handler failed\n");
 	}
 
 	krph_val = rand1;
@@ -246,21 +246,21 @@ static int test_kretprobes(void)
 	rp.kp.flags = 0;
 	ret = register_kretprobes(rps, 2);
 	if (ret < 0) {
-		pr_err("register_kretprobe returned %d\n", ret);
+		pr_debug("register_kretprobe returned %d\n", ret);
 		return ret;
 	}
 
 	krph_val = 0;
 	ret = target(rand1);
 	if (krph_val != rand1) {
-		pr_err("kretprobe handler not called\n");
+		pr_debug("kretprobe handler not called\n");
 		handler_errors++;
 	}
 
 	krph_val = 0;
 	ret = target2(rand1);
 	if (krph_val != rand1) {
-		pr_err("kretprobe handler2 not called\n");
+		pr_debug("kretprobe handler2 not called\n");
 		handler_errors++;
 	}
 	unregister_kretprobes(rps, 2);
@@ -279,7 +279,7 @@ int init_test_probes(void)
 		rand1 = prandom_u32();
 	} while (rand1 <= div_factor);
 
-	pr_info("started\n");
+	pr_debug("started\n");
 	num_tests++;
 	ret = test_kprobe();
 	if (ret < 0)
@@ -303,11 +303,11 @@ int init_test_probes(void)
 #endif /* CONFIG_KRETPROBES */
 
 	if (errors)
-		pr_err("BUG: %d out of %d tests failed\n", errors, num_tests);
+		pr_debug("BUG: %d out of %d tests failed\n", errors, num_tests);
 	else if (handler_errors)
-		pr_err("BUG: %d error(s) running handlers\n", handler_errors);
+		pr_debug("BUG: %d error(s) running handlers\n", handler_errors);
 	else
-		pr_info("passed successfully\n");
+		pr_debug("passed successfully\n");
 
 	return 0;
 }

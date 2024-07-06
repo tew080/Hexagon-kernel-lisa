@@ -135,13 +135,13 @@ static int swr_dmic_tx_master_port_get(struct snd_kcontrol *kcontrol,
 	unsigned int slave_port_idx = SWR_DMIC_MAX_PORTS;
 
 	if (NULL == component) {
-		pr_err("%s: swr dmic component is NULL\n", __func__);
+		pr_debug("%s: swr dmic component is NULL\n", __func__);
 		return -EINVAL;
 	}
 
 	swr_dmic = snd_soc_component_get_drvdata(component);
 	if (NULL == swr_dmic) {
-		pr_err("%s: swr_dmic_priv is NULL\n", __func__);
+		pr_debug("%s: swr_dmic_priv is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -153,7 +153,7 @@ static int swr_dmic_tx_master_port_get(struct snd_kcontrol *kcontrol,
 	}
 
 	if (slave_port_idx >= SWR_DMIC_MAX_PORTS) {
-		pr_err("%s: invalid slave port id\n", __func__);
+		pr_debug("%s: invalid slave port id\n", __func__);
 		return -EINVAL;
 	}
 
@@ -177,13 +177,13 @@ static int swr_dmic_tx_master_port_put(struct snd_kcontrol *kcontrol,
 	unsigned int slave_port_idx = SWR_DMIC_MAX_PORTS, idx = 0;
 
 	if (NULL == component) {
-		pr_err("%s: swr dmic component is NULL\n", __func__);
+		pr_debug("%s: swr dmic component is NULL\n", __func__);
 		return -EINVAL;
 	}
 
 	swr_dmic = snd_soc_component_get_drvdata(component);
 	if (NULL == swr_dmic) {
-		pr_err("%s: swr_dmic_priv is NULL\n", __func__);
+		pr_debug("%s: swr_dmic_priv is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -195,7 +195,7 @@ static int swr_dmic_tx_master_port_put(struct snd_kcontrol *kcontrol,
 	}
 
 	if (slave_port_idx >= SWR_DMIC_MAX_PORTS) {
-		pr_err("%s: invalid slave port id\n", __func__);
+		pr_debug("%s: invalid slave port id\n", __func__);
 		return -EINVAL;
 	}
 
@@ -446,7 +446,7 @@ static int enable_wcd_codec_supply(struct swr_dmic_priv *swr_dmic, bool enable)
 	struct snd_soc_component *component = swr_dmic->supply_component;
 
 	if (!component) {
-		pr_err("%s: component is NULL\n", __func__);
+		pr_debug("%s: component is NULL\n", __func__);
 		return -EINVAL;
 	}
 	dev_dbg(component->dev, "%s: supply %d micbias: %d enable: %d\n",

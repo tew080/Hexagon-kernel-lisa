@@ -469,7 +469,7 @@ static int dsi_pll_5nm_get_gdsc_status(struct dsi_pll_resource *rsc)
 
 	reg = DSI_PLL_REG_R(rsc->gdsc_base, 0x0);
 	status = reg & BIT(31);
-	pr_err("reg:0x%x status:%d\n", reg, status);
+	pr_debug("reg:0x%x status:%d\n", reg, status);
 
 	return status;
 }
@@ -894,7 +894,7 @@ static int vco_5nm_set_rate(struct clk_hw *hw, unsigned long rate,
 	struct dsi_pll_5nm *pll;
 
 	if (!rsc) {
-		pr_err("pll resource not found\n");
+		pr_debug("pll resource not found\n");
 		return -EINVAL;
 	}
 
@@ -903,7 +903,7 @@ static int vco_5nm_set_rate(struct clk_hw *hw, unsigned long rate,
 
 	pll = rsc->priv;
 	if (!pll) {
-		pr_err("pll configuration not found\n");
+		pr_debug("pll configuration not found\n");
 		return -EINVAL;
 	}
 
@@ -1172,19 +1172,19 @@ static int shadow_vco_5nm_set_rate(struct clk_hw *hw, unsigned long rate,
 	struct dsi_pll_resource *rsc = vco->priv;
 
 	if (!rsc) {
-		pr_err("pll resource not found\n");
+		pr_debug("pll resource not found\n");
 		return -EINVAL;
 	}
 
 	pll = rsc->priv;
 	if (!pll) {
-		pr_err("pll configuration not found\n");
+		pr_debug("pll configuration not found\n");
 		return -EINVAL;
 	}
 
 	rc = dsi_pll_read_stored_trim_codes(rsc, rate);
 	if (rc) {
-		pr_err("cannot find pll codes rate=%ld\n", rate);
+		pr_debug("cannot find pll codes rate=%ld\n", rate);
 		return -EINVAL;
 	}
 	pr_debug("ndx=%d, rate=%lu\n", rsc->index, rate);
@@ -1220,7 +1220,7 @@ static int dsi_pll_5nm_lock_status(struct dsi_pll_resource *pll)
 				       delay_us,
 				       timeout_us);
 	if (rc && !pll->handoff_resources)
-		pr_err("DSI PLL(%d) lock failed, status=0x%08x\n",
+		pr_debug("DSI PLL(%d) lock failed, status=0x%08x\n",
 			pll->index, status);
 
 	return rc;
@@ -1313,7 +1313,7 @@ static int dsi_pll_enable(struct dsi_pll_vco_clk *vco)
 	/* Check for PLL lock */
 	rc = dsi_pll_5nm_lock_status(rsc);
 	if (rc) {
-		pr_err("PLL(%d) lock failed\n", rsc->index);
+		pr_debug("PLL(%d) lock failed\n", rsc->index);
 		goto error;
 	}
 
@@ -1347,7 +1347,7 @@ static void dsi_pll_disable(struct dsi_pll_vco_clk *vco)
 	struct dsi_pll_resource *rsc = vco->priv;
 
 	if (!rsc->pll_on) {
-		pr_err("failed to enable pll (%d) resources\n", rsc->index);
+		pr_debug("failed to enable pll (%d) resources\n", rsc->index);
 		return;
 	}
 
@@ -1397,7 +1397,7 @@ static void vco_5nm_unprepare(struct clk_hw *hw)
 	struct dsi_pll_resource *pll = vco->priv;
 
 	if (!pll) {
-		pr_err("dsi pll resources not available\n");
+		pr_debug("dsi pll resources not available\n");
 		return;
 	}
 
@@ -1448,7 +1448,7 @@ static int vco_5nm_prepare(struct clk_hw *hw)
 	struct dsi_pll_resource *pll = vco->priv;
 
 	if (!pll) {
-		pr_err("dsi pll resources are not available\n");
+		pr_debug("dsi pll resources are not available\n");
 		return -EINVAL;
 	}
 
@@ -1463,7 +1463,7 @@ static int vco_5nm_prepare(struct clk_hw *hw)
 		rc = vco_5nm_set_rate(hw, pll->vco_cached_rate,
 				pll->vco_cached_rate);
 		if (rc) {
-			pr_err("pll(%d) set_rate failed, rc=%d\n",
+			pr_debug("pll(%d) set_rate failed, rc=%d\n",
 			       pll->index, rc);
 			return rc;
 		}
@@ -1491,12 +1491,12 @@ static unsigned long vco_5nm_recalc_rate(struct clk_hw *hw,
 	struct dsi_pll_resource *pll = vco->priv;
 
 	if (!vco->priv) {
-		pr_err("vco priv is null\n");
+		pr_debug("vco priv is null\n");
 		return 0;
 	}
 
 	if (!pll->priv) {
-		pr_err("pll priv is null\n");
+		pr_debug("pll priv is null\n");
 		return 0;
 	}
 	/*
@@ -1515,17 +1515,17 @@ static unsigned long vco_5nm_recalc_rate(struct clk_hw *hw,
 
 	if (!dsi_pll_5nm_get_gdsc_status(pll)) {
 		pll->handoff_resources = false;
-		pr_err("Hand_off_resources not needed since gdsc is off\n");
+		pr_debug("Hand_off_resources not needed since gdsc is off\n");
 		return 0;
 	}
 
 	dsi_pll_detect_phy_mode(pll->priv, pll);
 
 	if (dsi_pll_5nm_lock_status(pll)) {
-		pr_err("PLL not enabled\n");
+		pr_debug("PLL not enabled\n");
 		pll->handoff_resources = false;
 	}
-	pr_err("handoff_resources %s\n", pll->handoff_resources ? "true" : "false");
+	pr_debug("handoff_resources %s\n", pll->handoff_resources ? "true" : "false");
 
 	return rc;
 }
@@ -1596,7 +1596,7 @@ static int bit_clk_set_div(void *context, unsigned int reg, unsigned int div)
 	struct dsi_pll_resource *rsc = context;
 
 	if (!rsc) {
-		pr_err("pll resource not found\n");
+		pr_debug("pll resource not found\n");
 		return -EINVAL;
 	}
 
@@ -2511,14 +2511,14 @@ int dsi_pll_clock_register_5nm(struct platform_device *pdev,
 
 	if (!pdev || !pdev->dev.of_node ||
 		!pll_res || !pll_res->pll_base || !pll_res->phy_base) {
-		pr_err("Invalid params\n");
+		pr_debug("Invalid params\n");
 		return -EINVAL;
 	}
 
 	ndx = pll_res->index;
 
 	if (ndx >= DSI_PLL_MAX) {
-		pr_err("pll index(%d) NOT supported\n", ndx);
+		pr_debug("pll index(%d) NOT supported\n", ndx);
 		return -EINVAL;
 	}
 
@@ -2603,7 +2603,7 @@ int dsi_pll_clock_register_5nm(struct platform_device *pdev,
 			clk = devm_clk_register(&pdev->dev,
 						dsi_pllcc_5nm[i]);
 			if (IS_ERR(clk)) {
-				pr_err("clk registration failed for DSI clock:%d\n",
+				pr_debug("clk registration failed for DSI clock:%d\n",
 							pll_res->index);
 				rc = -EINVAL;
 				goto clk_register_fail;
@@ -2672,7 +2672,7 @@ int dsi_pll_clock_register_5nm(struct platform_device *pdev,
 			clk = devm_clk_register(&pdev->dev,
 						dsi_pllcc_5nm[i]);
 			if (IS_ERR(clk)) {
-				pr_err("clk registration failed for DSI clock:%d\n",
+				pr_debug("clk registration failed for DSI clock:%d\n",
 						pll_res->index);
 				rc = -EINVAL;
 				goto clk_register_fail;
@@ -2685,7 +2685,7 @@ int dsi_pll_clock_register_5nm(struct platform_device *pdev,
 				of_clk_src_onecell_get, clk_data);
 	}
 	if (!rc) {
-		pr_info("Registered DSI PLL ndx=%d, clocks successfully\n",
+		pr_debug("Registered DSI PLL ndx=%d, clocks successfully\n",
 				ndx);
 
 		return rc;

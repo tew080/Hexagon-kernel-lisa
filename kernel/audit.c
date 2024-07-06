@@ -1658,7 +1658,7 @@ static int __init audit_init(void)
 	mutex_init(&audit_cmd_mutex.lock);
 	audit_cmd_mutex.owner = NULL;
 
-	pr_info("initializing netlink subsys (%s)\n",
+	pr_debug("initializing netlink subsys (%s)\n",
 		audit_default ? "enabled" : "disabled");
 	register_pernet_subsys(&audit_net_ops);
 
@@ -1699,7 +1699,7 @@ static int __init audit_enable(char *str)
 		pr_err("audit: error setting audit state (%d)\n",
 		       audit_default);
 
-	pr_info("%s\n", audit_default ?
+	pr_debug("%s\n", audit_default ?
 		"enabled (after initialization)" : "disabled (until reboot)");
 
 	return 1;
@@ -1712,7 +1712,7 @@ static int __init audit_backlog_limit_set(char *str)
 {
 	u32 audit_backlog_limit_arg;
 
-	pr_info("audit_backlog_limit: ");
+	pr_debug("audit_backlog_limit: ");
 	if (kstrtouint(str, 0, &audit_backlog_limit_arg)) {
 		pr_cont("using default of %u, unable to parse %s\n",
 			audit_backlog_limit, str);

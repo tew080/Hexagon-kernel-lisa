@@ -407,7 +407,7 @@ int snd_pcm_add_usr_ctls(struct snd_pcm *pcm, int stream,
 	info->max_length = max_length;
 	buf = kzalloc(max_kctrl_str_len, GFP_KERNEL);
 	if (!buf) {
-		pr_err("%s: buffer allocation failed\n", __func__);
+		pr_debug("%s: buffer allocation failed\n", __func__);
 		kfree(info);
 		return -ENOMEM;
 	}
@@ -425,7 +425,7 @@ int snd_pcm_add_usr_ctls(struct snd_pcm *pcm, int stream,
 	if (!info->kctl) {
 		kfree(info);
 		kfree(knew.name);
-		pr_err("%s: snd_ctl_new failed\n", __func__);
+		pr_debug("%s: snd_ctl_new failed\n", __func__);
 		return -ENOMEM;
 	}
 	info->kctl->private_free = pcm_usr_ctl_private_free;
@@ -433,7 +433,7 @@ int snd_pcm_add_usr_ctls(struct snd_pcm *pcm, int stream,
 	if (err < 0) {
 		kfree(info);
 		kfree(knew.name);
-		pr_err("%s: snd_ctl_add failed:%d\n", __func__,
+		pr_debug("%s: snd_ctl_add failed:%d\n", __func__,
 			err);
 		return -ENOMEM;
 	}
@@ -494,7 +494,7 @@ static void msm_pcm_routing_cfg_pp(int port_id, int copp_idx, int topology,
 		rc = msm_ds2_dap_init(port_id, copp_idx, channels,
 				      is_custom_stereo_on);
 		if (rc < 0)
-			pr_err("%s: DS2 topo_id 0x%x, port %d, CS %d rc %d\n",
+			pr_debug("%s: DS2 topo_id 0x%x, port %d, CS %d rc %d\n",
 				__func__, topology, port_id,
 				is_custom_stereo_on, rc);
 		break;
@@ -504,14 +504,14 @@ static void msm_pcm_routing_cfg_pp(int port_id, int copp_idx, int topology,
 			rc = msm_ds2_dap_init(port_id, copp_idx, channels,
 				is_custom_stereo_on);
 			if (rc < 0)
-				pr_err("%s:DS2 topo_id 0x%x, port %d, rc %d\n",
+				pr_debug("%s:DS2 topo_id 0x%x, port %d, rc %d\n",
 					__func__, topology, port_id, rc);
 		} else {
 			pr_debug("%s: DOLBY_ADM_COPP_TOPOLOGY_ID\n", __func__);
 			rc = msm_dolby_dap_init(port_id, copp_idx, channels,
 						is_custom_stereo_on);
 			if (rc < 0)
-				pr_err("%s: DS1 topo_id 0x%x, port %d, rc %d\n",
+				pr_debug("%s: DS1 topo_id 0x%x, port %d, rc %d\n",
 					__func__, topology, port_id, rc);
 		}
 		break;
@@ -519,7 +519,7 @@ static void msm_pcm_routing_cfg_pp(int port_id, int copp_idx, int topology,
 		pr_debug("%s: TOPOLOGY_ID_AUDIOSPHERE\n", __func__);
 		rc = msm_qti_pp_asphere_init(port_id, copp_idx);
 		if (rc < 0)
-			pr_err("%s: topo_id 0x%x, port %d, copp %d, rc %d\n",
+			pr_debug("%s: topo_id 0x%x, port %d, copp %d, rc %d\n",
 				__func__, topology, port_id, copp_idx, rc);
 		break;
 	default:
@@ -583,7 +583,7 @@ static void msm_pcm_routng_cfg_matrix_map_pp(struct route_payload payload,
 				Q14_GAIN_ZERO_POINT_FIVE,
 				Q14_GAIN_ZERO_POINT_FIVE);
 			if (rc < 0)
-				pr_err("%s: err setting custom stereo\n",
+				pr_debug("%s: err setting custom stereo\n",
 					__func__);
 		}
 	}
@@ -1374,7 +1374,7 @@ static int get_copp_perf_mode(int fe_id, int sess_type, int port)
 	if ((fe_id < 0) || (fe_id >= MSM_FRONTEND_DAI_MAX) ||
 		(port < 0) || (port >= MSM_BACKEND_DAI_MAX) ||
 		(sess_type != SESSION_TYPE_RX && sess_type != SESSION_TYPE_TX)) {
-			pr_err("%s: Input out of bounds\n", __func__);
+			pr_debug("%s: Input out of bounds\n", __func__);
 			return rc;
 		}
 	fdai_mode = fe_dai_map[fe_id][sess_type].perf_mode;
@@ -1416,12 +1416,12 @@ int msm_pcm_routing_send_chmix_cfg(int fe_id, int ip_channel_cnt,
 		 stream_type);
 	if (!is_mm_lsm_fe_id(fe_id)) {
 		/* bad ID assigned in machine driver */
-		pr_err("%s: bad MM ID %d\n", __func__, fe_id);
+		pr_debug("%s: bad MM ID %d\n", __func__, fe_id);
 		return -EINVAL;
 	}
 
 	if (ch_wght_coeff == NULL) {
-		pr_err("%s: Null channel weightage coefficients passed\n",
+		pr_debug("%s: Null channel weightage coefficients passed\n",
 			__func__);
 		return -EINVAL;
 	}
@@ -1444,7 +1444,7 @@ int msm_pcm_routing_send_chmix_cfg(int fe_id, int ip_channel_cnt,
 						op_channel_cnt, ch_wght_coeff,
 						session_type, stream_type);
 			if (rc < 0)
-				pr_err("%s: err setting channel mix config\n",
+				pr_debug("%s: err setting channel mix config\n",
 					__func__);
 		}
 	}
@@ -1530,7 +1530,7 @@ int msm_pcm_routing_set_stream_ec_ref_chmix_cfg(
 	int i, j, ret = 0;
 
 	if (cfg_data == NULL) {
-		pr_err("%s: Received NULL pointer for cfg_data\n", __func__);
+		pr_debug("%s: Received NULL pointer for cfg_data\n", __func__);
 		ret = -EINVAL;
 		goto done;
 	}
@@ -1545,7 +1545,7 @@ int msm_pcm_routing_set_stream_ec_ref_chmix_cfg(
 				 __func__, i, j, cfg_data->channel_weight[i][j]);
 
 	if (fedai_id < 0 || fedai_id >= MSM_FRONTEND_DAI_MAX) {
-		pr_err("%s: Received out of bounds fedai_id %d\n",
+		pr_debug("%s: Received out of bounds fedai_id %d\n",
 			__func__, fedai_id);
 		ret = -EINVAL;
 		goto done;
@@ -1592,7 +1592,7 @@ int msm_pcm_routing_reg_stream_app_type_cfg(
 	int ret = 0;
 
 	if (cfg_data == NULL) {
-		pr_err("%s: Received NULL pointer for cfg_data\n", __func__);
+		pr_debug("%s: Received NULL pointer for cfg_data\n", __func__);
 		ret = -EINVAL;
 		goto done;
 	}
@@ -1605,20 +1605,20 @@ int msm_pcm_routing_reg_stream_app_type_cfg(
 		cfg_data->bit_width, cfg_data->copp_perf_mode);
 
 	if (!is_mm_lsm_fe_id(fedai_id)) {
-		pr_err("%s: Invalid machine driver ID %d\n",
+		pr_debug("%s: Invalid machine driver ID %d\n",
 			__func__, fedai_id);
 		ret = -EINVAL;
 		goto done;
 	}
 	if (session_type != SESSION_TYPE_RX &&
 		session_type != SESSION_TYPE_TX) {
-		pr_err("%s: Invalid session type %d\n",
+		pr_debug("%s: Invalid session type %d\n",
 			__func__, session_type);
 		ret = -EINVAL;
 		goto done;
 	}
 	if (be_id < 0 || be_id >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: Received out of bounds be_id %d\n",
+		pr_debug("%s: Received out of bounds be_id %d\n",
 			__func__, be_id);
 		ret = -EINVAL;
 		goto done;
@@ -1658,27 +1658,27 @@ int msm_pcm_routing_get_stream_app_type_cfg(
 	int ret = 0;
 
 	if (bedai_id == NULL) {
-		pr_err("%s: Received NULL pointer for backend ID\n", __func__);
+		pr_debug("%s: Received NULL pointer for backend ID\n", __func__);
 		ret = -EINVAL;
 		goto done;
 	} else if (cfg_data == NULL) {
-		pr_err("%s: NULL pointer sent for cfg_data\n", __func__);
+		pr_debug("%s: NULL pointer sent for cfg_data\n", __func__);
 		ret = -EINVAL;
 		goto done;
 	} else if (!is_mm_lsm_fe_id(fedai_id)) {
-		pr_err("%s: Invalid FE ID %d\n", __func__, fedai_id);
+		pr_debug("%s: Invalid FE ID %d\n", __func__, fedai_id);
 		ret = -EINVAL;
 		goto done;
 	} else if (session_type != SESSION_TYPE_RX &&
 		   session_type != SESSION_TYPE_TX) {
-		pr_err("%s: Invalid session type %d\n", __func__, session_type);
+		pr_debug("%s: Invalid session type %d\n", __func__, session_type);
 		ret = -EINVAL;
 		goto done;
 	}
 
 	be_id = last_be_id_configured[fedai_id][session_type];
 	if (be_id < 0 || be_id >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: Invalid BE ID %d\n", __func__, be_id);
+		pr_debug("%s: Invalid BE ID %d\n", __func__, be_id);
 		ret = -EINVAL;
 		goto done;
 	}
@@ -1935,7 +1935,7 @@ void msm_pcm_routing_reg_psthr_stream(int fedai_id, int dspst_id,
 
 	if (fedai_id >= MSM_FRONTEND_DAI_MM_MAX_ID) {
 		/* bad ID assigned in machine driver */
-		pr_err("%s: bad MM ID\n", __func__);
+		pr_debug("%s: bad MM ID\n", __func__);
 		return;
 	}
 
@@ -2001,14 +2001,14 @@ int msm_pcm_routing_get_pp_ch_cnt(int fe_id, int session_type)
 	memset(&cfg_data, 0, sizeof(cfg_data));
 
 	if (!is_mm_lsm_fe_id(fe_id)) {
-		pr_err("%s: bad MM ID\n", __func__);
+		pr_debug("%s: bad MM ID\n", __func__);
 		return -EINVAL;
 	}
 
 	ret = msm_pcm_routing_get_stream_app_type_cfg(fe_id, session_type,
 						      &be_id, &cfg_data);
 	if (ret) {
-		pr_err("%s: cannot get stream app type cfg\n", __func__);
+		pr_debug("%s: cannot get stream app type cfg\n", __func__);
 		return ret;
 	}
 
@@ -2036,7 +2036,7 @@ int msm_pcm_routing_reg_phy_compr_stream(int fe_id, int perf_mode,
 		 stream_type, passthr_mode);
 	if (!is_mm_lsm_fe_id(fe_id)) {
 		/* bad ID assigned in machine driver */
-		pr_err("%s: bad MM ID %d\n", __func__, fe_id);
+		pr_debug("%s: bad MM ID %d\n", __func__, fe_id);
 		return -EINVAL;
 	}
 
@@ -2055,7 +2055,7 @@ int msm_pcm_routing_reg_phy_compr_stream(int fe_id, int perf_mode,
 			path_type = ADM_PATH_LIVE_REC;
 		port_type = MSM_AFE_PORT_TYPE_TX;
 	} else {
-		pr_err("%s: invalid stream type %d\n", __func__, stream_type);
+		pr_debug("%s: invalid stream type %d\n", __func__, stream_type);
 		return -EINVAL;
 	}
 
@@ -2150,7 +2150,7 @@ int msm_pcm_routing_reg_phy_compr_stream(int fe_id, int perf_mode,
 					 session_type, passthr_mode, copp_token);
 			if ((copp_idx < 0) ||
 				(copp_idx >= MAX_COPPS_PER_PORT)) {
-				pr_err("%s:adm open failed coppid:%d\n",
+				pr_debug("%s:adm open failed coppid:%d\n",
 				__func__, copp_idx);
 				mutex_unlock(&routing_lock);
 				return -EINVAL;
@@ -2238,7 +2238,7 @@ static int msm_pcm_routing_channel_mixer_v2(int fe_id, bool perf_mode,
 	int ret = 0;
 
 	if (fe_id >= MSM_FRONTEND_DAI_MAX) {
-		pr_err("%s: invalid FE %d\n", __func__, fe_id);
+		pr_debug("%s: invalid FE %d\n", __func__, fe_id);
 		return 0;
 	}
 
@@ -2255,7 +2255,7 @@ static int msm_pcm_routing_channel_mixer_v2(int fe_id, bool perf_mode,
 
 	be_id = channel_mixer_v2[fe_id][sess_type].port_idx - 1;
         if (be_id < 0 || be_id >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: Received out of bounds be_id %d\n",
+		pr_debug("%s: Received out of bounds be_id %d\n",
 				__func__, be_id);
 		return -EINVAL;
 	}
@@ -2299,13 +2299,13 @@ static int msm_pcm_routing_channel_mixer(int fe_id, bool perf_mode,
 	ret = msm_pcm_routing_channel_mixer_v2(fe_id, perf_mode,
 				dspst_id, stream_type);
 	if (ret) {
-		pr_err("%s channel mixer v2 cmd  set failure%d\n", __func__,
+		pr_debug("%s channel mixer v2 cmd  set failure%d\n", __func__,
 				fe_id);
 		return ret;
 	}
 
 	if (fe_id >= MSM_FRONTEND_DAI_MAX) {
-		pr_err("%s: invalid FE %d\n", __func__, fe_id);
+		pr_debug("%s: invalid FE %d\n", __func__, fe_id);
 		return 0;
 	}
 
@@ -2324,7 +2324,7 @@ static int msm_pcm_routing_channel_mixer(int fe_id, bool perf_mode,
 		++i) {
 		be_id = channel_input[fe_id][i] - 1;
 		if (be_id < 0 || be_id >= MSM_BACKEND_DAI_MAX) {
-			pr_err("%s: Received out of bounds be_id %d\n",
+			pr_debug("%s: Received out of bounds be_id %d\n",
 					__func__, be_id);
 			return -EINVAL;
 		}
@@ -2379,7 +2379,7 @@ int msm_pcm_routing_set_channel_mixer_runtime(int fe_id, int be_id, int session_
 
 	be_id--;
 	if (be_id < 0 || be_id >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: invalid backend id %d\n", __func__,
+		pr_debug("%s: invalid backend id %d\n", __func__,
 				be_id);
 		return -EINVAL;
 	}
@@ -2387,7 +2387,7 @@ int msm_pcm_routing_set_channel_mixer_runtime(int fe_id, int be_id, int session_
 	tmp =  msm_pcm_routing_get_portid_copp_idx(fe_id, session_type, &port_id, &copp_idx);
 		
 	if(!tmp){
-		pr_err("%s: Could not find copp_idx for fe_id: %d, will use default copp_idx\n",
+		pr_debug("%s: Could not find copp_idx for fe_id: %d, will use default copp_idx\n",
 			__func__, fe_id);
 		copp_idx = adm_get_default_copp_idx(port_id);
 	}
@@ -2396,14 +2396,14 @@ int msm_pcm_routing_set_channel_mixer_runtime(int fe_id, int be_id, int session_
 
 	if ((params->input_channel < 0) ||
 		(params->input_channel > ADM_MAX_CHANNELS)) {
-		pr_err("%s: invalid input channel %d\n", __func__,
+		pr_debug("%s: invalid input channel %d\n", __func__,
 				params->input_channel);
 		return -EINVAL;
 	}
 
 	if ((params->output_channel < 0) ||
 		(params->output_channel > ADM_MAX_CHANNELS)) {
-		pr_err("%s: invalid output channel %d\n", __func__,
+		pr_debug("%s: invalid output channel %d\n", __func__,
 				params->output_channel);
 		return -EINVAL;
 	}
@@ -2423,7 +2423,7 @@ int msm_pcm_routing_set_channel_mixer_runtime(int fe_id, int be_id, int session_
 					params,
 					0);
 	if (rc) {
-		pr_err("%s: send params failed rc=%d\n", __func__, rc);
+		pr_debug("%s: send params failed rc=%d\n", __func__, rc);
 		rc = -EINVAL;
 	}
 	return rc;
@@ -2452,7 +2452,7 @@ bool msm_pcm_routing_get_portid_copp_idx(int fe_id,
 		 __func__, fe_id, session_type);
 	if (!is_mm_lsm_fe_id(fe_id)) {
 		/* bad ID assigned in machine driver */
-		pr_err("%s: bad MM ID %d\n", __func__, fe_id);
+		pr_debug("%s: bad MM ID %d\n", __func__, fe_id);
 		return -EINVAL;
 	}
 
@@ -2494,7 +2494,7 @@ int msm_pcm_routing_reg_phy_stream(int fedai_id, int perf_mode,
 
 	if (fedai_id >= MSM_FRONTEND_DAI_MM_MAX_ID) {
 		/* bad ID assigned in machine driver */
-		pr_err("%s: bad MM ID %d\n", __func__, fedai_id);
+		pr_debug("%s: bad MM ID %d\n", __func__, fedai_id);
 		return -EINVAL;
 	}
 
@@ -2618,7 +2618,7 @@ int msm_pcm_routing_reg_phy_stream(int fedai_id, int perf_mode,
 					    session_type, passthr_mode, copp_token);
 			if ((copp_idx < 0) ||
 				(copp_idx >= MAX_COPPS_PER_PORT)) {
-				pr_err("%s: adm open failed copp_idx:%d\n",
+				pr_debug("%s: adm open failed copp_idx:%d\n",
 				       __func__, copp_idx);
 				mutex_unlock(&routing_lock);
 				return -EINVAL;
@@ -2684,7 +2684,7 @@ int msm_pcm_routing_reg_phy_stream_v2(int fedai_id, int perf_mode,
 {
 	if (msm_pcm_routing_reg_phy_stream(fedai_id, perf_mode, dspst_id,
 				       stream_type)) {
-		pr_err("%s: failed to reg phy stream\n", __func__);
+		pr_debug("%s: failed to reg phy stream\n", __func__);
 		return -EINVAL;
 	}
 
@@ -2703,7 +2703,7 @@ void msm_pcm_routing_dereg_phy_stream(int fedai_id, int stream_type)
 
 	if (!is_mm_lsm_fe_id(fedai_id)) {
 		/* bad ID assigned in machine driver */
-		pr_err("%s: bad MM ID\n", __func__);
+		pr_debug("%s: bad MM ID\n", __func__);
 		return;
 	}
 
@@ -2767,7 +2767,7 @@ static bool msm_pcm_routing_route_is_set(u16 be_id, u16 fe_id)
 
 	if (!is_mm_lsm_fe_id(fe_id)) {
 		/* recheck FE ID in the mixer control defined in this file */
-		pr_err("%s: bad MM ID\n", __func__);
+		pr_debug("%s: bad MM ID\n", __func__);
 		return rc;
 	}
 
@@ -2798,7 +2798,7 @@ static void msm_pcm_routing_process_audio(u16 reg, u16 val, int set)
 		afe_set_dtmf_gen_rx_portid(msm_bedais[reg].port_id, set);
 	} else if (!is_mm_lsm_fe_id(val)) {
 		/* recheck FE ID in the mixer control defined in this file */
-		pr_err("%s: bad MM ID\n", __func__);
+		pr_debug("%s: bad MM ID\n", __func__);
 		return;
 	}
 
@@ -2914,7 +2914,7 @@ static void msm_pcm_routing_process_audio(u16 reg, u16 val, int set)
 					    session_type, passthr_mode, copp_token);
 			if ((copp_idx < 0) ||
 			    (copp_idx >= MAX_COPPS_PER_PORT)) {
-				pr_err("%s: adm open failed\n", __func__);
+				pr_debug("%s: adm open failed\n", __func__);
 				mutex_unlock(&routing_lock);
 				return;
 			}
@@ -3118,13 +3118,13 @@ static int msm_pcm_get_dev_acdb_id_by_port_id(int port_id)
 	} else if (port_type == MSM_AFE_PORT_TYPE_RX) {
 		session = SESSION_TYPE_RX;
 	} else {
-		pr_err("%s: Invalid port type %d\n", __func__, port_type);
+		pr_debug("%s: Invalid port type %d\n", __func__, port_type);
 		acdb_id = -EINVAL;
 		goto exit;
 	}
 
 	if (be_id < 0) {
-		pr_err("%s: Error getting backend id %d\n", __func__, be_id);
+		pr_debug("%s: Error getting backend id %d\n", __func__, be_id);
 		goto exit;
 	}
 
@@ -3537,7 +3537,7 @@ static void msm_routing_get_lsm_fe_idx(struct snd_kcontrol *kcontrol,
 	} else if (strnstr(kcontrol->id.name, "LSM8", sizeof("LSM8"))) {
 		fe_id = MSM_FRONTEND_DAI_LSM8;
 	} else {
-		pr_err("%s: Invalid kcontrol name:%s\n", __func__,
+		pr_debug("%s: Invalid kcontrol name:%s\n", __func__,
 				kcontrol->id.name);
 		return;
 	}
@@ -3566,7 +3566,7 @@ static int msm_routing_lsm_port_put(struct snd_kcontrol *kcontrol,
 	u8 fe_idx = 0;
 
 	if (mux >= e->items) {
-		pr_err("%s: Invalid mux value %d\n", __func__, mux);
+		pr_debug("%s: Invalid mux value %d\n", __func__, mux);
 		return -EINVAL;
 	}
 
@@ -3626,7 +3626,7 @@ static int msm_routing_lsm_port_put(struct snd_kcontrol *kcontrol,
 		lsm_port = RT_PROXY_PORT_001_TX;
 		break;
 	default:
-		pr_err("Default lsm port");
+		pr_debug("Default lsm port");
 		break;
 	}
 	set_lsm_port(lsm_port);
@@ -3815,7 +3815,7 @@ static int msm_routing_adm_get_backend_idx(struct snd_kcontrol *kcontrol)
 	} else if (strnstr(kcontrol->id.name, "SEC_TDM_RX_0", sizeof("SEC_TDM_RX_0"))) {
 		backend_id = MSM_BACKEND_DAI_SEC_TDM_RX_0;
 	} else {
-		pr_err("%s: unsupported backend id: %s",
+		pr_debug("%s: unsupported backend id: %s",
 			__func__, kcontrol->id.name);
 		return -EINVAL;
 	}
@@ -3886,7 +3886,7 @@ static int msm_routing_get_port_mixer(struct snd_kcontrol *kcontrol,
 	shift = mc->rshift%(sizeof(msm_bedais[mc->shift].port_sessions[0]) * 8);
 
 	if (idx >= BE_DAI_PORT_SESSIONS_IDX_MAX) {
-		pr_err("%s: Invalid idx = %d\n", __func__, idx);
+		pr_debug("%s: Invalid idx = %d\n", __func__, idx);
 		return -EINVAL;
 	}
 
@@ -3913,7 +3913,7 @@ static int msm_routing_put_port_mixer(struct snd_kcontrol *kcontrol,
 	shift = mc->rshift%(sizeof(msm_bedais[mc->shift].port_sessions[0]) * 8);
 
 	if (idx >= BE_DAI_PORT_SESSIONS_IDX_MAX) {
-		pr_err("%s: Invalid idx = %d\n", __func__, idx);
+		pr_debug("%s: Invalid idx = %d\n", __func__, idx);
 		return -EINVAL;
 	}
 
@@ -4439,7 +4439,7 @@ static int get_ec_ref_port_id(int value, int *index)
 		break;
 	default:
 		*index = 0; /* NONE */
-		pr_err("%s: Invalid value %d\n", __func__, value);
+		pr_debug("%s: Invalid value %d\n", __func__, value);
 		port_id = AFE_PORT_INVALID;
 		break;
 	}
@@ -4699,12 +4699,12 @@ static int msm_pcm_asm_format_put(struct snd_kcontrol *kcontrol,
 
 		if((fe_id < MSM_FRONTEND_DAI_MULTIMEDIA1) ||
 		   (fe_id >= MSM_FRONTEND_DAI_MAX)) {
-			pr_err("%s: Received invalid fe_id %lu\n", __func__, fe_id);
+			pr_debug("%s: Received invalid fe_id %lu\n", __func__, fe_id);
 			return -EINVAL;
 		}
 		if((mode < MSM_ASM_PLAYBACK_MODE) ||
 		   (mode >= MSM_ASM_MAX_MODE)) {
-			pr_err("%s: Received invalid mode %lu\n", __func__, mode);
+			pr_debug("%s: Received invalid mode %lu\n", __func__, mode);
 			return -EINVAL;
 		}
 		if((format == SNDRV_PCM_FORMAT_S16_LE) ||
@@ -4724,7 +4724,7 @@ static int msm_pcm_asm_format_put(struct snd_kcontrol *kcontrol,
 					loopback_cfg[fe_id].bit_format = format;
 			}
 		}else {
-			pr_err("%s: Received invalid foramt %lu\n", __func__,
+			pr_debug("%s: Received invalid foramt %lu\n", __func__,
 					asm_cfg_params[2]);
 			return -EINVAL;
 		}
@@ -4970,7 +4970,7 @@ static int msm_routing_ext_ec_put(struct snd_kcontrol *kcontrol,
 	struct snd_soc_dapm_update *update = NULL;
 
 	if (mux >= e->items) {
-		pr_err("%s: Invalid mux value %d\n", __func__, mux);
+		pr_debug("%s: Invalid mux value %d\n", __func__, mux);
 		return -EINVAL;
 	}
 
@@ -25212,7 +25212,7 @@ static int msm_routing_put_app_type_cfg_control(struct snd_kcontrol *kcontrol,
 	memset(app_type_cfg, 0, MAX_APP_TYPES*
 				sizeof(struct msm_pcm_routing_app_type_data));
 	if (num_app_types > MAX_APP_TYPES || num_app_types < 0) {
-		pr_err("%s: number of app types %d is invalid\n",
+		pr_debug("%s: number of app types %d is invalid\n",
 			__func__, num_app_types);
 		return -EINVAL;
 	}
@@ -25353,7 +25353,7 @@ static int msm_routing_put_module_cfg_control(struct snd_kcontrol *kcontrol,
 							(u8 *) &param_value,
 							&packed_param_size);
 				if (ret) {
-					pr_err("%s: Failed to pack params, error %d\n",
+					pr_debug("%s: Failed to pack params, error %d\n",
 					       __func__, ret);
 					goto done;
 				}
@@ -25363,7 +25363,7 @@ static int msm_routing_put_module_cfg_control(struct snd_kcontrol *kcontrol,
 							 packed_params,
 							 packed_param_size);
 				if (ret) {
-					pr_err("%s: Setting param failed with err=%d\n",
+					pr_debug("%s: Setting param failed with err=%d\n",
 						__func__, ret);
 					ret = -EINVAL;
 					goto done;
@@ -25419,7 +25419,7 @@ static int msm_routing_put_lsm_app_type_cfg_control(
 	mutex_lock(&routing_lock);
 	if (ucontrol->value.integer.value[0] < 0 ||
 	    ucontrol->value.integer.value[0] > MAX_APP_TYPES) {
-		pr_err("%s: number of app types %ld is invalid\n",
+		pr_debug("%s: number of app types %ld is invalid\n",
 			__func__, ucontrol->value.integer.value[0]);
 		mutex_unlock(&routing_lock);
 		return -EINVAL;
@@ -25480,7 +25480,7 @@ int msm_routing_get_rms_value_control(struct snd_kcontrol *kcontrol,
 		rc = adm_get_pp_params(SLIMBUS_0_TX, 0, ADM_CLIENT_ID_DEFAULT,
 				       NULL, &param_hdr, (u8 *) param_value);
 		if (rc) {
-			pr_err("%s: get parameters failed:%d\n", __func__, rc);
+			pr_debug("%s: get parameters failed:%d\n", __func__, rc);
 			kfree(param_value);
 			return -EINVAL;
 		}
@@ -25527,7 +25527,7 @@ static int spkr_prot_put_vi_lch_port(struct snd_kcontrol *kcontrol,
 				ret = -EINVAL;
 		}
 	} else {
-		pr_err("%s item value is out of range items = %d\n", __func__,
+		pr_debug("%s item value is out of range items = %d\n", __func__,
 			vi_lch_port);
 		ret = -EINVAL;
 	}
@@ -25566,7 +25566,7 @@ static int spkr_prot_put_vi_rch_port(struct snd_kcontrol *kcontrol,
 				ret = -EINVAL;
 		}
 	} else {
-		pr_err("%s item value is out of range items = %d\n", __func__,
+		pr_debug("%s item value is out of range items = %d\n", __func__,
 			vi_rch_port);
 		ret = -EINVAL;
 	}
@@ -32149,7 +32149,7 @@ static int msm_pcm_routing_hw_params(struct snd_pcm_substream *substream,
 	unsigned int be_id = rtd->dai_link->id;
 
 	if (be_id >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: unexpected BE id %d\n", __func__, be_id);
+		pr_debug("%s: unexpected BE id %d\n", __func__, be_id);
 		return -EINVAL;
 	}
 
@@ -32177,7 +32177,7 @@ static int msm_pcm_routing_close(struct snd_pcm_substream *substream)
 		 __func__, substream->pcm->id);
 
 	if (be_id >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: unexpected BE id %d\n", __func__, be_id);
+		pr_debug("%s: unexpected BE id %d\n", __func__, be_id);
 		return -EINVAL;
 	}
 
@@ -32255,7 +32255,7 @@ static int msm_pcm_routing_prepare(struct snd_pcm_substream *substream)
 		 __func__, substream->pcm->id);
 
 	if (be_id >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: unexpected BE id %d\n", __func__, be_id);
+		pr_debug("%s: unexpected BE id %d\n", __func__, be_id);
 		return -EINVAL;
 	}
 
@@ -32373,7 +32373,7 @@ static int msm_pcm_routing_prepare(struct snd_pcm_substream *substream)
 					    session_type, fdai->passthr_mode, copp_token);
 			if ((copp_idx < 0) ||
 				(copp_idx >= MAX_COPPS_PER_PORT)) {
-				pr_err("%s: adm open failed\n", __func__);
+				pr_debug("%s: adm open failed\n", __func__);
 				mutex_unlock(&routing_lock);
 				return -EINVAL;
 			}
@@ -32395,7 +32395,7 @@ static int msm_pcm_routing_prepare(struct snd_pcm_substream *substream)
 				msm_pcm_routing_cfg_pp(port_id, copp_idx,
 						       topology, channels);
 			if(msm_pcm_routing_channel_mixer(i, fdai->perf_mode,fdai->strm_id, session_type)){
-				pr_err("%s: failed to send channel mixer \n", __func__);
+				pr_debug("%s: failed to send channel mixer \n", __func__);
 			}
 		}
 	}
@@ -32472,7 +32472,7 @@ static int msm_routing_send_device_pp_params(int port_id, int copp_idx,
 
 	if (port_id != HDMI_RX && port_id != DISPLAY_PORT_RX
 			&& port_id != HDMI_RX_MS) {
-		pr_err("%s: Device pp params on invalid port %d, copp_idx %d, fe_id %d\n",
+		pr_debug("%s: Device pp params on invalid port %d, copp_idx %d, fe_id %d\n",
 			__func__, port_id, copp_idx, fe_id);
 		return  -EINVAL;
 	}
@@ -32492,14 +32492,14 @@ static int msm_routing_send_device_pp_params(int port_id, int copp_idx,
 			break;
 	}
 	if (index >= MSM_BACKEND_DAI_PP_PARAMS_REQ_MAX) {
-		pr_err("%s: Invalid backend pp params index %d\n",
+		pr_debug("%s: Invalid backend pp params index %d\n",
 			__func__, index);
 		return -EINVAL;
 	}
 
 	topo_id = adm_get_topology_for_port_copp_idx(port_id, copp_idx);
 	if (topo_id != COMPRESSED_PASSTHROUGH_DEFAULT_TOPOLOGY) {
-		pr_err("%s: Invalid passthrough topology 0x%x\n",
+		pr_debug("%s: Invalid passthrough topology 0x%x\n",
 			__func__, topo_id);
 		return -EINVAL;
 	}
@@ -32544,7 +32544,7 @@ static uint32_t msm_routing_get_topology(size_t data_size, void *data)
 	/* Retrieve cal_info size from cal data*/
 	if (data_size < sizeof(struct audio_cal_type_basic) +
 			sizeof(struct audio_cal_info_adm_top)) {
-		pr_err("%s: Invalid data size: %zd\n", __func__, data_size);
+		pr_debug("%s: Invalid data size: %zd\n", __func__, data_size);
 		goto done;
 	}
 	size = data_size - sizeof(struct audio_cal_type_basic);
@@ -32605,7 +32605,7 @@ static int msm_audio_get_copp_idx_from_port_id(int port_id, int session_type,
 
 	ret = q6audio_validate_port(port_id);
 	if (ret < 0) {
-		pr_err("%s: port validation failed id 0x%x ret %d\n",
+		pr_debug("%s: port validation failed id 0x%x ret %d\n",
 			__func__, port_id, ret);
 
 		ret = -EINVAL;
@@ -32617,7 +32617,7 @@ static int msm_audio_get_copp_idx_from_port_id(int port_id, int session_type,
 			break;
 	}
 	if (be_idx >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: Invalid be id %d\n", __func__, be_idx);
+		pr_debug("%s: Invalid be id %d\n", __func__, be_idx);
 
 		ret = -EINVAL;
 		goto done;
@@ -32641,7 +32641,7 @@ static int msm_audio_get_copp_idx_from_port_id(int port_id, int session_type,
 			break;
 	}
 	if (i >= MSM_FRONTEND_DAI_MAX) {
-		pr_err("%s: Invalid FE, exiting\n", __func__);
+		pr_debug("%s: Invalid FE, exiting\n", __func__);
 
 		ret = -EINVAL;
 		goto done;
@@ -32667,7 +32667,7 @@ static int msm_routing_put_copp_dtmf_module_enable
 	be_id_val = *be_id;
 
 	if((be_id_val < 0) || (be_id_val >= MSM_BACKEND_DAI_MAX)) {
-		pr_err("%s: received invalid be_id %lu\n", __func__, be_id_val);
+		pr_debug("%s: received invalid be_id %lu\n", __func__, be_id_val);
 		return -EINVAL;
 	}
 
@@ -32676,7 +32676,7 @@ static int msm_routing_put_copp_dtmf_module_enable
 					    &copp_idx);
 
 	if (rc) {
-		pr_err(" %s:failure in getting copp_idx\n", __func__);
+		pr_debug(" %s:failure in getting copp_idx\n", __func__);
 		return rc;
 	}
 
@@ -32689,7 +32689,7 @@ static int msm_routing_put_copp_dtmf_module_enable
 	rc = adm_pack_and_set_one_pp_param(port_id, copp_idx, param_hdr,
 					   (u8 *)&flag);
 	if (rc)
-		pr_err("%s: Failed to set adm_pack_and_set_one_pp_param, err %d\n",
+		pr_debug("%s: Failed to set adm_pack_and_set_one_pp_param, err %d\n",
 					__func__, rc);
 
 	return rc;
@@ -32715,13 +32715,13 @@ static int adsp_copp_event_handler(uint32_t opcode,
 	int ret = 0;
 
 	if (!rtd) {
-		pr_err("%s: rtd is NULL\n", __func__);
+		pr_debug("%s: rtd is NULL\n", __func__);
 		return -EINVAL;
 	}
 
 	ret = msm_adsp_copp_inform_mixer_ctl(rtd, payload);
 	if (ret) {
-		pr_err("%s: failed to inform mixer ctrl. err = %d\n",
+		pr_debug("%s: failed to inform mixer ctrl. err = %d\n",
 			__func__, ret);
 		return -EINVAL;
 	}
@@ -32742,7 +32742,7 @@ static int msm_routing_get_copp_callback_event(struct snd_kcontrol *kcontrol,
 				kcontrol->private_data;
 
 	if (kctl_prtd == NULL) {
-		pr_err("%s: ADM PP event queue is not initialized.\n",
+		pr_debug("%s: ADM PP event queue is not initialized.\n",
 				__func__);
 		ret = -EINVAL;
 		goto done;
@@ -32751,7 +32751,7 @@ static int msm_routing_get_copp_callback_event(struct snd_kcontrol *kcontrol,
 	spin_lock_irqsave(&kctl_prtd->prtd_spin_lock, spin_flags);
 	pr_debug("%s: %d events in queue.\n", __func__, kctl_prtd->event_count);
 	if (list_empty(&kctl_prtd->event_queue)) {
-		pr_err("%s: ADM PP event queue is empty.\n", __func__);
+		pr_debug("%s: ADM PP event queue is empty.\n", __func__);
 		ret = -EINVAL;
 		spin_unlock_irqrestore(&kctl_prtd->prtd_spin_lock, spin_flags);
 		goto done;
@@ -32890,7 +32890,7 @@ static int msm_routing_put_device_pp_params_mixer(struct snd_kcontrol *kcontrol,
 			break;
 	}
 	if (index >= MSM_BACKEND_DAI_PP_PARAMS_REQ_MAX) {
-		pr_err("%s: Invalid pp params backend index %d\n",
+		pr_debug("%s: Invalid pp params backend index %d\n",
 			__func__, index);
 		return -EINVAL;
 	}
@@ -33011,14 +33011,14 @@ static int msm_routing_put_port_chmap_mixer(struct snd_kcontrol *kcontrol,
 	int i;
 
 	if (be_idx >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: Invalid Backend index %d\n",  __func__, be_idx);
+		pr_debug("%s: Invalid Backend index %d\n",  __func__, be_idx);
 		return -EINVAL;
 	}
 
 	for (i = 0; i < PCM_FORMAT_MAX_NUM_CHANNEL_V8; i++) {
 		channel_map[i] = (char)(ucontrol->value.integer.value[i + 1]);
 		if (channel_map[i] > PCM_MAX_CHMAP_ID) {
-			pr_err("%s: Invalid channel map %d\n",
+			pr_debug("%s: Invalid channel map %d\n",
 				__func__, channel_map[i]);
 			return -EINVAL;
 		}
@@ -33052,7 +33052,7 @@ static int msm_routing_be_dai_name_table_tlv_get(struct snd_kcontrol *kcontrol,
 	int ret = 0;
 
 	if (size < sizeof(be_dai_name_table)) {
-		pr_err("%s: invalid size %d requested, returning\n",
+		pr_debug("%s: invalid size %d requested, returning\n",
 			__func__, size);
 		ret = -EINVAL;
 		goto done;
@@ -33072,7 +33072,7 @@ static int msm_routing_be_dai_name_table_tlv_get(struct snd_kcontrol *kcontrol,
 	ret = copy_to_user(bytes, &be_dai_name_table,
 			   sizeof(be_dai_name_table));
 	if (ret) {
-		pr_err("%s: failed to copy be_dai_name_table\n", __func__);
+		pr_debug("%s: failed to copy be_dai_name_table\n", __func__);
 		ret = -EFAULT;
 	}
 
@@ -33108,17 +33108,17 @@ static int msm_routing_put_mclk_src_cfg(struct snd_kcontrol *kcontrol,
 	mclk_freq = ucontrol->value.integer.value[2];
 
 	if (be_idx < 0 || be_idx >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: Invalid be id %d\n", __func__, be_idx);
+		pr_debug("%s: Invalid be id %d\n", __func__, be_idx);
 		return -EINVAL;
 	}
 
 	if (mclk_src_id < MCLK_SRC_INT || mclk_src_id >= MCLK_SRC_MAX) {
-		pr_err("%s: Invalid MCLK src %d\n", __func__, mclk_src_id);
+		pr_debug("%s: Invalid MCLK src %d\n", __func__, mclk_src_id);
 		return -EINVAL;
 	}
 
 	if (msm_bedais[be_idx].active) {
-		pr_err("%s:BE is active %d, cannot set mclk clock src\n",
+		pr_debug("%s:BE is active %d, cannot set mclk clock src\n",
 			__func__, be_idx);
 		return -EINVAL;
 	}
@@ -33128,7 +33128,7 @@ static int msm_routing_put_mclk_src_cfg(struct snd_kcontrol *kcontrol,
 		  __func__, be_idx, mclk_src_id, mclk_freq, port_id);
 	ret = afe_set_mclk_src_cfg(port_id, mclk_src_id, mclk_freq);
 	if (ret < 0)
-		pr_err("%s: failed to set mclk src cfg\n", __func__);
+		pr_debug("%s: failed to set mclk src cfg\n", __func__);
 
 	return ret;
 
@@ -33403,7 +33403,7 @@ static int asrc_get_module_location(struct asrc_module_config_params *params,
 	mutex_lock(&routing_lock);
 
 	if (NULL == params || NULL == copp_index || NULL == port_id) {
-		pr_err("%s: Invalid params\n", __func__);
+		pr_debug("%s: Invalid params\n", __func__);
 		ret = -EINVAL;
 		goto done;
 	}
@@ -33417,19 +33417,19 @@ static int asrc_get_module_location(struct asrc_module_config_params *params,
 			  MSM_AFE_PORT_TYPE_TX;
 
 	if (afe_get_port_type(bedai->port_id) != port_type) {
-		pr_err("%s: port_type not match: be_dai %d type %d\n",
+		pr_debug("%s: port_type not match: be_dai %d type %d\n",
 			__func__, be_id, port_type);
 		ret = -EINVAL;
 		goto done;
 	}
 	if (!bedai->active) {
-		pr_err("%s: be_dai %d not active\n", __func__, be_id);
+		pr_debug("%s: be_dai %d not active\n", __func__, be_id);
 		ret = 0;
 		goto done;
 	}
 
 	if (!test_bit(fe_id, &bedai->fe_sessions[0])) {
-		pr_err("%s: fe %d session not active\n", __func__, fe_id);
+		pr_debug("%s: fe %d session not active\n", __func__, fe_id);
 		ret = -EINVAL;
 		goto done;
 	}
@@ -33482,7 +33482,7 @@ static int asrc_pack_and_set_params(int module_id, int instance_id, int param_id
 				(u8 *) params,
 				&packed_param_size);
 	if (ret) {
-		pr_err("%s: Failed to pack pp params, error=%d\n",
+		pr_debug("%s: Failed to pack pp params, error=%d\n",
 			__func__, ret);
 		goto done;
 	}
@@ -33492,7 +33492,7 @@ static int asrc_pack_and_set_params(int module_id, int instance_id, int param_id
 				 packed_params,
 				 packed_param_size);
 	if (ret) {
-		pr_err("%s: Failed to set pp params, error=%d\n",
+		pr_debug("%s: Failed to set pp params, error=%d\n",
 			__func__, ret);
 		goto done;
 	}
@@ -33515,7 +33515,7 @@ static int asrc_enable_module(struct asrc_module_config_params *params)
 
 	ret = asrc_get_module_location(params, &copp_idx, &port_id);
 	if (ret) {
-		pr_err("%s: Failed to get module copp_idx, ret=%d\n",
+		pr_debug("%s: Failed to get module copp_idx, ret=%d\n",
 			__func__, ret);
 		goto done;
 	}
@@ -33524,7 +33524,7 @@ static int asrc_enable_module(struct asrc_module_config_params *params)
 					param_id, param_size,
 					param_module, port_id, copp_idx);
 	if (ret) {
-		pr_err("%s: Failed to set module params, ret=%d \
+		pr_debug("%s: Failed to set module params, ret=%d \
 			module_id=0x%x, instance_id=0x%x, param_id=0x%x, \
 			param_size=%d, port_id=0x%x, copp_idx=%d\n",
 			__func__, ret, module_id, instance_id, param_id,
@@ -33552,7 +33552,7 @@ static int asrc_put_drift_to_module(
 
 	ret = asrc_get_module_location(params, &copp_idx, &port_id);
 	if (ret) {
-		pr_err("%s: Failed to get module copp_idx, ret=%d\n",
+		pr_debug("%s: Failed to get module copp_idx, ret=%d\n",
 			__func__, ret);
 		goto done;
 	}
@@ -33561,7 +33561,7 @@ static int asrc_put_drift_to_module(
 					param_id, param_size,
 					param_module, port_id, copp_idx);
 	if (ret) {
-		pr_err("%s: Failed to set module params, ret=%d \
+		pr_debug("%s: Failed to set module params, ret=%d \
 			module_id=0x%x, instance_id=0x%x, param_id=0x%x, \
 			param_size=%d, port_id=0x%x, copp_idx=%d\n",
 			__func__, ret, module_id, instance_id, param_id,
@@ -33585,36 +33585,36 @@ static void get_drift_and_put_asrc(struct work_struct *work)
 
 	delayed_drift_work = to_delayed_work(work);
 	if (NULL == delayed_drift_work) {
-		pr_err("%s: Failed to get delayed drift work\n", __func__);
+		pr_debug("%s: Failed to get delayed drift work\n", __func__);
 		goto exit;
 	}
 	p_asrc_cfg = container_of(delayed_drift_work, struct asrc_config,
 				drift_work);
 	if (NULL == p_asrc_cfg) {
-		pr_err("%s: Failed to get asrc config\n", __func__);
+		pr_debug("%s: Failed to get asrc config\n", __func__);
 		goto exit;
 	}
 
 	mutex_lock(&p_asrc_cfg->lock);
 	be_id = msm_pcm_get_be_id_from_port_id(p_asrc_cfg->drift_src);
 	if (be_id < 0 || be_id >= MSM_BACKEND_DAI_MAX) {
-		pr_err("%s: Invalid be_id %d\n", __func__, be_id);
+		pr_debug("%s: Invalid be_id %d\n", __func__, be_id);
 		goto done;
 	}
 	bedai = &msm_bedais[be_id];
 	if (!bedai->active) {
-		pr_err("%s: bedai %d not active\n", __func__, be_id);
+		pr_debug("%s: bedai %d not active\n", __func__, be_id);
 		goto done;
 	}
 
 	ret = afe_get_av_dev_drift(&timing_stats, p_asrc_cfg->drift_src);
 	if (ret)
-		pr_err("%s: Failed to get drift\n", __func__);
+		pr_debug("%s: Failed to get drift\n", __func__);
 	else
 		pr_debug("%s: Succeed to get drift\n", __func__);
 
         if (NULL == &p_asrc_cfg->modules) {
-                pr_err("%s: Failed to get asrc config modules\n", __func__);
+                pr_debug("%s: Failed to get asrc config modules\n", __func__);
                 goto exit;
         }
 	list_for_each_safe(ptr, next, &p_asrc_cfg->modules) {
@@ -33624,7 +33624,7 @@ static void get_drift_and_put_asrc(struct work_struct *work)
 			ret = asrc_put_drift_to_module(&timing_stats,
 							&config_node->params);
 			if (ret)
-				pr_err("%s: Failed to set asrc\n", __func__);
+				pr_debug("%s: Failed to set asrc\n", __func__);
 			else
 				pr_debug("%s: src_cfg[%d].drift_src=0x%x, \
 					drift=%d\n", __func__, p_asrc_cfg->idx,
@@ -33734,7 +33734,7 @@ static int asrc_start(void)
 		|| dir >= MAX_SESSION_TYPES
 		|| be_id >= MSM_BACKEND_DAI_MAX
 		|| m_io >= MODULE_PORT_MAX) {
-		pr_err("%s:Invalid input param: enable=%d, fe_id=%d, dir=%d, \
+		pr_debug("%s:Invalid input param: enable=%d, fe_id=%d, dir=%d, \
 			be_id=%d, m_io=%d, param=0x%x\n", __func__, enable,
 			fe_id, dir, be_id, m_io, param);
 		ret = -EINVAL;
@@ -33770,7 +33770,7 @@ static int asrc_start(void)
 	case ENABLE_ASRC_DRIFT_HW:
 		idx = get_drift_src_idx(param & ~0x0100); /* group device */
 		if (idx < 0 || idx >= DRIFT_SRC_MAX) {
-			pr_err("%s Invalid index: %d\n", __func__, idx);
+			pr_debug("%s Invalid index: %d\n", __func__, idx);
 			ret = -EINVAL;
 			goto done;
 		}
@@ -33782,7 +33782,7 @@ static int asrc_start(void)
 	case DISABLE_ASRC:
 		break;
 	default:
-		pr_err("%s Invalid enable: %d\n", __func__, enable);
+		pr_debug("%s Invalid enable: %d\n", __func__, enable);
 		ret = -EINVAL;
 		goto done;
 	};
@@ -33792,7 +33792,7 @@ static int asrc_start(void)
 		params.enable = 0;
 		if (module_enabled) {
 			if (asrc_enable_module(&params)) {
-				pr_err("%s: Failed to disable module\n",
+				pr_debug("%s: Failed to disable module\n",
 					__func__);
 				ret = -EINVAL;
 				goto done;
@@ -33808,7 +33808,7 @@ static int asrc_start(void)
 	if (!asrc_module_and_port_exists_in_config(idx, &params)) {
 		if (!module_enabled) {
 			if (asrc_enable_module(&params)) {
-				pr_err("%s: Failed to enable module\n",
+				pr_debug("%s: Failed to enable module\n",
 					__func__);
 				ret = -EINVAL;
 				goto done;
@@ -33816,7 +33816,7 @@ static int asrc_start(void)
 		}
 		ret = asrc_add_module_and_port_to_config(idx, &params);
 		if (ret) {
-			pr_err("%s: Failed to add module and port to config\n",
+			pr_debug("%s: Failed to add module and port to config\n",
 				__func__);
 			ret = -EINVAL;
 			goto done;
@@ -33857,7 +33857,7 @@ static int msm_dai_q6_asrc_start_put(
 	if(asrc_enable)
 		ret = asrc_start();
 	else
-		pr_err(" %s : ASRC config is not set.\n",__func__);
+		pr_debug(" %s : ASRC config is not set.\n",__func__);
 
 	return ret;
 }
@@ -33910,7 +33910,7 @@ static int msm_internal_mclk_ctl_put(struct snd_kcontrol *kcontrol,
 
 	mclk_id = ucontrol->value.integer.value[0];
 	if (mclk_id != IDX_MCLK2) {
-		pr_err("%s: invalid mclk id: %d, only mclk2 is supported now\n",
+		pr_debug("%s: invalid mclk id: %d, only mclk2 is supported now\n",
 			__func__, mclk_id);
 		return -EINVAL;
 	}
@@ -33920,7 +33920,7 @@ static int msm_internal_mclk_ctl_put(struct snd_kcontrol *kcontrol,
 	ret = afe_set_lpass_clock_v2(AFE_PORT_ID_TDM_PORT_RANGE_START,
 				     &internal_mclk);
 	if (ret)
-		pr_err("%s: mclk enable failed %d\n", __func__, ret);
+		pr_debug("%s: mclk enable failed %d\n", __func__, ret);
 
 	return ret;
 }
@@ -34115,7 +34115,7 @@ static int msm_routing_probe(struct snd_soc_component *component)
 	kctl = snd_soc_card_get_kcontrol(component->dapm.card,
 				"ADSP COPP Callback Event");
 	if (!kctl) {
-		pr_err("%s: failed to get kctl %s.\n", __func__,
+		pr_debug("%s: failed to get kctl %s.\n", __func__,
 				"ADSP COPP Callback Event");
 		return -EINVAL;
 	}
@@ -34179,7 +34179,7 @@ int msm_routing_check_backend_enabled(int fedai_id)
 
 	if (fedai_id >= MSM_FRONTEND_DAI_MM_MAX_ID) {
 		/* bad ID assigned in machine driver */
-		pr_err("%s: bad MM ID\n", __func__);
+		pr_debug("%s: bad MM ID\n", __func__);
 		return 0;
 	}
 	for (i = 0; i < MSM_BACKEND_DAI_MAX; i++) {
@@ -34201,7 +34201,7 @@ static int get_cal_type_index(int32_t cal_type)
 		ret = ADM_LSM_TOPOLOGY_CAL_TYPE_IDX;
 		break;
 	default:
-		pr_err("%s: Invalid cal type %d\n", __func__, cal_type);
+		pr_debug("%s: Invalid cal type %d\n", __func__, cal_type);
 	}
 	return ret;
 }
@@ -34215,7 +34215,7 @@ static int msm_routing_set_cal(int32_t cal_type,
 
 	cal_index = get_cal_type_index(cal_type);
 	if (cal_index < 0) {
-		pr_err("%s: Could not get cal index %d\n",
+		pr_debug("%s: Could not get cal index %d\n",
 			__func__, cal_index);
 		ret = -EINVAL;
 		goto done;
@@ -34223,7 +34223,7 @@ static int msm_routing_set_cal(int32_t cal_type,
 
 	ret = cal_utils_set_cal(data_size, data, cal_data[cal_index], 0, NULL);
 	if (ret < 0) {
-		pr_err("%s: cal_utils_set_cal failed, ret = %d, cal type = %d!\n",
+		pr_debug("%s: cal_utils_set_cal failed, ret = %d, cal type = %d!\n",
 			__func__, ret, cal_type);
 		ret = -EINVAL;
 		goto done;
@@ -34263,7 +34263,7 @@ static int msm_routing_init_cal_data(void)
 	ret = cal_utils_create_cal_types(MAX_ROUTING_CAL_TYPES, &cal_data[0],
 		&cal_type_info[0]);
 	if (ret < 0) {
-		pr_err("%s: could not create cal type!\n",
+		pr_debug("%s: could not create cal type!\n",
 			__func__);
 		ret = -EINVAL;
 		goto err;
@@ -34279,7 +34279,7 @@ int __init msm_soc_routing_platform_init(void)
 {
 	mutex_init(&routing_lock);
 	if (msm_routing_init_cal_data())
-		pr_err("%s: could not init cal data!\n", __func__);
+		pr_debug("%s: could not init cal data!\n", __func__);
 
 	afe_set_routing_callback(
 		(routing_cb)msm_pcm_get_dev_acdb_id_by_port_id);

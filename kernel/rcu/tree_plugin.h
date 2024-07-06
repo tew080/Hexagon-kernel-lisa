@@ -25,57 +25,57 @@ static bool __read_mostly rcu_nocb_poll;    /* Offload kthread are to poll. */
 static void __init rcu_bootup_announce_oddness(void)
 {
 	if (IS_ENABLED(CONFIG_RCU_TRACE))
-		pr_info("\tRCU event tracing is enabled.\n");
+		pr_debug("\tRCU event tracing is enabled.\n");
 	if ((IS_ENABLED(CONFIG_64BIT) && RCU_FANOUT != 64) ||
 	    (!IS_ENABLED(CONFIG_64BIT) && RCU_FANOUT != 32))
-		pr_info("\tCONFIG_RCU_FANOUT set to non-default value of %d.\n",
+		pr_debug("\tCONFIG_RCU_FANOUT set to non-default value of %d.\n",
 			RCU_FANOUT);
 	if (rcu_fanout_exact)
-		pr_info("\tHierarchical RCU autobalancing is disabled.\n");
+		pr_debug("\tHierarchical RCU autobalancing is disabled.\n");
 	if (IS_ENABLED(CONFIG_RCU_FAST_NO_HZ))
-		pr_info("\tRCU dyntick-idle grace-period acceleration is enabled.\n");
+		pr_debug("\tRCU dyntick-idle grace-period acceleration is enabled.\n");
 	if (IS_ENABLED(CONFIG_PROVE_RCU))
-		pr_info("\tRCU lockdep checking is enabled.\n");
+		pr_debug("\tRCU lockdep checking is enabled.\n");
 	if (RCU_NUM_LVLS >= 4)
-		pr_info("\tFour(or more)-level hierarchy is enabled.\n");
+		pr_debug("\tFour(or more)-level hierarchy is enabled.\n");
 	if (RCU_FANOUT_LEAF != 16)
-		pr_info("\tBuild-time adjustment of leaf fanout to %d.\n",
+		pr_debug("\tBuild-time adjustment of leaf fanout to %d.\n",
 			RCU_FANOUT_LEAF);
 	if (rcu_fanout_leaf != RCU_FANOUT_LEAF)
-		pr_info("\tBoot-time adjustment of leaf fanout to %d.\n",
+		pr_debug("\tBoot-time adjustment of leaf fanout to %d.\n",
 			rcu_fanout_leaf);
 	if (nr_cpu_ids != NR_CPUS)
-		pr_info("\tRCU restricting CPUs from NR_CPUS=%d to nr_cpu_ids=%u.\n", NR_CPUS, nr_cpu_ids);
+		pr_debug("\tRCU restricting CPUs from NR_CPUS=%d to nr_cpu_ids=%u.\n", NR_CPUS, nr_cpu_ids);
 #ifdef CONFIG_RCU_BOOST
-	pr_info("\tRCU priority boosting: priority %d delay %d ms.\n",
+	pr_debug("\tRCU priority boosting: priority %d delay %d ms.\n",
 		kthread_prio, CONFIG_RCU_BOOST_DELAY);
 #endif
 	if (blimit != DEFAULT_RCU_BLIMIT)
-		pr_info("\tBoot-time adjustment of callback invocation limit to %ld.\n", blimit);
+		pr_debug("\tBoot-time adjustment of callback invocation limit to %ld.\n", blimit);
 	if (qhimark != DEFAULT_RCU_QHIMARK)
-		pr_info("\tBoot-time adjustment of callback high-water mark to %ld.\n", qhimark);
+		pr_debug("\tBoot-time adjustment of callback high-water mark to %ld.\n", qhimark);
 	if (qlowmark != DEFAULT_RCU_QLOMARK)
-		pr_info("\tBoot-time adjustment of callback low-water mark to %ld.\n", qlowmark);
+		pr_debug("\tBoot-time adjustment of callback low-water mark to %ld.\n", qlowmark);
 	if (jiffies_till_first_fqs != ULONG_MAX)
-		pr_info("\tBoot-time adjustment of first FQS scan delay to %ld jiffies.\n", jiffies_till_first_fqs);
+		pr_debug("\tBoot-time adjustment of first FQS scan delay to %ld jiffies.\n", jiffies_till_first_fqs);
 	if (jiffies_till_next_fqs != ULONG_MAX)
-		pr_info("\tBoot-time adjustment of subsequent FQS scan delay to %ld jiffies.\n", jiffies_till_next_fqs);
+		pr_debug("\tBoot-time adjustment of subsequent FQS scan delay to %ld jiffies.\n", jiffies_till_next_fqs);
 	if (jiffies_till_sched_qs != ULONG_MAX)
-		pr_info("\tBoot-time adjustment of scheduler-enlistment delay to %ld jiffies.\n", jiffies_till_sched_qs);
+		pr_debug("\tBoot-time adjustment of scheduler-enlistment delay to %ld jiffies.\n", jiffies_till_sched_qs);
 	if (rcu_kick_kthreads)
-		pr_info("\tKick kthreads if too-long grace period.\n");
+		pr_debug("\tKick kthreads if too-long grace period.\n");
 	if (IS_ENABLED(CONFIG_DEBUG_OBJECTS_RCU_HEAD))
-		pr_info("\tRCU callback double-/use-after-free debug enabled.\n");
+		pr_debug("\tRCU callback double-/use-after-free debug enabled.\n");
 	if (gp_preinit_delay)
-		pr_info("\tRCU debug GP pre-init slowdown %d jiffies.\n", gp_preinit_delay);
+		pr_debug("\tRCU debug GP pre-init slowdown %d jiffies.\n", gp_preinit_delay);
 	if (gp_init_delay)
-		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
+		pr_debug("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
 	if (gp_cleanup_delay)
-		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_cleanup_delay);
+		pr_debug("\tRCU debug GP init slowdown %d jiffies.\n", gp_cleanup_delay);
 	if (!use_softirq)
-		pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
+		pr_debug("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
 	if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
-		pr_info("\tRCU debug extended QS entry/exit.\n");
+		pr_debug("\tRCU debug extended QS entry/exit.\n");
 	rcupdate_announce_bootup_oddness();
 }
 
@@ -89,7 +89,7 @@ static void rcu_read_unlock_special(struct task_struct *t);
  */
 static void __init rcu_bootup_announce(void)
 {
-	pr_info("Preemptible hierarchical RCU implementation.\n");
+	pr_debug("Preemptible hierarchical RCU implementation.\n");
 	rcu_bootup_announce_oddness();
 }
 
@@ -751,16 +751,16 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
 	struct rcu_node *rnp1;
 
 	raw_lockdep_assert_held_rcu_node(rnp);
-	pr_info("%s: grp: %d-%d level: %d ->gp_seq %ld ->completedqs %ld\n",
+	pr_debug("%s: grp: %d-%d level: %d ->gp_seq %ld ->completedqs %ld\n",
 		__func__, rnp->grplo, rnp->grphi, rnp->level,
 		(long)rnp->gp_seq, (long)rnp->completedqs);
 	for (rnp1 = rnp; rnp1; rnp1 = rnp1->parent)
-		pr_info("%s: %d:%d ->qsmask %#lx ->qsmaskinit %#lx ->qsmaskinitnext %#lx\n",
+		pr_debug("%s: %d:%d ->qsmask %#lx ->qsmaskinit %#lx ->qsmaskinitnext %#lx\n",
 			__func__, rnp1->grplo, rnp1->grphi, rnp1->qsmask, rnp1->qsmaskinit, rnp1->qsmaskinitnext);
-	pr_info("%s: ->gp_tasks %p ->boost_tasks %p ->exp_tasks %p\n",
+	pr_debug("%s: ->gp_tasks %p ->boost_tasks %p ->exp_tasks %p\n",
 		__func__, READ_ONCE(rnp->gp_tasks), rnp->boost_tasks,
 		rnp->exp_tasks);
-	pr_info("%s: ->blkd_tasks", __func__);
+	pr_debug("%s: ->blkd_tasks", __func__);
 	i = 0;
 	list_for_each(lhp, &rnp->blkd_tasks) {
 		pr_cont(" %p", lhp);
@@ -771,7 +771,7 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
 	for (cpu = rnp->grplo; cpu <= rnp->grphi; cpu++) {
 		rdp = per_cpu_ptr(&rcu_data, cpu);
 		onl = !!(rdp->grpmask & rcu_rnp_online_cpus(rnp));
-		pr_info("\t%d: %c online: %ld(%d) offline: %ld(%d)\n",
+		pr_debug("\t%d: %c online: %ld(%d) offline: %ld(%d)\n",
 			cpu, ".o"[onl],
 			(long)rdp->rcu_onl_gp_seq, rdp->rcu_onl_gp_flags,
 			(long)rdp->rcu_ofl_gp_seq, rdp->rcu_ofl_gp_flags);
@@ -785,7 +785,7 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
  */
 static void __init rcu_bootup_announce(void)
 {
-	pr_info("Hierarchical RCU implementation.\n");
+	pr_debug("Hierarchical RCU implementation.\n");
 	rcu_bootup_announce_oddness();
 }
 
@@ -2209,7 +2209,7 @@ void __init rcu_init_nohz(void)
 
 	if (!cpumask_available(rcu_nocb_mask) && need_rcu_nocb_mask) {
 		if (!zalloc_cpumask_var(&rcu_nocb_mask, GFP_KERNEL)) {
-			pr_info("rcu_nocb_mask allocation failed, callback offloading disabled.\n");
+			pr_debug("rcu_nocb_mask allocation failed, callback offloading disabled.\n");
 			return;
 		}
 	}
@@ -2222,17 +2222,17 @@ void __init rcu_init_nohz(void)
 #endif /* #if defined(CONFIG_NO_HZ_FULL) */
 
 	if (!cpumask_subset(rcu_nocb_mask, cpu_possible_mask)) {
-		pr_info("\tNote: kernel parameter 'rcu_nocbs=', 'nohz_full', or 'isolcpus=' contains nonexistent CPUs.\n");
+		pr_debug("\tNote: kernel parameter 'rcu_nocbs=', 'nohz_full', or 'isolcpus=' contains nonexistent CPUs.\n");
 		cpumask_and(rcu_nocb_mask, cpu_possible_mask,
 			    rcu_nocb_mask);
 	}
 	if (cpumask_empty(rcu_nocb_mask))
-		pr_info("\tOffload RCU callbacks from CPUs: (none).\n");
+		pr_debug("\tOffload RCU callbacks from CPUs: (none).\n");
 	else
-		pr_info("\tOffload RCU callbacks from CPUs: %*pbl.\n",
+		pr_debug("\tOffload RCU callbacks from CPUs: %*pbl.\n",
 			cpumask_pr_args(rcu_nocb_mask));
 	if (rcu_nocb_poll)
-		pr_info("\tPoll for callbacks from no-CBs CPUs.\n");
+		pr_debug("\tPoll for callbacks from no-CBs CPUs.\n");
 
 	for_each_cpu(cpu, rcu_nocb_mask) {
 		rdp = per_cpu_ptr(&rcu_data, cpu);
@@ -2398,7 +2398,7 @@ static void show_rcu_nocb_gp_state(struct rcu_data *rdp)
 {
 	struct rcu_node *rnp = rdp->mynode;
 
-	pr_info("nocb GP %d %c%c%c%c%c%c %c[%c%c] %c%c:%ld rnp %d:%d %lu\n",
+	pr_debug("nocb GP %d %c%c%c%c%c%c %c[%c%c] %c%c:%ld rnp %d:%d %lu\n",
 		rdp->cpu,
 		"kK"[!!rdp->nocb_gp_kthread],
 		"lL"[raw_spin_is_locked(&rdp->nocb_gp_lock)],
@@ -2426,7 +2426,7 @@ static void show_rcu_nocb_state(struct rcu_data *rdp)
 	if (rdp->nocb_gp_rdp == rdp)
 		show_rcu_nocb_gp_state(rdp);
 
-	pr_info("   CB %d->%d %c%c%c%c%c%c F%ld L%ld C%d %c%c%c%c%c q%ld\n",
+	pr_debug("   CB %d->%d %c%c%c%c%c%c F%ld L%ld C%d %c%c%c%c%c q%ld\n",
 		rdp->cpu, rdp->nocb_gp_rdp->cpu,
 		"kK"[!!rdp->nocb_cb_kthread],
 		"bB"[raw_spin_is_locked(&rdp->nocb_bypass_lock)],
@@ -2455,7 +2455,7 @@ static void show_rcu_nocb_state(struct rcu_data *rdp)
 	    !waslocked && !wastimer && !wassleep)
 		return;  /* Nothing untowards. */
 
-	pr_info("   !!! %c%c%c%c %c\n",
+	pr_debug("   !!! %c%c%c%c %c\n",
 		"lL"[waslocked],
 		"dD"[!!rdp->nocb_defer_wakeup],
 		"tT"[wastimer],

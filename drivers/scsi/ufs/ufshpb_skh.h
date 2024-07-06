@@ -472,13 +472,13 @@ enum SKHPB_LOG_MASK {
 #define SKHPB_DRIVER_E(fmt, args...)								\
 	do {											\
 		if(likely(skhpb_debug_mask & SKHPB_LOG_ERR))                             	\
-			pr_err("[HPB E][%s:%d] "	fmt, __func__, __LINE__, ##args);	\
+			pr_debug("[HPB E][%s:%d] "	fmt, __func__, __LINE__, ##args);	\
 	} while (0)
 
 #define SKHPB_DRIVER_I(fmt, args...)								\
 	do {											\
 		if(unlikely(skhpb_debug_mask & SKHPB_LOG_INFO))                             	\
-			pr_err("[HPB][%s:%d] "	fmt, __func__, __LINE__, ##args);		\
+			pr_debug("[HPB][%s:%d] "	fmt, __func__, __LINE__, ##args);		\
 	} while (0)
 
 #define SKHPB_DRIVER_D(fmt, args...)								\

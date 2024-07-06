@@ -493,7 +493,7 @@ int wcd9xxx_page_write(struct wcd9xxx *wcd9xxx, unsigned short *reg)
 					wcd9xxx, PAGE_REG_ADDR, 1,
 					(void *) &pg_num, false);
 			if (ret < 0)
-				pr_err("page write error, pg_num: 0x%x\n",
+				pr_debug("page write error, pg_num: 0x%x\n",
 					pg_num);
 			else {
 				wcd9xxx->prev_pg = pg_num;
@@ -506,7 +506,7 @@ int wcd9xxx_page_write(struct wcd9xxx *wcd9xxx, unsigned short *reg)
 				wcd9xxx, PAGE_REG_ADDR, 1, (void *) &pg_num,
 				false);
 		if (ret < 0)
-			pr_err("page write error, pg_num: 0x%x\n", pg_num);
+			pr_debug("page write error, pg_num: 0x%x\n", pg_num);
 		else {
 			wcd9xxx->prev_pg = pg_num;
 			wcd9xxx->prev_pg_valid = true;
@@ -918,7 +918,7 @@ int wcd9xxx_core_irq_init(
 	if (wcd9xxx_core_res->irq != 1) {
 		ret = wcd9xxx_irq_init(wcd9xxx_core_res);
 		if (ret)
-			pr_err("IRQ initialization failed\n");
+			pr_debug("IRQ initialization failed\n");
 	}
 
 	return ret;
@@ -1165,7 +1165,7 @@ int wcd9xxx_set_power_state(struct wcd9xxx *wcd9xxx,
 			    enum wcd_power_regions region)
 {
 	if (!wcd9xxx) {
-		pr_err("%s: wcd9xxx is NULL\n", __func__);
+		pr_debug("%s: wcd9xxx is NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -1200,7 +1200,7 @@ int wcd9xxx_get_current_power_state(struct wcd9xxx *wcd9xxx,
 	int state;
 
 	if (!wcd9xxx) {
-		pr_err("%s: wcd9xxx is NULL\n", __func__);
+		pr_debug("%s: wcd9xxx is NULL\n", __func__);
 		return -EINVAL;
 	}
 

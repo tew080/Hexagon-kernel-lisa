@@ -65,12 +65,12 @@ static void set_dim_layer_exposure(uint16_t brightness, struct dsi_display *disp
 	struct drm_property *prop;
 
 	if (!display->drm_conn) {
-		pr_err("The display is not connected!!\n");
+		pr_debug("The display is not connected!!\n");
 		return;
 	};
 
 	if (!display->drm_conn->state->crtc) {
-		pr_err("No CRTC on display connector!!\n");
+		pr_debug("No CRTC on display connector!!\n");
 		return;
 	}
 

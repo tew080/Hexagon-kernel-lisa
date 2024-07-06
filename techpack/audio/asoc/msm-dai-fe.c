@@ -44,7 +44,7 @@ static int fe_dai_probe(struct snd_soc_dai *dai)
 	struct snd_soc_dapm_context *dapm;
 
 	if (!dai || !dai->driver) {
-		pr_err("%s invalid params\n", __func__);
+		pr_debug("%s invalid params\n", __func__);
 		return -EINVAL;
 	}
 	dapm = snd_soc_component_get_dapm(dai->component);

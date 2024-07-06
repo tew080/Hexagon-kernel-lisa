@@ -175,7 +175,7 @@ static void boost_adjust_notify(struct cpufreq_policy *policy)
 	ret = freq_qos_update_request(req, ib_min);
 
 	if (ret < 0)
-		pr_err("Failed to update freq constraint in boost_adjust: %d\n",
+		pr_debug("Failed to update freq constraint in boost_adjust: %d\n",
 								ib_min);
 
 	pr_debug("CPU%u policy min after boost: %u kHz\n",
@@ -195,7 +195,7 @@ static void update_policy_online(void)
 	for_each_cpu(i, &online_cpus) {
 		policy = cpufreq_cpu_get(i);
 		if (!policy) {
-			pr_err("%s: cpufreq policy not found for cpu%d\n",
+			pr_debug("%s: cpufreq policy not found for cpu%d\n",
 							__func__, i);
 			return;
 		}
@@ -229,7 +229,7 @@ static void do_input_boost_rem(struct work_struct *work)
 	if (sched_boost_active) {
 		ret = sched_set_boost(0);
 		if (ret)
-			pr_err("cpu-boost: sched boost disable failed\n");
+			pr_debug("cpu-boost: sched boost disable failed\n");
 		sched_boost_active = false;
 	}
 }
@@ -262,7 +262,7 @@ static void do_input_boost(struct kthread_work *work)
 	if (sched_boost_on_input > 0) {
 		ret = sched_set_boost(sched_boost_on_input);
 		if (ret)
-			pr_err("cpu-boost: sched boost enable failed\n");
+			pr_debug("cpu-boost: sched boost enable failed\n");
 		else
 			sched_boost_active = true;
 	}
@@ -416,7 +416,7 @@ int cpu_boost_init(void)
 		req = &per_cpu(qos_req, cpu);
 		policy = cpufreq_cpu_get(cpu);
 		if (!policy) {
-			pr_err("%s: cpufreq policy not found for cpu%d\n",
+			pr_debug("%s: cpufreq policy not found for cpu%d\n",
 							__func__, cpu);
 			return -ESRCH;
 		}
@@ -424,7 +424,7 @@ int cpu_boost_init(void)
 		ret = freq_qos_add_request(&policy->constraints, req,
 						FREQ_QOS_MIN, policy->min);
 		if (ret < 0) {
-			pr_err("%s: Failed to add freq constraint (%d)\n",
+			pr_debug("%s: Failed to add freq constraint (%d)\n",
 							__func__, ret);
 			return ret;
 		}
@@ -434,32 +434,32 @@ int cpu_boost_init(void)
 	cpu_boost_kobj = kobject_create_and_add("cpu_boost",
 						&cpu_subsys.dev_root->kobj);
 	if (!cpu_boost_kobj)
-		pr_err("Failed to initialize sysfs node for cpu_boost.\n");
+		pr_debug("Failed to initialize sysfs node for cpu_boost.\n");
 
 	ret = sysfs_create_file(cpu_boost_kobj, &input_boost_ms_attr.attr);
 	if (ret)
-		pr_err("Failed to create input_boost_ms node: %d\n", ret);
+		pr_debug("Failed to create input_boost_ms node: %d\n", ret);
 
 	ret = sysfs_create_file(cpu_boost_kobj, &input_boost_freq_attr.attr);
 	if (ret)
-		pr_err("Failed to create input_boost_freq node: %d\n", ret);
+		pr_debug("Failed to create input_boost_freq node: %d\n", ret);
 
 	ret = sysfs_create_file(cpu_boost_kobj,
 				&sched_boost_on_input_attr.attr);
 	if (ret)
-		pr_err("Failed to create sched_boost_on_input node: %d\n", ret);
+		pr_debug("Failed to create sched_boost_on_input node: %d\n", ret);
 
 	ret = sysfs_create_file(cpu_boost_kobj, &wake_boost_enable_attr.attr);
 	if (ret)
-		pr_err("Failed to create wake_boost_enable node: %d\n", ret);
+		pr_debug("Failed to create wake_boost_enable node: %d\n", ret);
 
 	ret = sysfs_create_file(cpu_boost_kobj, &wake_boost_ms_attr.attr);
 	if (ret)
-		pr_err("Failed to create wake_boost_ms node: %d\n", ret);
+		pr_debug("Failed to create wake_boost_ms node: %d\n", ret);
 
 	ret = mi_disp_register_client(&mi_disp_notif);
 	if (ret)
-		pr_err("Failed to register display notifier: %d\n", ret);
+		pr_debug("Failed to register display notifier: %d\n", ret);
 
 	ret = input_register_handler(&cpuboost_input_handler);
 	return 0;

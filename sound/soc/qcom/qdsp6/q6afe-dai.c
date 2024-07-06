@@ -94,7 +94,7 @@ static int q6slim_hw_params(struct snd_pcm_substream *substream,
 		slim->bit_width = 32;
 		break;
 	default:
-		pr_err("%s: format %d\n",
+		pr_debug("%s: format %d\n",
 			__func__, params_format(params));
 		return -EINVAL;
 	}
@@ -387,7 +387,7 @@ static int q6slim_set_channel_map(struct snd_soc_dai *dai,
 	if (dai->id & 0x1) {
 		/* TX */
 		if (!tx_slot) {
-			pr_err("%s: tx slot not found\n", __func__);
+			pr_debug("%s: tx slot not found\n", __func__);
 			return -EINVAL;
 		}
 
@@ -399,7 +399,7 @@ static int q6slim_set_channel_map(struct snd_soc_dai *dai,
 
 	} else {
 		if (!rx_slot) {
-			pr_err("%s: rx slot not found\n", __func__);
+			pr_debug("%s: rx slot not found\n", __func__);
 			return -EINVAL;
 		}
 

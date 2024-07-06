@@ -499,7 +499,7 @@ static void _sde_dump_reg(const char *dump_name, u32 reg_dump_flag,
 	if (_sde_power_check(sde_dbg_base.dump_mode)) {
 		rc = pm_runtime_get_sync(sde_dbg_base.dev);
 		if (rc < 0) {
-			pr_err("failed to enable power %d\n", rc);
+			pr_debug("failed to enable power %d\n", rc);
 			return;
 		}
 	}
@@ -559,7 +559,7 @@ static u32 _sde_dbg_get_reg_blk_size(struct sde_dbg_reg_base *dbg)
 	struct sde_dbg_reg_range *range_node;
 
 	if (!dbg || !dbg->base) {
-		pr_err("dbg base is null!\n");
+		pr_debug("dbg base is null!\n");
 		return 0;
 	}
 
@@ -643,7 +643,7 @@ static void _sde_dump_reg_by_ranges(struct sde_dbg_reg_base *dbg,
 	struct sde_dbg_base *dbg_base = &sde_dbg_base;
 
 	if (!dbg || !(dbg->base || dbg->cb)) {
-		pr_err("dbg base is null!\n");
+		pr_debug("dbg base is null!\n");
 		return;
 	}
 
@@ -967,7 +967,7 @@ static void _sde_dbg_dump_sde_dbg_bus(struct sde_dbg_sde_debug_bus *bus)
 
 	reg_base = _sde_dump_get_blk_addr(bus->cmn.name);
 	if (!reg_base || !reg_base->base) {
-		pr_err("unable to find mem_base for %s\n", bus->cmn.name);
+		pr_debug("unable to find mem_base for %s\n", bus->cmn.name);
 		return;
 	}
 
@@ -1001,7 +1001,7 @@ static void _sde_dbg_dump_sde_dbg_bus(struct sde_dbg_sde_debug_bus *bus)
 
 #ifdef CONFIG_QCOM_VA_MINIDUMP
 	if (sde_mini_dump_add_region(bus->cmn.name, list_size, *dump_mem) < 0)
-		pr_err("minidump add %s failed\n", bus->cmn.name);
+		pr_debug("minidump add %s failed\n", bus->cmn.name);
 #endif
 
 	dump_addr = *dump_mem;
@@ -1051,7 +1051,7 @@ static void _sde_dbg_dump_dsi_dbg_bus(struct sde_dbg_sde_debug_bus *bus)
 
 #ifdef CONFIG_QCOM_VA_MINIDUMP
 	if (sde_mini_dump_add_region(bus->cmn.name, list_size, *dump_mem) < 0)
-		pr_err("minidump add %s failed\n", bus->cmn.name);
+		pr_debug("minidump add %s failed\n", bus->cmn.name);
 #endif
 
 	dump_addr = *dump_mem;
@@ -1099,14 +1099,14 @@ static void _sde_dump_array(struct sde_dbg_reg_base *blk_arr[],
 	dbg_base->reg_dump_addr =  dbg_base->reg_dump_base;
 
 	if (!dbg_base->reg_dump_addr)
-		pr_err("Failed to allocate memory for reg_dump_addr size:%d\n",
+		pr_debug("Failed to allocate memory for reg_dump_addr size:%d\n",
 				reg_dump_size);
 
 #ifdef CONFIG_QCOM_VA_MINIDUMP
 	if (dbg_base->reg_dump_addr &&
 			sde_mini_dump_add_region("reg_dump",
 			reg_dump_size, dbg_base->reg_dump_addr) < 0)
-		pr_err("minidump add regdump failed\n");
+		pr_debug("minidump add regdump failed\n");
 #endif
 
 	if (dump_all)
@@ -1126,7 +1126,7 @@ static void _sde_dump_array(struct sde_dbg_reg_base *blk_arr[],
 	if (_sde_power_check(sde_dbg_base.dump_mode)) {
 		rc = pm_runtime_get_sync(sde_dbg_base.dev);
 		if (rc < 0) {
-			pr_err("failed to enable power %d\n", rc);
+			pr_debug("failed to enable power %d\n", rc);
 			return;
 		}
 	}
@@ -1206,7 +1206,7 @@ void sde_dbg_dump(enum sde_dbg_dump_context dump_mode, const char *name, ...)
 	i = 0;
 	while ((blk_name = va_arg(args, char*))) {
 		if (i++ >= SDE_EVTLOG_MAX_DATA) {
-			pr_err("could not parse all dump arguments\n");
+			pr_debug("could not parse all dump arguments\n");
 			break;
 		}
 		if (IS_ERR_OR_NULL(blk_name))
@@ -1218,7 +1218,7 @@ void sde_dbg_dump(enum sde_dbg_dump_context dump_mode, const char *name, ...)
 				blk_arr[index] = blk_base;
 				index++;
 			} else {
-				pr_err("insufficient space to to dump %s\n",
+				pr_debug("insufficient space to to dump %s\n",
 						blk_name);
 			}
 		}
@@ -1275,7 +1275,7 @@ void sde_dbg_ctrl(const char *name, ...)
 
 	while ((blk_name = va_arg(args, char*))) {
 		if (i++ >= SDE_EVTLOG_MAX_DATA) {
-			pr_err("could not parse all dbg arguments\n");
+			pr_debug("could not parse all dbg arguments\n");
 			break;
 		}
 
@@ -1292,7 +1292,7 @@ void sde_dbg_ctrl(const char *name, ...)
 		if (!strcmp(blk_name, "panic_underrun") &&
 				sde_dbg_base.debugfs_ctrl &
 				DBG_CTRL_PANIC_UNDERRUN) {
-			pr_err("panic underrun\n");
+			pr_debug("panic underrun\n");
 			SDE_DBG_DUMP_WQ("all", "dbg_bus", "vbif_dbg_bus",
 					"panic");
 		}
@@ -1349,7 +1349,7 @@ static int sde_dbg_reg_base_open(struct inode *inode, struct file *file)
 	base_name[strlen(file->f_path.dentry->d_iname) - 4] = '\0';
 	reg_base = _sde_dump_get_blk_addr(base_name);
 	if (!reg_base) {
-		pr_err("error: unable to locate base %s\n",
+		pr_debug("error: unable to locate base %s\n",
 				base_name);
 		return -EINVAL;
 	}
@@ -1384,7 +1384,7 @@ static ssize_t sde_evtlog_dump_read(struct file *file, char __user *buff,
 	mutex_unlock(&sde_dbg_base.mutex);
 
 	if (len < 0 || len > count) {
-		pr_err("len is more than user buffer size\n");
+		pr_debug("len is more than user buffer size\n");
 		return 0;
 	}
 
@@ -1444,7 +1444,7 @@ static ssize_t sde_dbg_ctrl_read(struct file *file, char __user *buff,
 		return 0;
 
 	if ((count < sizeof(buf)) || copy_to_user(buff, buf, len)) {
-		pr_err("error copying the buffer! count:0x%zx\n", count);
+		pr_debug("error copying the buffer! count:0x%zx\n", count);
 		return -EFAULT;
 	}
 
@@ -1466,7 +1466,7 @@ static ssize_t sde_dbg_ctrl_write(struct file *file,
 	char buf[24];
 
 	if (!file) {
-		pr_err("DbgDbg: %s: error no file --\n", __func__);
+		pr_debug("DbgDbg: %s: error no file --\n", __func__);
 		return -EINVAL;
 	}
 
@@ -1480,7 +1480,7 @@ static ssize_t sde_dbg_ctrl_write(struct file *file,
 	buf[count] = 0; /* end of string */
 
 	if (kstrtouint(buf, 0, &dbg_ctrl)) {
-		pr_err("%s: error in the number of bytes\n", __func__);
+		pr_debug("%s: error in the number of bytes\n", __func__);
 		return -EFAULT;
 	}
 
@@ -1523,12 +1523,12 @@ static ssize_t _sde_dbg_dump_reg_rows(u32 reg_start,
 	int rows = min(count / DUMP_CLMN_COUNT, DUMP_MAX_LINES_PER_BLK);
 
 	if (!start || !buf) {
-		pr_err("invalid address for dump\n");
+		pr_debug("invalid address for dump\n");
 		return len;
 	}
 
 	if (buflen < PAGE_SIZE) {
-		pr_err("buffer too small for dump\n");
+		pr_debug("buffer too small for dump\n");
 		return len;
 	}
 
@@ -1553,14 +1553,14 @@ static int  _sde_dbg_recovery_dump_sub_blk(struct sde_dbg_reg_range *sub_blk,
 	int len = 0;
 
 	if (!sub_blk || (buflen < PAGE_SIZE)) {
-		pr_err("invalid params buflen:%d subblk valid:%d\n",
+		pr_debug("invalid params buflen:%d subblk valid:%d\n",
 				buflen, sub_blk != NULL);
 		return len;
 	}
 
 	count = (sub_blk->offset.end - sub_blk->offset.start) / (sizeof(u32));
 	if (count < DUMP_CLMN_COUNT) {
-		pr_err("invalid count for register dumps :%d\n", count);
+		pr_debug("invalid count for register dumps :%d\n", count);
 		return len;
 	}
 
@@ -1583,7 +1583,7 @@ static int  _sde_dbg_recovery_dump_reg_blk(struct sde_dbg_reg_base *blk,
 	struct sde_dbg_reg_range *sub_blk;
 
 	if (buf_size < PAGE_SIZE) {
-		pr_err("buffer too small for dump\n");
+		pr_debug("buffer too small for dump\n");
 		return len;
 	}
 
@@ -1886,7 +1886,7 @@ static bool sde_dbg_reg_base_is_valid_range(
 		}
 	}
 
-	pr_err("invalid range requested\n");
+	pr_debug("invalid range requested\n");
 	return false;
 }
 
@@ -2064,7 +2064,7 @@ static ssize_t sde_dbg_reg_base_reg_write(struct file *file,
 
 	rc = pm_runtime_get_sync(sde_dbg_base.dev);
 	if (rc < 0) {
-		pr_err("failed to enable power %d\n", rc);
+		pr_debug("failed to enable power %d\n", rc);
 		count = rc;
 		goto end;
 	}
@@ -2101,7 +2101,7 @@ static ssize_t sde_dbg_reg_base_reg_read(struct file *file,
 
 	dbg = file->private_data;
 	if (!dbg) {
-		pr_err("invalid handle\n");
+		pr_debug("invalid handle\n");
 		return -ENODEV;
 	}
 
@@ -2139,7 +2139,7 @@ static ssize_t sde_dbg_reg_base_reg_read(struct file *file,
 
 		rc = pm_runtime_get_sync(sde_dbg_base.dev);
 		if (rc < 0) {
-			pr_err("failed to enable power %d\n", rc);
+			pr_debug("failed to enable power %d\n", rc);
 			len = rc;
 			goto end;
 		}
@@ -2172,7 +2172,7 @@ static ssize_t sde_dbg_reg_base_reg_read(struct file *file,
 
 	len = min(count, dbg->buf_len - (size_t) *ppos);
 	if (copy_to_user(user_buf, dbg->buf + *ppos, len)) {
-		pr_err("failed to copy to user\n");
+		pr_debug("failed to copy to user\n");
 		len = -EFAULT;
 		goto end;
 	}
@@ -2212,20 +2212,20 @@ int sde_dbg_debugfs_register(struct device *dev)
 	struct msm_drm_private *priv = NULL;
 
 	if (!ddev) {
-		pr_err("Invalid drm device node\n");
+		pr_debug("Invalid drm device node\n");
 		return -EINVAL;
 	}
 
 	priv = ddev->dev_private;
 	if (!priv) {
-		pr_err("Invalid msm drm private node\n");
+		pr_debug("Invalid msm drm private node\n");
 		return -EINVAL;
 	}
 
 	debugfs_root = debugfs_create_dir("debug",
 			ddev->primary->debugfs_root);
 	if (IS_ERR_OR_NULL(debugfs_root)) {
-		pr_err("debugfs_root create_dir fail, error %ld\n",
+		pr_debug("debugfs_root create_dir fail, error %ld\n",
 				PTR_ERR(debugfs_root));
 		priv->debug_root = NULL;
 		return -EINVAL;
@@ -2351,7 +2351,7 @@ void sde_dbg_init_dbg_buses(u32 hwversion)
 int sde_dbg_init(struct device *dev)
 {
 	if (!dev) {
-		pr_err("invalid params\n");
+		pr_debug("invalid params\n");
 		return -EINVAL;
 	}
 
@@ -2377,7 +2377,7 @@ int sde_dbg_init(struct device *dev)
 	sde_dbg_base.enable_reg_dump = DEFAULT_REGDUMP;
 	memset(&sde_dbg_base.regbuf, 0, sizeof(sde_dbg_base.regbuf));
 
-	pr_info("evtlog_status: enable:%d, panic:%d, dump:%d\n",
+	pr_debug("evtlog_status: enable:%d, panic:%d, dump:%d\n",
 		sde_dbg_base.evtlog->enable, sde_dbg_base.panic_on_err,
 		sde_dbg_base.enable_reg_dump);
 
@@ -2472,7 +2472,7 @@ int sde_dbg_reg_register_base(const char *name, void __iomem *base,
 	struct sde_dbg_reg_base *reg_base;
 
 	if (!name || !strlen(name)) {
-		pr_err("no debug name provided\n");
+		pr_debug("no debug name provided\n");
 		return -EINVAL;
 	}
 
@@ -2504,7 +2504,7 @@ int sde_dbg_reg_register_cb(const char *name, void (*cb)(void *), void *ptr)
 	struct sde_dbg_reg_base *reg_base;
 
 	if (!name || !strlen(name)) {
-		pr_err("no debug name provided\n");
+		pr_debug("no debug name provided\n");
 		return -EINVAL;
 	}
 
@@ -2561,13 +2561,13 @@ void sde_dbg_reg_register_dump_range(const char *base_name,
 
 	reg_base = _sde_dump_get_blk_addr(base_name);
 	if (!reg_base) {
-		pr_err("error: for range %s unable to locate base %s\n",
+		pr_debug("error: for range %s unable to locate base %s\n",
 				range_name, base_name);
 		return;
 	}
 
 	if (!range_name || strlen(range_name) == 0) {
-		pr_err("%pS: bad range name, base_name %s, offset_start 0x%X, end 0x%X\n",
+		pr_debug("%pS: bad range name, base_name %s, offset_start 0x%X, end 0x%X\n",
 				__builtin_return_address(0), base_name,
 				offset_start, offset_end);
 		return;
@@ -2575,7 +2575,7 @@ void sde_dbg_reg_register_dump_range(const char *base_name,
 
 	if (offset_end - offset_start < REG_DUMP_ALIGN ||
 			offset_start > offset_end) {
-		pr_err("%pS: bad range, base_name %s, range_name %s, offset_start 0x%X, end 0x%X\n",
+		pr_debug("%pS: bad range, base_name %s, range_name %s, offset_start 0x%X, end 0x%X\n",
 				__builtin_return_address(0), base_name,
 				range_name, offset_start, offset_end);
 		return;
