@@ -19,24 +19,19 @@
 
 
 #define NL_RATIO 75
-#define DEFAULT_HISPEED_LOAD 90
-#define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
-#define DEFAULT_CPU4_RTG_BOOST_FREQ 0
-#define DEFAULT_CPU7_RTG_BOOST_FREQ 0
-#if 0
 #define HISPEED_LOAD_CPU_LP_MASK 85
 #define HISPEED_LOAD_CPU_PERF_MASK 85
 #define HISPEED_LOAD_CPU_PRIME_MASK 90
-#define UP_RATE_LIMIT_US_CPU_LP_MASK 8000
-#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 16000
-#define UP_RATE_LIMIT_US_CPU_PERF_MASK 8000
-#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 16000
-#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 8000
-#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 16000
-#define DEFAULT_CPU0_RTG_BOOST_FREQ 1000000
+#define UP_RATE_LIMIT_US_CPU_LP_MASK 500
+#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 20000
+#define UP_RATE_LIMIT_US_CPU_PERF_MASK 500
+#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 10000
+#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 500
+#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 5000
+#define DEFAULT_CPU0_RTG_BOOST_FREQ 1324800
 #define DEFAULT_CPU4_RTG_BOOST_FREQ 1516000
 #define DEFAULT_CPU7_RTG_BOOST_FREQ 1324000
-#endif
+
 
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
@@ -911,7 +906,7 @@ static ssize_t up_rate_limit_us_store(struct gov_attr_set *attr_set,
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
-//	return count;
+	return count;
 	tunables->up_rate_limit_us = rate_limit_us;
 
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
@@ -932,7 +927,7 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
-//	return count;
+	return count;
 	tunables->down_rate_limit_us = rate_limit_us;
 
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
@@ -959,7 +954,7 @@ static ssize_t hispeed_load_store(struct gov_attr_set *attr_set,
 	if (kstrtouint(buf, 10, &hispeed_load))
 		return -EINVAL;
 
-//	return count;
+	return count;
 	tunables->hispeed_load = min(100U, tunables->hispeed_load);
 
 	return count;
@@ -1015,7 +1010,7 @@ static ssize_t rtg_boost_freq_store(struct gov_attr_set *attr_set,
 	if (kstrtouint(buf, 10, &val))
 		return -EINVAL;
 
-//	return count;
+	return count;
 	tunables->rtg_boost_freq = val;
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
 		raw_spin_lock_irqsave(&sg_policy->update_lock, flags);
@@ -1258,28 +1253,27 @@ static int sugov_init(struct cpufreq_policy *policy)
 
 	tunables->up_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
 	tunables->down_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
-	tunables->hispeed_load = DEFAULT_HISPEED_LOAD;
 	tunables->hispeed_freq = 0;
 
 	switch (policy->cpu) {
 	default:
 	case 0:
 		tunables->rtg_boost_freq = DEFAULT_CPU0_RTG_BOOST_FREQ;
-//		tunables->hispeed_load = HISPEED_LOAD_CPU_LP_MASK;
-//		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_LP_MASK;
-//		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_LP_MASK;
+		tunables->hispeed_load = HISPEED_LOAD_CPU_LP_MASK;
+		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_LP_MASK;
+		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_LP_MASK;
 		break;
 	case 4:
 		tunables->rtg_boost_freq = DEFAULT_CPU4_RTG_BOOST_FREQ;
-//		tunables->hispeed_load = HISPEED_LOAD_CPU_PERF_MASK;
-//		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PERF_MASK;
-//		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PERF_MASK;
+		tunables->hispeed_load = HISPEED_LOAD_CPU_PERF_MASK;
+		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PERF_MASK;
+		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PERF_MASK;
 		break;
 	case 7:
 		tunables->rtg_boost_freq = DEFAULT_CPU7_RTG_BOOST_FREQ;
-//		tunables->hispeed_load = HISPEED_LOAD_CPU_PRIME_MASK;
-//      tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PRIME_MASK;
-//	    tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PRIME_MASK;
+		tunables->hispeed_load = HISPEED_LOAD_CPU_PRIME_MASK;
+ 	    tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PRIME_MASK;
+	    tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PRIME_MASK;
 		break;
 	}
 

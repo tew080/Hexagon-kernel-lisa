@@ -8080,9 +8080,9 @@ static void uclamp_set(struct cgroup_subsys_state *css)
        	{"foreground",          "5",  "max",  1, 20480},
         {"camera-daemon",       "30", "max",  1, 20480},
         {"system",              "0",  "max",  0, 20480},
-        {"dex2oat",             "0",  "70",   0,   512},
-        {"background",          "0",  "40",   0,  1024},
-        {"system-background",   "0",  "40",   0,  1024},
+        {"dex2oat",             "0",  "60",   0,   512},
+        {"background",          "0",  "50",   0,  1024},
+        {"system-background",   "0",  "50",   0,  1024},
 	};
 
         if(!css->cgroup->kn)
