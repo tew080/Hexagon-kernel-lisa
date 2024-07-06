@@ -239,7 +239,7 @@ int dsi_panel_trigger_esd_attack(struct dsi_panel *panel, bool trusted_vm_env)
 	}
 
 	SDE_EVT32(SDE_EVTLOG_FUNC_CASE1);
-	DSI_INFO("GPIO pulled low to simulate ESD\n");
+	DSI_DEBUG("GPIO pulled low to simulate ESD\n");
 
 	return 0;
 }
@@ -655,7 +655,7 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 		mi_dsi_panel_update_last_bl_level(panel, bl_lvl);
 		return 0;
 	} else if (panel->mi_cfg.aod_bl_51ctl && panel->power_mode == SDE_MODE_DPMS_LP1) {
-		DSI_INFO("%s panel skip set backlight %d due to "
+		DSI_DEBUG("%s panel skip set backlight %d due to "
 				"display is lp1 state\n", panel->type, bl_lvl);
 		panel->mi_cfg.bl_need_update = true;
 		return 0;
@@ -1202,10 +1202,10 @@ static int dsi_panel_parse_misc_host_config(struct dsi_host_common_cfg *host,
 	rc = utils->read_u32(utils->data, "qcom,mdss-dsi-clk-strength", &val);
 	if (!rc) {
 		host->clk_strength = val;
-		pr_info("[%s] clk_strength = %d\n", name, val);
+		pr_debug("[%s] clk_strength = %d\n", name, val);
 	} else {
 		host->clk_strength = 0;
-		pr_info("[%s] clk_strength default value = %d\n", name, val);
+		pr_debug("[%s] clk_strength default value = %d\n", name, val);
 	}
 
 	DSI_DEBUG("[%s] DMA scheduling parameters Line: %d Window: %d\n", name,
@@ -2984,7 +2984,7 @@ static int dsi_panel_parse_vdc_params(struct dsi_display_mode *mode,
 		}
 	}
 
-	DSI_INFO("vdc major: 0x%x minor : 0x%x release : 0x%x\n",
+	DSI_DEBUG("vdc major: 0x%x minor : 0x%x release : 0x%x\n",
 			priv_info->vdc.version_major,
 			priv_info->vdc.version_minor,
 			priv_info->vdc.version_release);
@@ -3192,7 +3192,7 @@ static int dsi_panel_parse_topology(
 	}
 
 	if (topology_override >= 0 && topology_override < top_count) {
-		DSI_INFO("override topology: cfg:%d lm:%d comp_enc:%d intf:%d\n",
+		DSI_DEBUG("override topology: cfg:%d lm:%d comp_enc:%d intf:%d\n",
 			topology_override,
 			topology[topology_override].num_lm,
 			topology[topology_override].num_enc,
@@ -3215,7 +3215,7 @@ static int dsi_panel_parse_topology(
 		goto parse_fail;
 	}
 
-	DSI_INFO("default topology: lm: %d comp_enc:%d intf: %d\n",
+	DSI_DEBUG("default topology: lm: %d comp_enc:%d intf: %d\n",
 		topology[top_sel].num_lm,
 		topology[top_sel].num_enc,
 		topology[top_sel].num_intf);
@@ -3266,7 +3266,7 @@ static int dsi_panel_parse_roi_alignment(struct dsi_parser_utils *utils,
 			align->min_height = value[5];
 		}
 
-		DSI_INFO("roi alignment: [%d, %d, %d, %d, %d, %d]\n",
+		DSI_DEBUG("roi alignment: [%d, %d, %d, %d, %d, %d]\n",
 			align->xstart_pix_align,
 			align->width_pix_align,
 			align->ystart_pix_align,
@@ -3302,7 +3302,7 @@ static int dsi_panel_parse_partial_update_caps(struct dsi_display_mode *mode,
 		else if (!strcmp(data, "single_roi"))
 			roi_caps->num_roi = 1;
 		else {
-			DSI_INFO(
+			DSI_DEBUG(
 			"invalid value for qcom,partial-update-enabled: %s\n",
 			data);
 			return 0;
@@ -3466,7 +3466,7 @@ int dsi_panel_parse_esd_reg_read_configs(struct dsi_panel *panel)
 	dsi_panel_parse_cmd_sets_sub(&esd_config->offset_cmd,
 				DSI_CMD_SET_PANEL_STATUS_OFFSET, utils);
 	if (!esd_config->offset_cmd.count) {
-		DSI_INFO("no panel status offset command\n");
+		DSI_DEBUG("no panel status offset command\n");
 	}
 
 	dsi_panel_parse_cmd_sets_sub(&esd_config->status_cmd,
@@ -3743,9 +3743,9 @@ struct dsi_panel *dsi_panel_get(struct device *parent,
 	rc = utils->read_u64(utils->data, "mi,panel-id", &panel->mi_panel_id);
 	if (rc) {
 		panel->mi_panel_id = 0;
-		DSI_INFO("mi,panel-id not specified\n");
+		DSI_DEBUG("mi,panel-id not specified\n");
 	} else {
-		DSI_INFO("mi,panel-id 0x%llX\n", panel->mi_panel_id);
+		DSI_DEBUG("mi,panel-id 0x%llX\n", panel->mi_panel_id);
 	}
 
 	rc = dsi_panel_parse_panel_mode(panel);
@@ -4352,13 +4352,13 @@ int dsi_panel_get_mode(struct dsi_panel *panel,
 			else if (mode->timing.refresh_rate == 120)
 				j = 8;
 
-			DSI_INFO("refresh_rate= %d, j = %d\n", mode->timing.refresh_rate, j);
+			DSI_DEBUG("refresh_rate= %d, j = %d\n", mode->timing.refresh_rate, j);
 			cmds = prv_info->cmd_sets[DSI_CMD_SET_MI_DEMURA_WHEN_DC_OFF].cmds;
 			if (cmds) {
 				tx_buf = (u8 *)cmds[2].msg.tx_buf;
 				for (i = 0 ; i < cmds[2].msg.tx_len-1; i ++){
 					tx_buf[i+1] = panel->mi_cfg.demura_data[j*75 +i];
-					//DSI_INFO("LUT%d: %d= %02x\n", j+1, i, tx_buf[i+1]);
+					//DSI_DEBUG("LUT%d: %d= %02x\n", j+1, i, tx_buf[i+1]);
 				}
 			}
 			cmds = prv_info->cmd_sets[DSI_CMD_SET_MI_DEMURA_WHEN_DC_OFF].cmds;
@@ -4366,7 +4366,7 @@ int dsi_panel_get_mode(struct dsi_panel *panel,
 				tx_buf = (u8 *)cmds[4].msg.tx_buf;
 				for (i = 0 ; i < cmds[4].msg.tx_len-1; i ++){
 					tx_buf[i+1] = panel->mi_cfg.demura_data[(j+1)*75 +i];
-					//DSI_INFO("LUT%d: %d= %02x\n", j+2, i, tx_buf[i+1]);
+					//DSI_DEBUG("LUT%d: %d= %02x\n", j+2, i, tx_buf[i+1]);
 				}
 			}
 			cmds = prv_info->cmd_sets[DSI_CMD_SET_MI_DEMURA_WHEN_DC_ON].cmds;
@@ -4374,7 +4374,7 @@ int dsi_panel_get_mode(struct dsi_panel *panel,
 				tx_buf = (u8 *)cmds[2].msg.tx_buf;
 				for (i = 0; i < cmds[2].msg.tx_len-1; i ++){
 					tx_buf[i+1] = panel->mi_cfg.demura_data[(j+2)*75 +i];
-					//DSI_INFO("LUT%d: %d= %02x\n", j+3, i, tx_buf[i+1]);
+					//DSI_DEBUG("LUT%d: %d= %02x\n", j+3, i, tx_buf[i+1]);
 				}
 			}
 			cmds = prv_info->cmd_sets[DSI_CMD_SET_MI_DEMURA_WHEN_DC_ON].cmds;
@@ -4382,7 +4382,7 @@ int dsi_panel_get_mode(struct dsi_panel *panel,
 				tx_buf = (u8 *)cmds[4].msg.tx_buf;
 				for (i = 0; i < cmds[4].msg.tx_len-1; i ++){
 					tx_buf[i+1] = panel->mi_cfg.demura_data[(j+3)*75 +i];
-					//DSI_INFO("LUT%d: %d= %02x\n", j+4, i, tx_buf[i+1]);
+					//DSI_DEBUG("LUT%d: %d= %02x\n", j+4, i, tx_buf[i+1]);
 				}
 			}
 		}
@@ -4408,7 +4408,7 @@ int dsi_panel_get_mode(struct dsi_panel *panel,
 			if (rc) {
 				rc = 0;
 				mode->panel_mode = panel->panel_mode;
-				DSI_INFO(
+				DSI_DEBUG(
 				"POMS: panel mode isn't specified in timing[%d]\n",
 				child_idx);
 			}
@@ -4622,12 +4622,12 @@ int dsi_panel_set_nolp(struct dsi_panel *panel)
 		goto exit;
 
 	if (is_hbm_fod_on(panel)) {
-		DSI_INFO("%s panel: fod hbm on, skip nolp\n", panel->type);
+		DSI_DEBUG("%s panel: fod hbm on, skip nolp\n", panel->type);
 		goto exit1;
 	}
 
 	if (panel->mi_cfg.panel_state == PANEL_STATE_ON && !panel->mi_cfg.aod_bl_51ctl) {
-		DSI_INFO("panel already PANEL_STATE_ON, skip nolp\n");
+		DSI_DEBUG("panel already PANEL_STATE_ON, skip nolp\n");
 		goto exit1;
 	}
 	/*

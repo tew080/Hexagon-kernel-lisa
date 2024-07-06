@@ -86,7 +86,7 @@ int adreno_get_firmware(struct adreno_device *adreno_dev,
 	ret = request_firmware(&fw, fwfile, &device->pdev->dev);
 
 	if (ret) {
-		dev_err(device->dev, "request_firmware(%s) failed: %d\n",
+		dev_dbg(device->dev, "request_firmware(%s) failed: %d\n",
 				fwfile, ret);
 		return ret;
 	}
@@ -261,10 +261,10 @@ static int _get_counter(struct adreno_device *adreno_dev,
 			lo, hi, PERFCOUNTER_FLAG_KERNEL);
 
 		if (ret) {
-			dev_err(KGSL_DEVICE(adreno_dev)->dev,
+			dev_dbg(KGSL_DEVICE(adreno_dev)->dev,
 				     "Unable to allocate fault detect performance counter %d/%d\n",
 				     group, countable);
-			dev_err(KGSL_DEVICE(adreno_dev)->dev,
+			dev_dbg(KGSL_DEVICE(adreno_dev)->dev,
 				     "GPU fault detect will be less reliable\n");
 		}
 	}
@@ -578,7 +578,7 @@ static u32 adreno_efuse_read_soc_hw_rev(struct platform_device *pdev)
 
 	ret = adreno_efuse_map(pdev);
 	if (ret) {
-		dev_err(&pdev->dev,
+		dev_dbg(&pdev->dev,
 			"Unable to map hardware revision fuse: ret=%d\n", ret);
 		return 0;
 	}
@@ -587,7 +587,7 @@ static u32 adreno_efuse_read_soc_hw_rev(struct platform_device *pdev)
 	adreno_efuse_unmap();
 
 	if (ret) {
-		dev_err(&pdev->dev,
+		dev_dbg(&pdev->dev,
 			"Unable to read hardware revision fuse: ret=%d\n", ret);
 		return 0;
 	}
@@ -660,7 +660,7 @@ adreno_identify_gpu(struct platform_device *pdev, u32 *chipid)
 	 * message
 	 */
 	if (gpucore->features & ADRENO_DEPRECATED) {
-		dev_err(&pdev->dev,
+		dev_dbg(&pdev->dev,
 			"Support for GPU %d.%d.%d.%d has been deprecated\n",
 			gpucore->core,
 			gpucore->major,
@@ -709,14 +709,14 @@ static int adreno_of_parse_pwrlevels(struct adreno_device *adreno_dev,
 
 		ret = of_property_read_u32(child, "reg", &index);
 		if (ret) {
-			dev_err(device->dev, "%pOF: powerlevel index not found\n",
+			dev_dbg(device->dev, "%pOF: powerlevel index not found\n",
 				child);
 			goto out;
 		}
 
 		ret = of_property_read_u32(child, "qcom,gpu-freq", &freq);
 		if (ret) {
-			dev_err(device->dev, "%pOF: Unable to read qcom,gpu-freq\n",
+			dev_dbg(device->dev, "%pOF: Unable to read qcom,gpu-freq\n",
 				child);
 			goto out;
 		}
@@ -727,7 +727,7 @@ static int adreno_of_parse_pwrlevels(struct adreno_device *adreno_dev,
 
 		ret = of_property_read_u32(child, "qcom,level", &voltage);
 		if (ret) {
-			dev_err(device->dev, "%pOF: Unable to read qcom,level\n",
+			dev_dbg(device->dev, "%pOF: Unable to read qcom,level\n",
 				child);
 			goto out;
 		}
@@ -735,14 +735,14 @@ static int adreno_of_parse_pwrlevels(struct adreno_device *adreno_dev,
 		ret = kgsl_of_property_read_ddrtype(child, "qcom,bus-freq",
 			&bus);
 		if (ret) {
-			dev_err(device->dev, "%pOF:Unable to read qcom,bus-freq\n",
+			dev_dbg(device->dev, "%pOF:Unable to read qcom,bus-freq\n",
 				child);
 			goto out;
 		}
 
 
 		if (index >= KGSL_MAX_PWRLEVELS) {
-			dev_err(device->dev, "%pOF: Pwrlevel index %d is out of range\n",
+			dev_dbg(device->dev, "%pOF: Pwrlevel index %d is out of range\n",
 				child, index);
 			continue;
 		}
@@ -818,7 +818,7 @@ static int adreno_of_get_legacy_pwrlevels(struct adreno_device *adreno_dev,
 	node = of_find_node_by_name(parent, "qcom,gpu-pwrlevels");
 
 	if (node == NULL) {
-		dev_err(&device->pdev->dev,
+		dev_dbg(&device->pdev->dev,
 			"Unable to find 'qcom,gpu-pwrlevels'\n");
 		return -EINVAL;
 	}
@@ -873,7 +873,7 @@ static int adreno_of_get_pwrlevels(struct adreno_device *adreno_dev,
 		}
 	}
 
-	dev_err(&device->pdev->dev,
+	dev_dbg(&device->pdev->dev,
 		"GPU speed_bin:%d mismatch for efused bin:%d\n",
 		device->speed_bin, bin);
 	return -ENODEV;
@@ -907,7 +907,7 @@ l3_pwrlevel_probe(struct kgsl_device *device, struct device_node *node)
 	device->l3_icc = of_icc_get(&device->pdev->dev, "l3_path");
 
 	if (IS_ERR(device->l3_icc))
-		dev_err(&device->pdev->dev,
+		dev_dbg(&device->pdev->dev,
 			"Unable to get the l3 icc path\n");
 }
 
@@ -923,12 +923,12 @@ static int adreno_of_get_power(struct adreno_device *adreno_dev,
 		"kgsl_3d0_reg_memory");
 
 	if (res == NULL) {
-		dev_err(device->dev,
+		dev_dbg(device->dev,
 			     "platform_get_resource_byname failed\n");
 		return -EINVAL;
 	}
 	if (res->start == 0 || resource_size(res) == 0) {
-		dev_err(device->dev, "dev %d invalid register region\n",
+		dev_dbg(device->dev, "dev %d invalid register region\n",
 			     device->id);
 		return -EINVAL;
 	}
@@ -1437,7 +1437,7 @@ static int adreno_bind(struct device *dev)
 	u32 chipid;
 
 	if (adreno_is_gpu_disabled(pdev)) {
-		dev_err(&pdev->dev, "adreno: GPU is disabled on this device\n");
+		dev_dbg(&pdev->dev, "adreno: GPU is disabled on this device\n");
 		return -ENODEV;
 	}
 
@@ -1539,7 +1539,7 @@ static void adreno_resume(struct adreno_device *adreno_dev)
 		if (device->state == KGSL_STATE_ACTIVE)
 			adreno_idle(device);
 		kgsl_pwrctrl_change_state(device, KGSL_STATE_SLUMBER);
-		dev_err(device->dev, "resume invoked without a suspend\n");
+		dev_dbg(device->dev, "resume invoked without a suspend\n");
 	}
 }
 
@@ -1796,11 +1796,11 @@ static int adreno_last_close(struct kgsl_device *device)
 	 * and then start complaining about it
 	 */
 	if (kgsl_active_count_wait(device, 0, HZ)) {
-		dev_err(device->dev,
+		dev_dbg(device->dev,
 			"Waiting for the active count to become 0\n");
 
 		while (kgsl_active_count_wait(device, 0, HZ))
-			dev_err(device->dev,
+			dev_dbg(device->dev,
 				"Still waiting for the active count\n");
 	}
 
@@ -1946,7 +1946,7 @@ void adreno_get_bus_counters(struct adreno_device *adreno_dev)
 
 	return;
 err:
-	dev_err(KGSL_DEVICE(adreno_dev)->dev,
+	dev_dbg(KGSL_DEVICE(adreno_dev)->dev,
 		"Unable to get perf counters for bus DCVS\n");
 
 }
@@ -2317,7 +2317,7 @@ static int adreno_prop_gaming_bin(struct kgsl_device *device,
 		return ret;
 	}
 
-	dev_err(device->dev, "failed to read gaming_bin nvmem cell\n");
+	dev_dbg(device->dev, "failed to read gaming_bin nvmem cell\n");
 	return -EINVAL;
 }
 
@@ -2694,7 +2694,7 @@ static int adreno_soft_reset(struct kgsl_device *device)
 	adreno_perfcounter_restore(adreno_dev);
 
 	if (ret)
-		dev_err(device->dev, "Device soft reset failed: %d\n", ret);
+		dev_dbg(device->dev, "Device soft reset failed: %d\n", ret);
 
 	return ret;
 }
@@ -2751,6 +2751,9 @@ int adreno_spin_idle(struct adreno_device *adreno_dev, unsigned int timeout)
 
 		if (adreno_isidle(adreno_dev))
 			return 0;
+
+		/* relax tight loop */
+		cond_resched();
 
 	} while (time_before(jiffies, wait));
 
@@ -3008,14 +3011,14 @@ int adreno_gmu_fenced_write(struct adreno_device *adreno_dev,
 		return 0;
 
 	if (i == GMU_CORE_LONG_WAKEUP_RETRY_LIMIT) {
-		dev_err(adreno_dev->dev.dev,
+		dev_dbg(adreno_dev->dev.dev,
 			"Timed out waiting %d usecs to write fenced register 0x%x\n",
 			i * GMU_CORE_WAKEUP_DELAY_US,
 			reg_offset);
 		return -ETIMEDOUT;
 	}
 
-	dev_err(adreno_dev->dev.dev,
+	dev_dbg(adreno_dev->dev.dev,
 		"Waited %d usecs to write fenced register 0x%x\n",
 		i * GMU_CORE_WAKEUP_DELAY_US,
 		reg_offset);
@@ -3575,10 +3578,10 @@ static void adreno_regulator_disable_poll(struct kgsl_device *device)
 		return gpudev->regulator_disable_poll(device);
 
 	if (!kgsl_regulator_disable_wait(pwr->gx_gdsc, 200))
-		dev_err(device->dev, "Regulator vdd is stuck on\n");
+		dev_dbg(device->dev, "Regulator vdd is stuck on\n");
 
 	if (!kgsl_regulator_disable_wait(pwr->cx_gdsc, 200))
-		dev_err(device->dev, "Regulator vddcx is stuck on\n");
+		dev_dbg(device->dev, "Regulator vddcx is stuck on\n");
 }
 
 static void adreno_gpu_model(struct kgsl_device *device, char *str,
@@ -3692,7 +3695,7 @@ static int adreno_gpu_clock_set(struct kgsl_device *device, u32 pwrlevel)
 
 	ret = clk_set_rate(pwr->grp_clks[0], pl->gpu_freq);
 	if (ret)
-		dev_err(device->dev, "GPU clk freq set failure: %d\n", ret);
+		dev_dbg(device->dev, "GPU clk freq set failure: %d\n", ret);
 
 	return ret;
 }
@@ -3865,7 +3868,7 @@ static struct platform_driver adreno_platform_driver = {
 	}
 };
 
-static int __init kgsl_3d_init(void)
+static int __kgsl_3d_init(void *arg)
 {
 	int ret;
 
@@ -3879,6 +3882,16 @@ static int __init kgsl_3d_init(void)
 		kgsl_core_exit();
 
 	return ret;
+}
+
+static int __init kgsl_3d_init(void)
+{
+	struct task_struct *kgsl_3d_init_task =
+		kthread_run(__kgsl_3d_init, NULL, "kgsl_3d_init");
+	if (IS_ERR(kgsl_3d_init_task))
+		return PTR_ERR(kgsl_3d_init_task);
+	else
+		return 0;
 }
 
 static void __exit kgsl_3d_exit(void)

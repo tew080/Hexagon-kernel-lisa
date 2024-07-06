@@ -788,7 +788,7 @@ static void __device_link_del(struct kref *kref)
 {
 	struct device_link *link = container_of(kref, struct device_link, kref);
 
-	dev_info(link->consumer, "Dropping the link to %s\n",
+	dev_dbg(link->consumer, "Dropping the link to %s\n",
 		 dev_name(link->supplier));
 
 	pm_runtime_drop_link(link);
@@ -3934,16 +3934,16 @@ void device_shutdown(void)
 
 		if (dev->class && dev->class->shutdown_pre) {
 			if (initcall_debug)
-				dev_info(dev, "shutdown_pre\n");
+				dev_dbg(dev, "shutdown_pre\n");
 			dev->class->shutdown_pre(dev);
 		}
 		if (dev->bus && dev->bus->shutdown) {
 			if (initcall_debug)
-				dev_info(dev, "shutdown\n");
+				dev_dbg(dev, "shutdown\n");
 			dev->bus->shutdown(dev);
 		} else if (dev->driver && dev->driver->shutdown) {
 			if (initcall_debug)
-				dev_info(dev, "shutdown\n");
+				dev_dbg(dev, "shutdown\n");
 			dev->driver->shutdown(dev);
 		}
 

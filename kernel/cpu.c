@@ -401,10 +401,10 @@ void __init cpu_smt_disable(bool force)
 		return;
 
 	if (force) {
-		pr_info("SMT: Force disabled\n");
+		pr_debug("SMT: Force disabled\n");
 		cpu_smt_control = CPU_SMT_FORCE_DISABLED;
 	} else {
-		pr_info("SMT: disabled\n");
+		pr_debug("SMT: disabled\n");
 		cpu_smt_control = CPU_SMT_DISABLED;
 	}
 }
@@ -1136,7 +1136,7 @@ static int do_cpu_down(unsigned int cpu, enum cpuhp_state target)
 	    !cpumask_intersects(&newmask, cpu_prime_mask) ||
 	    !cpumask_intersects(&newmask, cpu_drm_mask) ||
 	    !cpumask_intersects(&newmask, cpu_kgsl_mask)) {
-		pr_err("%s: not allowed for cpu %d", __func__, cpu);
+		pr_debug("%s: not allowed for cpu %d", __func__, cpu);
 		return -EINVAL;
 	}
 
@@ -1314,10 +1314,10 @@ static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
 	int switch_err = 0;
 
 	if (!cpu_possible(cpu)) {
-		pr_err("can't online cpu %d because it is not configured as may-hotadd at boot time\n",
+		pr_debug("can't online cpu %d because it is not configured as may-hotadd at boot time\n",
 		       cpu);
 #if defined(CONFIG_IA64)
-		pr_err("please check additional_cpus= boot parameter\n");
+		pr_debug("please check additional_cpus= boot parameter\n");
 #endif
 		return -EINVAL;
 	}
@@ -1350,7 +1350,7 @@ out:
 	if (!switch_err) {
 		switch_err = switch_to_fair_policy();
 		if (switch_err)
-			pr_err("Hotplug policy switch err=%d Task %s pid=%d\n",
+			pr_debug("Hotplug policy switch err=%d Task %s pid=%d\n",
 				switch_err, current->comm, current->pid);
 	}
 
@@ -1387,13 +1387,13 @@ int __freeze_secondary_cpus(int primary, bool suspend)
 	 */
 	cpumask_clear(frozen_cpus);
 
-	pr_info("Disabling non-boot CPUs ...\n");
+	pr_debug("Disabling non-boot CPUs ...\n");
 	for_each_online_cpu(cpu) {
 		if (cpu == primary)
 			continue;
 
 		if (suspend && pm_wakeup_pending()) {
-			pr_info("Wakeup pending. Abort CPU freeze\n");
+			pr_debug("Wakeup pending. Abort CPU freeze\n");
 			error = -EBUSY;
 			break;
 		}
@@ -1404,7 +1404,7 @@ int __freeze_secondary_cpus(int primary, bool suspend)
 		if (!error)
 			cpumask_set_cpu(cpu, frozen_cpus);
 		else {
-			pr_err("Error taking CPU%d down: %d\n", cpu, error);
+			pr_debug("Error taking CPU%d down: %d\n", cpu, error);
 			break;
 		}
 	}
@@ -1412,7 +1412,7 @@ int __freeze_secondary_cpus(int primary, bool suspend)
 	if (!error)
 		BUG_ON(num_online_cpus() > 1);
 	else
-		pr_err("Non-boot CPUs are not disabled\n");
+		pr_debug("Non-boot CPUs are not disabled\n");
 
 	/*
 	 * Make sure the CPUs won't be enabled by someone else. We need to do
@@ -1444,7 +1444,7 @@ void enable_nonboot_cpus(void)
 	if (cpumask_empty(frozen_cpus))
 		goto out;
 
-	pr_info("Enabling non-boot CPUs ...\n");
+	pr_debug("Enabling non-boot CPUs ...\n");
 
 	arch_enable_nonboot_cpus_begin();
 
@@ -1453,16 +1453,16 @@ void enable_nonboot_cpus(void)
 		error = _cpu_up(cpu, 1, CPUHP_ONLINE);
 		trace_suspend_resume(TPS("CPU_ON"), cpu, false);
 		if (!error) {
-			pr_info("CPU%d is up\n", cpu);
+			pr_debug("CPU%d is up\n", cpu);
 			cpu_device = get_cpu_device(cpu);
 			if (!cpu_device)
-				pr_err("%s: failed to get cpu%d device\n",
+				pr_debug("%s: failed to get cpu%d device\n",
 				       __func__, cpu);
 			else
 				kobject_uevent(&cpu_device->kobj, KOBJ_ONLINE);
 			continue;
 		}
-		pr_warn("Error taking CPU%d up: %d\n", cpu, error);
+		pr_debug("Error taking CPU%d up: %d\n", cpu, error);
 	}
 
 	arch_enable_nonboot_cpus_end();

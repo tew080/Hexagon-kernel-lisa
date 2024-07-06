@@ -203,7 +203,7 @@ static ssize_t cnss_dev_boot_debug_write(struct file *fp,
 
 	buf[len] = '\0';
 	cmd = buf;
-	cnss_pr_dbg("Received dev_boot debug command: %s\n", cmd);
+	pr_debug("Received dev_boot debug command: %s\n", cmd);
 
 	if (sysfs_streq(cmd, "on")) {
 		ret = cnss_power_on_device(plat_priv, false);
@@ -237,11 +237,11 @@ static ssize_t cnss_dev_boot_debug_write(struct file *fp,
 			cnss_pr_info("FW Assert triggered for debug\n");
 			ret = cnss_force_fw_assert(&pci_priv->pci_dev->dev);
 		} else if (sysfs_streq(cmd, "set_cbc_done")) {
-			cnss_pr_dbg("Force set cold boot cal done status\n");
+			pr_debug("Force set cold boot cal done status\n");
 			set_bit(CNSS_COLD_BOOT_CAL_DONE,
 				&plat_priv->driver_state);
 		} else {
-			cnss_pr_err("Device boot debugfs command is invalid\n");
+			pr_debug("Device boot debugfs command is invalid\n");
 			ret = -EINVAL;
 		}
 	}
@@ -367,13 +367,13 @@ static ssize_t cnss_reg_read_debug_write(struct file *fp,
 		ret = cnss_bus_debug_reg_read(plat_priv, reg_offset, &reg_val);
 		if (ret)
 			return ret;
-		cnss_pr_dbg("Read 0x%x from register offset 0x%x\n", reg_val,
+		pr_debug("Read 0x%x from register offset 0x%x\n", reg_val,
 			    reg_offset);
 		return count;
 	}
 
 	if (!test_bit(CNSS_FW_READY, &plat_priv->driver_state)) {
-		cnss_pr_err("Firmware is not ready yet\n");
+		pr_debug("Firmware is not ready yet\n");
 		return -EINVAL;
 	}
 
@@ -478,13 +478,13 @@ static ssize_t cnss_reg_write_debug_write(struct file *fp,
 		ret = cnss_bus_debug_reg_write(plat_priv, reg_offset, reg_val);
 		if (ret)
 			return ret;
-		cnss_pr_dbg("Wrote 0x%x to register offset 0x%x\n", reg_val,
+		pr_debug("Wrote 0x%x to register offset 0x%x\n", reg_val,
 			    reg_offset);
 		return count;
 	}
 
 	if (!test_bit(CNSS_FW_READY, &plat_priv->driver_state)) {
-		cnss_pr_err("Firmware is not ready yet\n");
+		pr_debug("Firmware is not ready yet\n");
 		return -EINVAL;
 	}
 
@@ -558,7 +558,7 @@ static ssize_t cnss_runtime_pm_debug_write(struct file *fp,
 	} else if (sysfs_streq(cmd, "suspend_bus")) {
 		cnss_pci_suspend_bus(pci_priv);
 	} else {
-		cnss_pr_err("Runtime PM debugfs command is invalid\n");
+		pr_debug("Runtime PM debugfs command is invalid\n");
 		ret = -EINVAL;
 	}
 
@@ -866,7 +866,7 @@ int cnss_debugfs_create(struct cnss_plat_data *plat_priv)
 	root_dentry = debugfs_create_dir("cnss", 0);
 	if (IS_ERR(root_dentry)) {
 		ret = PTR_ERR(root_dentry);
-		cnss_pr_err("Unable to create debugfs %d\n", ret);
+		pr_debug("Unable to create debugfs %d\n", ret);
 		goto out;
 	}
 
@@ -923,14 +923,14 @@ static int cnss_ipc_logging_init(void)
 	cnss_ipc_log_context = ipc_log_context_create(CNSS_IPC_LOG_PAGES,
 						      "cnss", 0);
 	if (!cnss_ipc_log_context) {
-		cnss_pr_err("Unable to create IPC log context\n");
+		pr_debug("Unable to create IPC log context\n");
 		return -EINVAL;
 	}
 
 	cnss_ipc_log_long_context = ipc_log_context_create(CNSS_IPC_LOG_PAGES,
 							   "cnss-long", 0);
 	if (!cnss_ipc_log_long_context) {
-		cnss_pr_err("Unable to create IPC long log context\n");
+		pr_debug("Unable to create IPC long log context\n");
 		ipc_log_context_destroy(cnss_ipc_log_context);
 		return -EINVAL;
 	}

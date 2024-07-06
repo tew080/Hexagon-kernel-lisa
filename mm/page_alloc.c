@@ -165,7 +165,7 @@ static int __init early_init_on_alloc(char *buf)
 		return -EINVAL;
 	ret = kstrtobool(buf, &bool_result);
 	if (bool_result && page_poisoning_enabled())
-		pr_info("mem auto-init: CONFIG_PAGE_POISONING is on, will take precedence over init_on_alloc\n");
+		pr_debug("mem auto-init: CONFIG_PAGE_POISONING is on, will take precedence over init_on_alloc\n");
 	if (bool_result)
 		static_branch_enable(&init_on_alloc);
 	else
@@ -183,7 +183,7 @@ static int __init early_init_on_free(char *buf)
 		return -EINVAL;
 	ret = kstrtobool(buf, &bool_result);
 	if (bool_result && page_poisoning_enabled())
-		pr_info("mem auto-init: CONFIG_PAGE_POISONING is on, will take precedence over init_on_free\n");
+		pr_debug("mem auto-init: CONFIG_PAGE_POISONING is on, will take precedence over init_on_free\n");
 	if (bool_result)
 		static_branch_enable(&init_on_free);
 	else
@@ -749,7 +749,7 @@ static int __init debug_guardpage_minorder_setup(char *buf)
 		return 0;
 	}
 	_debug_guardpage_minorder = res;
-	pr_info("Setting debug_guardpage_minorder to %lu\n", res);
+	pr_debug("Setting debug_guardpage_minorder to %lu\n", res);
 	return 0;
 }
 early_param("debug_guardpage_minorder", debug_guardpage_minorder_setup);
@@ -1847,7 +1847,7 @@ zone_empty:
 	/* Sanity check that the next zone really is unpopulated */
 	WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
 
-	pr_info("node %d initialised, %lu pages in %ums\n",
+	pr_debug("node %d initialised, %lu pages in %ums\n",
 		pgdat->node_id,	nr_pages, jiffies_to_msecs(jiffies - start));
 
 	pgdat_init_report_one_done();
@@ -3945,7 +3945,7 @@ void warn_alloc(gfp_t gfp_mask, nodemask_t *nodemask, const char *fmt, ...)
 	va_start(args, fmt);
 	vaf.fmt = fmt;
 	vaf.va = &args;
-	pr_warn("%s: %pV, mode:%#x(%pGg), nodemask=%*pbl",
+	pr_debug("%s: %pV, mode:%#x(%pGg), nodemask=%*pbl",
 			current->comm, &vaf, gfp_mask, &gfp_mask,
 			nodemask_pr_args(nodemask));
 	va_end(args);
@@ -5788,7 +5788,7 @@ static int __parse_numa_zonelist_order(char *s)
 	 * not fail it silently
 	 */
 	if (!(*s == 'd' || *s == 'D' || *s == 'n' || *s == 'N')) {
-		pr_warn("Ignoring unsupported numa_zonelist_order value:  %s\n", s);
+		pr_debug("Ignoring unsupported numa_zonelist_order value:  %s\n", s);
 		return -EINVAL;
 	}
 	return 0;
@@ -6164,12 +6164,12 @@ void __ref build_all_zonelists(pg_data_t *pgdat)
 	else
 		page_group_by_mobility_disabled = 0;
 
-	pr_info("Built %u zonelists, mobility grouping %s.  Total pages: %ld\n",
+	pr_debug("Built %u zonelists, mobility grouping %s.  Total pages: %ld\n",
 		nr_online_nodes,
 		page_group_by_mobility_disabled ? "off" : "on",
 		vm_total_pages);
 #ifdef CONFIG_NUMA
-	pr_info("Policy zone: %s\n", zone_names[policy_zone]);
+	pr_debug("Policy zone: %s\n", zone_names[policy_zone]);
 #endif
 }
 
@@ -6339,7 +6339,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
 		}
 	}
 
-	pr_info("%s initialised %lu pages in %ums\n", __func__,
+	pr_debug("%s initialised %lu pages in %ums\n", __func__,
 		size, jiffies_to_msecs(jiffies - start));
 }
 
@@ -7111,7 +7111,7 @@ static void __init free_area_init_core(struct pglist_data *pgdat)
 					       "  %s zone: %lu pages used for memmap\n",
 					       zone_names[j], memmap_pages);
 			} else
-				pr_warn("  %s zone: %lu pages exceeds freesize %lu\n",
+				pr_debug("  %s zone: %lu pages exceeds freesize %lu\n",
 					zone_names[j], memmap_pages, freesize);
 		}
 
@@ -7225,7 +7225,7 @@ void __init free_area_init_node(int nid, unsigned long *zones_size,
 	pgdat->per_cpu_nodestats = NULL;
 #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
 	get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
-	pr_info("Initmem setup node %d [mem %#018Lx-%#018Lx]\n", nid,
+	pr_debug("Initmem setup node %d [mem %#018Lx-%#018Lx]\n", nid,
 		(u64)start_pfn << PAGE_SHIFT,
 		end_pfn ? ((u64)end_pfn << PAGE_SHIFT) - 1 : 0);
 #else
@@ -7312,7 +7312,7 @@ void __init zero_resv_unavail(void)
 	 * firmware is using some of this memory, or for some other reasons.
 	 */
 	if (pgcnt)
-		pr_info("Zeroed struct page in unavailable ranges: %lld pages", pgcnt);
+		pr_debug("Zeroed struct page in unavailable ranges: %lld pages", pgcnt);
 }
 #endif /* !CONFIG_FLAT_NODE_MEM_MAP */
 
@@ -7392,7 +7392,7 @@ static unsigned long __init find_min_pfn_for_node(int nid)
 		min_pfn = min(min_pfn, start_pfn);
 
 	if (min_pfn == ULONG_MAX) {
-		pr_warn("Could not find start_pfn for node %d\n", nid);
+		pr_debug("Could not find start_pfn for node %d\n", nid);
 		return 0;
 	}
 
@@ -7496,7 +7496,7 @@ static void __init find_zone_movable_pfns_for_nodes(void)
 		}
 
 		if (mem_below_4gb_not_mirrored)
-			pr_warn("This configuration results in unmirrored kernel memory.");
+			pr_debug("This configuration results in unmirrored kernel memory.");
 
 		goto out2;
 	}
@@ -7710,11 +7710,11 @@ void __init free_area_init_nodes(unsigned long *max_zone_pfn)
 	find_zone_movable_pfns_for_nodes();
 
 	/* Print out the zone ranges */
-	pr_info("Zone ranges:\n");
+	pr_debug("Zone ranges:\n");
 	for (i = 0; i < MAX_NR_ZONES; i++) {
 		if (i == ZONE_MOVABLE)
 			continue;
-		pr_info("  %-8s ", zone_names[i]);
+		pr_debug("  %-8s ", zone_names[i]);
 		if (arch_zone_lowest_possible_pfn[i] ==
 				arch_zone_highest_possible_pfn[i])
 			pr_cont("empty\n");
@@ -7727,10 +7727,10 @@ void __init free_area_init_nodes(unsigned long *max_zone_pfn)
 	}
 
 	/* Print out the PFNs ZONE_MOVABLE begins at in each node */
-	pr_info("Movable zone start for each node\n");
+	pr_debug("Movable zone start for each node\n");
 	for (i = 0; i < MAX_NUMNODES; i++) {
 		if (zone_movable_pfn[i])
-			pr_info("  Node %d: %#018Lx\n", i,
+			pr_debug("  Node %d: %#018Lx\n", i,
 			       (u64)zone_movable_pfn[i] << PAGE_SHIFT);
 	}
 
@@ -7739,9 +7739,9 @@ void __init free_area_init_nodes(unsigned long *max_zone_pfn)
 	 * subsection-map relative to active online memory ranges to
 	 * enable future "sub-section" extensions of the memory map.
 	 */
-	pr_info("Early memory node ranges\n");
+	pr_debug("Early memory node ranges\n");
 	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
-		pr_info("  node %3d: [mem %#018Lx-%#018Lx]\n", nid,
+		pr_debug("  node %3d: [mem %#018Lx-%#018Lx]\n", nid,
 			(u64)start_pfn << PAGE_SHIFT,
 			((u64)end_pfn << PAGE_SHIFT) - 1);
 		subsection_map_init(start_pfn, end_pfn - start_pfn);
@@ -7858,7 +7858,7 @@ unsigned long free_reserved_area(void *start, void *end, int poison, const char 
 	}
 
 	if (pages && s)
-		pr_info("Freeing %s memory: %ldK\n",
+		pr_debug("Freeing %s memory: %ldK\n",
 			s, pages << (PAGE_SHIFT - 10));
 
 #ifdef CONFIG_HAVE_MEMBLOCK
@@ -7916,7 +7916,7 @@ void __init mem_init_print_info(const char *str)
 
 #undef	adj_init_size
 
-	pr_info("Memory: %luK/%luK available (%luK kernel code, %luK rwdata, %luK rodata, %luK init, %luK bss, %luK reserved, %luK cma-reserved"
+	pr_debug("Memory: %luK/%luK available (%luK kernel code, %luK rwdata, %luK rodata, %luK init, %luK bss, %luK reserved, %luK cma-reserved"
 #ifdef	CONFIG_HIGHMEM
 		", %luK highmem"
 #endif
@@ -8211,7 +8211,7 @@ int __meminit init_per_zone_wmark_min(void)
 		if (min_free_kbytes > 65536)
 			min_free_kbytes = 65536;
 	} else {
-		pr_warn("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
+		pr_debug("min_free_kbytes is not updated to %d because user defined value %d is preferred\n",
 				new_min_free_kbytes, user_min_free_kbytes);
 	}
 	setup_per_zone_wmarks();
@@ -8538,7 +8538,7 @@ void *__init alloc_large_system_hash(const char *tablename,
 	if (!table)
 		panic("Failed to allocate %s hash table\n", tablename);
 
-	pr_info("%s hash table entries: %ld (order: %d, %lu bytes, %s)\n",
+	pr_debug("%s hash table entries: %ld (order: %d, %lu bytes, %s)\n",
 		tablename, 1UL << log2qty, ilog2(size) - PAGE_SHIFT, size,
 		virt ? "vmalloc" : "linear");
 
@@ -8860,7 +8860,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
 
 	/* Make sure the range is really isolated. */
 	if (test_pages_isolated(outer_start, end, false)) {
-		pr_info_ratelimited("%s: [%lx, %lx) PFNs busy\n",
+		pr_debug_ratelimited("%s: [%lx, %lx) PFNs busy\n",
 			__func__, outer_start, end);
 		ret = -EBUSY;
 		goto done;
@@ -8983,7 +8983,7 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
 		order = page_order(page);
 		offlined_pages += 1 << order;
 #ifdef CONFIG_DEBUG_VM
-		pr_info("remove from free list %lx %d %lx\n",
+		pr_debug("remove from free list %lx %d %lx\n",
 			pfn, 1 << order, end_pfn);
 #endif
 		del_page_from_free_area(page, &zone->free_area[order]);

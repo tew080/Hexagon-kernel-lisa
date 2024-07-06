@@ -756,7 +756,7 @@ static int q6afe_callback(struct apr_device *adev, struct apr_resp_pkt *data)
 	switch (hdr->opcode) {
 	case APR_BASIC_RSP_RESULT: {
 		if (res->status) {
-			dev_err(afe->dev, "cmd = 0x%x returned error = 0x%x\n",
+			dev_dbg(afe->dev, "cmd = 0x%x returned error = 0x%x\n",
 				res->opcode, res->status);
 		}
 		switch (res->opcode) {
@@ -772,7 +772,7 @@ static int q6afe_callback(struct apr_device *adev, struct apr_resp_pkt *data)
 			}
 			break;
 		default:
-			dev_err(afe->dev, "Unknown cmd 0x%x\n",	res->opcode);
+			dev_dbg(afe->dev, "Unknown cmd 0x%x\n",	res->opcode);
 			break;
 		}
 	}
@@ -821,7 +821,7 @@ static int afe_apr_send_pkt(struct q6afe *afe, struct apr_pkt *pkt,
 
 	ret = apr_send_pkt(afe->apr, pkt);
 	if (ret < 0) {
-		dev_err(afe->dev, "packet not transmitted (%d)\n", ret);
+		dev_dbg(afe->dev, "packet not transmitted (%d)\n", ret);
 		ret = -EINVAL;
 		goto err;
 	}
@@ -831,7 +831,7 @@ static int afe_apr_send_pkt(struct q6afe *afe, struct apr_pkt *pkt,
 	if (!ret) {
 		ret = -ETIMEDOUT;
 	} else if (port->result.status > 0) {
-		dev_err(afe->dev, "DSP returned error[%x]\n",
+		dev_dbg(afe->dev, "DSP returned error[%x]\n",
 			port->result.status);
 		ret = -EINVAL;
 	} else {
@@ -885,7 +885,7 @@ static int q6afe_port_set_param(struct q6afe_port *port, void *data,
 
 	ret = afe_apr_send_pkt(afe, pkt, port);
 	if (ret)
-		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
+		dev_dbg(afe->dev, "AFE enable for port 0x%x failed %d\n",
 		       port_id, ret);
 
 	kfree(pkt);
@@ -934,7 +934,7 @@ static int q6afe_port_set_param_v2(struct q6afe_port *port, void *data,
 
 	ret = afe_apr_send_pkt(afe, pkt, port);
 	if (ret)
-		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
+		dev_dbg(afe->dev, "AFE enable for port 0x%x failed %d\n",
 		       port_id, ret);
 
 	kfree(pkt);
@@ -1039,7 +1039,7 @@ int q6afe_port_stop(struct q6afe_port *port)
 	port_id = port->id;
 	index = port->token;
 	if (index < 0 || index >= AFE_PORT_MAX) {
-		dev_err(afe->dev, "AFE port index[%d] invalid!\n", index);
+		dev_dbg(afe->dev, "AFE port index[%d] invalid!\n", index);
 		return -EINVAL;
 	}
 
@@ -1064,7 +1064,7 @@ int q6afe_port_stop(struct q6afe_port *port)
 
 	ret = afe_apr_send_pkt(afe, pkt, port);
 	if (ret)
-		dev_err(afe->dev, "AFE close failed %d\n", ret);
+		dev_dbg(afe->dev, "AFE close failed %d\n", ret);
 
 	kfree(pkt);
 	return ret;
@@ -1187,7 +1187,7 @@ int q6afe_i2s_port_prepare(struct q6afe_port *port, struct q6afe_i2s_cfg *cfg)
 
 	switch (num_sd_lines) {
 	case 0:
-		dev_err(dev, "no line is assigned\n");
+		dev_dbg(dev, "no line is assigned\n");
 		return -EINVAL;
 	case 1:
 		switch (cfg->sd_line_mask) {
@@ -1204,7 +1204,7 @@ int q6afe_i2s_port_prepare(struct q6afe_port *port, struct q6afe_i2s_cfg *cfg)
 			pcfg->i2s_cfg.channel_mode = AFE_PORT_I2S_SD3;
 			break;
 		default:
-			dev_err(dev, "Invalid SD lines\n");
+			dev_dbg(dev, "Invalid SD lines\n");
 			return -EINVAL;
 		}
 		break;
@@ -1217,7 +1217,7 @@ int q6afe_i2s_port_prepare(struct q6afe_port *port, struct q6afe_i2s_cfg *cfg)
 			pcfg->i2s_cfg.channel_mode = AFE_PORT_I2S_QUAD23;
 			break;
 		default:
-			dev_err(dev, "Invalid SD lines\n");
+			dev_dbg(dev, "Invalid SD lines\n");
 			return -EINVAL;
 		}
 		break;
@@ -1227,7 +1227,7 @@ int q6afe_i2s_port_prepare(struct q6afe_port *port, struct q6afe_i2s_cfg *cfg)
 			pcfg->i2s_cfg.channel_mode = AFE_PORT_I2S_6CHS;
 			break;
 		default:
-			dev_err(dev, "Invalid SD lines\n");
+			dev_dbg(dev, "Invalid SD lines\n");
 			return -EINVAL;
 		}
 		break;
@@ -1238,12 +1238,12 @@ int q6afe_i2s_port_prepare(struct q6afe_port *port, struct q6afe_i2s_cfg *cfg)
 
 			break;
 		default:
-			dev_err(dev, "Invalid SD lines\n");
+			dev_dbg(dev, "Invalid SD lines\n");
 			return -EINVAL;
 		}
 		break;
 	default:
-		dev_err(dev, "Invalid SD lines\n");
+		dev_dbg(dev, "Invalid SD lines\n");
 		return -EINVAL;
 	}
 
@@ -1270,21 +1270,21 @@ int q6afe_i2s_port_prepare(struct q6afe_port *port, struct q6afe_i2s_cfg *cfg)
 	case 3:
 	case 4:
 		if (pcfg->i2s_cfg.channel_mode < AFE_PORT_I2S_QUAD01) {
-			dev_err(dev, "Invalid Channel mode\n");
+			dev_dbg(dev, "Invalid Channel mode\n");
 			return -EINVAL;
 		}
 		break;
 	case 5:
 	case 6:
 		if (pcfg->i2s_cfg.channel_mode < AFE_PORT_I2S_6CHS) {
-			dev_err(dev, "Invalid Channel mode\n");
+			dev_dbg(dev, "Invalid Channel mode\n");
 			return -EINVAL;
 		}
 		break;
 	case 7:
 	case 8:
 		if (pcfg->i2s_cfg.channel_mode < AFE_PORT_I2S_8CHS) {
-			dev_err(dev, "Invalid Channel mode\n");
+			dev_dbg(dev, "Invalid Channel mode\n");
 			return -EINVAL;
 		}
 		break;
@@ -1317,7 +1317,7 @@ int q6afe_port_start(struct q6afe_port *port)
 				       AFE_MODULE_AUDIO_DEV_INTERFACE,
 				       sizeof(port->port_cfg));
 	if (ret) {
-		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
+		dev_dbg(afe->dev, "AFE enable for port 0x%x failed %d\n",
 			port_id, ret);
 		return ret;
 	}
@@ -1327,7 +1327,7 @@ int q6afe_port_start(struct q6afe_port *port)
 					AFE_PARAM_ID_PORT_SLOT_MAPPING_CONFIG,
 					AFE_MODULE_TDM, sizeof(*port->scfg));
 		if (ret) {
-			dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
+			dev_dbg(afe->dev, "AFE enable for port 0x%x failed %d\n",
 			port_id, ret);
 			return ret;
 		}
@@ -1354,7 +1354,7 @@ int q6afe_port_start(struct q6afe_port *port)
 
 	ret = afe_apr_send_pkt(afe, pkt, port);
 	if (ret)
-		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
+		dev_dbg(afe->dev, "AFE enable for port 0x%x failed %d\n",
 			port_id, ret);
 
 	kfree(pkt);
@@ -1380,14 +1380,14 @@ struct q6afe_port *q6afe_port_get_from_id(struct device *dev, int id)
 	int cfg_type;
 
 	if (id < 0 || id >= AFE_PORT_MAX) {
-		dev_err(dev, "AFE port token[%d] invalid!\n", id);
+		dev_dbg(dev, "AFE port token[%d] invalid!\n", id);
 		return ERR_PTR(-EINVAL);
 	}
 
 	/* if port is multiple times bind/unbind before callback finishes */
 	port = q6afe_find_port(afe, id);
 	if (port) {
-		dev_err(dev, "AFE Port already open\n");
+		dev_dbg(dev, "AFE Port already open\n");
 		return port;
 	}
 
@@ -1430,7 +1430,7 @@ struct q6afe_port *q6afe_port_get_from_id(struct device *dev, int id)
 		break;
 
 	default:
-		dev_err(dev, "Invalid port id 0x%x\n", port_id);
+		dev_dbg(dev, "Invalid port id 0x%x\n", port_id);
 		return ERR_PTR(-EINVAL);
 	}
 

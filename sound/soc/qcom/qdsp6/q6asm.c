@@ -235,10 +235,10 @@ static int q6asm_apr_send_session_pkt(struct q6asm *a, struct audio_client *ac,
 					5 * HZ);
 
 	if (!rc) {
-		dev_err(a->dev, "CMD timeout\n");
+		dev_dbg(a->dev, "CMD timeout\n");
 		rc = -ETIMEDOUT;
 	} else if (ac->result.status > 0) {
-		dev_err(a->dev, "DSP returned error[%x]\n",
+		dev_dbg(a->dev, "DSP returned error[%x]\n",
 			ac->result.status);
 		rc = -EINVAL;
 	}
@@ -258,7 +258,7 @@ static int __q6asm_memory_unmap(struct audio_client *ac,
 	void *p;
 
 	if (ac->port[dir].mem_map_handle == 0) {
-		dev_err(ac->dev, "invalid mem handle\n");
+		dev_dbg(ac->dev, "invalid mem handle\n");
 		return -EINVAL;
 	}
 
@@ -328,7 +328,7 @@ int q6asm_unmap_memory_regions(unsigned int dir, struct audio_client *ac)
 	if (cnt >= 0) {
 		rc = __q6asm_memory_unmap(ac, port->buf[dir].phys, dir);
 		if (rc < 0) {
-			dev_err(ac->dev, "%s: Memory_unmap_regions failed %d\n",
+			dev_dbg(ac->dev, "%s: Memory_unmap_regions failed %d\n",
 				__func__, rc);
 			goto err;
 		}
@@ -431,7 +431,7 @@ int q6asm_map_memory_regions(unsigned int dir, struct audio_client *ac,
 
 	spin_lock_irqsave(&ac->lock, flags);
 	if (ac->port[dir].buf) {
-		dev_err(ac->dev, "Buffer already allocated\n");
+		dev_dbg(ac->dev, "Buffer already allocated\n");
 		spin_unlock_irqrestore(&ac->lock, flags);
 		return 0;
 	}
@@ -460,7 +460,7 @@ int q6asm_map_memory_regions(unsigned int dir, struct audio_client *ac,
 
 	rc = __q6asm_memory_map_regions(ac, dir, period_sz, periods, 1);
 	if (rc < 0) {
-		dev_err(ac->dev, "Memory_map_regions failed\n");
+		dev_dbg(ac->dev, "Memory_map_regions failed\n");
 		q6asm_audio_client_free_buf(ac, &ac->port[dir]);
 	}
 
@@ -503,7 +503,7 @@ static struct audio_client *q6asm_get_audio_client(struct q6asm *a,
 
 	spin_lock_irqsave(&a->slock, flags);
 	if ((session_id <= 0) || (session_id > MAX_SESSIONS)) {
-		dev_err(a->dev, "invalid session: %d\n", session_id);
+		dev_dbg(a->dev, "invalid session: %d\n", session_id);
 		goto err;
 	}
 
@@ -565,7 +565,7 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
 		case ASM_STREAM_CMD_SET_ENCDEC_PARAM:
 		case ASM_DATA_CMD_MEDIA_FMT_UPDATE_V2:
 			if (result->status != 0) {
-				dev_err(ac->dev,
+				dev_dbg(ac->dev,
 					"cmd = 0x%x returned error = 0x%x\n",
 					result->opcode, result->status);
 				ac->result = *result;
@@ -575,7 +575,7 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
 			}
 			break;
 		default:
-			dev_err(ac->dev, "command[0x%x] not expecting rsp\n",
+			dev_dbg(ac->dev, "command[0x%x] not expecting rsp\n",
 				result->opcode);
 			break;
 		}
@@ -610,7 +610,7 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
 
 			if (lower_32_bits(phys) != result->opcode ||
 			    upper_32_bits(phys) != result->status) {
-				dev_err(ac->dev, "Expected addr %pa\n",
+				dev_dbg(ac->dev, "Expected addr %pa\n",
 					&port->buf[hdr->token].phys);
 				spin_unlock_irqrestore(&ac->lock, flags);
 				ret = -EINVAL;
@@ -638,7 +638,7 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
 
 			if (upper_32_bits(phys) != done->buf_addr_msw ||
 			    lower_32_bits(phys) != done->buf_addr_lsw) {
-				dev_err(ac->dev, "Expected addr %pa %08x-%08x\n",
+				dev_dbg(ac->dev, "Expected addr %pa %08x-%08x\n",
 					&port->buf[hdr->token].phys,
 					done->buf_addr_lsw,
 					done->buf_addr_msw);
@@ -683,7 +683,7 @@ static int q6asm_srvc_callback(struct apr_device *adev,
 	sid = (hdr->token >> 8) & 0x0F;
 	ac = q6asm_get_audio_client(q6asm, sid);
 	if (!ac) {
-		dev_err(&adev->dev, "Audio Client not active\n");
+		dev_dbg(&adev->dev, "Audio Client not active\n");
 		return 0;
 	}
 
@@ -701,7 +701,7 @@ static int q6asm_srvc_callback(struct apr_device *adev,
 			wake_up(&a->mem_wait);
 			break;
 		default:
-			dev_err(&adev->dev, "command[0x%x] not expecting rsp\n",
+			dev_dbg(&adev->dev, "command[0x%x] not expecting rsp\n",
 				 result->opcode);
 			break;
 		}
@@ -768,7 +768,7 @@ struct audio_client *q6asm_audio_client_alloc(struct device *dev, q6asm_cb cb,
 
 	ac = q6asm_get_audio_client(a, stream_id + 1);
 	if (ac) {
-		dev_err(dev, "Audio Client already active\n");
+		dev_dbg(dev, "Audio Client already active\n");
 		return ac;
 	}
 
@@ -815,13 +815,13 @@ static int q6asm_ac_send_cmd_sync(struct audio_client *ac, struct apr_pkt *pkt)
 	rc = wait_event_timeout(ac->cmd_wait,
 				(ac->result.opcode == hdr->opcode), 5 * HZ);
 	if (!rc) {
-		dev_err(ac->dev, "CMD timeout\n");
+		dev_dbg(ac->dev, "CMD timeout\n");
 		rc =  -ETIMEDOUT;
 		goto err;
 	}
 
 	if (ac->result.status > 0) {
-		dev_err(ac->dev, "DSP returned error[%x]\n",
+		dev_dbg(ac->dev, "DSP returned error[%x]\n",
 			ac->result.status);
 		rc = -EINVAL;
 	} else {
@@ -878,7 +878,7 @@ int q6asm_open_write(struct audio_client *ac, uint32_t format,
 		open->dec_fmt_id = ASM_MEDIA_FMT_MULTI_CHANNEL_PCM_V2;
 		break;
 	default:
-		dev_err(ac->dev, "Invalid format 0x%x\n", format);
+		dev_dbg(ac->dev, "Invalid format 0x%x\n", format);
 		rc = -EINVAL;
 		goto err;
 	}
@@ -1008,7 +1008,7 @@ int q6asm_media_format_block_multi_ch_pcm(struct audio_client *ac,
 		memcpy(channel_mapping, channel_map, PCM_MAX_NUM_CHANNEL);
 	} else {
 		if (q6dsp_map_channels(channel_mapping, channels)) {
-			dev_err(ac->dev, " map channels failed %d\n", channels);
+			dev_dbg(ac->dev, " map channels failed %d\n", channels);
 			rc = -EINVAL;
 			goto err;
 		}
@@ -1125,7 +1125,7 @@ int q6asm_read(struct audio_client *ac)
 	if (rc == pkt_size)
 		rc = 0;
 	else
-		pr_err("read op[0x%x]rc[%d]\n", pkt->hdr.opcode, rc);
+		pr_debug("read op[0x%x]rc[%d]\n", pkt->hdr.opcode, rc);
 
 	kfree(pkt);
 	return rc;
@@ -1166,7 +1166,7 @@ static int __q6asm_open_read(struct audio_client *ac,
 		open->enc_cfg_id = ASM_MEDIA_FMT_MULTI_CHANNEL_PCM_V2;
 		break;
 	default:
-		pr_err("Invalid format[%d]\n", format);
+		pr_debug("Invalid format[%d]\n", format);
 	}
 
 	rc = q6asm_ac_send_cmd_sync(ac, pkt);

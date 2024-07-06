@@ -201,13 +201,13 @@ static int set_wlan_mac_address(const u8 *mac_list, const uint32_t len,
 		return -EINVAL;
 
 	if (len == 0 || (len % ETH_ALEN) != 0) {
-		pr_err("Invalid length %d\n", len);
+		pr_debug("Invalid length %d\n", len);
 		return -EINVAL;
 	}
 
 	no_of_mac_addr = len / ETH_ALEN;
 	if (no_of_mac_addr > MAX_NO_OF_MAC_ADDR) {
-		pr_err("Exceed maximum supported MAC address %u %u\n",
+		pr_debug("Exceed maximum supported MAC address %u %u\n",
 		       MAX_NO_OF_MAC_ADDR, no_of_mac_addr);
 		return -EINVAL;
 	}
@@ -218,7 +218,7 @@ static int set_wlan_mac_address(const u8 *mac_list, const uint32_t len,
 		addr = &priv->wlan_der_mac_addr;
 
 	if (addr->no_of_mac_addr_set) {
-		pr_err("WLAN MAC address is already set, num %d type %d\n",
+		pr_debug("WLAN MAC address is already set, num %d type %d\n",
 		       addr->no_of_mac_addr_set, type);
 		return 0;
 	}
@@ -264,7 +264,7 @@ static u8 *get_wlan_mac_address(struct device *dev,
 		addr = &priv->wlan_der_mac_addr;
 
 	if (!addr->no_of_mac_addr_set) {
-		pr_err("WLAN MAC address is not set, type %d\n", type);
+		pr_debug("WLAN MAC address is not set, type %d\n", type);
 		goto out;
 	}
 	*num = addr->no_of_mac_addr_set;
@@ -342,7 +342,7 @@ static ssize_t cnss_utils_mac_write(struct file *fp,
 	if (!mac_address)
 		return -EINVAL;
 	if (strcmp("0x", mac_address)) {
-		pr_err("Invalid MAC prefix\n");
+		pr_debug("Invalid MAC prefix\n");
 		return -EINVAL;
 	}
 
@@ -351,7 +351,7 @@ static ssize_t cnss_utils_mac_write(struct file *fp,
 	len -= MAC_PREFIX_LEN;
 	if (len < ETH_ALEN * 2 || len > ETH_ALEN * 2 * MAX_NO_OF_MAC_ADDR ||
 	    len % (ETH_ALEN * 2) != 0) {
-		pr_err("Invalid MAC address length %zu\n", len);
+		pr_debug("Invalid MAC address length %zu\n", len);
 		return -EINVAL;
 	}
 
@@ -363,7 +363,7 @@ static ssize_t cnss_utils_mac_write(struct file *fp,
 		priv->wlan_der_mac_addr.no_of_mac_addr_set =
 			len / (ETH_ALEN * 2);
 	} else {
-		pr_err("Invalid MAC address type %s\n", mac_type);
+		pr_debug("Invalid MAC address type %s\n", mac_type);
 		return -EINVAL;
 	}
 
@@ -432,7 +432,7 @@ static int cnss_utils_debugfs_create(struct cnss_utils_priv *priv)
 
 	if (IS_ERR(root_dentry)) {
 		ret = PTR_ERR(root_dentry);
-		pr_err("Unable to create debugfs %d\n", ret);
+		pr_debug("Unable to create debugfs %d\n", ret);
 		goto out;
 	}
 	priv->root_dentry = root_dentry;
