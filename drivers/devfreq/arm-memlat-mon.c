@@ -887,8 +887,8 @@ static int memlat_mon_probe(struct platform_device *pdev, bool is_compute)
 	unsigned long flags;
 
 	if (!memlat_wq)
-		memlat_wq = create_freezable_workqueue("memlat_wq");
-
+		memlat_wq = alloc_workqueue("memlat_wq", WQ_HIGHPRI | WQ_FREEZABLE |
+				            WQ_UNBOUND | WQ_MEM_RECLAIM, 1);
 	if (!memlat_wq) {
 		dev_err(dev, "Couldn't create memlat workqueue.\n");
 		return -ENOMEM;

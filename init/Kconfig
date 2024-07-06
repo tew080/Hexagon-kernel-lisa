@@ -1242,6 +1242,12 @@ config CPUSET_TOP_APP
 	help
 	  The CPU mask to use for the top-app cpuset.
 
+config CPUSET_DISPLAY
+	string "Value for 'display' cpuset"
+	default "0-7"
+	help
+	  The CPU mask to use for the display cpuset.
+
 endif
 
 config SYSFS_DEPRECATED
