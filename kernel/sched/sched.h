@@ -100,6 +100,7 @@ struct walt_cpu_load {
 #define DECLARE_BITMAP_ARRAY(name, nr, bits) \
 	unsigned long name[nr][BITS_TO_LONGS(bits)]
 
+unsigned long apply_dvfs_headroom(unsigned long util, int cpu, bool tapered);
 extern unsigned int sched_ravg_window;
 
 struct walt_sched_stats {
