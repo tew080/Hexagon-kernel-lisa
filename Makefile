@@ -763,7 +763,7 @@ KCFLAGS += -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd  -mt
 KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
 KCFLAGS += -funroll-loops -ftree-vectorize
 KCFLAGS += -msve-vector-bits=128
-KCFLAGS += -fno-common -fomit-frame-pointer -fuse-ld=gold
+KCFLAGS += -fno-common -fuse-ld=gold
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
@@ -773,7 +773,7 @@ KCFLAGS += -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd  -mt
 KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
 KCFLAGS += -funroll-loops -ftree-vectorize
 KCFLAGS += -msve-vector-bits=128
-KCFLAGS += -fno-common -fomit-frame-pointer -fuse-ld=gold
+KCFLAGS += -fno-common -fuse-ld=gold
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_QC_LLVM
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
@@ -783,7 +783,7 @@ KCFLAGS += -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd -mtu
 KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
 KCFLAGS += -funroll-loops -ftree-vectorize 
 KCFLAGS += -msve-vector-bits=128
-KCFLAGS += -fno-common -fomit-frame-pointer -fuse-ld=gold
+KCFLAGS += -fno-common -fuse-ld=gold
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
@@ -793,7 +793,7 @@ KCFLAGS += -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd  -mt
 KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
 KCFLAGS += -funroll-loops -ftree-vectorize
 KCFLAGS += -msve-vector-bits=128
-KCFLAGS += -fno-common -fomit-frame-pointer -fuse-ld=gold
+KCFLAGS += -fno-common -fuse-ld=gold
 endif
 
 ifdef CONFIG_LLVM_POLLY
