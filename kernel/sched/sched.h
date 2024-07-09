@@ -99,6 +99,8 @@ struct walt_cpu_load {
 #ifdef CONFIG_SCHED_WALT
 #define DECLARE_BITMAP_ARRAY(name, nr, bits) \
 	unsigned long name[nr][BITS_TO_LONGS(bits)]
+	
+extern unsigned int sched_ravg_window;
 
 struct walt_sched_stats {
 	int nr_big_tasks;
