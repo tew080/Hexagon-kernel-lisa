@@ -754,6 +754,9 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-truncation)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 
+#Enable hot cold split optimization
+KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
+
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
@@ -810,10 +813,8 @@ KBUILD_CFLAGS	+= -mllvm -polly \
 		   -mllvm -polly-ast-use-context \
 		   -mllvm -polly-detect-keep-going \
 		   -mllvm -polly-invariant-load-hoisting \
-		   -mllvm -polly-vectorizer=stripmine
-
-ifeq ($(shell test $(CONFIG_CLANG_VERSION) -gt 130000; echo $$?),0)
-KBUILD_CFLAGS	+= -mllvm -polly-loopfusion-greedy=1 \
+		   -mllvm -polly-vectorizer=stripmine \
+		   -mllvm -polly-loopfusion-greedy=1 \
 		   -mllvm -polly-reschedule=1 \
 		   -mllvm -polly-postopts=1 \
 		   -mllvm -polly-num-threads=0 \
@@ -830,7 +831,6 @@ endif
 # in order to preserve the overall effect of the linker's DCE.
 ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
 POLLY_FLAGS	+= -mllvm -polly-run-dce
-endif
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
