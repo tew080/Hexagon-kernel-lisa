@@ -387,7 +387,6 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
 	util = util_cfs + cpu_util_rt(rq);
 	if (type == FREQUENCY_UTIL)
 		util = uclamp_rq_util_with(rq, util, p);
-		util = apply_dvfs_headroom(util, cpu, true);
 
 	dl_util = cpu_util_dl(rq);
 
@@ -421,7 +420,6 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
 	 */
 	util = scale_irq_capacity(util, irq, max);
 	util += irq;
-	util += type == FREQUENCY_UTIL ? apply_dvfs_headroom(irq, cpu, false) : irq;
 
 	/*
 	 * Bandwidth required by DEADLINE must always be granted while, for
@@ -434,7 +432,7 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
 	 * an interface. So, we only do the latter for now.
 	 */
 	if (type == FREQUENCY_UTIL)
-		util += apply_dvfs_headroom(cpu_bw_dl(rq), cpu, false);
+		util += cpu_bw_dl(rq);
 
 	return min(max, util);
 }
