@@ -28,7 +28,7 @@
 #include <linux/scmi_protocol.h>
 
 /*MSM TouchBoost*/
-static int touchboost = 0;
+static int touchboost = 1;
 
 #define POLL_INT 25
 #define NODE_NAME_MAX_CHARS 16

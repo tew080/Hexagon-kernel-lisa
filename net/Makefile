@@ -5,13 +5,11 @@
 # 2 Sep 2000, Christoph Hellwig <hch@infradead.org>
 # Rewritten to use lists instead of if-statements.
 #
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd \
-		 -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd \
-		 -mtune=cortex-a78  \
+ccflags-y += -mcpu=kryo -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd  \
+		 -mcpu=cortex-a78 -mtune=cortex-a78  \
 		 -funroll-loops -ftree-vectorize \
-		 -msve-vector-bits=128 -mfpu=neon-fp-armv8 \
-		 -mfloat-abi=hard -fno-common  
-	
+		 -mfpu=neon-fp-armv8 -mfloat-abi=hard \
+		 -msve-vector-bits=128 -fno-common
 
 obj-$(CONFIG_NET)		:= socket.o core/
 

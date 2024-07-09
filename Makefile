@@ -758,42 +758,50 @@ ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -O2
-KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd
-KCFLAGS += -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd  -mtune=cortex-a78 
-KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
-KCFLAGS += -funroll-loops -ftree-vectorize
-KCFLAGS += -msve-vector-bits=128
-KCFLAGS += -fno-common -fuse-ld=gold
+KCFLAGS += -mcpu=kryo 
+KCFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KCFLAGS += -mcpu=cortex-a78 
+KCFLAGS += -mtune=cortex-a78 
+KCFLAGS += -mfpu=neon-fp-armv8 
+KCFLAGS += -mfloat-abi=hard
+KCFLAGS += -funroll-loops -ftree-vectorize 
+KCFLAGS += -msve-vector-bits=128 -fno-common
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -O3
-KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd
-KCFLAGS += -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd  -mtune=cortex-a78 
-KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
-KCFLAGS += -funroll-loops -ftree-vectorize
-KCFLAGS += -msve-vector-bits=128
-KCFLAGS += -fno-common -fuse-ld=gold
+KCFLAGS += -mcpu=kryo 
+KCFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KCFLAGS += -mcpu=cortex-a78 
+KCFLAGS += -mtune=cortex-a78 
+KCFLAGS += -mfpu=neon-fp-armv8 
+KCFLAGS += -mfloat-abi=hard
+KCFLAGS += -funroll-loops -ftree-vectorize 
+KCFLAGS += -msve-vector-bits=128 -fno-common
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_QC_LLVM
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -Ofast
-KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd
-KCFLAGS += -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd -mtune=cortex-a78 
-KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
+KCFLAGS += -mcpu=kryo 
+KCFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KCFLAGS += -mcpu=cortex-a78 
+KCFLAGS += -mtune=cortex-a78 
+KCFLAGS += -mfpu=neon-fp-armv8 
+KCFLAGS += -mfloat-abi=hard
 KCFLAGS += -funroll-loops -ftree-vectorize 
-KCFLAGS += -msve-vector-bits=128
-KCFLAGS += -fno-common -fuse-ld=gold
+KCFLAGS += -msve-vector-bits=128 -fno-common
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += $(KCFLAGS)
 KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -Os
-KCFLAGS := -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd
-KCFLAGS += -mcpu=cortex-a78+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd  -mtune=cortex-a78 
-KCFLAGS += -mfpu=neon-fp-armv8 -mfloat-abi=hard
-KCFLAGS += -funroll-loops -ftree-vectorize
-KCFLAGS += -msve-vector-bits=128
-KCFLAGS += -fno-common -fuse-ld=gold
+KCFLAGS += -mcpu=kryo 
+KCFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KCFLAGS += -mcpu=cortex-a78 
+KCFLAGS += -mtune=cortex-a78 
+KCFLAGS += -mfpu=neon-fp-armv8 
+KCFLAGS += -mfloat-abi=hard
+KCFLAGS += -funroll-loops -ftree-vectorize 
+KCFLAGS += -msve-vector-bits=128 -fno-common
 endif
 
 ifdef CONFIG_LLVM_POLLY
