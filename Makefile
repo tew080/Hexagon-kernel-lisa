@@ -757,54 +757,24 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 #Enable hot cold split optimization
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 
+# Snapdragon optimization
+KBUILD_CFLAGS += -mcpu=kryo 
+KBUILD_CFLAGS  += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KBUILD_CFLAGS  += -mcpu=cortex-a78 
+KBUILD_CFLAGS += -mtune=cortex-a78 
+KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
+KBUILD_CFLAGS  += -mfloat-abi=hard
+KBUILD_CFLAGS += -funroll-loops -ftree-vectorize 
+KBUILD_CFLAGS  += -msve-vector-bits=128 -fno-common
+
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
-KBUILD_CFLAGS += $(KCFLAGS)
-KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -O2
-KCFLAGS += -mcpu=kryo 
-KCFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
-KCFLAGS += -mcpu=cortex-a78 
-KCFLAGS += -mtune=cortex-a78 
-KCFLAGS += -mfpu=neon-fp-armv8 
-KCFLAGS += -mfloat-abi=hard
-KCFLAGS += -funroll-loops -ftree-vectorize 
-KCFLAGS += -msve-vector-bits=128 -fno-common
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
-KBUILD_CFLAGS += $(KCFLAGS)
-KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -O3
-KCFLAGS += -mcpu=kryo 
-KCFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
-KCFLAGS += -mcpu=cortex-a78 
-KCFLAGS += -mtune=cortex-a78 
-KCFLAGS += -mfpu=neon-fp-armv8 
-KCFLAGS += -mfloat-abi=hard
-KCFLAGS += -funroll-loops -ftree-vectorize 
-KCFLAGS += -msve-vector-bits=128 -fno-common
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_QC_LLVM
-KBUILD_CFLAGS += $(KCFLAGS)
-KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -Ofast
-KCFLAGS += -mcpu=kryo 
-KCFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
-KCFLAGS += -mcpu=cortex-a78 
-KCFLAGS += -mtune=cortex-a78 
-KCFLAGS += -mfpu=neon-fp-armv8 
-KCFLAGS += -mfloat-abi=hard
-KCFLAGS += -funroll-loops -ftree-vectorize 
-KCFLAGS += -msve-vector-bits=128 -fno-common
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS += $(KCFLAGS)
-KBUILD_LDFLAGS += $(LDFLAGS)
 KBUILD_CFLAGS += -Os
-KCFLAGS += -mcpu=kryo 
-KCFLAGS += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
-KCFLAGS += -mcpu=cortex-a78 
-KCFLAGS += -mtune=cortex-a78 
-KCFLAGS += -mfpu=neon-fp-armv8 
-KCFLAGS += -mfloat-abi=hard
-KCFLAGS += -funroll-loops -ftree-vectorize 
-KCFLAGS += -msve-vector-bits=128 -fno-common
 endif
 
 ifdef CONFIG_LLVM_POLLY
