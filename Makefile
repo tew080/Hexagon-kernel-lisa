@@ -759,7 +759,7 @@ KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 
 # Snapdragon optimization
 KBUILD_CFLAGS += -mcpu=kryo 
-KBUILD_CFLAGS  += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KBUILD_CFLAGS  += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2
 KBUILD_CFLAGS  += -mcpu=cortex-a78 
 KBUILD_CFLAGS += -mtune=cortex-a78 
 KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
@@ -791,8 +791,6 @@ KBUILD_CFLAGS	+= -mllvm -polly \
 		   -mllvm -polly-omp-backend=LLVM \
 		   -mllvm -polly-scheduling=dynamic \
 		   -mllvm -polly-scheduling-chunksize=1
-else
-KBUILD_CFLAGS	+= -mllvm -polly-opt-fusion=max
 endif
 
 # Polly may optimise loops with dead paths beyound what the linker
