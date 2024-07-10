@@ -45,13 +45,13 @@ else
 	LINUX_COMPILE_BY=$KBUILD_BUILD_USER
 fi
 if test -z "$KBUILD_BUILD_HOST"; then
-	LINUX_COMPILE_HOST=GeForce
+	LINUX_COMPILE_HOST=MSM
 else
 	LINUX_COMPILE_HOST=$KBUILD_BUILD_HOST
 fi
 
 UTS_VERSION="#$VERSION"
-CONFIG_FLAGS="|GeForceProject|"
+CONFIG_FLAGS="|HexagonProject|"
 if [ -n "$SMP" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS SMP"; fi
 if [ -n "$PREEMPT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT"; fi
 if [ -n "$PREEMPT_RT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT_RT"; fi
@@ -72,7 +72,7 @@ UTS_TRUNCATE="cut -b -$UTS_LEN"
   echo \#define UTS_VERSION \"`echo $UTS_VERSION | $UTS_TRUNCATE`\"
 
   echo \#define LINUX_COMPILE_BY \"`echo TEW080 | $UTS_TRUNCATE`\"
-  echo \#define LINUX_COMPILE_HOST \"`echo GeForce | $UTS_TRUNCATE`\"
+  echo \#define LINUX_COMPILE_HOST \"`echo MSM | $UTS_TRUNCATE`\"
 
   echo \#define LINUX_COMPILER \"`$CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//'`\"
 } > .tmpcompile
