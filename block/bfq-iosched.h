@@ -11,15 +11,15 @@
 #include <linux/blk-cgroup.h>
 
 #define BFQ_IOPRIO_CLASSES	3
-#define BFQ_CL_IDLE_TIMEOUT	(HZ/5)
+#define BFQ_CL_IDLE_TIMEOUT	(HZ/4)
 
 #define BFQ_MIN_WEIGHT			1
 #define BFQ_MAX_WEIGHT			1000
-#define BFQ_WEIGHT_CONVERSION_COEFF	10
+#define BFQ_WEIGHT_CONVERSION_COEFF	15
 
-#define BFQ_DEFAULT_QUEUE_IOPRIO	4
+#define BFQ_DEFAULT_QUEUE_IOPRIO	5
 
-#define BFQ_WEIGHT_LEGACY_DFL	100
+#define BFQ_WEIGHT_LEGACY_DFL	120
 #define BFQ_DEFAULT_GRP_IOPRIO	0
 #define BFQ_DEFAULT_GRP_CLASS	IOPRIO_CLASS_BE
 
@@ -30,7 +30,7 @@
  * than interactive ones. Over-raise the weight of the former to
  * privilege them against the latter.
  */
-#define BFQ_SOFTRT_WEIGHT_FACTOR	100
+#define BFQ_SOFTRT_WEIGHT_FACTOR	120
 
 struct bfq_entity;
 

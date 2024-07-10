@@ -1170,7 +1170,7 @@ config CHECKPOINT_RESTORE
 	  entries.
 
 	  If unsure, say N here.
-	  
+
 config SCHED_AUTOGROUP
 	bool "Automatic process group scheduling"
 	select CGROUPS
