@@ -7,7 +7,7 @@ SECONDS=0 # builtin bash timer
 TC_DIR="/home/tew404/lisa-Kernel/Clang-19.0.0"
 DEFCONFIG="lisa_defconfig"
 
-ZIPNAME="Geforce-kernel-lisa-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="Hexagon-kernel-lisa-$(date '+%Y%m%d-%H%M').zip"
 
 if test -z "$(git rev-parse --show-cdup 2>/dev/null)" &&
    head=$(git rev-parse --verify HEAD 2>/dev/null); then
