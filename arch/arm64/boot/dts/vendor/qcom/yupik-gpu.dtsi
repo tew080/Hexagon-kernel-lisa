@@ -197,7 +197,7 @@
 					qcom,bus-freq-ddr7 = <4>;
 					qcom,bus-min-ddr7 = <3>;
 					qcom,bus-max-ddr7 = <6>;
-					qcom,acd-level = <0x802B5FFD>;
+					qcom,acd-level = <0x882F5FFD>;
 				};
 				qcom,gpu-pwrlevel@4 {
 					reg = <4>;
