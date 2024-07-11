@@ -2,7 +2,7 @@
 #
 # Cryptographic API
 #
-ccflags-y += -mcpu=kryo -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
+ccflags-y += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
 		 -mcpu=cortex-a78 -mtune=cortex-a78  \
 		 -funroll-loops -ftree-vectorize \
 		 -mfpu=neon-fp-armv8 -mfloat-abi=hard \
@@ -100,7 +100,7 @@ obj-$(CONFIG_CRYPTO_AEGIS128) += aegis128.o
 aegis128-y := aegis128-core.o
 
 ifeq ($(ARCH),arm)
-CFLAGS_aegis128-neon-inner.o += -ffreestanding -march=armv8.2-a+crypto+rcpc+dotprod -mfloat-abi=hard
+CFLAGS_aegis128-neon-inner.o += -ffreestanding -march=armv8-a+crypto+rcpc+dotprod -mfloat-abi=hard
 CFLAGS_aegis128-neon-inner.o += -mfpu=crypto-neon-fp-armv8
 CFLAGS_aegis128-neon-inner.o += -mcpu=cortex-a78 -mtune=cortex-a78
 CFLAGS_aegis128-neon-inner.o +=  

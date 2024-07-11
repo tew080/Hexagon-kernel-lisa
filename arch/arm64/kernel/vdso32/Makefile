@@ -60,7 +60,7 @@ endif
 # From arm vDSO Makefile
 VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
 VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
-VDSO_CAFLAGS += -march=armv8.2-a
+VDSO_CAFLAGS += -march=armv8-a
 
 VDSO_CFLAGS := $(VDSO_CAFLAGS)
 VDSO_CFLAGS += -DENABLE_COMPAT_VDSO=1

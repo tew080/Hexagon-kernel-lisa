@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
 # auto-detect subdirs
-ccflags-y += -mcpu=kryo -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
+ccflags-y += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
 		 -mcpu=cortex-a78 -mtune=cortex-a78  \
 		 -funroll-loops -ftree-vectorize \
 		 -mfpu=neon-fp-armv8 -mfloat-abi=hard \

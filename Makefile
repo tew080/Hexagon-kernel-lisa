@@ -759,7 +759,7 @@ KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 
 # Snapdragon optimization
 KBUILD_CFLAGS += -mcpu=kryo 
-KBUILD_CFLAGS  += -march=armv8.2-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2
+KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2
 KBUILD_CFLAGS  += -mcpu=cortex-a78 
 KBUILD_CFLAGS += -mtune=cortex-a78 
 KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
@@ -962,10 +962,8 @@ endif
 
 ifdef CONFIG_LTO_CLANG
 ifdef CONFIG_THINLTO
-CC_FLAGS_LTO_CLANG := -flto=thin $(call cc-option, -fsplit-lto-unit)
+CC_FLAGS_LTO_CLANG := -flto=full $(call cc-option, -fsplit-lto-unit)
 KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
-else
-CC_FLAGS_LTO_CLANG := -flto
 endif
 ifdef CONFIG_LD_IS_LLD
 KBUILD_LDFLAGS += --lto-O3
