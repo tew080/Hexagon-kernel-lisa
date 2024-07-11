@@ -766,28 +766,6 @@ KBUILD_CFLAGS  += -mfpu=neon-fp-armv8
 KBUILD_CFLAGS  += -mfloat-abi=hard
 KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
 KBUILD_CFLAGS  += -msve-vector-bits=128 -fno-common
-KBUILD_CFLAGS  += -march=native
-ifeq ($(cc-name),gcc)
-KBUILD_CFLAGS  += -mcpu=kryo 
-KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2
-KBUILD_CFLAGS  += -mcpu=cortex-a78 
-KBUILD_CFLAGS  += -mtune=cortex-a78 
-KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
-KBUILD_CFLAGS  += -mfloat-abi=hard
-KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
-KBUILD_CFLAGS  += -msve-vector-bits=128 -fno-common
-KBUILD_CFLAGS  += -march=native
-else ifeq ($(cc-name),clang)
-KBUILD_CFLAGS  += -mcpu=kryo 
-KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2
-KBUILD_CFLAGS  += -mcpu=cortex-a78 
-KBUILD_CFLAGS  += -mtune=cortex-a78 
-KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
-KBUILD_CFLAGS  += -mfloat-abi=hard
-KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
-KBUILD_CFLAGS  += -msve-vector-bits=128 -fno-common
-KBUILD_CFLAGS  += -march=native
-endif
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
 KBUILD_CFLAGS += -O2
