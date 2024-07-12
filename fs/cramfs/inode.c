@@ -652,14 +652,14 @@ static int cramfs_mtd_fill_super(struct super_block *sb, struct fs_context *fc)
 		return err ? : -ENODATA;
 	}
 
-	pr_info("checking physical address %pap for linear cramfs image\n",
+	pr_debug("checking physical address %pap for linear cramfs image\n",
 		&sbi->linear_phys_addr);
 	err = cramfs_read_super(sb, fc, &super);
 	if (err)
 		return err;
 
 	/* Remap the whole filesystem now */
-	pr_info("linear cramfs image on mtd:%s appears to be %lu KB in size\n",
+	pr_debug("linear cramfs image on mtd:%s appears to be %lu KB in size\n",
 		sb->s_mtd->name, sbi->size/1024);
 	mtd_unpoint(sb->s_mtd, 0, PAGE_SIZE);
 	err = mtd_point(sb->s_mtd, 0, sbi->size, &sbi->mtd_point_size,

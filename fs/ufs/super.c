@@ -173,13 +173,13 @@ static void ufs_print_super_stuff(struct super_block *sb,
 		pr_debug("  cs_nbfree(No of free blocks):  %llu\n",
 			 (unsigned long long)
 			 fs64_to_cpu(sb, usb2->fs_un.fs_u2.cs_nbfree));
-		pr_info("  cs_nifree(Num of free inodes): %llu\n",
+		pr_debug("  cs_nifree(Num of free inodes): %llu\n",
 			(unsigned long long)
 			fs64_to_cpu(sb, usb3->fs_un1.fs_u2.cs_nifree));
-		pr_info("  cs_nffree(Num of free frags): %llu\n",
+		pr_debug("  cs_nffree(Num of free frags): %llu\n",
 			(unsigned long long)
 			fs64_to_cpu(sb, usb3->fs_un1.fs_u2.cs_nffree));
-		pr_info("  fs_maxsymlinklen: %u\n",
+		pr_debug("  fs_maxsymlinklen: %u\n",
 			fs32_to_cpu(sb, usb3->fs_un2.fs_44.fs_maxsymlinklen));
 	} else {
 		pr_debug(" sblkno:      %u\n", fs32_to_cpu(sb, usb1->fs_sblkno));
@@ -915,7 +915,7 @@ static int ufs_fill_super(struct super_block *sb, void *data, int silent)
 		flags |= UFS_DE_OLD | UFS_UID_OLD | UFS_ST_OLD | UFS_CG_OLD;
 		if (!sb_rdonly(sb)) {
 			if (!silent)
-				pr_info("ufstype=old is supported read-only\n");
+				pr_debug("ufstype=old is supported read-only\n");
 			sb->s_flags |= SB_RDONLY;
 		}
 		break;
@@ -931,7 +931,7 @@ static int ufs_fill_super(struct super_block *sb, void *data, int silent)
 		flags |= UFS_DE_OLD | UFS_UID_OLD | UFS_ST_OLD | UFS_CG_OLD;
 		if (!sb_rdonly(sb)) {
 			if (!silent)
-				pr_info("ufstype=nextstep is supported read-only\n");
+				pr_debug("ufstype=nextstep is supported read-only\n");
 			sb->s_flags |= SB_RDONLY;
 		}
 		break;
@@ -947,7 +947,7 @@ static int ufs_fill_super(struct super_block *sb, void *data, int silent)
 		flags |= UFS_DE_OLD | UFS_UID_OLD | UFS_ST_OLD | UFS_CG_OLD;
 		if (!sb_rdonly(sb)) {
 			if (!silent)
-				pr_info("ufstype=nextstep-cd is supported read-only\n");
+				pr_debug("ufstype=nextstep-cd is supported read-only\n");
 			sb->s_flags |= SB_RDONLY;
 		}
 		break;
@@ -963,7 +963,7 @@ static int ufs_fill_super(struct super_block *sb, void *data, int silent)
 		flags |= UFS_DE_44BSD | UFS_UID_44BSD | UFS_ST_44BSD | UFS_CG_44BSD;
 		if (!sb_rdonly(sb)) {
 			if (!silent)
-				pr_info("ufstype=openstep is supported read-only\n");
+				pr_debug("ufstype=openstep is supported read-only\n");
 			sb->s_flags |= SB_RDONLY;
 		}
 		break;
@@ -978,7 +978,7 @@ static int ufs_fill_super(struct super_block *sb, void *data, int silent)
 		flags |= UFS_DE_OLD | UFS_UID_OLD | UFS_ST_OLD | UFS_CG_OLD;
 		if (!sb_rdonly(sb)) {
 			if (!silent)
-				pr_info("ufstype=hp is supported read-only\n");
+				pr_debug("ufstype=hp is supported read-only\n");
 			sb->s_flags |= SB_RDONLY;
  		}
  		break;

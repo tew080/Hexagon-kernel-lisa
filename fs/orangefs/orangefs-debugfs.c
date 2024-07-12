@@ -174,7 +174,7 @@ void orangefs_debugfs_init(int debug_mask)
 	if (orangefs_gossip_debug_mask != 0)
 		kernel_mask_set_mod_init = true;
 
-	pr_info("%s: called with debug mask: :%s: :%llx:\n",
+	pr_debug("%s: called with debug mask: :%s: :%llx:\n",
 		__func__,
 		kernel_debug_string,
 		(unsigned long long)orangefs_gossip_debug_mask);
@@ -203,7 +203,7 @@ static void orangefs_kernel_debug_init(void)
 		strcat(k_buffer, "\n");
 	} else {
 		strcpy(k_buffer, "none\n");
-		pr_info("%s: overflow 1!\n", __func__);
+		pr_debug("%s: overflow 1!\n", __func__);
 	}
 
 	debugfs_create_file(ORANGEFS_KMOD_DEBUG_FILE, 0444, debug_dir, k_buffer,
@@ -303,7 +303,7 @@ static void orangefs_client_debug_init(void)
 		strcat(c_buffer, "\n");
 	} else {
 		strcpy(c_buffer, "none\n");
-		pr_info("%s: overflow! 2\n", __func__);
+		pr_debug("%s: overflow! 2\n", __func__);
 	}
 
 	client_debug_dentry = debugfs_create_file(ORANGEFS_CLIENT_DEBUG_FILE,
@@ -429,7 +429,7 @@ static ssize_t orangefs_debug_write(struct file *file,
 	} else {
 		/* Can't reset client debug mask if client is not running. */
 		if (is_daemon_in_service()) {
-			pr_info("%s: Client not running :%d:\n",
+			pr_debug("%s: Client not running :%d:\n",
 				__func__,
 				is_daemon_in_service());
 			goto out;
@@ -441,7 +441,7 @@ static ssize_t orangefs_debug_write(struct file *file,
 
 		new_op = op_alloc(ORANGEFS_VFS_OP_PARAM);
 		if (!new_op) {
-			pr_info("%s: op_alloc failed!\n", __func__);
+			pr_debug("%s: op_alloc failed!\n", __func__);
 			goto out;
 		}
 
@@ -513,7 +513,7 @@ static int orangefs_prepare_cdm_array(char *debug_array_string)
 			cdm_element_count++;
 
 	if (!cdm_element_count) {
-		pr_info("No elements in client debug array string!\n");
+		pr_debug("No elements in client debug array string!\n");
 		goto out;
 	}
 
@@ -900,7 +900,7 @@ int orangefs_debugfs_new_client_mask(void __user *arg)
 	client_debug_mask.mask1 = mask2_info.mask1_value;
 	client_debug_mask.mask2 = mask2_info.mask2_value;
 
-	pr_info("%s: client debug mask has been been received "
+	pr_debug("%s: client debug mask has been been received "
 		":%llx: :%llx:\n",
 		__func__,
 		(unsigned long long)client_debug_mask.mask1,
@@ -918,7 +918,7 @@ int orangefs_debugfs_new_client_string(void __user *arg)
 			     ORANGEFS_MAX_DEBUG_STRING_LEN);
 
 	if (ret != 0) {
-		pr_info("%s: CLIENT_STRING: copy_from_user failed\n",
+		pr_debug("%s: CLIENT_STRING: copy_from_user failed\n",
 			__func__);
 		return -EFAULT;
 	}
@@ -936,7 +936,7 @@ int orangefs_debugfs_new_client_string(void __user *arg)
 	client_debug_array_string[ORANGEFS_MAX_DEBUG_STRING_LEN - 1] =
 		'\0';
 
-	pr_info("%s: client debug array string has been received.\n",
+	pr_debug("%s: client debug array string has been received.\n",
 		__func__);
 
 	if (!help_string_initialized) {
@@ -988,7 +988,7 @@ int orangefs_debugfs_new_debug(void __user *arg)
 		debug_mask_to_string(&mask_info.mask_value,
 				     mask_info.mask_type);
 		orangefs_gossip_debug_mask = mask_info.mask_value;
-		pr_info("%s: kernel debug mask has been modified to "
+		pr_debug("%s: kernel debug mask has been modified to "
 			":%s: :%llx:\n",
 			__func__,
 			kernel_debug_string,
@@ -996,7 +996,7 @@ int orangefs_debugfs_new_debug(void __user *arg)
 	} else if (mask_info.mask_type == CLIENT_MASK) {
 		debug_mask_to_string(&mask_info.mask_value,
 				     mask_info.mask_type);
-		pr_info("%s: client debug mask has been modified to"
+		pr_debug("%s: client debug mask has been modified to"
 			":%s: :%llx:\n",
 			__func__,
 			client_debug_string,

@@ -1624,7 +1624,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
 	   We cannot do rollback at this point. */
 	walk_system_ram_range(start_pfn, end_pfn - start_pfn,
 			      &offlined_pages, offline_isolated_pages_cb);
-	pr_info("Offlined Pages %ld\n", offlined_pages);
+	pr_debug("Offlined Pages %ld\n", offlined_pages);
 	/*
 	 * Onlining will reset pagetype flags and makes migrate type
 	 * MOVABLE, so just need to decrease the number of isolated

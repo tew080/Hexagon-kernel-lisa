@@ -2363,7 +2363,7 @@ static void __init btrfs_print_mod_info(void)
 			", ref-verify=on"
 #endif
 			;
-	pr_info("Btrfs loaded, crc32c=%s%s\n", crc32c_impl(), options);
+	pr_debug("Btrfs loaded, crc32c=%s%s\n", crc32c_impl(), options);
 }
 
 static int __init init_btrfs_fs(void)

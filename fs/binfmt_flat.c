@@ -489,7 +489,7 @@ static int load_flat_file(struct linux_binprm *bprm,
 	}
 
 	if (flags & FLAT_FLAG_KTRACE)
-		pr_info("Loading file: %s\n", bprm->filename);
+		pr_debug("Loading file: %s\n", bprm->filename);
 
 #ifdef CONFIG_BINFMT_FLAT_OLD
 	if (rev != FLAT_VERSION && rev != OLD_FLAT_VERSION) {
@@ -764,9 +764,9 @@ static int load_flat_file(struct linux_binprm *bprm,
 	}
 
 	if (flags & FLAT_FLAG_KTRACE) {
-		pr_info("Mapping is %lx, Entry point is %x, data_start is %x\n",
+		pr_debug("Mapping is %lx, Entry point is %x, data_start is %x\n",
 			textpos, 0x00ffffff&ntohl(hdr->entry), ntohl(hdr->data_start));
-		pr_info("%s %s: TEXT=%lx-%lx DATA=%lx-%lx BSS=%lx-%lx\n",
+		pr_debug("%s %s: TEXT=%lx-%lx DATA=%lx-%lx BSS=%lx-%lx\n",
 			id ? "Lib" : "Load", bprm->filename,
 			start_code, end_code, datapos, datapos + data_len,
 			datapos + data_len, (datapos + data_len + bss_len + 3) & ~3);

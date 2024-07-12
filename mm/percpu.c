@@ -1751,7 +1751,7 @@ fail:
 			size, align, is_atomic, err);
 		dump_stack();
 		if (!--warn_limit)
-			pr_info("limit reached, disable warning\n");
+			pr_debug("limit reached, disable warning\n");
 	}
 	if (is_atomic) {
 		/* see the flag handling in pcpu_blance_workfn() */
@@ -2787,7 +2787,7 @@ int __init pcpu_embed_first_chunk(size_t reserved_size, size_t dyn_size,
 		ai->groups[group].base_offset = areas[group] - base;
 	}
 
-	pr_info("Embedded %zu pages/cpu s%zu r%zu d%zu u%zu\n",
+	pr_debug("Embedded %zu pages/cpu s%zu r%zu d%zu u%zu\n",
 		PFN_DOWN(size_sum), ai->static_size, ai->reserved_size,
 		ai->dyn_size, ai->unit_size);
 
@@ -2912,7 +2912,7 @@ int __init pcpu_page_first_chunk(size_t reserved_size,
 	}
 
 	/* we're ready, commit */
-	pr_info("%d %s pages/cpu s%zu r%zu d%zu\n",
+	pr_debug("%d %s pages/cpu s%zu r%zu d%zu\n",
 		unit_pages, psize_str, ai->static_size,
 		ai->reserved_size, ai->dyn_size);
 

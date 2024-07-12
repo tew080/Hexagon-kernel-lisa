@@ -941,7 +941,7 @@ static int madvise_inject_error(int behavior,
 		}
 
 		if (behavior == MADV_SOFT_OFFLINE) {
-			pr_info("Soft offlining pfn %#lx at process virtual address %#lx\n",
+			pr_debug("Soft offlining pfn %#lx at process virtual address %#lx\n",
 					pfn, start);
 
 			ret = soft_offline_page(page, MF_COUNT_INCREASED);
@@ -950,7 +950,7 @@ static int madvise_inject_error(int behavior,
 			continue;
 		}
 
-		pr_info("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
+		pr_debug("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
 				pfn, start);
 
 		/*

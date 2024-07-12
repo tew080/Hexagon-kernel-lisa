@@ -892,7 +892,7 @@ static pageout_t pageout(struct page *page, struct address_space *mapping,
 		if (page_has_private(page)) {
 			if (try_to_free_buffers(page)) {
 				ClearPageDirty(page);
-				pr_info("%s: orphaned page\n", __func__);
+				pr_debug("%s: orphaned page\n", __func__);
 				return PAGE_CLEAN;
 			}
 		}
@@ -7045,7 +7045,7 @@ void update_kswapd_threads(void)
 	for_each_node_state(nid, N_MEMORY)
 		update_kswapd_threads_node(nid);
 
-	pr_info("kswapd_thread count changed, old:%d new:%d\n",
+	pr_debug("kswapd_thread count changed, old:%d new:%d\n",
 		kswapd_threads_current, kswapd_threads);
 	kswapd_threads_current = kswapd_threads;
 	mem_hotplug_done();

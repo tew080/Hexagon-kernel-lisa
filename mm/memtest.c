@@ -27,7 +27,7 @@ static u64 patterns[] __initdata = {
 
 static void __init reserve_bad_mem(u64 pattern, phys_addr_t start_bad, phys_addr_t end_bad)
 {
-	pr_info("  %016llx bad mem addr %pa - %pa reserved\n",
+	pr_debug("  %016llx bad mem addr %pa - %pa reserved\n",
 		cpu_to_be64(pattern), &start_bad, &end_bad);
 	memblock_reserve(start_bad, end_bad - start_bad);
 }
@@ -73,7 +73,7 @@ static void __init do_one_pass(u64 pattern, phys_addr_t start, phys_addr_t end)
 		this_start = clamp(this_start, start, end);
 		this_end = clamp(this_end, start, end);
 		if (this_start < this_end) {
-			pr_info("  %pa - %pa pattern %016llx\n",
+			pr_debug("  %pa - %pa pattern %016llx\n",
 				&this_start, &this_end, cpu_to_be64(pattern));
 			memtest(pattern, this_start, this_end - this_start);
 		}
@@ -105,7 +105,7 @@ void __init early_memtest(phys_addr_t start, phys_addr_t end)
 	if (!memtest_pattern)
 		return;
 
-	pr_info("early_memtest: # of tests: %u\n", memtest_pattern);
+	pr_debug("early_memtest: # of tests: %u\n", memtest_pattern);
 	for (i = memtest_pattern-1; i < UINT_MAX; --i) {
 		idx = i % ARRAY_SIZE(patterns);
 		do_one_pass(patterns[idx], start, end);

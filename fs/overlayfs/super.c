@@ -591,7 +591,7 @@ static int ovl_parse_opt(char *opt, struct ovl_config *config)
 
 	/* Workdir is useless in non-upper mount */
 	if (!config->upperdir && config->workdir) {
-		pr_info("overlayfs: option \"workdir=%s\" is useless in a non-upper mount, ignore\n",
+		pr_debug("overlayfs: option \"workdir=%s\" is useless in a non-upper mount, ignore\n",
 			config->workdir);
 		kfree(config->workdir);
 		config->workdir = NULL;
@@ -620,7 +620,7 @@ static int ovl_parse_opt(char *opt, struct ovl_config *config)
 			 * There was an explicit redirect_dir=... that resulted
 			 * in this conflict.
 			 */
-			pr_info("overlayfs: disabling metacopy due to redirect_dir=%s\n",
+			pr_debug("overlayfs: disabling metacopy due to redirect_dir=%s\n",
 				config->redirect_mode);
 			config->metacopy = false;
 		} else {
@@ -1452,7 +1452,7 @@ static int ovl_get_lower_layers(struct super_block *sb, struct ovl_fs *ofs,
 	}
 
 	if (ofs->xino_bits) {
-		pr_info("overlayfs: \"xino\" feature enabled using %d upper inode bits.\n",
+		pr_debug("overlayfs: \"xino\" feature enabled using %d upper inode bits.\n",
 			ofs->xino_bits);
 	}
 

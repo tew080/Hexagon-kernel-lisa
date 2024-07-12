@@ -42,7 +42,7 @@ void _erofs_info(struct super_block *sb, const char *function,
 	vaf.fmt = fmt;
 	vaf.va = &args;
 
-	pr_info("(device %s): %pV", sb->s_id, &vaf);
+	pr_debug("(device %s): %pV", sb->s_id, &vaf);
 	va_end(args);
 }
 

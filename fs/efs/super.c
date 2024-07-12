@@ -129,7 +129,7 @@ static const struct export_operations efs_export_ops = {
 
 static int __init init_efs_fs(void) {
 	int err;
-	pr_info(EFS_VERSION" - http://aeschi.ch.eu.org/efs/\n");
+	pr_debug(EFS_VERSION" - http://aeschi.ch.eu.org/efs/\n");
 	err = init_inodecache();
 	if (err)
 		goto out1;
@@ -222,7 +222,7 @@ static efs_block_t efs_validate_vh(struct volume_header *vh) {
 		pr_notice("partition table contained no EFS partitions\n");
 #ifdef DEBUG
 	} else {
-		pr_info("using slice %d (type %s, offset 0x%x)\n", slice,
+		pr_debug("using slice %d (type %s, offset 0x%x)\n", slice,
 			(pt_entry->pt_name) ? pt_entry->pt_name : "unknown",
 			sblock);
 #endif
@@ -305,7 +305,7 @@ static int efs_fill_super(struct super_block *s, void *d, int silent)
 
 	if (!sb_rdonly(s)) {
 #ifdef DEBUG
-		pr_info("forcing read-only mode\n");
+		pr_debug("forcing read-only mode\n");
 #endif
 		s->s_flags |= SB_RDONLY;
 	}

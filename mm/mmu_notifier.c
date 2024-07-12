@@ -176,7 +176,7 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
 			if (!mmu_notifier_range_blockable(range))
 				non_block_end();
 			if (_ret) {
-				pr_info("%pS callback failed with %d in %sblockable context.\n",
+				pr_debug("%pS callback failed with %d in %sblockable context.\n",
 					mn->ops->invalidate_range_start, _ret,
 					!mmu_notifier_range_blockable(range) ? "non-" : "");
 				WARN_ON(mmu_notifier_range_blockable(range) ||

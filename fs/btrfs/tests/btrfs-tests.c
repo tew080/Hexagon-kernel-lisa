@@ -265,7 +265,7 @@ int btrfs_run_sanity_tests(void)
 		for (nodesize = sectorsize;
 		     nodesize <= BTRFS_MAX_METADATA_BLOCKSIZE;
 		     nodesize <<= 1) {
-			pr_info("BTRFS: selftest: sectorsize: %u  nodesize: %u\n",
+			pr_debug("BTRFS: selftest: sectorsize: %u  nodesize: %u\n",
 				sectorsize, nodesize);
 			ret = btrfs_test_free_space_cache(sectorsize, nodesize);
 			if (ret)

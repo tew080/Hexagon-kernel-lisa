@@ -782,7 +782,7 @@ static int coda_upcall(struct venus_comm *vcp,
 
 	/* Venus saw the upcall, make sure we can send interrupt signal */
 	if (!vcp->vc_inuse) {
-		pr_info("Venus dead, not sending signal.\n");
+		pr_debug("Venus dead, not sending signal.\n");
 		goto exit;
 	}
 

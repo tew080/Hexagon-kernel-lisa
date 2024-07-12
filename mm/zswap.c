@@ -1323,7 +1323,7 @@ static int __init init_zswap(void)
 
 	pool = __zswap_pool_create_fallback();
 	if (pool) {
-		pr_info("loaded using pool %s/%s\n", pool->tfm_name,
+		pr_debug("loaded using pool %s/%s\n", pool->tfm_name,
 			zpool_get_type(pool->zpool));
 		list_add(&pool->list, &zswap_pools);
 		zswap_has_pool = true;

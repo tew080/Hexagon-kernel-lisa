@@ -924,7 +924,7 @@ static int ramoops_probe(struct platform_device *pdev)
 	ramoops_pmsg_size = pdata->pmsg_size;
 	ramoops_ftrace_size = pdata->ftrace_size;
 
-	pr_info("using 0x%lx@0x%llx, ecc: %d\n",
+	pr_debug("using 0x%lx@0x%llx, ecc: %d\n",
 		cxt->size, (unsigned long long)cxt->phys_addr,
 		cxt->ecc_info.ecc_size);
 
@@ -994,7 +994,7 @@ static void __init ramoops_register_dummy(void)
 	if (!mem_size)
 		return;
 
-	pr_info("using module parameters\n");
+	pr_debug("using module parameters\n");
 
 	memset(&pdata, 0, sizeof(pdata));
 	pdata.mem_size = mem_size;
@@ -1016,7 +1016,7 @@ static void __init ramoops_register_dummy(void)
 	dummy = platform_device_register_data(NULL, "ramoops", -1,
 			&pdata, sizeof(pdata));
 	if (IS_ERR(dummy)) {
-		pr_info("could not create platform device: %ld\n",
+		pr_debug("could not create platform device: %ld\n",
 			PTR_ERR(dummy));
 		dummy = NULL;
 		ramoops_unregister_dummy();
@@ -1047,9 +1047,9 @@ static int __init ramoops_memreserve(char *p)
 	ramoops_data.pmsg_size = size / 2;
 	ramoops_data.dump_oops = 1;
 
-	pr_info("msm_reserve_ramoops_memory addr=%llx,size=%lx\n",
+	pr_debug("msm_reserve_ramoops_memory addr=%llx,size=%lx\n",
 		ramoops_data.mem_address, ramoops_data.mem_size);
-	pr_info("msm_reserve_ramoops_memory record_size=%lx,ftrace_size=%lx\n",
+	pr_debug("msm_reserve_ramoops_memory record_size=%lx,ftrace_size=%lx\n",
 		ramoops_data.record_size, ramoops_data.ftrace_size);
 
 	memblock_reserve(ramoops_data.mem_address, ramoops_data.mem_size);
@@ -1060,9 +1060,9 @@ early_param("ramoops_memreserve", ramoops_memreserve);
 
 static int __init msm_register_ramoops_device(void)
 {
-	pr_info("msm_register_ramoops_device\n");
+	pr_debug("msm_register_ramoops_device\n");
 	if (platform_device_register(&ramoops_dev))
-		pr_info("Unable to register ramoops platform device\n");
+		pr_debug("Unable to register ramoops platform device\n");
 	return 0;
 }
 core_initcall(msm_register_ramoops_device);

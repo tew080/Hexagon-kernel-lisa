@@ -95,7 +95,7 @@ fscrypt_allocate_skcipher(struct fscrypt_mode *mode, const u8 *raw_key,
 		 * performance problems by logging the ->cra_driver_name the
 		 * first time a mode is used.
 		 */
-		pr_info("fscrypt: %s using implementation \"%s\"\n",
+		pr_debug("fscrypt: %s using implementation \"%s\"\n",
 			mode->friendly_name, crypto_skcipher_driver_name(tfm));
 	}
 	if (WARN_ON(crypto_skcipher_ivsize(tfm) != mode->ivsize)) {

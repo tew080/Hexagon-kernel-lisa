@@ -91,11 +91,11 @@ int sysctl_vm_numa_stat_handler(struct ctl_table *table, int write,
 		goto out;
 	else if (sysctl_vm_numa_stat == ENABLE_NUMA_STAT) {
 		static_branch_enable(&vm_numa_stat_key);
-		pr_info("enable numa statistics\n");
+		pr_debug("enable numa statistics\n");
 	} else {
 		static_branch_disable(&vm_numa_stat_key);
 		invalid_numa_statistics();
-		pr_info("disable numa statistics, and clear numa counters\n");
+		pr_debug("disable numa statistics, and clear numa counters\n");
 	}
 
 out:

@@ -3046,7 +3046,7 @@ next:
 		}
 	}
 
-	pr_info("%lu of %lu THP split\n", split, total);
+	pr_debug("%lu of %lu THP split\n", split, total);
 
 	return 0;
 }

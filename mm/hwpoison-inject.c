@@ -52,7 +52,7 @@ static int hwpoison_inject(void *data, u64 val)
 		goto put_out;
 
 inject:
-	pr_info("Injecting memory failure at pfn %#lx\n", pfn);
+	pr_debug("Injecting memory failure at pfn %#lx\n", pfn);
 	return memory_failure(pfn, MF_COUNT_INCREASED);
 put_out:
 	put_hwpoison_page(p);

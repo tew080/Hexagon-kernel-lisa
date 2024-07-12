@@ -161,7 +161,7 @@ static int coda_fill_super(struct super_block *sb, void *data, int silent)
 	if(idx == -1)
 		idx = 0;
 	
-	pr_info("%s: device index: %i\n", __func__,  idx);
+	pr_debug("%s: device index: %i\n", __func__,  idx);
 
 	vc = &coda_comms[idx];
 	mutex_lock(&vc->vc_mutex);
@@ -203,7 +203,7 @@ static int coda_fill_super(struct super_block *sb, void *data, int silent)
 			__func__, error);
 		goto error;
 	}
-	pr_info("%s: rootfid is %s\n", __func__, coda_f2s(&fid));
+	pr_debug("%s: rootfid is %s\n", __func__, coda_f2s(&fid));
 	
 	/* make root inode */
         root = coda_cnode_make(&fid, sb);
@@ -214,7 +214,7 @@ static int coda_fill_super(struct super_block *sb, void *data, int silent)
 		goto error;
 	} 
 
-	pr_info("%s: rootinode is %ld dev %s\n",
+	pr_debug("%s: rootinode is %ld dev %s\n",
 		__func__, root->i_ino, root->i_sb->s_id);
 	sb->s_root = d_make_root(root);
 	if (!sb->s_root) {
@@ -241,7 +241,7 @@ static void coda_put_super(struct super_block *sb)
 	mutex_unlock(&vcp->vc_mutex);
 	mutex_destroy(&vcp->vc_mutex);
 
-	pr_info("Bye bye.\n");
+	pr_debug("Bye bye.\n");
 }
 
 static void coda_evict_inode(struct inode *inode)

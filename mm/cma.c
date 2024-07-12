@@ -104,7 +104,7 @@ static int cma_showmem_notifier(struct notifier_block *nb,
 		used = bitmap_weight(cma->bitmap,
 				     (int)cma_bitmap_maxno(cma));
 		used <<= cma->order_per_bit;
-		pr_info("cma-%d pages: => %lu used of %lu total pages\n",
+		pr_debug("cma-%d pages: => %lu used of %lu total pages\n",
 			i, used, cma->count);
 	}
 
@@ -381,7 +381,7 @@ int __init cma_declare_contiguous(phys_addr_t base,
 	if (ret)
 		goto free_mem;
 
-	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
+	pr_debug("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
 		&base);
 	return 0;
 
@@ -401,7 +401,7 @@ static void cma_debug_show_areas(struct cma *cma)
 	unsigned long nbits = cma_bitmap_maxno(cma);
 
 	mutex_lock(&cma->lock);
-	pr_info("number of available pages: ");
+	pr_debug("number of available pages: ");
 	for (;;) {
 		next_zero_bit = find_next_zero_bit(cma->bitmap, nbits, start);
 		if (next_zero_bit >= nbits)

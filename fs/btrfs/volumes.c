@@ -1102,10 +1102,10 @@ static noinline struct btrfs_device *device_list_add(const char *path,
 		*new_device_added = true;
 
 		if (disk_super->label[0])
-			pr_info("BTRFS: device label %s devid %llu transid %llu %s\n",
+			pr_debug("BTRFS: device label %s devid %llu transid %llu %s\n",
 				disk_super->label, devid, found_transid, path);
 		else
-			pr_info("BTRFS: device fsid %pU devid %llu transid %llu %s\n",
+			pr_debug("BTRFS: device fsid %pU devid %llu transid %llu %s\n",
 				disk_super->fsid, devid, found_transid, path);
 
 	} else if (!device->name || strcmp(device->name->str, path)) {

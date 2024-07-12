@@ -2396,7 +2396,7 @@ static void __init report_hugepages(void)
 		char buf[32];
 
 		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
-		pr_info("HugeTLB registered %s page size, pre-allocated %ld pages\n",
+		pr_debug("HugeTLB registered %s page size, pre-allocated %ld pages\n",
 			buf, h->free_huge_pages);
 	}
 }
@@ -3270,7 +3270,7 @@ void hugetlb_show_meminfo(void)
 
 	for_each_node_state(nid, N_MEMORY)
 		for_each_hstate(h)
-			pr_info("Node %d hugepages_total=%u hugepages_free=%u hugepages_surp=%u hugepages_size=%lukB\n",
+			pr_debug("Node %d hugepages_total=%u hugepages_free=%u hugepages_surp=%u hugepages_size=%lukB\n",
 				nid,
 				h->nr_huge_pages_node[nid],
 				h->free_huge_pages_node[nid],

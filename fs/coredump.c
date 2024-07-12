@@ -794,7 +794,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
 		 * have this set to NULL.
 		 */
 		if (!cprm.file) {
-			pr_info("Core dump to |%s disabled\n", cn.corename);
+			pr_debug("Core dump to |%s disabled\n", cn.corename);
 			goto close_fail;
 		}
 		file_start_write(cprm.file);

@@ -2523,7 +2523,7 @@ void zs_destroy_pool(struct zs_pool *pool)
 
 		for (fg = ZS_EMPTY; fg < NR_ZS_FULLNESS; fg++) {
 			if (!list_empty(&class->fullness_list[fg])) {
-				pr_info("Freeing non-empty class with size %db, fullness group %d\n",
+				pr_debug("Freeing non-empty class with size %db, fullness group %d\n",
 					class->size, fg);
 			}
 		}

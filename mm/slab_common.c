@@ -1579,8 +1579,8 @@ void dump_unreclaimable_slab(void)
 		return;
 	}
 
-	pr_info("Unreclaimable slab info:\n");
-	pr_info("Name                      Used          Total\n");
+	pr_debug("Unreclaimable slab info:\n");
+	pr_debug("Name                      Used          Total\n");
 
 	list_for_each_entry_safe(s, s2, &slab_caches, list) {
 		if (!is_root_cache(s) || (s->flags & SLAB_RECLAIM_ACCOUNT))
@@ -1589,7 +1589,7 @@ void dump_unreclaimable_slab(void)
 		get_slabinfo(s, &sinfo);
 
 		if (sinfo.num_objs > 0)
-			pr_info("%-17s %10luKB %10luKB\n", cache_name(s),
+			pr_debug("%-17s %10luKB %10luKB\n", cache_name(s),
 				(sinfo.active_objs * s->size) / 1024,
 				(sinfo.num_objs * s->size) / 1024);
 	}

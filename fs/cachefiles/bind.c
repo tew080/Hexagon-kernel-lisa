@@ -225,7 +225,7 @@ static int cachefiles_daemon_add_cache(struct cachefiles_cache *cache)
 	set_bit(CACHEFILES_READY, &cache->flags);
 	dput(root);
 
-	pr_info("File cache on %s registered\n", cache->cache.identifier);
+	pr_debug("File cache on %s registered\n", cache->cache.identifier);
 
 	/* check how much space the cache has */
 	cachefiles_has_space(cache, 0, 0);
@@ -259,7 +259,7 @@ void cachefiles_daemon_unbind(struct cachefiles_cache *cache)
 	_enter("");
 
 	if (test_bit(CACHEFILES_READY, &cache->flags)) {
-		pr_info("File cache on %s unregistering\n",
+		pr_debug("File cache on %s unregistering\n",
 			cache->cache.identifier);
 
 		fscache_withdraw_cache(&cache->cache);

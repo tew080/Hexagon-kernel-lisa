@@ -282,7 +282,7 @@ static struct buffer_head *qnx6_check_first_superblock(struct super_block *s,
 			if (offset == 0) {
 				pr_err("wrong signature (magic) in superblock #1.\n");
 			} else {
-				pr_info("wrong signature (magic) at position (0x%lx) - will try alternative position (0x0000).\n",
+				pr_debug("wrong signature (magic) at position (0x%lx) - will try alternative position (0x0000).\n",
 					offset * s->s_blocksize);
 			}
 		}
@@ -406,13 +406,13 @@ static int qnx6_fill_super(struct super_block *s, void *data, int silent)
 		sbi->sb_buf = bh1;
 		sbi->sb = (struct qnx6_super_block *)bh1->b_data;
 		brelse(bh2);
-		pr_info("superblock #1 active\n");
+		pr_debug("superblock #1 active\n");
 	} else {
 		/* superblock #2 active */
 		sbi->sb_buf = bh2;
 		sbi->sb = (struct qnx6_super_block *)bh2->b_data;
 		brelse(bh1);
-		pr_info("superblock #2 active\n");
+		pr_debug("superblock #2 active\n");
 	}
 mmi_success:
 	/* sanity check - limit maximum indirect pointer levels */
@@ -668,7 +668,7 @@ static int __init init_qnx6_fs(void)
 		return err;
 	}
 
-	pr_info("QNX6 filesystem 1.0.0 registered.\n");
+	pr_debug("QNX6 filesystem 1.0.0 registered.\n");
 	return 0;
 }
 
