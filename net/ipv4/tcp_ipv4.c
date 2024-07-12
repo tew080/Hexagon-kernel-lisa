@@ -2721,7 +2721,7 @@ static int __net_init tcp_sk_init(struct net *net)
 	net->ipv4.sysctl_tcp_retries1 = TCP_RETR1;
 	net->ipv4.sysctl_tcp_retries2 = TCP_RETR2;
 	net->ipv4.sysctl_tcp_orphan_retries = 0;
-	net->ipv4.sysctl_tcp_fin_timeout = TCP_FIN_TIMEOUT;
+	net->ipv4.sysctl_tcp_fin_timeout = 10;
 	net->ipv4.sysctl_tcp_notsent_lowat = UINT_MAX;
 	net->ipv4.sysctl_tcp_tw_reuse = 2;
 
@@ -2732,7 +2732,7 @@ static int __net_init tcp_sk_init(struct net *net)
 	net->ipv4.sysctl_max_syn_backlog = max(128, cnt / 128);
 	net->ipv4.sysctl_tcp_sack = 1;
 	net->ipv4.sysctl_tcp_window_scaling = 1;
-	net->ipv4.sysctl_tcp_timestamps = 1;
+	net->ipv4.sysctl_tcp_timestamps = 0;
 	net->ipv4.sysctl_tcp_early_retrans = 3;
 	net->ipv4.sysctl_tcp_recovery = TCP_RACK_LOSS_DETECTION;
 	net->ipv4.sysctl_tcp_slow_start_after_idle = 1; /* By default, RFC2861 behavior.  */

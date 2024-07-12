@@ -261,25 +261,32 @@ NOTE:
   # on systems with a VERY fast bus -> memory interface this is the big gainer
   net.ipv4.tcp_sack = 0
   # set min/default/max TCP read buffer, default 4096 87380 174760
-  net.ipv4.tcp_rmem = 10000000 10000000 10000000
+  net.ipv4.tcp_rmem = 4096    4194304   16777216
   # set min/pressure/max TCP write buffer, default 4096 16384 131072
-  net.ipv4.tcp_wmem = 10000000 10000000 10000000
+  net.ipv4.tcp_wmem = 4096    4194304   16777216
   # set min/pressure/max TCP buffer space, default 31744 32256 32768
-  net.ipv4.tcp_mem = 10000000 10000000 10000000
+  net.ipv4.tcp_mem = 4096    4194304   16777216
 
   ### CORE settings (mostly for socket and UDP effect)
   # set maximum receive socket buffer size, default 131071
-  net.core.rmem_max = 524287
+  net.core.rmem_max = 4194304
   # set maximum send socket buffer size, default 131071
-  net.core.wmem_max = 524287
+  net.core.wmem_max = 4194304
   # set default receive socket buffer size, default 65535
-  net.core.rmem_default = 524287
+  net.core.rmem_default = 4194304
   # set default send socket buffer size, default 65535
-  net.core.wmem_default = 524287
+  net.core.wmem_default = 4194304
   # set maximum amount of option memory buffers, default 10240
-  net.core.optmem_max = 524287
+  net.core.optmem_max = 4194304
   # set number of unprocessed input packets before kernel starts dropping them; default 300
-  net.core.netdev_max_backlog = 300000
+  net.core.netdev_max_backlog = 250000
+  net.ipv4.tcp_low_latency=1
+  net.ipv4.tcp_adv_win_scale=1
+  net.ipv4.tcp_no_metrics_save=1
+  net.ipv4.conf.all.send_redirects=0
+  net.ipv4.conf.all.accept_source_route=0
+  net.ipv4.icmp_echo_ignore_broadcasts=1
+  net.core.somaxconn = 50000
 
 Edit the ixgb_perf.sh script if necessary to change eth1 to whatever interface
 your ixgb driver is using and/or replace '1a48' with appropriate 10GbE device's

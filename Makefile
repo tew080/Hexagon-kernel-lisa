@@ -961,13 +961,9 @@ export CC_FLAGS_SCS
 endif
 
 ifdef CONFIG_LTO_CLANG
-ifdef CONFIG_THINLTO
 CC_FLAGS_LTO_CLANG := -flto=full $(call cc-option, -fsplit-lto-unit)
 KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
-endif
-ifdef CONFIG_LD_IS_LLD
 KBUILD_LDFLAGS += --lto-O3
-endif
 CC_FLAGS_LTO_CLANG += -fvisibility=default
 KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
 endif
