@@ -1094,40 +1094,51 @@ static void sugov_policy_free(struct sugov_policy *sg_policy)
 
 static int sugov_kthread_create(struct sugov_policy *sg_policy)
 {
-	struct task_struct *thread;
-	struct sched_param param = { .sched_priority = MAX_USER_RT_PRIO - 1 };
-	struct cpufreq_policy *policy = sg_policy->policy;
-	int ret;
+    struct task_struct *thread;
+    struct sched_attr attr = {
+        .size           = sizeof(struct sched_attr),
+        .sched_policy   = SCHED_DEADLINE,
+        .sched_flags    = SCHED_FLAG_SUGOV,
+        .sched_nice     = 0,
+        .sched_priority = 0,
+        .sched_runtime  = 1000000,
+        .sched_deadline = 10000000,
+        .sched_period   = 10000000,
+    };
+    struct cpufreq_policy *policy = sg_policy->policy;
+    cpumask_t efficient_cpus;  
+    int ret;
 
-	/* kthread only required for slow path */
-	if (policy->fast_switch_enabled)
-		return 0;
+    if (policy->fast_switch_enabled)
+        return 0;
 
-	kthread_init_work(&sg_policy->work, sugov_work);
-	kthread_init_worker(&sg_policy->worker);
-	thread = kthread_create(kthread_worker_fn, &sg_policy->worker,
-				"sugov:%d",
-				cpumask_first(policy->related_cpus));
-	if (IS_ERR(thread)) {
-		pr_debug("failed to create sugov thread: %ld\n", PTR_ERR(thread));
-		return PTR_ERR(thread);
-	}
+    kthread_init_work(&sg_policy->work, sugov_work);
+    kthread_init_worker(&sg_policy->worker);
+    
+    thread = kthread_create(kthread_worker_fn, &sg_policy->worker, "sugov:%d", cpumask_first(policy->related_cpus));
+    if (IS_ERR(thread)) {
+        pr_err("failed to create sugov thread: %ld\n", PTR_ERR(thread));
+        return PTR_ERR(thread);
+    }
 
-	ret = sched_setscheduler_nocheck(thread, SCHED_FIFO, &param);
-	if (ret) {
-		kthread_stop(thread);
-		pr_warn("%s: failed to set SCHED_FIFO\n", __func__);
-		return ret;
-	}
+    ret = sched_setattr_nocheck(thread, &attr);
+    if (ret) {
+        kthread_stop(thread);
+        pr_warn("%s: failed to set SCHED_DEADLINE\n", __func__);
+        return ret;
+    }
 
-	sg_policy->thread = thread;
-	kthread_bind_mask(thread, policy->related_cpus);
-	init_irq_work(&sg_policy->irq_work, sugov_irq_work);
-	mutex_init(&sg_policy->work_lock);
+    sg_policy->thread = thread;
+    
+    cpumask_copy(&efficient_cpus, policy->related_cpus);
+    kthread_bind_mask(thread, &efficient_cpus);
+    
+    init_irq_work(&sg_policy->irq_work, sugov_irq_work);
+    mutex_init(&sg_policy->work_lock);
 
-	wake_up_process(thread);
+    wake_up_process(thread);
 
-	return 0;
+    return 0;
 }
 
 static void sugov_kthread_stop(struct sugov_policy *sg_policy)
