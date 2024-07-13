@@ -7,8 +7,8 @@ ccflags-y += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+sim
 		 -mfpu=neon-fp-armv8 -mfloat-abi=hard \
 		 -msve-vector-bits=128 -fno-common
 
-subdir-ccflags-y += -Os
-subdir-ccflags-y += -gO
+ccflags-y += -Os
+ccflags-y += -g0
 
 obj-$(CONFIG_SOUND) += soundcore.o
 obj-$(CONFIG_DMASOUND) += oss/dmasound/

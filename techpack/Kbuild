@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 TECHPACK?=y
 
-ccflags-y += -Os
-ccflags-y += -gO
+subdir-ccflags-y += -Os
+subdir-ccflags-y += -g0
 
 techpack-dirs := $(shell find $(srctree)/techpack -maxdepth 1 -mindepth 1 -type d -not -name ".*")
 obj-${TECHPACK} += stub/ $(addsuffix /,$(subst $(srctree)/techpack/,,$(techpack-dirs)))

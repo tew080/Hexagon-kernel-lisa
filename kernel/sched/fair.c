@@ -32,7 +32,7 @@
 #define SYSCTL_SCHED_MIN_GRANULARITY 750000ULL
 #define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 750000ULL
 #define SCHED_NR_LATENCY 8
-#define SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY 0
+#define SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY 
 #define SYSCTL_SCHED_WAKEUP_GRANULARITY 1000000UL
 #define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 1000000UL
 #define SYSCTL_SCHED_MIGRATION_COST 500000UL
@@ -88,7 +88,7 @@ static unsigned int sched_nr_latency = SCHED_NR_LATENCY;
  * After fork, child runs first. If set to 0 (default) then
  * parent will (try to) run first.
  */
-unsigned int sysctl_sched_child_runs_first __read_mostly = SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY;
+unsigned int sysctl_sched_child_runs_first __read_mostly SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY;
 
 /*
  * SCHED_OTHER wake-up granularity.
@@ -4305,7 +4305,7 @@ static inline void check_schedstat_required(void)
 		printk_deferred_once("Scheduler tracepoints stat_sleep, stat_iowait, "
 			     "stat_blocked and stat_runtime require the "
 			     "kernel parameter schedstats=enable or "
-			     "kernel.sched_schedstats=0\n");
+			     "kernel.sched_schedstats=1\n");
 	}
 #endif
 }
