@@ -2373,7 +2373,7 @@ void mark_task_starting(struct task_struct *p)
  * sched_group_upmigrate need to be up-migrated if possible.
  */
 static unsigned int __read_mostly sched_group_upmigrate = 20000000;
-unsigned int __read_mostly sysctl_sched_group_upmigrate_pct = 100;
+unsigned int __read_mostly sysctl_sched_group_upmigrate_pct = 80;
 
 /*
  * Task groups, once up-migrated, will need to drop their aggregate
@@ -2381,7 +2381,7 @@ unsigned int __read_mostly sysctl_sched_group_upmigrate_pct = 100;
  * migrated.
  */
 static unsigned int __read_mostly sched_group_downmigrate = 19000000;
-unsigned int __read_mostly sysctl_sched_group_downmigrate_pct = 95;
+unsigned int __read_mostly sysctl_sched_group_downmigrate_pct = 20;
 
 static inline void walt_update_group_thresholds(void)
 {
@@ -2390,9 +2390,9 @@ static inline void walt_update_group_thresholds(void)
 	u64 min_ms = min_scale * (sched_ravg_window >> SCHED_CAPACITY_SHIFT);
 
 	sched_group_upmigrate = div64_ul(min_ms *
-				sysctl_sched_group_upmigrate_pct, 100);
+				sysctl_sched_group_upmigrate_pct, 80);
 	sched_group_downmigrate = div64_ul(min_ms *
-				sysctl_sched_group_downmigrate_pct, 100);
+				sysctl_sched_group_downmigrate_pct, 20);
 }
 
 struct walt_sched_cluster *sched_cluster[NR_CPUS];
