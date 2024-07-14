@@ -1,6 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd -mcpu=cortex-a78 -mtune=cortex-a78  -funroll-loops -ftree-vectorize 
-ccflags-y += -msve-vector-bits=128 -mfpu=neon-fp-armv8 -mfloat-abi=hard -fno-common
 
 ccflags-y := -I$(srctree)/include/drm -I$(srctree)/techpack/display/msm -I$(srctree)/techpack/display/msm/dsi -I$(srctree)/techpack/display/msm/dp
 ccflags-y += -I$(srctree)/techpack/display/msm/sde

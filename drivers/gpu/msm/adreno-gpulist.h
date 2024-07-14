@@ -137,7 +137,7 @@ static const struct adreno_a6xx_core adreno_gpu_core_a642l = {
 		.bus_width = 32,
 		.snapshot_size = SZ_2M,
 	},
-	.prim_fifo_threshold = 0x00200000,
+	.prim_fifo_threshold = 0x00300000,
 	.gmu_major = 2,
 	.gmu_minor = 0,
 	.sqefw_name = "a660_sqe.fw",
@@ -151,7 +151,7 @@ static const struct adreno_a6xx_core adreno_gpu_core_a642l = {
 	.veto_fal10 = true,
 	.protected_regs = a660_protected_regs,
 	.disable_tseskip = true,
-	.highest_bank_bit = 15,
+	.highest_bank_bit = 16,
 	.pdc_in_aop = true,
 	.ctxt_record_size = 2496 * 1024,
 };

@@ -10,9 +10,9 @@
 
 #ifdef CONFIG_SCHED_WALT
 /* 1ms default for 20ms window size scaled to 1024 */
-unsigned int sysctl_sched_min_task_util_for_boost = 25;
+unsigned int sysctl_sched_min_task_util_for_boost = 51;
 /* 0.68ms default for 20ms window size scaled to 1024 */
-unsigned int sysctl_sched_min_task_util_for_colocation = 50;
+unsigned int sysctl_sched_min_task_util_for_colocation = 0;
 
 static int
 kick_active_balance(struct rq *rq, struct task_struct *p, int new_cpu)
