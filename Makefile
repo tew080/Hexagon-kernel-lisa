@@ -754,9 +754,9 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-truncation)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 
+ifdef CONFIG_SNAPDRAGON_OPTIMIZE
 #Enable hot cold split optimization
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
-
 # Snapdragon optimization
 KBUILD_CFLAGS  += -mcpu=kryo 
 KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2
@@ -766,6 +766,7 @@ KBUILD_CFLAGS  += -mfpu=neon-fp-armv8
 KBUILD_CFLAGS  += -mfloat-abi=hard
 KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
 KBUILD_CFLAGS  += -msve-vector-bits=128 -fno-common
+endif
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
 KBUILD_CFLAGS += -O2

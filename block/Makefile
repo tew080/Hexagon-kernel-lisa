@@ -2,11 +2,7 @@
 #
 # Makefile for the kernel block layer
 #
-subdir-ccflags-y += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
-		 -mcpu=cortex-a78 -mtune=cortex-a78  \
-		 -funroll-loops -ftree-vectorize \
-		 -mfpu=neon-fp-armv8 -mfloat-abi=hard \
-		 -msve-vector-bits=128 -fno-common 
+ 
 	
 obj-$(CONFIG_BLOCK) := bio.o elevator.o blk-core.o blk-sysfs.o \
 			blk-flush.o blk-settings.o blk-ioc.o blk-map.o \

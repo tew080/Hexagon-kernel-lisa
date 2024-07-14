@@ -5,11 +5,7 @@
 # 15 Sep 2000, Christoph Hellwig <hch@infradead.org>
 # Rewritten to use lists instead of if-statements.
 #
-subdir-ccflags-y += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
-		 -mcpu=cortex-a78 -mtune=cortex-a78  \
-		 -funroll-loops -ftree-vectorize \
-		 -mfpu=neon-fp-armv8 -mfloat-abi=hard \
-		 -msve-vector-bits=128 -fno-common 
+ 
 
 obj-y				+= irqchip/
 obj-y				+= bus/

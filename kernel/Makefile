@@ -2,11 +2,7 @@
 #
 # Makefile for the linux kernel.
 #
-subdir-ccflags-y += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
-		 -mcpu=cortex-a78 -mtune=cortex-a78  \
-		 -funroll-loops -ftree-vectorize \
-		 -mfpu=neon-fp-armv8 -mfloat-abi=hard \
-		 -msve-vector-bits=128 -fno-common 
+ 
 
 obj-y     = fork.o exec_domain.o panic.o \
 	    cpu.o exit.o softirq.o resource.o \
