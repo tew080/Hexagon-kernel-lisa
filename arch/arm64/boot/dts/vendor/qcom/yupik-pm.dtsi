@@ -167,64 +167,6 @@
 		};
 	};
 	
-	idle-states {
-    	entry-method = "psci";
-
-    	CPU_SLVR_OFF: cpu-slvr-off {
-        	compatible = "arm,idle-state";
-        	idle-state-name = "rail-off";
-        	entry-latency-us = <500>;
-        	exit-latency-us = <1200>;
-        	min-residency-us = <4000>;
-        	arm,psci-suspend-param = <0x40000004>;
-    	};
-
-    	CPU_SLVR_RAIL_OFF: cpu-slvr-rail-off {
-        	compatible = "arm,idle-state";
-        	idle-state-name = "rail-off";
-        	entry-latency-us = <600>;
-        	exit-latency-us = <1700>;
-        	min-residency-us = <5500>;
-        	arm,psci-suspend-param = <0x40000005>;
-    	};
-
-    	CPU_SLVR_DEEPER_SLEEP: cpu-slvr-deeper-sleep {
-        	compatible = "arm,idle-state";
-        	idle-state-name = "deeper-sleep";
-        	entry-latency-us = <800>;
-        	exit-latency-us = <1800>;
-        	min-residency-us = <7000>;
-        	arm,psci-suspend-param = <0x40000006>;
-    	};
-
-    	CPU_GOLD_OFF: cpu-gold-off {
-        	compatible = "arm,idle-state";
-        	idle-state-name = "rail-off";
-        	entry-latency-us = <500>;
-        	exit-latency-us = <1200>;
-        	min-residency-us = <4000>;
-        	arm,psci-suspend-param = <0x40000004>;
-    	};
-
-    	CPU_GOLD_RAIL_OFF: cpu-gold-rail-off {
-        	compatible = "arm,idle-state";
-        	idle-state-name = "rail-off";
-        	entry-latency-us = <600>;
-        	exit-latency-us = <1700>;
-        	min-residency-us = <5500>;
-        	arm,psci-suspend-param = <0x40000005>;
-    	};
-
-   		CPU_GOLD_DEEPER_SLEEP: cpu-gold-deeper-sleep {
-        	compatible = "arm,idle-state";
-        	idle-state-name = "deeper-sleep";
-        	entry-latency-us = <800>;
-        	exit-latency-us = <1800>;
-        	min-residency-us = <7000>;
-        	arm,psci-suspend-param = <0x40000006>;
-    	};
-	};
-	
 	rpmh-master-stats@b221200 {
 		compatible = "qcom,rpmh-master-stats-v1";
 		reg = <0xb221200 0x60>;
