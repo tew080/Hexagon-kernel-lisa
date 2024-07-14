@@ -2,11 +2,11 @@
 #
 # Makefile for the linux ipc.
 #
-ccflags-y += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
+subdir-ccflags-y += -mcpu=kryo -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2  \
 		 -mcpu=cortex-a78 -mtune=cortex-a78  \
 		 -funroll-loops -ftree-vectorize \
 		 -mfpu=neon-fp-armv8 -mfloat-abi=hard \
-		 -msve-vector-bits=128 -fno-common
+		 -msve-vector-bits=128 -fno-common 
 
 obj-$(CONFIG_SYSVIPC_COMPAT) += compat.o
 obj-$(CONFIG_SYSVIPC) += util.o msgutil.o msg.o sem.o shm.o syscall.o
