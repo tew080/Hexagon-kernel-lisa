@@ -17,10 +17,13 @@
 #include <linux/syscalls.h>
 #include <linux/pagemap.h>
 #include <linux/compat.h>
-#include <linux/suspicious.h>
 
 #include <linux/uaccess.h>
 #include <asm/unistd.h>
+
+#ifdef CONFIG_KSU_SUSFS
+#include <linux/susfs.h>
+#endif
 
 /**
  * generic_fillattr - Fill in the basic attributes from the inode struct
@@ -113,9 +116,11 @@ int vfs_getattr(const struct path *path, struct kstat *stat,
 {
 	int retval;
 
-	if (is_suspicious_path(path)) {
-		return -ENOENT;
+#ifdef CONFIG_KSU_SUSFS_SUS_PATH
+	if (susfs_sus_path_by_path(path, &retval, SYSCALL_FAMILY_ALL_ENOENT)) {
+		return retval;
 	}
+#endif
 
 	retval = security_inode_getattr(path);
 	if (retval)
@@ -343,6 +348,9 @@ static int cp_new_stat(struct kstat *stat, struct stat __user *statbuf)
 #endif
 	tmp.st_blocks = stat->blocks;
 	tmp.st_blksize = stat->blksize;
+#ifdef CONFIG_KSU_SUSFS_SUS_KSTAT
+	susfs_sus_kstat(tmp.st_ino, &tmp);
+#endif
 	return copy_to_user(statbuf,&tmp,sizeof(tmp)) ? -EFAULT : 0;
 }
 
