@@ -71,11 +71,11 @@ LZ4_memcpy_using_offset_base(BYTE * dstPtr, const BYTE * srcPtr, BYTE * dstEnd,
 		dstPtr[2] = srcPtr[2];
 		dstPtr[3] = srcPtr[3];
 		srcPtr += inc32table[offset];
-		memcpy(dstPtr + 4, srcPtr, 4);
+		LZ4_memcpy(dstPtr + 4, srcPtr, 4);
 		srcPtr -= dec64table[offset];
 		dstPtr += 8;
 	} else {
-		memcpy(dstPtr, srcPtr, 8);
+		LZ4_memcpy(dstPtr, srcPtr, 8);
 		dstPtr += 8;
 		srcPtr += 8;
 	}
@@ -94,8 +94,8 @@ LZ4_wildCopy32(void *dstPtr, const void *srcPtr, void *dstEnd)
 	BYTE *const e = (BYTE *) dstEnd;
 
 	do {
-		memcpy(d, s, 16);
-		memcpy(d + 16, s + 16, 16);
+		LZ4_memcpy(d, s, 16);
+		LZ4_memcpy(d + 16, s + 16, 16);
 		d += 32;
 		s += 32;
 	} while (d < e);
@@ -112,13 +112,13 @@ LZ4_memcpy_using_offset(BYTE *dstPtr, const BYTE *srcPtr, BYTE *dstEnd,
 		memset(v, *srcPtr, 8);
 		goto copy_loop;
 	case 2:
-		memcpy(v, srcPtr, 2);
-		memcpy(&v[2], srcPtr, 2);
-		memcpy(&v[4], &v[0], 4);
+		LZ4_memcpy(v, srcPtr, 2);
+		LZ4_memcpy(&v[2], srcPtr, 2);
+		LZ4_memcpy(&v[4], &v[0], 4);
 		goto copy_loop;
 	case 4:
-		memcpy(v, srcPtr, 4);
-		memcpy(&v[4], srcPtr, 4);
+		LZ4_memcpy(v, srcPtr, 4);
+		LZ4_memcpy(&v[4], srcPtr, 4);
 		goto copy_loop;
 	default:
 		LZ4_memcpy_using_offset_base(dstPtr, srcPtr, dstEnd, offset);
@@ -126,10 +126,10 @@ LZ4_memcpy_using_offset(BYTE *dstPtr, const BYTE *srcPtr, BYTE *dstEnd,
 	}
 
       copy_loop:
-	memcpy(dstPtr, v, 8);
+	LZ4_memcpy(dstPtr, v, 8);
 	dstPtr += 8;
 	while (dstPtr < dstEnd) {
-		memcpy(dstPtr, v, 8);
+		LZ4_memcpy(dstPtr, v, 8);
 		dstPtr += 8;
 	}
 }
@@ -278,14 +278,14 @@ static FORCE_INLINE int LZ4_decompress_generic(
 				}
 				/* Literals can only be 14, but hope compilers optimize */
 				/*if we copy by a register size */
-				memcpy(op, ip, 16);
+				LZ4_memcpy(op, ip, 16);
 			} else {
 				/* LZ4_decompress_fast() cannot copy more than 8 bytes at a time */
 				/* it doesn't know input length, and relies on end-of-block */
 				/* properties */
-				memcpy(op, ip, 8);
+				LZ4_memcpy(op, ip, 8);
 				if (length > 8) {
-					memcpy(op + 8, ip + 8, 8);
+					LZ4_memcpy(op + 8, ip + 8, 8);
 				}
 			}
 			ip += length;
@@ -329,9 +329,9 @@ static FORCE_INLINE int LZ4_decompress_generic(
 			/* Fastpath check: Avoids a branch in LZ4_wildCopy32 if true */
 			if (!(dict == usingExtDict) || (match >= lowPrefix)) {
 				if (offset >= 8) {
-					memcpy(op, match, 8);
-					memcpy(op + 8, match + 8, 8);
-					memcpy(op + 16, match + 16, 2);
+					LZ4_memcpy(op, match, 8);
+					LZ4_memcpy(op + 8, match + 8, 8);
+					LZ4_memcpy(op + 16, match + 16, 2);
 					op += length;
 					continue;
 				}
@@ -361,7 +361,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
 				size_t const copySize =
 				    (size_t) (lowPrefix - match);
 				size_t const restSize = length - copySize;
-				memcpy(op, dictEnd - copySize, copySize);
+				LZ4_memcpy(op, dictEnd - copySize, copySize);
 				op += copySize;
 				if (restSize > (size_t) (op - lowPrefix)) {	/* overlap copy */
 					BYTE *const endOfMatch = op + restSize;
@@ -370,7 +370,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
 						*op++ = *copyFrom++;
 					}
 				} else {
-					memcpy(op, lowPrefix, restSize);
+					LZ4_memcpy(op, lowPrefix, restSize);
 					op += restSize;
 				}
 			}
@@ -410,6 +410,9 @@ static FORCE_INLINE int LZ4_decompress_generic(
 		 * space in the output for those 18 bytes earlier, upon
 		 * entering the shortcut (in other words, there is a
 		 * combined check for both stages).
+		 *
+		 * The & in the likely() below is intentionally not && so that
+		 * some compilers can produce better parallelized runtime code
 		 */
 		if ((endOnInput ? length != RUN_MASK : length <= 8)
 		    /*
@@ -419,9 +422,8 @@ static FORCE_INLINE int LZ4_decompress_generic(
 		    && likely((endOnInput ? ip < shortiend : 1) &
 			      (op <= shortoend))) {
 			/* Copy the literals */
-			memcpy(op, ip, endOnInput ? 16 : 8);
-			op += length;
-			ip += length;
+			LZ4_memcpy(op, ip, endOnInput ? 16 : 8);
+			op += length; ip += length;
 
 			/*
 			 * The second stage:
@@ -439,9 +441,9 @@ static FORCE_INLINE int LZ4_decompress_generic(
 			    (offset >= 8) &&
 			    (dict == withPrefix64k || match >= lowPrefix)) {
 				/* Copy the match. */
-				memcpy(op + 0, match + 0, 8);
-				memcpy(op + 8, match + 8, 8);
-				memcpy(op + 16, match + 16, 2);
+				LZ4_memcpy(op + 0, match + 0, 8);
+				LZ4_memcpy(op + 8, match + 8, 8);
+				LZ4_memcpy(op + 16, match + 16, 2);
 				op += length + MINMATCH;
 				/* Both stages worked, load the next token. */
 				continue;
@@ -614,7 +616,7 @@ safe_match_copy:
 				size_t const copySize = (size_t)(lowPrefix - match);
 				size_t const restSize = length - copySize;
 
-				memcpy(op, dictEnd - copySize, copySize);
+				LZ4_memcpy(op, dictEnd - copySize, copySize);
 				op += copySize;
 				if (restSize > (size_t)(op - lowPrefix)) {
 					/* overlap copy */
@@ -624,7 +626,7 @@ safe_match_copy:
 					while (op < endOfMatch)
 						*op++ = *copyFrom++;
 				} else {
-					memcpy(op, lowPrefix, restSize);
+					LZ4_memcpy(op, lowPrefix, restSize);
 					op += restSize;
 				}
 			}
@@ -650,7 +652,7 @@ safe_match_copy:
 				while (op < copyEnd)
 					*op++ = *match++;
 			} else {
-				memcpy(op, match, mlen);
+				LZ4_memcpy(op, match, mlen);
 			}
 			op = copyEnd;
 			if (op == oend)
@@ -664,7 +666,7 @@ safe_match_copy:
 			op[2] = match[2];
 			op[3] = match[3];
 			match += inc32table[offset];
-			memcpy(op + 4, match, 4);
+			LZ4_memcpy(op + 4, match, 4);
 			match -= dec64table[offset];
 		} else {
 			LZ4_copy8(op, match);
@@ -741,7 +743,7 @@ int LZ4_decompress_fast(const char *source, char *dest, int originalSize)
 
 /* ===== Instantiate a few more decoding cases, used more than once. ===== */
 
-int LZ4_decompress_safe_withPrefix64k(const char *source, char *dest,
+static int LZ4_decompress_safe_withPrefix64k(const char *source, char *dest,
 				      int compressedSize, int maxOutputSize)
 {
 	return LZ4_decompress_generic(source, dest,
