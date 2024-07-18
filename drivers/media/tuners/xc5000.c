@@ -1242,7 +1242,7 @@ static int xc5000_sleep(struct dvb_frontend *fe)
 	if (no_poweroff)
 		return 0;
 
-	schedule_delayed_work(&priv->timer_sleep,
+	queue_delayed_work(system_power_efficient_wq,&priv->timer_sleep,
 			      msecs_to_jiffies(XC5000_SLEEP_TIME));
 
 	return 0;

@@ -46,7 +46,7 @@ static void da9052_onkey_query(struct da9052_onkey *onkey)
 		 * is simulated through work queue.
 		 */
 		if (pressed)
-			schedule_delayed_work(&onkey->work,
+			queue_delayed_work(system_power_efficient_wq,&onkey->work,
 						msecs_to_jiffies(50));
 	}
 }

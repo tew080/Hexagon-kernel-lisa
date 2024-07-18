@@ -1624,7 +1624,7 @@ static void rtl8139_thread (struct work_struct *work)
 		rtl8139_thread_iter(dev, tp, tp->mmio_addr);
 
 	if (tp->have_thread)
-		schedule_delayed_work(&tp->thread, thr_delay);
+		queue_delayed_work(system_power_efficient_wq,&tp->thread, thr_delay);
 out_unlock:
 	rtnl_unlock ();
 }
@@ -1640,7 +1640,7 @@ static void rtl8139_start_thread(struct rtl8139_private *tp)
 	tp->have_thread = 1;
 	tp->watchdog_fired = 0;
 
-	schedule_delayed_work(&tp->thread, next_tick);
+	queue_delayed_work(system_power_efficient_wq,&tp->thread, next_tick);
 }
 
 static inline void rtl8139_tx_clear (struct rtl8139_private *tp)
@@ -1707,7 +1707,7 @@ static void rtl8139_tx_timeout (struct net_device *dev)
 	tp->watchdog_fired = 1;
 	if (!tp->have_thread) {
 		INIT_DELAYED_WORK(&tp->thread, rtl8139_thread);
-		schedule_delayed_work(&tp->thread, next_tick);
+		queue_delayed_work(system_power_efficient_wq,&tp->thread, next_tick);
 	}
 }
 

@@ -756,7 +756,7 @@ void ata_scsi_port_error_handler(struct Scsi_Host *host, struct ata_port *ap)
 		ap->pflags &= ~ATA_PFLAG_LOADING;
 	else if ((ap->pflags & ATA_PFLAG_SCSI_HOTPLUG) &&
 		!(ap->flags & ATA_FLAG_SAS_HOST))
-		schedule_delayed_work(&ap->hotplug_task, 0);
+		queue_delayed_work(system_power_efficient_wq,&ap->hotplug_task, 0);
 
 	if (ap->pflags & ATA_PFLAG_RECOVERED)
 		ata_port_info(ap, "EH complete\n");

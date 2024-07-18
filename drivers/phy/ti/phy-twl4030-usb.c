@@ -488,7 +488,7 @@ static int twl4030_phy_power_on(struct phy *phy)
 
 	dev_dbg(twl->dev, "%s\n", __func__);
 	pm_runtime_get_sync(twl->dev);
-	schedule_delayed_work(&twl->id_workaround_work, HZ);
+	queue_delayed_work(system_power_efficient_wq,&twl->id_workaround_work, HZ);
 	pm_runtime_mark_last_busy(twl->dev);
 	pm_runtime_put_autosuspend(twl->dev);
 
@@ -596,7 +596,7 @@ static irqreturn_t twl4030_usb_irq(int irq, void *_twl)
 	/* don't schedule during sleep - irq works right then */
 	if (status == MUSB_ID_GROUND && pm_runtime_active(twl->dev)) {
 		cancel_delayed_work(&twl->id_workaround_work);
-		schedule_delayed_work(&twl->id_workaround_work, HZ);
+		queue_delayed_work(system_power_efficient_wq,&twl->id_workaround_work, HZ);
 	}
 
 	if (irq)
@@ -619,7 +619,7 @@ static int twl4030_phy_init(struct phy *phy)
 
 	pm_runtime_get_sync(twl->dev);
 	twl->linkstat = MUSB_UNKNOWN;
-	schedule_delayed_work(&twl->id_workaround_work, HZ);
+	queue_delayed_work(system_power_efficient_wq,&twl->id_workaround_work, HZ);
 	pm_runtime_mark_last_busy(twl->dev);
 	pm_runtime_put_autosuspend(twl->dev);
 

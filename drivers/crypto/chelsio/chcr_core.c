@@ -62,7 +62,7 @@ static void detach_work_fn(struct work_struct *work)
 			pr_debug("Request Inflight Count %d\n",
 				atomic_read(&dev->inflight));
 
-			schedule_delayed_work(&dev->detach_work, WQ_DETACH_TM);
+			queue_delayed_work(system_power_efficient_wq,&dev->detach_work, WQ_DETACH_TM);
 		} else {
 			WARN(1, "CHCR:%d request Still Pending\n",
 				atomic_read(&dev->inflight));
@@ -247,7 +247,7 @@ static void chcr_detach_device(struct uld_ctx *u_ctx)
 	}
 	dev->state = CHCR_DETACH;
 	if (atomic_read(&dev->inflight) != 0) {
-		schedule_delayed_work(&dev->detach_work, WQ_DETACH_TM);
+		queue_delayed_work(system_power_efficient_wq,&dev->detach_work, WQ_DETACH_TM);
 		wait_for_completion(&dev->detach_comp);
 	}
 

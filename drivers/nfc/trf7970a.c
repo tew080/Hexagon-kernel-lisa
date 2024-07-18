@@ -696,7 +696,7 @@ static int trf7970a_transmit(struct trf7970a *trf, struct sk_buff *skb,
 	dev_dbg(trf->dev, "Setting timeout for %d ms, state: %d\n", timeout,
 		trf->state);
 
-	schedule_delayed_work(&trf->timeout_work, msecs_to_jiffies(timeout));
+	queue_delayed_work(system_power_efficient_wq,&trf->timeout_work, msecs_to_jiffies(timeout));
 
 	return 0;
 }
@@ -722,7 +722,7 @@ static void trf7970a_fill_fifo(struct trf7970a *trf)
 	/* Calculate how much more data can be written to the fifo */
 	len = TRF7970A_FIFO_SIZE - fifo_bytes;
 	if (!len) {
-		schedule_delayed_work(&trf->timeout_work,
+		queue_delayed_work(system_power_efficient_wq,&trf->timeout_work,
 			msecs_to_jiffies(TRF7970A_WAIT_FOR_FIFO_DRAIN_TIMEOUT));
 		return;
 	}
@@ -814,7 +814,7 @@ no_rx_data:
 	dev_dbg(trf->dev, "Setting timeout for %d ms\n",
 		TRF7970A_WAIT_FOR_RX_DATA_TIMEOUT);
 
-	schedule_delayed_work(&trf->timeout_work,
+	queue_delayed_work(system_power_efficient_wq,&trf->timeout_work,
 			   msecs_to_jiffies(TRF7970A_WAIT_FOR_RX_DATA_TIMEOUT));
 }
 
@@ -999,7 +999,7 @@ static void trf7970a_issue_eof(struct trf7970a *trf)
 	dev_dbg(trf->dev, "Setting timeout for %d ms, state: %d\n",
 		trf->timeout, trf->state);
 
-	schedule_delayed_work(&trf->timeout_work,
+	queue_delayed_work(system_power_efficient_wq,&trf->timeout_work,
 			      msecs_to_jiffies(trf->timeout));
 }
 
@@ -1783,7 +1783,7 @@ static int _trf7970a_tg_listen(struct nfc_digital_dev *ddev, u16 timeout,
 	trf->state = mode_detect ? TRF7970A_ST_LISTENING_MD :
 				   TRF7970A_ST_LISTENING;
 
-	schedule_delayed_work(&trf->timeout_work, msecs_to_jiffies(timeout));
+	queue_delayed_work(system_power_efficient_wq,&trf->timeout_work, msecs_to_jiffies(timeout));
 
 out_err:
 	mutex_unlock(&trf->lock);

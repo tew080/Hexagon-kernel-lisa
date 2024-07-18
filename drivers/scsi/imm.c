@@ -724,7 +724,7 @@ static void imm_interrupt(struct work_struct *work)
 	unsigned long flags;
 
 	if (imm_engine(dev, cmd)) {
-		schedule_delayed_work(&dev->imm_tq, 1);
+		queue_delayed_work(system_power_efficient_wq,&dev->imm_tq, 1);
 		return;
 	}
 	/* Command must of completed hence it is safe to let go... */
@@ -927,7 +927,7 @@ static int imm_queuecommand_lck(struct scsi_cmnd *cmd,
 	cmd->result = DID_ERROR << 16;	/* default return code */
 	cmd->SCp.phase = 0;	/* bus free */
 
-	schedule_delayed_work(&dev->imm_tq, 0);
+	queue_delayed_work(system_power_efficient_wq,&dev->imm_tq, 0);
 
 	imm_pb_claim(dev);
 

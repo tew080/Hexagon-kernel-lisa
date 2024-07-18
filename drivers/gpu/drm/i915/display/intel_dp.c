@@ -2685,7 +2685,7 @@ static void edp_panel_vdd_schedule_off(struct intel_dp *intel_dp)
 	 * operations.
 	 */
 	delay = msecs_to_jiffies(intel_dp->panel_power_cycle_delay * 5);
-	schedule_delayed_work(&intel_dp->panel_vdd_work, delay);
+	queue_delayed_work(system_power_efficient_wq,&intel_dp->panel_vdd_work, delay);
 }
 
 /*
@@ -6929,7 +6929,7 @@ void intel_edp_drrs_flush(struct drm_i915_private *dev_priv,
 	 * other fbs are quiescent too
 	 */
 	if (!dev_priv->drrs.busy_frontbuffer_bits)
-		schedule_delayed_work(&dev_priv->drrs.work,
+		queue_delayed_work(system_power_efficient_wq,&dev_priv->drrs.work,
 				msecs_to_jiffies(1000));
 	mutex_unlock(&dev_priv->drrs.mutex);
 }

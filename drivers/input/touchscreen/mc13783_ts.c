@@ -50,7 +50,7 @@ static irqreturn_t mc13783_ts_handler(int irq, void *data)
 	 * be rescheduled for immediate execution here. However the rearm
 	 * delay is HZ / 50 which is acceptable.
 	 */
-	schedule_delayed_work(&priv->work, 0);
+	queue_delayed_work(system_power_efficient_wq,&priv->work, 0);
 
 	return IRQ_HANDLED;
 }
@@ -102,7 +102,7 @@ static void mc13783_ts_report_sample(struct mc13783_ts_priv *priv)
 
 			dev_dbg(&idev->dev, "report (%d, %d, %d)\n",
 					x1, y1, 0x1000 - cr0);
-			schedule_delayed_work(&priv->work, HZ / 50);
+			queue_delayed_work(system_power_efficient_wq,&priv->work, HZ / 50);
 		} else {
 			dev_dbg(&idev->dev, "report release\n");
 		}

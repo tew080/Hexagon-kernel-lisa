@@ -466,7 +466,7 @@ static void __kvm_ioapic_update_eoi(struct kvm_vcpu *vcpu,
 				 * level-triggered interrupt.  Emulate this
 				 * behavior if we detect an interrupt storm.
 				 */
-				schedule_delayed_work(&ioapic->eoi_inject, HZ / 100);
+				queue_delayed_work(system_power_efficient_wq,&ioapic->eoi_inject, HZ / 100);
 				ioapic->irq_eoi[i] = 0;
 				trace_kvm_ioapic_delayed_eoi_inj(ent->bits);
 			} else {

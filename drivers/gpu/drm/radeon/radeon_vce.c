@@ -272,7 +272,7 @@ static void radeon_vce_idle_work_handler(struct work_struct *work)
 			radeon_set_vce_clocks(rdev, 0, 0);
 		}
 	} else {
-		schedule_delayed_work(&rdev->vce.idle_work,
+		queue_delayed_work(system_power_efficient_wq,&rdev->vce.idle_work,
 				      msecs_to_jiffies(VCE_IDLE_TIMEOUT_MS));
 	}
 }
@@ -288,7 +288,7 @@ void radeon_vce_note_usage(struct radeon_device *rdev)
 {
 	bool streams_changed = false;
 	bool set_clocks = !cancel_delayed_work_sync(&rdev->vce.idle_work);
-	set_clocks &= schedule_delayed_work(&rdev->vce.idle_work,
+	set_clocks &= queue_delayed_work(system_power_efficient_wq,&rdev->vce.idle_work,
 					    msecs_to_jiffies(VCE_IDLE_TIMEOUT_MS));
 
 	if ((rdev->pm.pm_method == PM_METHOD_DPM) && rdev->pm.dpm_enabled) {

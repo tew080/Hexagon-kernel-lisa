@@ -334,12 +334,12 @@ static void o2hb_arm_timeout(struct o2hb_region *reg)
 		spin_unlock(&o2hb_live_lock);
 	}
 	cancel_delayed_work(&reg->hr_write_timeout_work);
-	schedule_delayed_work(&reg->hr_write_timeout_work,
+	queue_delayed_work(system_power_efficient_wq,&reg->hr_write_timeout_work,
 			      msecs_to_jiffies(O2HB_MAX_WRITE_TIMEOUT_MS));
 
 	cancel_delayed_work(&reg->hr_nego_timeout_work);
 	/* negotiate timeout must be less than write timeout. */
-	schedule_delayed_work(&reg->hr_nego_timeout_work,
+	queue_delayed_work(system_power_efficient_wq,&reg->hr_nego_timeout_work,
 			      msecs_to_jiffies(O2HB_NEGO_TIMEOUT_MS));
 	memset(reg->hr_nego_node_bitmap, 0, sizeof(reg->hr_nego_node_bitmap));
 }
@@ -397,7 +397,7 @@ static void o2hb_nego_timeout(struct work_struct *work)
 			/* check negotiate bitmap every second to do timeout
 			 * approve decision.
 			 */
-			schedule_delayed_work(&reg->hr_nego_timeout_work,
+			queue_delayed_work(system_power_efficient_wq,&reg->hr_nego_timeout_work,
 				msecs_to_jiffies(1000));
 
 			return;

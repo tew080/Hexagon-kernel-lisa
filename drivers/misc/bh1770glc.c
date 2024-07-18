@@ -620,7 +620,7 @@ static irqreturn_t bh1770_irq(int irq, void *data)
 		 * next expected interrupt time.
 		 */
 		cancel_delayed_work_sync(&chip->prox_work);
-		schedule_delayed_work(&chip->prox_work,
+		queue_delayed_work(system_power_efficient_wq,&chip->prox_work,
 				msecs_to_jiffies(rate + 50));
 	}
 	return IRQ_HANDLED;

@@ -2380,7 +2380,7 @@ static void e1000_82547_tx_fifo_stall_task(struct work_struct *work)
 			atomic_set(&adapter->tx_fifo_stall, 0);
 			netif_wake_queue(netdev);
 		} else if (!test_bit(__E1000_DOWN, &adapter->flags)) {
-			schedule_delayed_work(&adapter->fifo_stall_task, 1);
+			queue_delayed_work(system_power_efficient_wq,&adapter->fifo_stall_task, 1);
 		}
 	}
 }
@@ -2478,7 +2478,7 @@ static void e1000_watchdog(struct work_struct *work)
 
 			netif_carrier_on(netdev);
 			if (!test_bit(__E1000_DOWN, &adapter->flags))
-				schedule_delayed_work(&adapter->phy_info_task,
+				queue_delayed_work(system_power_efficient_wq,&adapter->phy_info_task,
 						      2 * HZ);
 			adapter->smartspeed = 0;
 		}
@@ -2491,7 +2491,7 @@ static void e1000_watchdog(struct work_struct *work)
 			netif_carrier_off(netdev);
 
 			if (!test_bit(__E1000_DOWN, &adapter->flags))
-				schedule_delayed_work(&adapter->phy_info_task,
+				queue_delayed_work(system_power_efficient_wq,&adapter->phy_info_task,
 						      2 * HZ);
 		}
 
@@ -2550,7 +2550,7 @@ link_up:
 
 	/* Reschedule the task */
 	if (!test_bit(__E1000_DOWN, &adapter->flags))
-		schedule_delayed_work(&adapter->watchdog_task, 2 * HZ);
+		queue_delayed_work(system_power_efficient_wq,&adapter->watchdog_task, 2 * HZ);
 }
 
 enum latency_range {
@@ -3219,7 +3219,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
 		     (e1000_82547_fifo_workaround(adapter, skb)))) {
 		netif_stop_queue(netdev);
 		if (!test_bit(__E1000_DOWN, &adapter->flags))
-			schedule_delayed_work(&adapter->fifo_stall_task, 1);
+			queue_delayed_work(system_power_efficient_wq,&adapter->fifo_stall_task, 1);
 		return NETDEV_TX_BUSY;
 	}
 
@@ -3771,7 +3771,7 @@ static irqreturn_t e1000_intr(int irq, void *data)
 		hw->get_link_status = 1;
 		/* guard against interrupt when we're going down */
 		if (!test_bit(__E1000_DOWN, &adapter->flags))
-			schedule_delayed_work(&adapter->watchdog_task, 1);
+			queue_delayed_work(system_power_efficient_wq,&adapter->watchdog_task, 1);
 	}
 
 	/* disable interrupts, without the synchronize_irq bit */

@@ -323,14 +323,14 @@ static void ir_work(struct work_struct *work)
 		}
 	}
 
-	schedule_delayed_work(&ir->work, msecs_to_jiffies(ir->polling_interval));
+	queue_delayed_work(system_power_efficient_wq,&ir->work, msecs_to_jiffies(ir->polling_interval));
 }
 
 static int ir_open(struct rc_dev *dev)
 {
 	struct IR_i2c *ir = dev->priv;
 
-	schedule_delayed_work(&ir->work, 0);
+	queue_delayed_work(system_power_efficient_wq,&ir->work, 0);
 
 	return 0;
 }

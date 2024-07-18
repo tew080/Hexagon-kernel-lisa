@@ -1098,7 +1098,7 @@ isert_rx_login_req(struct isert_conn *isert_conn)
 		complete(&isert_conn->login_comp);
 		return;
 	}
-	schedule_delayed_work(&conn->login_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&conn->login_work, 0);
 }
 
 static struct iscsi_cmd
@@ -2428,7 +2428,7 @@ isert_get_login_rx(struct iscsi_conn *conn, struct iscsi_login *login)
 
 	/*
 	 * For login requests after the first PDU, isert_rx_login_req() will
-	 * kick schedule_delayed_work(&conn->login_work) as the packet is
+	 * kick queue_delayed_work(system_power_efficient_wq,&conn->login_work) as the packet is
 	 * received, which turns this callback from iscsi_target_do_login_rx()
 	 * into a NOP.
 	 */

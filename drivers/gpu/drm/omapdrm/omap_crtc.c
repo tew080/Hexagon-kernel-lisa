@@ -355,7 +355,7 @@ void omap_crtc_flush(struct drm_crtc *crtc)
 		return;
 
 	if (!delayed_work_pending(&omap_crtc->update_work))
-		schedule_delayed_work(&omap_crtc->update_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&omap_crtc->update_work, 0);
 }
 
 static void omap_crtc_manual_display_update(struct work_struct *data)

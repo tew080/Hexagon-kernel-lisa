@@ -283,7 +283,7 @@ static int amoled_ecm_enable(struct amoled_ecm *ecm)
 	}
 
 	if (data->mode == ECM_MODE_CONTINUOUS)
-		schedule_delayed_work(&ecm->average_work,
+		queue_delayed_work(system_power_efficient_wq,&ecm->average_work,
 			msecs_to_jiffies(data->time_period_ms));
 
 	ecm->enable = true;
@@ -355,7 +355,7 @@ static void ecm_average_work(struct work_struct *work)
 	 */
 
 	if (!ecm->abort && ecm->enable)
-		schedule_delayed_work(&ecm->average_work,
+		queue_delayed_work(system_power_efficient_wq,&ecm->average_work,
 			msecs_to_jiffies(ecm->data.time_period_ms));
 }
 
@@ -522,7 +522,7 @@ static int handle_ecm_abort(struct amoled_ecm *ecm)
 		}
 
 		ecm->abort = true;
-		schedule_delayed_work(&ecm->average_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&ecm->average_work, 0);
 		break;
 	default:
 		pr_err_ratelimited("Invalid ECM operation mode: %u\n", mode);
@@ -669,7 +669,7 @@ static irqreturn_t sdam_full_irq_handler(int irq, void *_ecm)
 
 	if ((data->mode == ECM_MODE_MULTI_FRAMES) &&
 			(sdam_index < max_samples))
-		schedule_delayed_work(&ecm->average_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&ecm->average_work, 0);
 
 irq_exit:
 	mutex_unlock(&ecm->sdam_lock);

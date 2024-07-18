@@ -420,7 +420,7 @@ void digital_poll_next_tech(struct nfc_digital_dev *ddev)
 
 	mutex_unlock(&ddev->poll_lock);
 
-	schedule_delayed_work(&ddev->poll_work,
+	queue_delayed_work(system_power_efficient_wq,&ddev->poll_work,
 			      msecs_to_jiffies(DIGITAL_POLL_INTERVAL));
 }
 
@@ -545,7 +545,7 @@ static int digital_start_poll(struct nfc_dev *nfc_dev, __u32 im_protocols,
 		return -EINVAL;
 	}
 
-	schedule_delayed_work(&ddev->poll_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&ddev->poll_work, 0);
 
 	return 0;
 }

@@ -37,7 +37,7 @@ static void cifs_dfs_expire_automounts(struct work_struct *work)
 
 	mark_mounts_for_expiry(list);
 	if (!list_empty(list))
-		schedule_delayed_work(&cifs_dfs_automount_task,
+		queue_delayed_work(system_power_efficient_wq,&cifs_dfs_automount_task,
 				      cifs_dfs_mountpoint_expiry_timeout);
 }
 
@@ -406,7 +406,7 @@ struct vfsmount *cifs_dfs_d_automount(struct path *path)
 
 	mntget(newmnt); /* prevent immediate expiration */
 	mnt_set_expiry(newmnt, &cifs_dfs_automount_list);
-	schedule_delayed_work(&cifs_dfs_automount_task,
+	queue_delayed_work(system_power_efficient_wq,&cifs_dfs_automount_task,
 			      cifs_dfs_mountpoint_expiry_timeout);
 	cifs_dbg(FYI, "leaving %s [ok]\n" , __func__);
 	return newmnt;

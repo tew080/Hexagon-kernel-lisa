@@ -160,7 +160,7 @@ static void envelope_detector_setup_compare(struct envelope *env)
 		goto err;
 
 	/* ...and wait for a bit to see if the latch catches anything. */
-	schedule_delayed_work(&env->comp_timeout,
+	queue_delayed_work(system_power_efficient_wq,&env->comp_timeout,
 			      msecs_to_jiffies(env->comp_interval));
 	return;
 

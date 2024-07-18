@@ -97,7 +97,7 @@ static DECLARE_DELAYED_WORK(switch_work, switch_worker);
 static void start_switch_worker(void)
 {
 	if (oprofile_ops.switch_events)
-		schedule_delayed_work(&switch_work, oprofile_time_slice);
+		queue_delayed_work(system_power_efficient_wq,&switch_work, oprofile_time_slice);
 }
 
 static void stop_switch_worker(void)

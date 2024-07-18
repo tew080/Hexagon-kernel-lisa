@@ -257,7 +257,7 @@ static inline void vio_cmo_dealloc(struct vio_dev *viodev, size_t size)
 		vio_cmo.excess.free += excess_freed;
 
 	if (balance)
-		schedule_delayed_work(&vio_cmo.balance_q, VIO_CMO_BALANCE_DELAY);
+		queue_delayed_work(system_power_efficient_wq,&vio_cmo.balance_q, VIO_CMO_BALANCE_DELAY);
 	spin_unlock_irqrestore(&vio_cmo.lock, flags);
 }
 
@@ -354,7 +354,7 @@ int vio_cmo_entitlement_update(size_t new_entitlement)
 	}
 
 out:
-	schedule_delayed_work(&vio_cmo.balance_q, 0);
+	queue_delayed_work(system_power_efficient_wq,&vio_cmo.balance_q, 0);
 	spin_unlock_irqrestore(&vio_cmo.lock, flags);
 	return 0;
 }
@@ -674,7 +674,7 @@ void vio_cmo_set_dev_desired(struct vio_dev *viodev, size_t desired)
 			viodev->cmo.entitled = desired;
 		}
 	}
-	schedule_delayed_work(&vio_cmo.balance_q, 0);
+	queue_delayed_work(system_power_efficient_wq,&vio_cmo.balance_q, 0);
 	spin_unlock_irqrestore(&vio_cmo.lock, flags);
 }
 

@@ -30,7 +30,7 @@
 
 static void vnt_cmd_timer_wait(struct vnt_private *priv, unsigned long msecs)
 {
-	schedule_delayed_work(&priv->run_command_work, msecs_to_jiffies(msecs));
+	queue_delayed_work(system_power_efficient_wq,&priv->run_command_work, msecs_to_jiffies(msecs));
 }
 
 static int vnt_cmd_complete(struct vnt_private *priv)

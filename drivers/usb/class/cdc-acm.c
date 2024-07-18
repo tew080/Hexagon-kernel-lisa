@@ -551,9 +551,9 @@ static void acm_read_bulk_callback(struct urb *urb)
 
 	if (stopped || stalled || cooldown) {
 		if (stalled)
-			schedule_delayed_work(&acm->dwork, 0);
+			queue_delayed_work(system_power_efficient_wq,&acm->dwork, 0);
 		else if (cooldown)
-			schedule_delayed_work(&acm->dwork, HZ / 2);
+			queue_delayed_work(system_power_efficient_wq,&acm->dwork, HZ / 2);
 		return;
 	}
 
@@ -581,7 +581,7 @@ static void acm_write_bulk(struct urb *urb)
 	acm_write_done(acm, wb);
 	spin_unlock_irqrestore(&acm->write_lock, flags);
 	set_bit(EVENT_TTY_WAKEUP, &acm->flags);
-	schedule_delayed_work(&acm->dwork, 0);
+	queue_delayed_work(system_power_efficient_wq,&acm->dwork, 0);
 }
 
 static void acm_softint(struct work_struct *work)

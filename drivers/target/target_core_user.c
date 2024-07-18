@@ -222,7 +222,7 @@ static int tcmu_set_global_max_data_area(const char *str,
 
 	tcmu_global_max_blocks = TCMU_MBS_TO_BLOCKS(max_area_mb);
 	if (atomic_read(&global_db_count) > tcmu_global_max_blocks)
-		schedule_delayed_work(&tcmu_unmap_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&tcmu_unmap_work, 0);
 	else
 		cancel_delayed_work_sync(&tcmu_unmap_work);
 
@@ -496,7 +496,7 @@ static inline bool tcmu_get_empty_block(struct tcmu_dev *udev,
 	if (!page) {
 		if (atomic_add_return(1, &global_db_count) >
 				      tcmu_global_max_blocks)
-			schedule_delayed_work(&tcmu_unmap_work, 0);
+			queue_delayed_work(system_power_efficient_wq,&tcmu_unmap_work, 0);
 
 		/* try to get new page from the mm */
 		page = alloc_page(GFP_KERNEL);
@@ -1268,7 +1268,7 @@ static bool tcmu_handle_completions(struct tcmu_dev *udev)
 			 */
 			if (atomic_read(&global_db_count) >
 			    tcmu_global_max_blocks)
-				schedule_delayed_work(&tcmu_unmap_work, 0);
+				queue_delayed_work(system_power_efficient_wq,&tcmu_unmap_work, 0);
 		}
 	} else if (udev->cmd_time_out) {
 		tcmu_set_next_deadline(&udev->inflight_queue, &udev->cmd_timer);
@@ -1319,7 +1319,7 @@ static void tcmu_device_timedout(struct tcmu_dev *udev)
 		list_add_tail(&udev->timedout_entry, &timed_out_udevs);
 	spin_unlock(&timed_out_udevs_lock);
 
-	schedule_delayed_work(&tcmu_unmap_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&tcmu_unmap_work, 0);
 }
 
 static void tcmu_cmd_timedout(struct timer_list *t)
@@ -2675,7 +2675,7 @@ static void find_free_blocks(void)
 	mutex_unlock(&root_udev_mutex);
 
 	if (atomic_read(&global_db_count) > tcmu_global_max_blocks)
-		schedule_delayed_work(&tcmu_unmap_work, msecs_to_jiffies(5000));
+		queue_delayed_work(system_power_efficient_wq,&tcmu_unmap_work, msecs_to_jiffies(5000));
 }
 
 static void check_timedout_devices(void)

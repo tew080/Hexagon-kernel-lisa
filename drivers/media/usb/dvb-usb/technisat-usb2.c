@@ -324,7 +324,7 @@ static void technisat_usb2_green_led_control(struct work_struct *work)
 	}
 
 schedule:
-	schedule_delayed_work(&state->green_led_work,
+	queue_delayed_work(system_power_efficient_wq,&state->green_led_work,
 			msecs_to_jiffies(500));
 }
 
@@ -769,7 +769,7 @@ static int technisat_usb2_probe(struct usb_interface *intf,
 		if (!disable_led_control) {
 			INIT_DELAYED_WORK(&state->green_led_work,
 					technisat_usb2_green_led_control);
-			schedule_delayed_work(&state->green_led_work,
+			queue_delayed_work(system_power_efficient_wq,&state->green_led_work,
 					msecs_to_jiffies(500));
 		}
 	}

@@ -475,7 +475,7 @@ static void mlxreg_hotplug_work_handler(struct work_struct *work)
 	 * during masking.
 	 */
 	cancel_delayed_work(&priv->dwork_irq);
-	schedule_delayed_work(&priv->dwork_irq, 0);
+	queue_delayed_work(system_power_efficient_wq,&priv->dwork_irq, 0);
 
 	spin_unlock_irqrestore(&priv->lock, flags);
 
@@ -610,7 +610,7 @@ static irqreturn_t mlxreg_hotplug_irq_handler(int irq, void *dev)
 	priv = (struct mlxreg_hotplug_priv_data *)dev;
 
 	/* Schedule work task for immediate execution.*/
-	schedule_delayed_work(&priv->dwork_irq, 0);
+	queue_delayed_work(system_power_efficient_wq,&priv->dwork_irq, 0);
 
 	return IRQ_HANDLED;
 }

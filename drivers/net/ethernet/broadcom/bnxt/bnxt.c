@@ -1173,7 +1173,7 @@ static void bnxt_queue_fw_reset_work(struct bnxt *bp, unsigned long delay)
 	if (BNXT_PF(bp))
 		queue_delayed_work(bnxt_pf_wq, &bp->fw_reset_task, delay);
 	else
-		schedule_delayed_work(&bp->fw_reset_task, delay);
+		queue_delayed_work(system_power_efficient_wq,&bp->fw_reset_task, delay);
 }
 
 static void bnxt_queue_sp_work(struct bnxt *bp)

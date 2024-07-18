@@ -2125,7 +2125,7 @@ static void __ibmvnic_reset(struct work_struct *work)
 	adapter = container_of(work, struct ibmvnic_adapter, ibmvnic_reset);
 
 	if (test_and_set_bit_lock(0, &adapter->resetting)) {
-		schedule_delayed_work(&adapter->ibmvnic_delayed_reset,
+		queue_delayed_work(system_power_efficient_wq,&adapter->ibmvnic_delayed_reset,
 				      IBMVNIC_RESET_DELAY);
 		return;
 	}

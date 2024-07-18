@@ -52,7 +52,7 @@ void rtl92e_hw_wakeup(struct net_device *dev)
 		spin_unlock_irqrestore(&priv->rf_ps_lock, flags);
 		RT_TRACE(COMP_DBG,
 			 "%s(): RF Change in progress!\n", __func__);
-		schedule_delayed_work(&priv->rtllib->hw_wakeup_wq,
+		queue_delayed_work(system_power_efficient_wq,&priv->rtllib->hw_wakeup_wq,
 				      msecs_to_jiffies(10));
 		return;
 	}
@@ -99,8 +99,8 @@ void rtl92e_enter_sleep(struct net_device *dev, u64 time)
 		return;
 	}
 	tmp = time - jiffies;
-	schedule_delayed_work(&priv->rtllib->hw_wakeup_wq, tmp);
-	schedule_delayed_work(&priv->rtllib->hw_sleep_wq, 0);
+	queue_delayed_work(system_power_efficient_wq,&priv->rtllib->hw_wakeup_wq, tmp);
+	queue_delayed_work(system_power_efficient_wq,&priv->rtllib->hw_sleep_wq, 0);
 	spin_unlock_irqrestore(&priv->ps_lock, flags);
 }
 

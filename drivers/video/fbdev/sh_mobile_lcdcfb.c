@@ -500,7 +500,7 @@ static void sh_mobile_lcdc_deferred_io_touch(struct fb_info *info)
 	struct fb_deferred_io *fbdefio = info->fbdefio;
 
 	if (fbdefio)
-		schedule_delayed_work(&info->deferred_work, fbdefio->delay);
+		queue_delayed_work(system_power_efficient_wq,&info->deferred_work, fbdefio->delay);
 }
 
 static void sh_mobile_lcdc_display_on(struct sh_mobile_lcdc_chan *ch)
@@ -1081,7 +1081,7 @@ static void sh_mobile_lcdc_stop(struct sh_mobile_lcdc_priv *priv)
 		 */
 		if (ch->info && ch->info->fbdefio) {
 			ch->frame_end = 0;
-			schedule_delayed_work(&ch->info->deferred_work, 0);
+			queue_delayed_work(system_power_efficient_wq,&ch->info->deferred_work, 0);
 			wait_event(ch->frame_end_wait, ch->frame_end);
 			fb_deferred_io_cleanup(ch->info);
 			ch->info->fbdefio = NULL;

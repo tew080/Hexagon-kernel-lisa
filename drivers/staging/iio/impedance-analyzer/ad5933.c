@@ -583,7 +583,7 @@ static int ad5933_ring_postenable(struct iio_dev *indio_dev)
 	 * but no measurement takes place.
 	 */
 
-	schedule_delayed_work(&st->work,
+	queue_delayed_work(system_power_efficient_wq,&st->work,
 			      msecs_to_jiffies(AD5933_INIT_EXCITATION_TIME_ms));
 	return 0;
 }
@@ -632,7 +632,7 @@ static void ad5933_work(struct work_struct *work)
 		/* start sweep */
 		ad5933_cmd(st, AD5933_CTRL_START_SWEEP);
 		st->state = AD5933_CTRL_START_SWEEP;
-		schedule_delayed_work(&st->work, st->poll_time_jiffies);
+		queue_delayed_work(system_power_efficient_wq,&st->work, st->poll_time_jiffies);
 		return;
 	}
 
@@ -659,7 +659,7 @@ static void ad5933_work(struct work_struct *work)
 		iio_push_to_buffers(indio_dev, val);
 	} else {
 		/* no data available - try again later */
-		schedule_delayed_work(&st->work, st->poll_time_jiffies);
+		queue_delayed_work(system_power_efficient_wq,&st->work, st->poll_time_jiffies);
 		return;
 	}
 
@@ -672,7 +672,7 @@ static void ad5933_work(struct work_struct *work)
 	} else {
 		/* we just received a valid datum, move on to the next */
 		ad5933_cmd(st, AD5933_CTRL_INC_FREQ);
-		schedule_delayed_work(&st->work, st->poll_time_jiffies);
+		queue_delayed_work(system_power_efficient_wq,&st->work, st->poll_time_jiffies);
 	}
 }
 

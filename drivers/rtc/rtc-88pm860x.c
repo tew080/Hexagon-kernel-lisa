@@ -279,7 +279,7 @@ static void calibrate_vrtc_work(struct work_struct *work)
 		goto out;
 	dev_dbg(info->dev, "set 0x%x to RTC_MISC1\n", data);
 	/* trigger next calibration since VRTC is updated */
-	schedule_delayed_work(&info->calib_work, VRTC_CALIB_INTERVAL);
+	queue_delayed_work(system_power_efficient_wq,&info->calib_work, VRTC_CALIB_INTERVAL);
 	return;
 out:
 	/* disable measurement */
@@ -405,7 +405,7 @@ static int pm860x_rtc_probe(struct platform_device *pdev)
 
 	/* calibrate VRTC */
 	INIT_DELAYED_WORK(&info->calib_work, calibrate_vrtc_work);
-	schedule_delayed_work(&info->calib_work, VRTC_CALIB_INTERVAL);
+	queue_delayed_work(system_power_efficient_wq,&info->calib_work, VRTC_CALIB_INTERVAL);
 #endif	/* VRTC_CALIBRATION */
 
 	device_init_wakeup(&pdev->dev, 1);

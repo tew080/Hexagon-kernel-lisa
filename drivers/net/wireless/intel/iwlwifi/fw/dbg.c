@@ -2060,7 +2060,7 @@ int iwl_fw_dbg_collect_desc(struct iwl_fw_runtime *fwrt,
 	fwrt->dump.desc = desc;
 	fwrt->dump.monitor_only = monitor_only;
 
-	schedule_delayed_work(&fwrt->dump.wks[0].wk, usecs_to_jiffies(delay));
+	queue_delayed_work(system_power_efficient_wq,&fwrt->dump.wks[0].wk, usecs_to_jiffies(delay));
 
 	return 0;
 }
@@ -2181,7 +2181,7 @@ int _iwl_fw_dbg_ini_collect(struct iwl_fw_runtime *fwrt,
 
 	IWL_WARN(fwrt, "WRT: Collecting data: ini trigger %d fired.\n", id);
 
-	schedule_delayed_work(&fwrt->dump.wks[idx].wk, usecs_to_jiffies(delay));
+	queue_delayed_work(system_power_efficient_wq,&fwrt->dump.wks[idx].wk, usecs_to_jiffies(delay));
 
 	return 0;
 }

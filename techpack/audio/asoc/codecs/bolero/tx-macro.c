@@ -1059,7 +1059,7 @@ void bolero_tx_macro_mute_hs(void)
 	reg_val = snd_soc_component_read32(component, reg);
 	dev_info(component->dev, "%s: the reg(%#x) value after mute is: %#x \n",
 			__func__, reg, reg_val);
-	schedule_delayed_work(&g_tx_priv->tx_hs_unmute_dwork,
+	queue_delayed_work(system_power_efficient_wq,&g_tx_priv->tx_hs_unmute_dwork,
 			msecs_to_jiffies(tx_unmute_delay_plugout));
 	return;
 }

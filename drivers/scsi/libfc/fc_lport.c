@@ -1093,7 +1093,7 @@ static void fc_lport_error(struct fc_lport *lport, struct fc_frame *fp)
 		else
 			delay =	msecs_to_jiffies(lport->e_d_tov);
 
-		schedule_delayed_work(&lport->retry_work, delay);
+		queue_delayed_work(system_power_efficient_wq,&lport->retry_work, delay);
 	} else
 		fc_lport_enter_reset(lport);
 }

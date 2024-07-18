@@ -34,7 +34,7 @@ struct retu_wdt_dev {
 static void retu_wdt_ping_enable(struct retu_wdt_dev *wdev)
 {
 	retu_write(wdev->rdev, RETU_REG_WATCHDOG, RETU_WDT_MAX_TIMER);
-	schedule_delayed_work(&wdev->ping_work,
+	queue_delayed_work(system_power_efficient_wq,&wdev->ping_work,
 			round_jiffies_relative(RETU_WDT_MAX_TIMER * HZ / 2));
 }
 

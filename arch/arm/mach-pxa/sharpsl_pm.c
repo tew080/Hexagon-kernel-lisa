@@ -218,7 +218,7 @@ static int get_apm_status(int voltage)
 
 void sharpsl_battery_kick(void)
 {
-	schedule_delayed_work(&sharpsl_bat, msecs_to_jiffies(125));
+	queue_delayed_work(system_power_efficient_wq,&sharpsl_bat, msecs_to_jiffies(125));
 }
 
 static void sharpsl_battery_thread(struct work_struct *private_)
@@ -233,7 +233,7 @@ static void sharpsl_battery_thread(struct work_struct *private_)
 	/* Corgi cannot confirm when battery fully charged so periodically kick! */
 	if (!sharpsl_pm.machinfo->batfull_irq && (sharpsl_pm.charge_mode == CHRG_ON)
 			&& time_after(jiffies, sharpsl_pm.charge_start_time +  SHARPSL_CHARGE_ON_TIME_INTERVAL))
-		schedule_delayed_work(&toggle_charger, 0);
+		queue_delayed_work(system_power_efficient_wq,&toggle_charger, 0);
 
 	for (i = 0; i < 5; i++) {
 		voltage = sharpsl_pm.machinfo->read_devdata(SHARPSL_BATT_VOLT);
@@ -271,7 +271,7 @@ static void sharpsl_battery_thread(struct work_struct *private_)
 		apm_queue_event(APM_CRITICAL_SUSPEND);
 	}
 
-	schedule_delayed_work(&sharpsl_bat, SHARPSL_BATCHK_TIME);
+	queue_delayed_work(system_power_efficient_wq,&sharpsl_bat, SHARPSL_BATCHK_TIME);
 }
 
 void sharpsl_pm_led(int val)
@@ -293,8 +293,8 @@ static void sharpsl_charge_on(void)
 
 	sharpsl_pm.full_count = 0;
 	sharpsl_pm.charge_mode = CHRG_ON;
-	schedule_delayed_work(&toggle_charger, msecs_to_jiffies(250));
-	schedule_delayed_work(&sharpsl_bat, msecs_to_jiffies(500));
+	queue_delayed_work(system_power_efficient_wq,&toggle_charger, msecs_to_jiffies(250));
+	queue_delayed_work(system_power_efficient_wq,&sharpsl_bat, msecs_to_jiffies(500));
 }
 
 static void sharpsl_charge_off(void)
@@ -305,7 +305,7 @@ static void sharpsl_charge_off(void)
 	sharpsl_pm_led(SHARPSL_LED_OFF);
 	sharpsl_pm.charge_mode = CHRG_OFF;
 
-	schedule_delayed_work(&sharpsl_bat, 0);
+	queue_delayed_work(system_power_efficient_wq,&sharpsl_bat, 0);
 }
 
 static void sharpsl_charge_error(void)
@@ -347,7 +347,7 @@ static void sharpsl_ac_timer(struct timer_list *unused)
 	else if (sharpsl_pm.charge_mode == CHRG_ON)
 		sharpsl_charge_off();
 
-	schedule_delayed_work(&sharpsl_bat, 0);
+	queue_delayed_work(system_power_efficient_wq,&sharpsl_bat, 0);
 }
 
 
@@ -372,10 +372,10 @@ static void sharpsl_chrg_full_timer(struct timer_list *unused)
 			sharpsl_charge_off();
 	} else if (sharpsl_pm.full_count < 2) {
 		dev_dbg(sharpsl_pm.dev, "Charge Full: Count too low\n");
-		schedule_delayed_work(&toggle_charger, 0);
+		queue_delayed_work(system_power_efficient_wq,&toggle_charger, 0);
 	} else if (time_after(jiffies, sharpsl_pm.charge_start_time + SHARPSL_CHARGE_FINISH_TIME)) {
 		dev_dbg(sharpsl_pm.dev, "Charge Full: Interrupt generated too slowly - retry.\n");
-		schedule_delayed_work(&toggle_charger, 0);
+		queue_delayed_work(system_power_efficient_wq,&toggle_charger, 0);
 	} else {
 		sharpsl_charge_off();
 		sharpsl_pm.charge_mode = CHRG_DONE;

@@ -1929,7 +1929,7 @@ static int mvs_handle_event(struct mvs_info *mvi, void *data, int handler)
 		mwq->handler = handler;
 		MV_INIT_DELAYED_WORK(&mwq->work_q, mvs_work_queue, mwq);
 		list_add_tail(&mwq->entry, &mvi->wq_list);
-		schedule_delayed_work(&mwq->work_q, HZ * 2);
+		queue_delayed_work(system_power_efficient_wq,&mwq->work_q, HZ * 2);
 	} else
 		ret = -ENOMEM;
 

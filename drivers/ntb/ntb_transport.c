@@ -965,7 +965,7 @@ static void ntb_qp_link_cleanup_work(struct work_struct *work)
 	ntb_qp_link_cleanup(qp);
 
 	if (nt->link_is_up)
-		schedule_delayed_work(&qp->link_work,
+		queue_delayed_work(system_power_efficient_wq,&qp->link_work,
 				      msecs_to_jiffies(NTB_LINK_DOWN_TIMEOUT));
 }
 
@@ -1019,7 +1019,7 @@ static void ntb_transport_event_callback(void *data)
 	struct ntb_transport_ctx *nt = data;
 
 	if (ntb_link_is_up(nt->ndev, NULL, NULL) == 1)
-		schedule_delayed_work(&nt->link_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&nt->link_work, 0);
 	else
 		schedule_work(&nt->link_cleanup);
 }
@@ -1109,7 +1109,7 @@ static void ntb_transport_link_work(struct work_struct *work)
 		ntb_transport_setup_qp_peer_msi(nt, i);
 
 		if (qp->client_ready)
-			schedule_delayed_work(&qp->link_work, 0);
+			queue_delayed_work(system_power_efficient_wq,&qp->link_work, 0);
 	}
 
 	return;
@@ -1124,7 +1124,7 @@ out1:
 
 out:
 	if (ntb_link_is_up(ndev, NULL, NULL) == 1)
-		schedule_delayed_work(&nt->link_work,
+		queue_delayed_work(system_power_efficient_wq,&nt->link_work,
 				      msecs_to_jiffies(NTB_LINK_DOWN_TIMEOUT));
 }
 
@@ -1158,7 +1158,7 @@ static void ntb_qp_link_work(struct work_struct *work)
 		if (qp->active)
 			tasklet_schedule(&qp->rxc_db_work);
 	} else if (nt->link_is_up)
-		schedule_delayed_work(&qp->link_work,
+		queue_delayed_work(system_power_efficient_wq,&qp->link_work,
 				      msecs_to_jiffies(NTB_LINK_DOWN_TIMEOUT));
 }
 
@@ -2329,7 +2329,7 @@ void ntb_transport_link_up(struct ntb_transport_qp *qp)
 	qp->client_ready = true;
 
 	if (qp->transport->link_is_up)
-		schedule_delayed_work(&qp->link_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&qp->link_work, 0);
 }
 EXPORT_SYMBOL_GPL(ntb_transport_link_up);
 

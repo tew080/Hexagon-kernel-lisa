@@ -240,7 +240,7 @@ static void pending_rx_work(struct work_struct *work)
 	do_rx_work(dev);
 
 	if (polling_rate) {
-		schedule_delayed_work(&dev->rx.dwork, dev->rx.delay);
+		queue_delayed_work(system_power_efficient_wq,&dev->rx.dwork, dev->rx.delay);
 	} else {
 		dev->rx.int_disabled = false;
 		enable_irq(dev->client->irq);
@@ -271,7 +271,7 @@ static irqreturn_t most_irq_handler(int irq, void *_dev)
 
 	disable_irq_nosync(irq);
 	dev->rx.int_disabled = true;
-	schedule_delayed_work(&dev->rx.dwork, 0);
+	queue_delayed_work(system_power_efficient_wq,&dev->rx.dwork, 0);
 
 	return IRQ_HANDLED;
 }

@@ -249,7 +249,7 @@ static void e1000e_systim_overflow_work(struct work_struct *work)
 	e_dbg("SYSTIM overflow check at %lld.%09lu\n",
 	      (long long) ts.tv_sec, ts.tv_nsec);
 
-	schedule_delayed_work(&adapter->systim_overflow_work,
+	queue_delayed_work(system_power_efficient_wq,&adapter->systim_overflow_work,
 			      E1000_SYSTIM_OVERFLOW_PERIOD);
 }
 
@@ -319,7 +319,7 @@ void e1000e_ptp_init(struct e1000_adapter *adapter)
 	INIT_DELAYED_WORK(&adapter->systim_overflow_work,
 			  e1000e_systim_overflow_work);
 
-	schedule_delayed_work(&adapter->systim_overflow_work,
+	queue_delayed_work(system_power_efficient_wq,&adapter->systim_overflow_work,
 			      E1000_SYSTIM_OVERFLOW_PERIOD);
 
 	adapter->ptp_clock = ptp_clock_register(&adapter->ptp_clock_info,

@@ -541,7 +541,7 @@ void iwl_mvm_tdls_ch_switch_work(struct work_struct *work)
 
 	/* retry after a DTIM if we failed sending now */
 	delay = TU_TO_MS(vif->bss_conf.dtim_period * vif->bss_conf.beacon_int);
-	schedule_delayed_work(&mvm->tdls_cs.dwork, msecs_to_jiffies(delay));
+	queue_delayed_work(system_power_efficient_wq,&mvm->tdls_cs.dwork, msecs_to_jiffies(delay));
 out:
 	mutex_unlock(&mvm->mutex);
 }

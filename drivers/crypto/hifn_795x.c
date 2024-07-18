@@ -1840,7 +1840,7 @@ static void hifn_work(struct work_struct *work)
 		tasklet_schedule(&dev->tasklet);
 	}
 
-	schedule_delayed_work(&dev->work, HZ);
+	queue_delayed_work(system_power_efficient_wq,&dev->work, HZ);
 }
 
 static irqreturn_t hifn_interrupt(int irq, void *data)
@@ -2554,7 +2554,7 @@ static int hifn_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		goto err_out_unregister_rng;
 
 	INIT_DELAYED_WORK(&dev->work, hifn_work);
-	schedule_delayed_work(&dev->work, HZ);
+	queue_delayed_work(system_power_efficient_wq,&dev->work, HZ);
 
 	dev_dbg(&pdev->dev, "HIFN crypto accelerator card at %s has been "
 		"successfully registered as %s.\n",

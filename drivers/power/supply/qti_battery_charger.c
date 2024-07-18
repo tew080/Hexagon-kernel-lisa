@@ -1278,7 +1278,7 @@ static void handle_notification(struct battery_chg_dev *bcdev, void *data,
 		pst = &bcdev->psy_list[PSY_TYPE_WLS];
 		break;
 	case BC_XM_STATUS_GET:
-		schedule_delayed_work(&bcdev->xm_prop_change_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&bcdev->xm_prop_change_work, 0);
 		break;
 	default:
 		break;
@@ -5426,7 +5426,7 @@ static void xm_charger_debug_info_print_work(struct work_struct *work)
 		interval = DISCHARGE_PERIOD_S;
 	}
 
-	schedule_delayed_work(&bcdev->charger_debug_info_print_work, interval * HZ);
+	queue_delayed_work(system_power_efficient_wq,&bcdev->charger_debug_info_print_work, interval * HZ);
 }
 #endif
 
@@ -5712,7 +5712,7 @@ static int battery_chg_probe(struct platform_device *pdev)
 
 #ifdef DEBUG
 	INIT_DELAYED_WORK( &bcdev->charger_debug_info_print_work, xm_charger_debug_info_print_work);
-	schedule_delayed_work(&bcdev->charger_debug_info_print_work, 5 * HZ);
+	queue_delayed_work(system_power_efficient_wq,&bcdev->charger_debug_info_print_work, 5 * HZ);
 #endif
 
 	bcdev->slave_fg_verify_flag = false;

@@ -178,7 +178,7 @@ static int picolcd_fb_update_tile(u8 *vbitmap, const u8 *bitmap, int bpp,
 void picolcd_fb_refresh(struct picolcd_data *data)
 {
 	if (data->fb_info)
-		schedule_delayed_work(&data->fb_info->deferred_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&data->fb_info->deferred_work, 0);
 }
 
 /* Reconfigure LCD display */
@@ -214,7 +214,7 @@ int picolcd_fb_reset(struct picolcd_data *data, int clear)
 
 	/* schedule first output of framebuffer */
 	if (fbdata->ready)
-		schedule_delayed_work(&data->fb_info->deferred_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&data->fb_info->deferred_work, 0);
 	else
 		fbdata->ready = 1;
 
@@ -291,7 +291,7 @@ static void picolcd_fb_fillrect(struct fb_info *info,
 		return;
 	sys_fillrect(info, rect);
 
-	schedule_delayed_work(&info->deferred_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&info->deferred_work, 0);
 }
 
 /* Stub to call the system default and update the image on the picoLCD */
@@ -302,7 +302,7 @@ static void picolcd_fb_copyarea(struct fb_info *info,
 		return;
 	sys_copyarea(info, area);
 
-	schedule_delayed_work(&info->deferred_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&info->deferred_work, 0);
 }
 
 /* Stub to call the system default and update the image on the picoLCD */
@@ -312,7 +312,7 @@ static void picolcd_fb_imageblit(struct fb_info *info, const struct fb_image *im
 		return;
 	sys_imageblit(info, image);
 
-	schedule_delayed_work(&info->deferred_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&info->deferred_work, 0);
 }
 
 /*
@@ -327,7 +327,7 @@ static ssize_t picolcd_fb_write(struct fb_info *info, const char __user *buf,
 		return -ENODEV;
 	ret = fb_sys_write(info, buf, count, ppos);
 	if (ret >= 0)
-		schedule_delayed_work(&info->deferred_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&info->deferred_work, 0);
 	return ret;
 }
 

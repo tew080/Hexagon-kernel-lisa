@@ -425,7 +425,7 @@ static void free_object(struct debug_obj *obj)
 	__free_object(obj);
 	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
 		WRITE_ONCE(obj_freeing, true);
-		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
+		queue_delayed_work(system_power_efficient_wq,&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
 	}
 }
 
@@ -1018,7 +1018,7 @@ repeat:
 	/* Schedule work to actually kmem_cache_free() objects */
 	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
 		WRITE_ONCE(obj_freeing, true);
-		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
+		queue_delayed_work(system_power_efficient_wq,&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
 	}
 }
 

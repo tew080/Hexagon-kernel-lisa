@@ -820,7 +820,7 @@ static int rtl2832_deselect(struct i2c_mux_core *muxc, u32 chan_id)
 {
 	struct rtl2832_dev *dev = i2c_mux_priv(muxc);
 
-	schedule_delayed_work(&dev->i2c_gate_work, usecs_to_jiffies(100));
+	queue_delayed_work(system_power_efficient_wq,&dev->i2c_gate_work, usecs_to_jiffies(100));
 	return 0;
 }
 

@@ -936,7 +936,7 @@ static void sh_mmcif_start_cmd(struct sh_mmcif_host *host,
 	sh_mmcif_writel(host->addr, MMCIF_CE_CMD_SET, opc);
 
 	host->wait_for = MMCIF_WAIT_FOR_CMD;
-	schedule_delayed_work(&host->timeout_work, host->timeout);
+	queue_delayed_work(system_power_efficient_wq,&host->timeout_work, host->timeout);
 	spin_unlock_irqrestore(&host->lock, flags);
 }
 
@@ -1243,7 +1243,7 @@ static irqreturn_t sh_mmcif_irqt(int irq, void *dev_id)
 	}
 
 	if (wait) {
-		schedule_delayed_work(&host->timeout_work, host->timeout);
+		queue_delayed_work(system_power_efficient_wq,&host->timeout_work, host->timeout);
 		/* Wait for more data */
 		mutex_unlock(&host->thread_lock);
 		return IRQ_HANDLED;
@@ -1258,7 +1258,7 @@ static irqreturn_t sh_mmcif_irqt(int irq, void *dev_id)
 		if (mrq->stop && !mrq->cmd->error && (!data || !data->error)) {
 			sh_mmcif_stop_cmd(host, mrq);
 			if (!mrq->stop->error) {
-				schedule_delayed_work(&host->timeout_work, host->timeout);
+				queue_delayed_work(system_power_efficient_wq,&host->timeout_work, host->timeout);
 				mutex_unlock(&host->thread_lock);
 				return IRQ_HANDLED;
 			}

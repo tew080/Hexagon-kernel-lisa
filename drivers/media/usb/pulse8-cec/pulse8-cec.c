@@ -695,7 +695,7 @@ static int pulse8_connect(struct serio *serio, struct serio_driver *drv)
 
 	INIT_DELAYED_WORK(&pulse8->ping_eeprom_work,
 			  pulse8_ping_eeprom_work_handler);
-	schedule_delayed_work(&pulse8->ping_eeprom_work, PING_PERIOD);
+	queue_delayed_work(system_power_efficient_wq,&pulse8->ping_eeprom_work, PING_PERIOD);
 
 	return 0;
 
@@ -715,7 +715,7 @@ static void pulse8_ping_eeprom_work_handler(struct work_struct *work)
 		container_of(work, struct pulse8, ping_eeprom_work.work);
 	u8 cmd;
 
-	schedule_delayed_work(&pulse8->ping_eeprom_work, PING_PERIOD);
+	queue_delayed_work(system_power_efficient_wq,&pulse8->ping_eeprom_work, PING_PERIOD);
 	cmd = MSGCODE_PING;
 	pulse8_send_and_wait(pulse8, &cmd, 1,
 			     MSGCODE_COMMAND_ACCEPTED, 0);

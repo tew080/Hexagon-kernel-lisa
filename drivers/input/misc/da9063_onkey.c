@@ -153,7 +153,7 @@ static void da9063_poll_on(struct work_struct *work)
 
 err_poll:
 	if (poll)
-		schedule_delayed_work(&onkey->work, msecs_to_jiffies(50));
+		queue_delayed_work(system_power_efficient_wq,&onkey->work, msecs_to_jiffies(50));
 }
 
 static irqreturn_t da9063_onkey_irq_handler(int irq, void *data)
@@ -169,7 +169,7 @@ static irqreturn_t da9063_onkey_irq_handler(int irq, void *data)
 	if (onkey->key_power && !error && (val & config->onkey_nonkey_mask)) {
 		input_report_key(onkey->input, KEY_POWER, 1);
 		input_sync(onkey->input);
-		schedule_delayed_work(&onkey->work, 0);
+		queue_delayed_work(system_power_efficient_wq,&onkey->work, 0);
 		dev_dbg(onkey->dev, "KEY_POWER long press.\n");
 	} else {
 		input_report_key(onkey->input, KEY_POWER, 1);

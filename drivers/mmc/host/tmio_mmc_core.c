@@ -780,7 +780,7 @@ static void tmio_process_mrq(struct tmio_mmc_host *host,
 	if (ret)
 		goto fail;
 
-	schedule_delayed_work(&host->delayed_reset_work,
+	queue_delayed_work(system_power_efficient_wq,&host->delayed_reset_work,
 			      msecs_to_jiffies(CMDREQ_TIMEOUT));
 	return;
 

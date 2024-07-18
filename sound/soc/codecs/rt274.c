@@ -984,7 +984,7 @@ static int rt274_probe(struct snd_soc_component *component)
 	if (rt274->i2c->irq) {
 		INIT_DELAYED_WORK(&rt274->jack_detect_work,
 					rt274_jack_detect_work);
-		schedule_delayed_work(&rt274->jack_detect_work,
+		queue_delayed_work(system_power_efficient_wq,&rt274->jack_detect_work,
 					msecs_to_jiffies(1250));
 	}
 

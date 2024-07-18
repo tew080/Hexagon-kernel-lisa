@@ -371,9 +371,9 @@ static DECLARE_DELAYED_WORK(fsm_tq, ps_tq_int);
 static void schedule_fsm(void)
 {
 	if (!nice)
-		schedule_delayed_work(&fsm_tq, 0);
+		queue_delayed_work(system_power_efficient_wq,&fsm_tq, 0);
 	else
-		schedule_delayed_work(&fsm_tq, nice-1);
+		queue_delayed_work(system_power_efficient_wq,&fsm_tq, nice-1);
 }
 
 static void ps_tq_int(struct work_struct *work)

@@ -136,7 +136,7 @@ static void flexcop_pci_irq_check_work(struct work_struct *work)
 		}
 	}
 
-	schedule_delayed_work(&fc_pci->irq_check_work,
+	queue_delayed_work(system_power_efficient_wq,&fc_pci->irq_check_work,
 			msecs_to_jiffies(irq_chk_intv < 100 ? 100 : irq_chk_intv));
 }
 
@@ -388,7 +388,7 @@ static int flexcop_pci_probe(struct pci_dev *pdev,
 	INIT_DELAYED_WORK(&fc_pci->irq_check_work, flexcop_pci_irq_check_work);
 
 	if (irq_chk_intv > 0)
-		schedule_delayed_work(&fc_pci->irq_check_work,
+		queue_delayed_work(system_power_efficient_wq,&fc_pci->irq_check_work,
 				msecs_to_jiffies(irq_chk_intv < 100 ?
 					100 :
 					irq_chk_intv));

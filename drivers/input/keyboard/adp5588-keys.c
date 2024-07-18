@@ -321,7 +321,7 @@ static irqreturn_t adp5588_irq(int irq, void *handle)
 	 * REVID < 4
 	 */
 
-	schedule_delayed_work(&kpad->work, kpad->delay);
+	queue_delayed_work(system_power_efficient_wq,&kpad->work, kpad->delay);
 
 	return IRQ_HANDLED;
 }

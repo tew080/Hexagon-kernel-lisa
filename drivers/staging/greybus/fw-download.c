@@ -207,7 +207,7 @@ static struct fw_request *find_firmware(struct fw_download *fw_download,
 	fw_req->release_timeout_j = jiffies + req_count * NEXT_REQ_TIMEOUT_J;
 
 	INIT_DELAYED_WORK(&fw_req->dwork, fw_request_timedout);
-	schedule_delayed_work(&fw_req->dwork, NEXT_REQ_TIMEOUT_J);
+	queue_delayed_work(system_power_efficient_wq,&fw_req->dwork, NEXT_REQ_TIMEOUT_J);
 
 	return fw_req;
 
@@ -341,7 +341,7 @@ static int fw_download_fetch_firmware(struct gb_operation *op)
 		size);
 
 	/* Refresh timeout */
-	schedule_delayed_work(&fw_req->dwork, NEXT_REQ_TIMEOUT_J);
+	queue_delayed_work(system_power_efficient_wq,&fw_req->dwork, NEXT_REQ_TIMEOUT_J);
 
 put_fw:
 	put_fw_req(fw_req);

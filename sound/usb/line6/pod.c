@@ -185,7 +185,7 @@ static void line6_pod_process_message(struct usb_line6 *line6)
 				 (int) buf[10];
 		if (pod->startup_progress == POD_STARTUP_VERSIONREQ) {
 			pod->startup_progress = POD_STARTUP_SETUP;
-			schedule_delayed_work(&line6->startup_work, 0);
+			queue_delayed_work(system_power_efficient_wq,&line6->startup_work, 0);
 		}
 		return;
 	}
@@ -398,7 +398,7 @@ static int pod_init(struct usb_line6 *line6,
 		pod->monitor_level = POD_SYSTEM_INVALID;
 
 		/* initiate startup procedure: */
-		schedule_delayed_work(&line6->startup_work,
+		queue_delayed_work(system_power_efficient_wq,&line6->startup_work,
 				      msecs_to_jiffies(POD_STARTUP_DELAY));
 	}
 

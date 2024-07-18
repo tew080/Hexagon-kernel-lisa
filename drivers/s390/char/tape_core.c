@@ -308,7 +308,7 @@ __tape_cancel_io(struct tape_device *device, struct tape_request *request)
 				return 0;
 			case -EBUSY:
 				request->status	= TAPE_REQUEST_CANCEL;
-				schedule_delayed_work(&device->tape_dnr, 0);
+				queue_delayed_work(system_power_efficient_wq,&device->tape_dnr, 0);
 				return 0;
 			case -ENODEV:
 				DBF_EXCEPTION(2, "device gone, retry\n");
@@ -791,7 +791,7 @@ __tape_start_io(struct tape_device *device, struct tape_request *request)
 	} else if (rc == -EBUSY) {
 		/* The common I/O subsystem is currently busy. Retry later. */
 		request->status = TAPE_REQUEST_QUEUED;
-		schedule_delayed_work(&device->tape_dnr, 0);
+		queue_delayed_work(system_power_efficient_wq,&device->tape_dnr, 0);
 		rc = 0;
 	} else {
 		/* Start failed. Remove request and indicate failure. */
@@ -1142,7 +1142,7 @@ __tape_do_irq (struct ccw_device *cdev, unsigned long intparm, struct irb *irb)
 		DBF_EVENT(3,"(%08x): deferred cc=%i, fctl=%i. restarting\n",
 			device->cdev_id, irb->scsw.cmd.cc, irb->scsw.cmd.fctl);
 		request->status = TAPE_REQUEST_QUEUED;
-		schedule_delayed_work(&device->tape_dnr, HZ);
+		queue_delayed_work(system_power_efficient_wq,&device->tape_dnr, HZ);
 		return;
 	}
 

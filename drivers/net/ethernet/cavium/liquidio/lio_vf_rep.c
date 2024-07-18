@@ -481,7 +481,7 @@ lio_vf_rep_fetch_stats(struct work_struct *work)
 		memcpy(&vf_rep->stats, &stats, sizeof(stats));
 	}
 
-	schedule_delayed_work(&vf_rep->stats_wk.work,
+	queue_delayed_work(system_power_efficient_wq,&vf_rep->stats_wk.work,
 			      msecs_to_jiffies(LIO_VF_REP_STATS_POLL_TIME_MS));
 }
 
@@ -536,7 +536,7 @@ lio_vf_rep_create(struct octeon_device *oct)
 		INIT_DELAYED_WORK(&vf_rep->stats_wk.work,
 				  lio_vf_rep_fetch_stats);
 		vf_rep->stats_wk.ctxptr = (void *)vf_rep;
-		schedule_delayed_work(&vf_rep->stats_wk.work,
+		queue_delayed_work(system_power_efficient_wq,&vf_rep->stats_wk.work,
 				      msecs_to_jiffies
 				      (LIO_VF_REP_STATS_POLL_TIME_MS));
 		oct->vf_rep_list.num_vfs++;

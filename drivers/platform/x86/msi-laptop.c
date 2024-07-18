@@ -818,7 +818,7 @@ static bool msi_laptop_i8042_filter(unsigned char data, unsigned char str,
 		switch (data) {
 		case 0xE4:
 			if (quirks->ec_delay) {
-				schedule_delayed_work(&msi_touchpad_dwork,
+				queue_delayed_work(system_power_efficient_wq,&msi_touchpad_dwork,
 					round_jiffies_relative(0.5 * HZ));
 			} else
 				schedule_work(&msi_touchpad_work);
@@ -827,7 +827,7 @@ static bool msi_laptop_i8042_filter(unsigned char data, unsigned char str,
 		case 0x62:
 		case 0x76:
 			if (quirks->ec_delay) {
-				schedule_delayed_work(&msi_rfkill_dwork,
+				queue_delayed_work(system_power_efficient_wq,&msi_rfkill_dwork,
 					round_jiffies_relative(0.5 * HZ));
 			} else
 				schedule_work(&msi_rfkill_work);
@@ -898,7 +898,7 @@ static int rfkill_init(struct platform_device *sdev)
 
 	/* schedule to run rfkill state initial */
 	if (quirks->ec_delay) {
-		schedule_delayed_work(&msi_rfkill_init,
+		queue_delayed_work(system_power_efficient_wq,&msi_rfkill_init,
 			round_jiffies_relative(1 * HZ));
 	} else
 		schedule_work(&msi_rfkill_work);

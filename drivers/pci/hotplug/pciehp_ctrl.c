@@ -178,7 +178,7 @@ void pciehp_handle_button_press(struct controller *ctrl)
 		/* blink power indicator and turn off attention */
 		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
 				      PCI_EXP_SLTCTL_ATTN_IND_OFF);
-		schedule_delayed_work(&ctrl->button_work, 5 * HZ);
+		queue_delayed_work(system_power_efficient_wq,&ctrl->button_work, 5 * HZ);
 		break;
 	case BLINKINGOFF_STATE:
 	case BLINKINGON_STATE:

@@ -1122,7 +1122,7 @@ static void __gnttab_unmap_refs_async(struct gntab_unmap_queue_data* item)
 	for (pc = 0; pc < item->count; pc++) {
 		if (page_count(item->pages[pc]) > 1) {
 			unsigned long delay = GNTTAB_UNMAP_REFS_DELAY * (item->age + 1);
-			schedule_delayed_work(&item->gnttab_work,
+			queue_delayed_work(system_power_efficient_wq,&item->gnttab_work,
 					      msecs_to_jiffies(delay));
 			return;
 		}

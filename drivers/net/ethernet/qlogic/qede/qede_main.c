@@ -2433,7 +2433,7 @@ static void qede_schedule_recovery_handler(void *dev)
 	}
 
 	set_bit(QEDE_SP_RECOVERY, &edev->sp_flags);
-	schedule_delayed_work(&edev->sp_task, 0);
+	queue_delayed_work(system_power_efficient_wq,&edev->sp_task, 0);
 
 	DP_INFO(edev, "Scheduled a recovery handler\n");
 }

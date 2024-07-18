@@ -357,7 +357,7 @@ static void nvmet_keep_alive_timer(struct work_struct *work)
 	if (cmd_seen) {
 		pr_debug("ctrl %d reschedule traffic based keep-alive timer\n",
 			ctrl->cntlid);
-		schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
+		queue_delayed_work(system_power_efficient_wq,&ctrl->ka_work, ctrl->kato * HZ);
 		return;
 	}
 
@@ -376,7 +376,7 @@ static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
 		ctrl->cntlid, ctrl->kato);
 
 	INIT_DELAYED_WORK(&ctrl->ka_work, nvmet_keep_alive_timer);
-	schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
+	queue_delayed_work(system_power_efficient_wq,&ctrl->ka_work, ctrl->kato * HZ);
 }
 
 static void nvmet_stop_keep_alive_timer(struct nvmet_ctrl *ctrl)

@@ -176,7 +176,7 @@ void tegra_vde_dmabuf_cache_unmap(struct tegra_vde *vde,
 			if (release)
 				tegra_vde_release_entry(entry);
 			else
-				schedule_delayed_work(&entry->dwork, 5 * HZ);
+				queue_delayed_work(system_power_efficient_wq,&entry->dwork, 5 * HZ);
 		}
 		break;
 	}

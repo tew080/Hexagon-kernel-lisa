@@ -112,7 +112,7 @@ static void dvb_usb_read_remote_control(struct work_struct *work)
 		return; /* stop polling */
 	}
 
-	schedule_delayed_work(&d->rc_query_work,
+	queue_delayed_work(system_power_efficient_wq,&d->rc_query_work,
 			msecs_to_jiffies(d->rc.interval));
 }
 
@@ -168,7 +168,7 @@ static int dvb_usbv2_remote_init(struct dvb_usb_device *d)
 		dev_info(&d->udev->dev,
 				"%s: schedule remote query interval to %d msecs\n",
 				KBUILD_MODNAME, d->rc.interval);
-		schedule_delayed_work(&d->rc_query_work,
+		queue_delayed_work(system_power_efficient_wq,&d->rc_query_work,
 				msecs_to_jiffies(d->rc.interval));
 		d->rc_polling_active = true;
 	}
@@ -1084,7 +1084,7 @@ static int dvb_usbv2_resume_common(struct dvb_usb_device *d)
 
 	/* start remote controller poll */
 	if (d->rc_polling_active)
-		schedule_delayed_work(&d->rc_query_work,
+		queue_delayed_work(system_power_efficient_wq,&d->rc_query_work,
 				msecs_to_jiffies(d->rc.interval));
 
 	return ret;

@@ -117,7 +117,7 @@ static void ht16k33_fb_queue(struct ht16k33_priv *priv)
 {
 	struct ht16k33_fbdev *fbdev = &priv->fbdev;
 
-	schedule_delayed_work(&fbdev->work, HZ / fbdev->refresh_rate);
+	queue_delayed_work(system_power_efficient_wq,&fbdev->work, HZ / fbdev->refresh_rate);
 }
 
 /*

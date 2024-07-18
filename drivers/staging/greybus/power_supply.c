@@ -747,7 +747,7 @@ static void gb_power_supply_work(struct work_struct *work)
 
 	gb_power_supply_status_update(gbpsy);
 	next_interval(gbpsy);
-	schedule_delayed_work(&gbpsy->work, gbpsy->update_interval);
+	queue_delayed_work(system_power_efficient_wq,&gbpsy->work, gbpsy->update_interval);
 }
 
 static int get_property(struct power_supply *b,
@@ -922,7 +922,7 @@ static int gb_power_supply_enable(struct gb_power_supply *gbpsy)
 
 	gbpsy->update_interval = update_interval_init;
 	INIT_DELAYED_WORK(&gbpsy->work, gb_power_supply_work);
-	schedule_delayed_work(&gbpsy->work, 0);
+	queue_delayed_work(system_power_efficient_wq,&gbpsy->work, 0);
 
 	/* everything went fine, mark it for release code to know */
 	gbpsy->registered = true;

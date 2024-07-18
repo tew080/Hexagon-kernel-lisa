@@ -726,7 +726,7 @@ static void igb_ptp_overflow_check(struct work_struct *work)
 	pr_debug("igb overflow check at %lld.%09lu\n",
 		 (long long) ts.tv_sec, ts.tv_nsec);
 
-	schedule_delayed_work(&igb->ptp_overflow_work,
+	queue_delayed_work(system_power_efficient_wq,&igb->ptp_overflow_work,
 			      IGB_SYSTIM_OVERFLOW_PERIOD);
 }
 
@@ -1363,6 +1363,6 @@ out:
 	wrfl();
 
 	if (adapter->ptp_flags & IGB_PTP_OVERFLOW_CHECK)
-		schedule_delayed_work(&adapter->ptp_overflow_work,
+		queue_delayed_work(system_power_efficient_wq,&adapter->ptp_overflow_work,
 				      IGB_SYSTIM_OVERFLOW_PERIOD);
 }

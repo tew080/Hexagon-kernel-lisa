@@ -939,7 +939,7 @@ static int liquidio_open(struct net_device *netdev)
 
 	INIT_DELAYED_WORK(&lio->stats_wk.work, lio_fetch_stats);
 	lio->stats_wk.ctxptr = lio;
-	schedule_delayed_work(&lio->stats_wk.work, msecs_to_jiffies
+	queue_delayed_work(system_power_efficient_wq,&lio->stats_wk.work, msecs_to_jiffies
 					(LIQUIDIO_NDEV_STATS_POLL_TIME_MS));
 
 	/* tell Octeon to start forwarding packets to host */

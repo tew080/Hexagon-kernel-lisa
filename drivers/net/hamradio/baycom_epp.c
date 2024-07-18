@@ -745,7 +745,7 @@ static void epp_bh(struct work_struct *work)
 	bc->debug_vals.mod_cycles = time2 - time1;
 	bc->debug_vals.demod_cycles = time3 - time2;
 #endif /* BAYCOM_DEBUG */
-	schedule_delayed_work(&bc->run_work, 1);
+	queue_delayed_work(system_power_efficient_wq,&bc->run_work, 1);
 	if (!bc->skb)
 		netif_wake_queue(dev);
 	return;
@@ -933,7 +933,7 @@ static int epp_open(struct net_device *dev)
 	bc->hdlctx.slotcnt = bc->ch_params.slottime;
 	bc->hdlctx.calibrate = 0;
 	/* start the bottom half stuff */
-	schedule_delayed_work(&bc->run_work, 1);
+	queue_delayed_work(system_power_efficient_wq,&bc->run_work, 1);
 	netif_start_queue(dev);
 	return 0;
 

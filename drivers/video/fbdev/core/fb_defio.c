@@ -138,7 +138,7 @@ page_already_added:
 	mutex_unlock(&fbdefio->lock);
 
 	/* come back after delay to process the deferred IO */
-	schedule_delayed_work(&info->deferred_work, fbdefio->delay);
+	queue_delayed_work(system_power_efficient_wq,&info->deferred_work, fbdefio->delay);
 	return VM_FAULT_LOCKED;
 }
 

@@ -869,13 +869,13 @@ static void hvsi_write_worker(struct work_struct *work)
 		 * be minutes before the service processor comes back, so only try
 		 * again once a second.
 		 */
-		schedule_delayed_work(&hp->writer, HZ);
+		queue_delayed_work(system_power_efficient_wq,&hp->writer, HZ);
 		goto out;
 	}
 
 	hvsi_push(hp);
 	if (hp->n_outbuf > 0)
-		schedule_delayed_work(&hp->writer, 10);
+		queue_delayed_work(system_power_efficient_wq,&hp->writer, 10);
 	else {
 #ifdef DEBUG
 		pr_debug("%s: outbuf emptied after %li jiffies\n", __func__,
@@ -946,7 +946,7 @@ static int hvsi_write(struct tty_struct *tty,
 		 * we weren't able to write it all to the hypervisor.
 		 * schedule another push attempt.
 		 */
-		schedule_delayed_work(&hp->writer, 10);
+		queue_delayed_work(system_power_efficient_wq,&hp->writer, 10);
 	}
 
 out:
