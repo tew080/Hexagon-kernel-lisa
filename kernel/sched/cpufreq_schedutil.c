@@ -437,11 +437,13 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
 	return min(max, util);
 }
 
+#ifdef CONFIG_CPU_IDLE_GOV_TEO
 unsigned long sched_cpu_util(int cpu, unsigned long max)
 {
 	return schedutil_cpu_util(cpu, cpu_util_cfs(cpu_rq(cpu)), max,
 				  ENERGY_UTIL, NULL);
 }
+#endif /* CONFIG_CPU_IDLE_GOV_TEO */
 
 static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
 {
