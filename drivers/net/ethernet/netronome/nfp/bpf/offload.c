@@ -336,21 +336,21 @@ nfp_bpf_map_alloc(struct nfp_app_bpf *bpf, struct bpf_offloaded_map *offmap)
 
 	if (offmap->map.map_flags ||
 	    offmap->map.numa_node != NUMA_NO_NODE) {
-		pr_info("map flags are not supported\n");
+		pr_debug("map flags are not supported\n");
 		return -EINVAL;
 	}
 
 	if (!(bpf->maps.types & 1 << offmap->map.map_type)) {
-		pr_info("map type not supported\n");
+		pr_debug("map type not supported\n");
 		return -EOPNOTSUPP;
 	}
 	if (bpf->maps.max_maps == bpf->maps_in_use) {
-		pr_info("too many maps for a device\n");
+		pr_debug("too many maps for a device\n");
 		return -ENOMEM;
 	}
 	if (bpf->maps.max_elems - bpf->map_elems_in_use <
 	    offmap->map.max_entries) {
-		pr_info("map with too many elements: %u, left: %u\n",
+		pr_debug("map with too many elements: %u, left: %u\n",
 			offmap->map.max_entries,
 			bpf->maps.max_elems - bpf->map_elems_in_use);
 		return -ENOMEM;
@@ -358,19 +358,19 @@ nfp_bpf_map_alloc(struct nfp_app_bpf *bpf, struct bpf_offloaded_map *offmap)
 
 	if (round_up(offmap->map.key_size, 8) +
 	    round_up(offmap->map.value_size, 8) > bpf->maps.max_elem_sz) {
-		pr_info("map elements too large: %u, FW max element size (key+value): %u\n",
+		pr_debug("map elements too large: %u, FW max element size (key+value): %u\n",
 			round_up(offmap->map.key_size, 8) +
 			round_up(offmap->map.value_size, 8),
 			bpf->maps.max_elem_sz);
 		return -ENOMEM;
 	}
 	if (offmap->map.key_size > bpf->maps.max_key_sz) {
-		pr_info("map key size %u, FW max is %u\n",
+		pr_debug("map key size %u, FW max is %u\n",
 			offmap->map.key_size, bpf->maps.max_key_sz);
 		return -ENOMEM;
 	}
 	if (offmap->map.value_size > bpf->maps.max_val_sz) {
-		pr_info("map value size %u, FW max is %u\n",
+		pr_debug("map value size %u, FW max is %u\n",
 			offmap->map.value_size, bpf->maps.max_val_sz);
 		return -ENOMEM;
 	}

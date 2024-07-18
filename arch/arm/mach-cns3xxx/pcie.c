@@ -130,7 +130,7 @@ static int cns3xxx_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
 	struct cns3xxx_pcie *cnspci = pdev_to_cnspci(dev);
 	int irq = cnspci->irqs[!!dev->bus->number];
 
-	pr_info("PCIe map irq: %04d:%02x:%02x.%02x slot %d, pin %d, irq: %d\n",
+	pr_debug("PCIe map irq: %04d:%02x:%02x.%02x slot %d, pin %d, irq: %d\n",
 		pci_domain_nr(dev->bus), dev->bus->number, PCI_SLOT(dev->devfn),
 		PCI_FUNC(dev->devfn), slot, pin, irq);
 
@@ -192,18 +192,18 @@ static void __init cns3xxx_pcie_check_link(struct cns3xxx_pcie *cnspci)
 	reg |= 0x3;
 	__raw_writel(reg, MISC_PCIE_CTRL(port));
 
-	pr_info("PCIe: Port[%d] Enable PCIe LTSSM\n", port);
-	pr_info("PCIe: Port[%d] Check data link layer...", port);
+	pr_debug("PCIe: Port[%d] Enable PCIe LTSSM\n", port);
+	pr_debug("PCIe: Port[%d] Check data link layer...", port);
 
 	time = jiffies;
 	while (1) {
 		reg = __raw_readl(MISC_PCIE_PM_DEBUG(port));
 		if (reg & 0x1) {
-			pr_info("Link up.\n");
+			pr_debug("Link up.\n");
 			cnspci->linked = 1;
 			break;
 		} else if (time_after(jiffies, time + 50)) {
-			pr_info("Device not found.\n");
+			pr_debug("Device not found.\n");
 			break;
 		}
 	}

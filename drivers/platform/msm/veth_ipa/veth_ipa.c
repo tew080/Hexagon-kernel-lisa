@@ -1115,7 +1115,7 @@ static void veth_ipa_offload_event_handler(
 	case EV_DEV_CLOSE:
 		{
 			if (pdata->prv_ipa.ipa_uc_ready) {
-				pr_info("%s: EV_DEV_CLOSE veth_disable_ipa_offload\n",
+				pr_debug("%s: EV_DEV_CLOSE veth_disable_ipa_offload\n",
 						__func__);
 				veth_disable_ipa_offload(pdata);
 				ipa_uc_offload_dereg_rdyCB(IPA_UC_NTN);
@@ -1487,7 +1487,7 @@ static int veth_ipa_emac_evt_mgmt(void *arg)
 				 */
 				if (!pdata->prv_ipa.emac_init) {
 					VETH_IPA_INFO("EMAC_INIT event received\n");
-					pr_info("%s: emac_init set to true\n", __func__);
+					pr_debug("%s: emac_init set to true\n", __func__);
 					veth_ipa_emac_init_done_cb(pdata);
 					pdata->prv_ipa.emac_init = true;
 				}
@@ -1571,7 +1571,7 @@ static int veth_ipa_init(struct platform_device *pdev)
 						0xB5, 0x7D, 0xF9};
 
 	VETH_IPA_LOG_ENTRY();
-	pr_info("veth start initialization\n");
+	pr_debug("veth start initialization\n");
 	VETH_IPA_DEBUG("%s initializing\n", DRIVER_NAME);
 
 	dev = alloc_etherdev(sizeof(struct veth_ipa_dev));
@@ -1653,7 +1653,7 @@ static int veth_ipa_init(struct platform_device *pdev)
 	mutex_init(&veth_ipa_pdata->prv_ipa.ipa_lock);
 	veth_ipa_pdata->prv_ipa.emac_init = false;
 	veth_ipa_pdata->veth_emac_mem.init_complete = false;
-	pr_info("VETH_IPA init flag set to false\n");
+	pr_debug("VETH_IPA init flag set to false\n");
 	veth_ipa_init_flag = false;
 	VETH_IPA_STATE_DEBUG(veth_ipa_pdata);
 	veth_pdata_p = veth_ipa_pdata;
@@ -1736,7 +1736,7 @@ static int veth_ipa_open(struct net_device *net)
 		veth_ipa_ctx->veth_emac_mem.init_complete = true;
 	}
 	veth_ipa_init_flag = true;
-	pr_info("VETH_IPA init flag set to true\n");
+	pr_debug("VETH_IPA init flag set to true\n");
 	veth_ipa_offload_event_handler(veth_ipa_ctx, EV_DEV_OPEN);
 
 
@@ -1948,7 +1948,7 @@ static int veth_ipa_stop(struct net_device *net)
 	VETH_IPA_DEBUG("network device stopped\n");
 
 	if (pdata->prv_ipa.ipa_uc_ready) {
-		pr_info("%s: veth_disable_ipa_offload\n",
+		pr_debug("%s: veth_disable_ipa_offload\n",
 				__func__);
 		veth_disable_ipa_offload(pdata);
 		ipa_uc_offload_dereg_rdyCB(IPA_UC_NTN);
@@ -2283,15 +2283,15 @@ static int veth_ipa_ap_suspend(struct device *dev)
 	int    ret = 0;
 	struct veth_ipa_dev *pdata = veth_pdata_p;
 
-	pr_info("VETH_IPA suspend init flag check\n");
+	pr_debug("VETH_IPA suspend init flag check\n");
 	if (!veth_ipa_init_flag)
 		return 0;
 
-	pr_info("%s: veth_global_pdata->state = %d\n",
+	pr_debug("%s: veth_global_pdata->state = %d\n",
 			__func__,
 			veth_pdata_p->state);
 	ret = veth_ipa_stop(pdata->net);
-	pr_info("%s: %d\n",
+	pr_debug("%s: %d\n",
 			__func__,
 			ret);
 	return ret;
@@ -2302,12 +2302,12 @@ static int veth_ipa_ap_resume(struct device *dev)
 {
 	struct veth_ipa_dev *pdata = veth_pdata_p;
 
-	pr_info("%s :\n", __func__);
-	pr_info("VETH_IPA resume init flag check\n");
+	pr_debug("%s :\n", __func__);
+	pr_debug("VETH_IPA resume init flag check\n");
 
 	if (!veth_ipa_init_flag)
 		return 0;
-	pr_info("%s: veth_global_pdata->state = %d\n",
+	pr_debug("%s: veth_global_pdata->state = %d\n",
 			__func__,
 			veth_pdata_p->state);
 	veth_ipa_open_cb(pdata);

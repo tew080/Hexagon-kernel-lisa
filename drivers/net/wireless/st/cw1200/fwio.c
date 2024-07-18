@@ -243,7 +243,7 @@ static int cw1200_load_firmware_cw1200(struct cw1200_common *priv)
 		ret = -ETIMEDOUT;
 		goto free_buffer;
 	} else {
-		pr_info("Firmware download completed.\n");
+		pr_debug("Firmware download completed.\n");
 		ret = 0;
 	}
 
@@ -397,11 +397,11 @@ int cw1200_load_firmware(struct cw1200_common *priv)
 
 		switch (val32) {
 		case CW1200_CUT_11_ID_STR:
-			pr_info("CW1x00 Cut 1.1 silicon detected.\n");
+			pr_debug("CW1x00 Cut 1.1 silicon detected.\n");
 			priv->hw_revision = CW1200_HW_REV_CUT11;
 			break;
 		default:
-			pr_info("CW1x00 Cut 1.0 silicon detected.\n");
+			pr_debug("CW1x00 Cut 1.0 silicon detected.\n");
 			priv->hw_revision = CW1200_HW_REV_CUT10;
 			break;
 		}
@@ -434,16 +434,16 @@ int cw1200_load_firmware(struct cw1200_common *priv)
 		if (ar1 == CW1200_CUT_22_ID_STR1 &&
 		    ar2 == CW1200_CUT_22_ID_STR2 &&
 		    ar3 == CW1200_CUT_22_ID_STR3) {
-			pr_info("CW1x00 Cut 2.2 silicon detected.\n");
+			pr_debug("CW1x00 Cut 2.2 silicon detected.\n");
 			priv->hw_revision = CW1200_HW_REV_CUT22;
 		} else {
-			pr_info("CW1x00 Cut 2.0 silicon detected.\n");
+			pr_debug("CW1x00 Cut 2.0 silicon detected.\n");
 			priv->hw_revision = CW1200_HW_REV_CUT20;
 		}
 		break;
 	}
 	case 4:
-		pr_info("CW1x60 silicon detected.\n");
+		pr_debug("CW1x60 silicon detected.\n");
 		priv->hw_revision = CW1X60_HW_REV;
 		break;
 	default:

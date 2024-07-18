@@ -171,7 +171,7 @@ static void gelic_eurus_sync_cmd_worker(struct work_struct *work)
 				      &cmd->tag, &cmd->size);
 	if (cmd->status) {
 		complete(&cmd->done);
-		pr_info("%s: cmd issue failed\n", __func__);
+		pr_debug("%s: cmd issue failed\n", __func__);
 		return;
 	}
 
@@ -283,7 +283,7 @@ static void gelic_wl_get_ch_info(struct gelic_wl_info *wl)
 		/* some fw versions may return error */
 		if (status) {
 			if (status != LV1_NO_ENTRY)
-				pr_info("%s: available ch unknown\n", __func__);
+				pr_debug("%s: available ch unknown\n", __func__);
 			wl->ch_info = 0x07ff;/* 11 ch */
 		} else
 			/* 16 bits of MSB has available channels */
@@ -422,11 +422,11 @@ static size_t gelic_wl_synthesize_ie(u8 *buf,
 	default:
 		if (rsn) {
 			ccmp = 1;
-			pr_info("%s: no cipher info. defaulted to CCMP\n",
+			pr_debug("%s: no cipher info. defaulted to CCMP\n",
 				__func__);
 		} else {
 			ccmp = 0;
-			pr_info("%s: no cipher info. defaulted to TKIP\n",
+			pr_debug("%s: no cipher info. defaulted to TKIP\n",
 				__func__);
 		}
 	}
@@ -803,7 +803,7 @@ static int gelic_wl_set_auth(struct net_device *netdev,
 			 * the association.
 			 */
 			if (!precise_ie())
-				pr_info("%s: WPA2 may not work\n", __func__);
+				pr_debug("%s: WPA2 may not work\n", __func__);
 			if (wpa2_capable()) {
 				wl->wpa_level = GELIC_WL_WPA_LEVEL_WPA2;
 				wl->group_cipher_method = GELIC_WL_CIPHER_AES;
@@ -1054,7 +1054,7 @@ static int gelic_wl_set_encode(struct net_device *netdev,
 		if (flags & IW_ENCODE_OPEN)
 			wl->auth_method = GELIC_EURUS_AUTH_OPEN;
 		if (flags & IW_ENCODE_RESTRICTED) {
-			pr_info("%s: shared key mode enabled\n", __func__);
+			pr_debug("%s: shared key mode enabled\n", __func__);
 			wl->auth_method = GELIC_EURUS_AUTH_SHARED;
 		}
 	} else {
@@ -1241,7 +1241,7 @@ static int gelic_wl_set_encodeext(struct net_device *netdev,
 			wl->auth_method = GELIC_EURUS_AUTH_SHARED;
 		}
 		if (IW_ENCODING_TOKEN_MAX < ext->key_len) {
-			pr_info("%s: key is too long %d\n", __func__,
+			pr_debug("%s: key is too long %d\n", __func__,
 				ext->key_len);
 			ret = -EINVAL;
 			goto done;
@@ -1510,7 +1510,7 @@ static void gelic_wl_scan_complete_event(struct gelic_wl_info *wl)
 
 	buf = (void *)__get_free_page(GFP_KERNEL);
 	if (!buf) {
-		pr_info("%s: scan buffer alloc failed\n", __func__);
+		pr_debug("%s: scan buffer alloc failed\n", __func__);
 		goto out;
 	}
 
@@ -1527,7 +1527,7 @@ static void gelic_wl_scan_complete_event(struct gelic_wl_info *wl)
 				   buf, PAGE_SIZE);
 	if (!cmd || cmd->status || cmd->cmd_status) {
 		wl->scan_stat = GELIC_WL_SCAN_STAT_INIT;
-		pr_info("%s:cmd failed\n", __func__);
+		pr_debug("%s:cmd failed\n", __func__);
 		kfree(cmd);
 		goto out;
 	}
@@ -1615,7 +1615,7 @@ static void gelic_wl_scan_complete_event(struct gelic_wl_info *wl)
 			if (scan_info->rate[r])
 				target->rate_len++;
 		if (8 < target->rate_len)
-			pr_info("%s: AP returns %d rates\n", __func__,
+			pr_debug("%s: AP returns %d rates\n", __func__,
 				target->rate_len);
 		target->rate_ext_len = 0;
 		for (r = 0; r < 16; r++)
@@ -1766,7 +1766,7 @@ static int gelic_wl_do_wep_setup(struct gelic_wl_info *wl)
 			if (wl->key_len[i] == 13)
 				wep104 = 1;
 			else if (wl->key_len[i] != 5) {
-				pr_info("%s: wrong wep key[%d]=%d\n",
+				pr_debug("%s: wrong wep key[%d]=%d\n",
 					__func__, i, wl->key_len[i]);
 				ret = -EINVAL;
 				goto out;
@@ -1775,7 +1775,7 @@ static int gelic_wl_do_wep_setup(struct gelic_wl_info *wl)
 		}
 
 		if (!have_key) {
-			pr_info("%s: all wep key disabled\n", __func__);
+			pr_debug("%s: all wep key disabled\n", __func__);
 			ret = -EINVAL;
 			goto out;
 		}
@@ -1846,7 +1846,7 @@ static int gelic_wl_do_wpa_setup(struct gelic_wl_info *wl)
 	memset(wpa, 0, sizeof(*wpa));
 
 	if (!test_bit(GELIC_WL_STAT_WPA_PSK_SET, &wl->stat))
-		pr_info("%s: PSK not configured yet\n", __func__);
+		pr_debug("%s: PSK not configured yet\n", __func__);
 
 	/* copy key */
 	memcpy(wpa->psk, wl->psk, wl->psk_len);
@@ -1995,7 +1995,7 @@ static int gelic_wl_associate_bss(struct gelic_wl_info *wl,
 
 	if (!rc) {
 		/* timeouted.  Maybe key or cyrpt mode is wrong */
-		pr_info("%s: connect timeout\n", __func__);
+		pr_debug("%s: connect timeout\n", __func__);
 		cmd = gelic_eurus_sync_cmd(wl, GELIC_EURUS_CMD_DISASSOC,
 					   NULL, 0);
 		kfree(cmd);
@@ -2009,7 +2009,7 @@ static int gelic_wl_associate_bss(struct gelic_wl_info *wl,
 
 		/* send connect event */
 		gelic_wl_send_iwap_event(wl, wl->active_bssid);
-		pr_info("%s: connected\n", __func__);
+		pr_debug("%s: connected\n", __func__);
 	}
 out:
 	free_page((unsigned long)common);
@@ -2193,7 +2193,7 @@ static void gelic_wl_assoc_worker(struct work_struct *work)
 		queue_delayed_work(system_power_efficient_wq,&wl->assoc_work, HZ/10); /*FIXME*/
 		goto out;
 	} else if (ret) {
-		pr_info("%s: scan prerequisite failed\n", __func__);
+		pr_debug("%s: scan prerequisite failed\n", __func__);
 		goto out;
 	}
 
@@ -2209,7 +2209,7 @@ static void gelic_wl_assoc_worker(struct work_struct *work)
 	mutex_lock(&wl->scan_lock);
 	if (wl->scan_stat != GELIC_WL_SCAN_STAT_GOT_LIST) {
 		gelic_wl_send_iwap_event(wl, NULL);
-		pr_info("%s: no scan list. association failed\n", __func__);
+		pr_debug("%s: no scan list. association failed\n", __func__);
 		goto scan_lock_out;
 	}
 
@@ -2217,14 +2217,14 @@ static void gelic_wl_assoc_worker(struct work_struct *work)
 	best_bss = gelic_wl_find_best_bss(wl);
 	if (!best_bss) {
 		gelic_wl_send_iwap_event(wl, NULL);
-		pr_info("%s: no bss matched. association failed\n", __func__);
+		pr_debug("%s: no bss matched. association failed\n", __func__);
 		goto scan_lock_out;
 	}
 
 	/* ok, do association */
 	ret = gelic_wl_associate_bss(wl, best_bss);
 	if (ret)
-		pr_info("%s: association failed %d\n", __func__, ret);
+		pr_debug("%s: association failed %d\n", __func__, ret);
 scan_lock_out:
 	mutex_unlock(&wl->scan_lock);
 out:

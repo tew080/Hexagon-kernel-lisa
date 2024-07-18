@@ -114,23 +114,23 @@ static void hh_control_hyp_uart(int val)
 	case ENABLE:
 	if (!hyp_uart_enable) {
 		hyp_uart_enable = val;
-		pr_info("Haven: enabling HYP UART\n");
+		pr_debug("Haven: enabling HYP UART\n");
 		arm_smccc_1_1_smc(QC_HYP_SMCCC_UART_ENABLE, NULL);
 	} else {
-		pr_info("Haven: HYP UART already enabled\n");
+		pr_debug("Haven: HYP UART already enabled\n");
 	}
 	break;
 	case DISABLE:
 	if (hyp_uart_enable) {
 		hyp_uart_enable = val;
-		pr_info("Haven: disabling HYP UART\n");
+		pr_debug("Haven: disabling HYP UART\n");
 		arm_smccc_1_1_smc(QC_HYP_SMCCC_UART_DISABLE, NULL);
 	} else {
-		pr_info("Haven: HYP UART already disabled\n");
+		pr_debug("Haven: HYP UART already disabled\n");
 	}
 	break;
 	default:
-		pr_info("Haven: supported values disable(0)/enable(1)\n");
+		pr_debug("Haven: supported values disable(0)/enable(1)\n");
 	}
 }
 
@@ -247,7 +247,7 @@ static int __init hh_ctrl_init(void)
 		if (ret)
 			pr_warn("failed to register dbgfs: %d\n", ret);
 	} else {
-		pr_info("Haven: no QC HYP interface detected\n");
+		pr_debug("Haven: no QC HYP interface detected\n");
 	}
 
 	return 0;

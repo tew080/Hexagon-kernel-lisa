@@ -536,7 +536,7 @@ static void hp_wmi_notify(u32 value, void *context)
 
 	status = wmi_get_event_data(value, &response);
 	if (status != AE_OK) {
-		pr_info("bad event status 0x%x\n", status);
+		pr_debug("bad event status 0x%x\n", status);
 		return;
 	}
 
@@ -545,7 +545,7 @@ static void hp_wmi_notify(u32 value, void *context)
 	if (!obj)
 		return;
 	if (obj->type != ACPI_TYPE_BUFFER) {
-		pr_info("Unknown response received %d\n", obj->type);
+		pr_debug("Unknown response received %d\n", obj->type);
 		kfree(obj);
 		return;
 	}
@@ -562,7 +562,7 @@ static void hp_wmi_notify(u32 value, void *context)
 		event_id = *location;
 		event_data = *(location + 2);
 	} else {
-		pr_info("Unknown buffer length %d\n", obj->buffer.length);
+		pr_debug("Unknown buffer length %d\n", obj->buffer.length);
 		kfree(obj);
 		return;
 	}
@@ -589,7 +589,7 @@ static void hp_wmi_notify(u32 value, void *context)
 
 		if (!sparse_keymap_report_event(hp_wmi_input_dev,
 						key_code, 1, true))
-			pr_info("Unknown key code - 0x%x\n", key_code);
+			pr_debug("Unknown key code - 0x%x\n", key_code);
 		break;
 	case HPWMI_WIRELESS:
 		if (rfkill2_count) {
@@ -611,7 +611,7 @@ static void hp_wmi_notify(u32 value, void *context)
 					  hp_wmi_get_hw_state(HPWMI_WWAN));
 		break;
 	case HPWMI_CPU_BATTERY_THROTTLE:
-		pr_info("Unimplemented CPU throttle because of 3 Cell battery event detected\n");
+		pr_debug("Unimplemented CPU throttle because of 3 Cell battery event detected\n");
 		break;
 	case HPWMI_LOCK_SWITCH:
 		break;
@@ -636,7 +636,7 @@ static void hp_wmi_notify(u32 value, void *context)
 	case HPWMI_SMART_EXPERIENCE_APP:
 		break;
 	default:
-		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
+		pr_debug("Unknown event_id - %d - 0x%x\n", event_id, event_data);
 		break;
 	}
 }
@@ -855,7 +855,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
 				    IS_HWBLOCKED(state.device[i].power));
 
 		if (!(state.device[i].power & HPWMI_POWER_BIOS))
-			pr_info("device %s blocked by BIOS\n", name);
+			pr_debug("device %s blocked by BIOS\n", name);
 
 		err = rfkill_register(rfkill);
 		if (err) {

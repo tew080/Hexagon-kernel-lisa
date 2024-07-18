@@ -481,7 +481,7 @@ static void synchronize_sched_expedited_wait(void)
 		if (rcu_cpu_stall_suppress)
 			continue;
 		panic_on_rcu_stall();
-		pr_err("INFO: %s detected expedited stalls on CPUs/tasks: {",
+		pr_debug("INFO: %s detected expedited stalls on CPUs/tasks: {",
 		       rcu_state.name);
 		ndetected = 0;
 		rcu_for_each_leaf_node(rnp) {
@@ -505,7 +505,7 @@ static void synchronize_sched_expedited_wait(void)
 			READ_ONCE(rnp_root->expmask),
 			".T"[!!rnp_root->exp_tasks]);
 		if (ndetected) {
-			pr_err("blocking rcu_node structures:");
+			pr_debug("blocking rcu_node structures:");
 			rcu_for_each_node_breadth_first(rnp) {
 				if (rnp == rnp_root)
 					continue; /* printed unconditionally */

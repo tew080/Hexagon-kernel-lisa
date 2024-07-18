@@ -1134,29 +1134,29 @@ static void socinfo_print(void)
 
 	switch (socinfo_format) {
 	case SOCINFO_VERSION(0, 1):
-		pr_info("v%u.%u, id=%u, ver=%u.%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u\n",
 				f_maj, f_min, socinfo->id, v_maj, v_min);
 		break;
 	case SOCINFO_VERSION(0, 2):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u\n",
 				f_maj, f_min, socinfo->id, v_maj, v_min,
 				socinfo->raw_id, socinfo->raw_ver);
 		break;
 	case SOCINFO_VERSION(0, 3):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u\n",
 				f_maj, f_min, socinfo->id, v_maj, v_min,
 				socinfo->raw_id, socinfo->raw_ver,
 				socinfo->hw_plat);
 		break;
 	case SOCINFO_VERSION(0, 4):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
 			socinfo->plat_ver);
 		break;
 	case SOCINFO_VERSION(0, 5):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1164,7 +1164,7 @@ static void socinfo_print(void)
 			socinfo->accessory_chip);
 		break;
 	case SOCINFO_VERSION(0, 6):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u hw_plat_subtype=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u hw_plat_subtype=%u\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1174,7 +1174,7 @@ static void socinfo_print(void)
 		break;
 	case SOCINFO_VERSION(0, 7):
 	case SOCINFO_VERSION(0, 8):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1185,7 +1185,7 @@ static void socinfo_print(void)
 			socinfo->pmic_die_rev);
 		break;
 	case SOCINFO_VERSION(0, 9):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1197,7 +1197,7 @@ static void socinfo_print(void)
 			socinfo->foundry_id);
 		break;
 	case SOCINFO_VERSION(0, 10):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1210,7 +1210,7 @@ static void socinfo_print(void)
 			socinfo->serial_num);
 		break;
 	case SOCINFO_VERSION(0, 11):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1224,7 +1224,7 @@ static void socinfo_print(void)
 			socinfo->num_pmics);
 		break;
 	case SOCINFO_VERSION(0, 12):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1241,7 +1241,7 @@ static void socinfo_print(void)
 			socinfo->raw_device_num);
 		break;
 	case SOCINFO_VERSION(0, 13):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x nproduct_id=0x%x\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x nproduct_id=0x%x\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1260,7 +1260,7 @@ static void socinfo_print(void)
 		break;
 
 	case SOCINFO_VERSION(0, 14):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x nproduct_id=0x%x num_clusters=0x%x ncluster_array_offset=0x%x num_defective_parts=0x%x ndefective_parts_array_offset=0x%x\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x nproduct_id=0x%x num_clusters=0x%x ncluster_array_offset=0x%x num_defective_parts=0x%x ndefective_parts_array_offset=0x%x\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1283,7 +1283,7 @@ static void socinfo_print(void)
 		break;
 
 	case SOCINFO_VERSION(0, 15):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x nproduct_id=0x%x num_clusters=0x%x ncluster_array_offset=0x%x num_defective_parts=0x%x ndefective_parts_array_offset=0x%x nmodem_supported=0x%x\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x nproduct_id=0x%x num_clusters=0x%x ncluster_array_offset=0x%x num_defective_parts=0x%x ndefective_parts_array_offset=0x%x nmodem_supported=0x%x\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,
@@ -1307,7 +1307,7 @@ static void socinfo_print(void)
 		break;
 
 	case SOCINFO_VERSION(0, 16):
-		pr_info("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x nproduct_id=0x%x num_clusters=0x%x ncluster_array_offset=0x%x num_defective_parts=0x%x ndefective_parts_array_offset=0x%x nmodem_supported=0x%x sku=%s\n",
+		pr_debug("v%u.%u, id=%u, ver=%u.%u, raw_id=%u, raw_ver=%u, hw_plat=%u, hw_plat_ver=%u\n accessory_chip=%u, hw_plat_subtype=%u, pmic_model=%u, pmic_die_revision=%u foundry_id=%u serial_number=%u num_pmics=%u chip_family=0x%x raw_device_family=0x%x raw_device_number=0x%x nproduct_id=0x%x num_clusters=0x%x ncluster_array_offset=0x%x num_defective_parts=0x%x ndefective_parts_array_offset=0x%x nmodem_supported=0x%x sku=%s\n",
 			f_maj, f_min, socinfo->id, v_maj, v_min,
 			socinfo->raw_id, socinfo->raw_ver,
 			socinfo->hw_plat,

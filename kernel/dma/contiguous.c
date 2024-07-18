@@ -50,7 +50,7 @@ static phys_addr_t limit_cmdline;
 static int __init early_cma(char *p)
 {
 	if (!p) {
-		pr_err("Config string not provided\n");
+		pr_debug("Config string not provided\n");
 		return -EINVAL;
 	}
 
@@ -309,13 +309,13 @@ static int __init rmem_cma_setup(struct reserved_mem *rmem)
 		return -EINVAL;
 
 	if ((rmem->base & mask) || (rmem->size & mask)) {
-		pr_err("Reserved memory: incorrect alignment of CMA region\n");
+		pr_debug("Reserved memory: incorrect alignment of CMA region\n");
 		return -EINVAL;
 	}
 
 	err = cma_init_reserved_mem(rmem->base, rmem->size, 0, rmem->name, &cma);
 	if (err) {
-		pr_err("Reserved memory: unable to setup CMA region\n");
+		pr_debug("Reserved memory: unable to setup CMA region\n");
 		return err;
 	}
 	/* Architecture specific contiguous memory fixup. */

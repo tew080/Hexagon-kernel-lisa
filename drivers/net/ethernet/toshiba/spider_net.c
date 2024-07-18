@@ -2026,7 +2026,7 @@ static void spider_net_link_phy(struct timer_list *t)
 
 	card->aneg_count = 0;
 
-	pr_info("%s: link up, %i Mbps, %s-duplex %sautoneg.\n",
+	pr_debug("%s: link up, %i Mbps, %s-duplex %sautoneg.\n",
 		card->netdev->name, phy->speed,
 		phy->duplex == 1 ? "Full" : "Half",
 		phy->autoneg == 1 ? "" : "no ");
@@ -2059,7 +2059,7 @@ spider_net_setup_phy(struct spider_net_card *card)
 		id = spider_net_read_phy(card->netdev, phy->mii_id, MII_BMSR);
 		if (id != 0x0000 && id != 0xffff) {
 			if (!sungem_phy_probe(phy, phy->mii_id)) {
-				pr_info("Found %s.\n", phy->def->name);
+				pr_debug("Found %s.\n", phy->def->name);
 				break;
 			}
 		}
@@ -2294,7 +2294,7 @@ spider_net_setup_netdev(struct spider_net_card *card)
 	}
 
 	if (netif_msg_probe(card))
-		pr_info("Initialized device %s.\n", netdev->name);
+		pr_debug("Initialized device %s.\n", netdev->name);
 
 	return 0;
 }
@@ -2504,19 +2504,19 @@ static int __init spider_net_init(void)
 
 	if (rx_descriptors < SPIDER_NET_RX_DESCRIPTORS_MIN) {
 		rx_descriptors = SPIDER_NET_RX_DESCRIPTORS_MIN;
-		pr_info("adjusting rx descriptors to %i.\n", rx_descriptors);
+		pr_debug("adjusting rx descriptors to %i.\n", rx_descriptors);
 	}
 	if (rx_descriptors > SPIDER_NET_RX_DESCRIPTORS_MAX) {
 		rx_descriptors = SPIDER_NET_RX_DESCRIPTORS_MAX;
-		pr_info("adjusting rx descriptors to %i.\n", rx_descriptors);
+		pr_debug("adjusting rx descriptors to %i.\n", rx_descriptors);
 	}
 	if (tx_descriptors < SPIDER_NET_TX_DESCRIPTORS_MIN) {
 		tx_descriptors = SPIDER_NET_TX_DESCRIPTORS_MIN;
-		pr_info("adjusting tx descriptors to %i.\n", tx_descriptors);
+		pr_debug("adjusting tx descriptors to %i.\n", tx_descriptors);
 	}
 	if (tx_descriptors > SPIDER_NET_TX_DESCRIPTORS_MAX) {
 		tx_descriptors = SPIDER_NET_TX_DESCRIPTORS_MAX;
-		pr_info("adjusting tx descriptors to %i.\n", tx_descriptors);
+		pr_debug("adjusting tx descriptors to %i.\n", tx_descriptors);
 	}
 
 	return pci_register_driver(&spider_net_driver);

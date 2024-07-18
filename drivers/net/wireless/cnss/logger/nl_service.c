@@ -105,7 +105,7 @@ static int logger_dispatch_skb(struct sk_buff *skb)
 	if (!ctx)
 		return -ENOENT;
 
-	pr_info("skb_len: %d, skb_data_len: %d\n",
+	pr_debug("skb_len: %d, skb_data_len: %d\n",
 		skb->len, skb->data_len);
 
 	if (skb->len < sizeof(struct nlmsghdr))
@@ -126,7 +126,7 @@ static int logger_dispatch_skb(struct sk_buff *skb)
 	}
 
 	if (!handled)
-		pr_info("Not handled msg type: %d\n", nlh->nlmsg_type);
+		pr_debug("Not handled msg type: %d\n", nlh->nlmsg_type);
 
 	return 0;
 }
@@ -147,7 +147,7 @@ static void logger_flush_event_handle(struct logger_device *dev)
 
 	list_for_each_safe(pos, temp, &dev->event_list) {
 		cur = container_of(pos, struct logger_event_handler, list);
-		pr_info("radio: %d, event: %d unregistered\n",
+		pr_debug("radio: %d, event: %d unregistered\n",
 			dev->radio_idx, cur->event);
 		list_del(&cur->list);
 		kfree(cur);
@@ -165,7 +165,7 @@ static void logger_flush_event_handle(struct logger_device *dev)
  */
 static void logger_flush_devices(struct logger_device *dev)
 {
-	pr_info("driver: [%s] and radio-%d is unregistered\n",
+	pr_debug("driver: [%s] and radio-%d is unregistered\n",
 		dev->name, dev->radio_idx);
 	logger_flush_event_handle(dev);
 	logger_put_radio_idx(dev->ctx, dev->radio_idx);
@@ -188,7 +188,7 @@ static int logger_register_device_event(struct logger_device *dev, int event,
 
 	list_for_each_entry(cur, &dev->event_list, list) {
 		if (cur->event == event) {
-			pr_info("event %d, is already added\n", event);
+			pr_debug("event %d, is already added\n", event);
 			return 0;
 		}
 	}
@@ -200,7 +200,7 @@ static int logger_register_device_event(struct logger_device *dev, int event,
 	cur->event = event;
 	cur->cb = cb;
 
-	pr_info("radio: %d, event: %d\n", dev->radio_idx, cur->event);
+	pr_debug("radio: %d, event: %d\n", dev->radio_idx, cur->event);
 	list_add_tail(&cur->list, &dev->event_list);
 
 	return 0;
@@ -223,7 +223,7 @@ static int logger_unregister_device_event(struct logger_device *dev, int event,
 	list_for_each_safe(pos, temp, &dev->event_list) {
 		cur = container_of(pos, struct logger_event_handler, list);
 		if (cur->event == event && cur->cb == cb) {
-			pr_info("radio: %d, event: %d\n",
+			pr_debug("radio: %d, event: %d\n",
 				dev->radio_idx, cur->event);
 			list_del(&cur->list);
 			kfree(cur);
@@ -340,7 +340,7 @@ int cnss_logger_device_register(struct wiphy *wiphy, const char *name)
 
 	list_add(&new->list, &ctx->dev_list);
 
-	pr_info("driver: [%s] is registered as radio-%d\n",
+	pr_debug("driver: [%s] is registered as radio-%d\n",
 		new->name, new->radio_idx);
 
 	return new->radio_idx;

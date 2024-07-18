@@ -513,13 +513,13 @@ int iavf_register_client(struct iavf_client *client)
 	}
 
 	if (strlen(client->name) == 0) {
-		pr_info("iavf: Failed to register client with no name\n");
+		pr_debug("iavf: Failed to register client with no name\n");
 		ret = -EIO;
 		goto out;
 	}
 
 	if (vf_registered_client) {
-		pr_info("iavf: Client %s has already been registered!\n",
+		pr_debug("iavf: Client %s has already been registered!\n",
 			client->name);
 		ret = -EEXIST;
 		goto out;
@@ -527,9 +527,9 @@ int iavf_register_client(struct iavf_client *client)
 
 	if ((client->version.major != IAVF_CLIENT_VERSION_MAJOR) ||
 	    (client->version.minor != IAVF_CLIENT_VERSION_MINOR)) {
-		pr_info("iavf: Failed to register client %s due to mismatched client interface version\n",
+		pr_debug("iavf: Failed to register client %s due to mismatched client interface version\n",
 			client->name);
-		pr_info("Client is using version: %02d.%02d.%02d while LAN driver supports %s\n",
+		pr_debug("Client is using version: %02d.%02d.%02d while LAN driver supports %s\n",
 			client->version.major, client->version.minor,
 			client->version.build,
 			iavf_client_interface_version_str);
@@ -541,7 +541,7 @@ int iavf_register_client(struct iavf_client *client)
 
 	iavf_client_prepare(client);
 
-	pr_info("iavf: Registered client %s with return code %d\n",
+	pr_debug("iavf: Registered client %s with return code %d\n",
 		client->name, ret);
 out:
 	return ret;
@@ -565,13 +565,13 @@ int iavf_unregister_client(struct iavf_client *client)
 	iavf_client_release(client);
 
 	if (vf_registered_client != client) {
-		pr_info("iavf: Client %s has not been registered\n",
+		pr_debug("iavf: Client %s has not been registered\n",
 			client->name);
 		ret = -ENODEV;
 		goto out;
 	}
 	vf_registered_client = NULL;
-	pr_info("iavf: Unregistered client %s\n", client->name);
+	pr_debug("iavf: Unregistered client %s\n", client->name);
 out:
 	return ret;
 }

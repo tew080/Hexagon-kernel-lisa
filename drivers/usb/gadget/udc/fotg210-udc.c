@@ -884,45 +884,45 @@ static irqreturn_t fotg210_irq(int irq, void *_fotg210)
 			value = ioread32(reg);
 			value &= ~DISGR2_USBRST_INT;
 			iowrite32(value, reg);
-			pr_info("fotg210 udc reset\n");
+			pr_debug("fotg210 udc reset\n");
 		}
 		if (int_grp2 & DISGR2_SUSP_INT) {
 			value = ioread32(reg);
 			value &= ~DISGR2_SUSP_INT;
 			iowrite32(value, reg);
-			pr_info("fotg210 udc suspend\n");
+			pr_debug("fotg210 udc suspend\n");
 		}
 		if (int_grp2 & DISGR2_RESM_INT) {
 			value = ioread32(reg);
 			value &= ~DISGR2_RESM_INT;
 			iowrite32(value, reg);
-			pr_info("fotg210 udc resume\n");
+			pr_debug("fotg210 udc resume\n");
 		}
 		if (int_grp2 & DISGR2_ISO_SEQ_ERR_INT) {
 			value = ioread32(reg);
 			value &= ~DISGR2_ISO_SEQ_ERR_INT;
 			iowrite32(value, reg);
-			pr_info("fotg210 iso sequence error\n");
+			pr_debug("fotg210 iso sequence error\n");
 		}
 		if (int_grp2 & DISGR2_ISO_SEQ_ABORT_INT) {
 			value = ioread32(reg);
 			value &= ~DISGR2_ISO_SEQ_ABORT_INT;
 			iowrite32(value, reg);
-			pr_info("fotg210 iso sequence abort\n");
+			pr_debug("fotg210 iso sequence abort\n");
 		}
 		if (int_grp2 & DISGR2_TX0BYTE_INT) {
 			fotg210_clear_tx0byte(fotg210);
 			value = ioread32(reg);
 			value &= ~DISGR2_TX0BYTE_INT;
 			iowrite32(value, reg);
-			pr_info("fotg210 transferred 0 byte\n");
+			pr_debug("fotg210 transferred 0 byte\n");
 		}
 		if (int_grp2 & DISGR2_RX0BYTE_INT) {
 			fotg210_clear_rx0byte(fotg210);
 			value = ioread32(reg);
 			value &= ~DISGR2_RX0BYTE_INT;
 			iowrite32(value, reg);
-			pr_info("fotg210 received 0 byte\n");
+			pr_debug("fotg210 received 0 byte\n");
 		}
 		if (int_grp2 & DISGR2_DMA_ERROR) {
 			value = ioread32(reg);
@@ -942,7 +942,7 @@ static irqreturn_t fotg210_irq(int irq, void *_fotg210)
 		/* the highest priority in this source register */
 		if (int_grp0 & DISGR0_CX_COMABT_INT) {
 			fotg210_clear_comabt_int(fotg210);
-			pr_info("fotg210 CX command abort\n");
+			pr_debug("fotg210 CX command abort\n");
 		}
 
 		if (int_grp0 & DISGR0_CX_SETUP_INT) {
@@ -955,7 +955,7 @@ static irqreturn_t fotg210_irq(int irq, void *_fotg210)
 			}
 		}
 		if (int_grp0 & DISGR0_CX_COMEND_INT)
-			pr_info("fotg210 cmd end\n");
+			pr_debug("fotg210 cmd end\n");
 
 		if (int_grp0 & DISGR0_CX_IN_INT)
 			fotg210_ep0in(fotg210);
@@ -965,7 +965,7 @@ static irqreturn_t fotg210_irq(int irq, void *_fotg210)
 
 		if (int_grp0 & DISGR0_CX_COMFAIL_INT) {
 			fotg210_set_cxstall(fotg210);
-			pr_info("fotg210 ep0 fail\n");
+			pr_debug("fotg210 ep0 fail\n");
 		}
 	}
 

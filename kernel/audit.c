@@ -300,7 +300,7 @@ void audit_panic(const char *message)
 		break;
 	case AUDIT_FAIL_PRINTK:
 		if (printk_ratelimit())
-			pr_err("%s\n", message);
+			pr_debug("%s\n", message);
 		break;
 	case AUDIT_FAIL_PANIC:
 		panic("audit: %s\n", message);
@@ -1689,14 +1689,14 @@ static int __init audit_enable(char *str)
 	else if (!strcasecmp(str, "on") || !strcmp(str, "1"))
 		audit_default = AUDIT_ON;
 	else {
-		pr_err("audit: invalid 'audit' parameter value (%s)\n", str);
+		pr_debug("audit: invalid 'audit' parameter value (%s)\n", str);
 		audit_default = AUDIT_ON;
 	}
 
 	if (audit_default == AUDIT_OFF)
 		audit_initialized = AUDIT_DISABLED;
 	if (audit_set_enabled(audit_default))
-		pr_err("audit: error setting audit state (%d)\n",
+		pr_debug("audit: error setting audit state (%d)\n",
 		       audit_default);
 
 	pr_debug("%s\n", audit_default ?

@@ -186,16 +186,16 @@ ixgb_validate_option(unsigned int *value, const struct ixgb_option *opt)
 	case enable_option:
 		switch (*value) {
 		case OPTION_ENABLED:
-			pr_info("%s Enabled\n", opt->name);
+			pr_debug("%s Enabled\n", opt->name);
 			return 0;
 		case OPTION_DISABLED:
-			pr_info("%s Disabled\n", opt->name);
+			pr_debug("%s Disabled\n", opt->name);
 			return 0;
 		}
 		break;
 	case range_option:
 		if (*value >= opt->arg.r.min && *value <= opt->arg.r.max) {
-			pr_info("%s set to %i\n", opt->name, *value);
+			pr_debug("%s set to %i\n", opt->name, *value);
 			return 0;
 		}
 		break;
@@ -207,7 +207,7 @@ ixgb_validate_option(unsigned int *value, const struct ixgb_option *opt)
 			ent = &opt->arg.l.p[i];
 			if (*value == ent->i) {
 				if (ent->str[0] != '\0')
-					pr_info("%s\n", ent->str);
+					pr_debug("%s\n", ent->str);
 				return 0;
 			}
 		}
@@ -217,7 +217,7 @@ ixgb_validate_option(unsigned int *value, const struct ixgb_option *opt)
 		BUG();
 	}
 
-	pr_info("Invalid %s specified (%i) %s\n", opt->name, *value, opt->err);
+	pr_debug("Invalid %s specified (%i) %s\n", opt->name, *value, opt->err);
 	*value = opt->def;
 	return -1;
 }
@@ -339,7 +339,7 @@ ixgb_check_options(struct ixgb_adapter *adapter)
 			adapter->hw.fc.high_water = opt.def;
 		}
 		if (!(adapter->hw.fc.type & ixgb_fc_tx_pause) )
-			pr_info("Ignoring RxFCHighThresh when no RxFC\n");
+			pr_debug("Ignoring RxFCHighThresh when no RxFC\n");
 	}
 	{ /* Receive Flow Control Low Threshold */
 		static const struct ixgb_option opt = {
@@ -358,7 +358,7 @@ ixgb_check_options(struct ixgb_adapter *adapter)
 			adapter->hw.fc.low_water = opt.def;
 		}
 		if (!(adapter->hw.fc.type & ixgb_fc_tx_pause) )
-			pr_info("Ignoring RxFCLowThresh when no RxFC\n");
+			pr_debug("Ignoring RxFCLowThresh when no RxFC\n");
 	}
 	{ /* Flow Control Pause Time Request*/
 		static const struct ixgb_option opt = {
@@ -378,14 +378,14 @@ ixgb_check_options(struct ixgb_adapter *adapter)
 			adapter->hw.fc.pause_time = opt.def;
 		}
 		if (!(adapter->hw.fc.type & ixgb_fc_tx_pause) )
-			pr_info("Ignoring FCReqTimeout when no RxFC\n");
+			pr_debug("Ignoring FCReqTimeout when no RxFC\n");
 	}
 	/* high low and spacing check for rx flow control thresholds */
 	if (adapter->hw.fc.type & ixgb_fc_tx_pause) {
 		/* high must be greater than low */
 		if (adapter->hw.fc.high_water < (adapter->hw.fc.low_water + 8)) {
 			/* set defaults */
-			pr_info("RxFCHighThresh must be >= (RxFCLowThresh + 8), Using Defaults\n");
+			pr_debug("RxFCHighThresh must be >= (RxFCLowThresh + 8), Using Defaults\n");
 			adapter->hw.fc.high_water = DEFAULT_FCRTH;
 			adapter->hw.fc.low_water  = DEFAULT_FCRTL;
 		}

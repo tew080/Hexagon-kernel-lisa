@@ -32,7 +32,7 @@ static int debug_log(struct ipc_log_context *ilctxt,
 	int ret;
 
 	if (size < MAX_MSG_DECODED_SIZE) {
-		pr_err("%s: buffer size %d < %d\n", __func__, size,
+		pr_debug("%s: buffer size %d < %d\n", __func__, size,
 			MAX_MSG_DECODED_SIZE);
 		return -ENOMEM;
 	}
@@ -161,7 +161,7 @@ void check_and_create_debugfs(void)
 		root_dent = debugfs_create_dir("ipc_logging", 0);
 
 		if (IS_ERR(root_dent)) {
-			pr_err("%s: unable to create debugfs %ld\n",
+			pr_debug("%s: unable to create debugfs %ld\n",
 				__func__, PTR_ERR(root_dent));
 			root_dent = NULL;
 		}

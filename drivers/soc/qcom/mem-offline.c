@@ -684,7 +684,7 @@ static int mem_event_callback(struct notifier_block *self,
 
 	if (sec_nr > end_section_nr || sec_nr < start_section_nr) {
 		if (action == MEM_ONLINE || action == MEM_OFFLINE)
-			pr_info("mem-offline: %s mem%ld, but not our block. Not performing any action\n",
+			pr_debug("mem-offline: %s mem%ld, but not our block. Not performing any action\n",
 				action == MEM_ONLINE ? "Onlined" : "Offlined",
 				sec_nr);
 		return NOTIFY_OK;
@@ -711,7 +711,7 @@ static int mem_event_callback(struct notifier_block *self,
 		delay = ktime_ms_delta(ktime_get(), cur);
 		record_stat(sec_nr, delay, MEMORY_ONLINE);
 		cur = 0;
-		pr_info("mem-offline: Onlined memory block mem%pK\n",
+		pr_debug("mem-offline: Onlined memory block mem%pK\n",
 			(void *)sec_nr);
 		break;
 	case MEM_GOING_OFFLINE:
@@ -739,11 +739,11 @@ static int mem_event_callback(struct notifier_block *self,
 		record_stat(sec_nr, delay, MEMORY_OFFLINE);
 		cur = 0;
 		has_pend_offline_req = false;
-		pr_info("mem-offline: Offlined memory block mem%pK\n",
+		pr_debug("mem-offline: Offlined memory block mem%pK\n",
 			(void *)sec_nr);
 		break;
 	case MEM_CANCEL_ONLINE:
-		pr_info("mem-offline: MEM_CANCEL_ONLINE: start = 0x%llx end = 0x%llx\n",
+		pr_debug("mem-offline: MEM_CANCEL_ONLINE: start = 0x%llx end = 0x%llx\n",
 				start_addr, end_addr);
 		mem_change_refresh_state(mn, MEMORY_OFFLINE);
 		break;
@@ -827,7 +827,7 @@ static int mem_online_remaining_blocks(void)
 	end_section_nr = pfn_to_section_nr(ram_end_pfn);
 
 	if (memblock_end_of_DRAM() >= bootloader_memory_limit) {
-		pr_info("mem-offline: System booted with no zone movable memory blocks. Cannot perform memory offlining\n");
+		pr_debug("mem-offline: System booted with no zone movable memory blocks. Cannot perform memory offlining\n");
 		return -EINVAL;
 	}
 
@@ -1194,11 +1194,11 @@ static int mem_offline_driver_probe(struct platform_device *pdev)
 		ret = -ENODEV;
 		goto err_sysfs_remove_group;
 	}
-	pr_info("mem-offline: Added memory blocks ranging from mem%lu - mem%lu\n",
+	pr_debug("mem-offline: Added memory blocks ranging from mem%lu - mem%lu\n",
 			start_section_nr, end_section_nr);
 
 	if (bypass_send_msg)
-		pr_info("mem-offline: bypass mode\n");
+		pr_debug("mem-offline: bypass mode\n");
 
 	migrate_wq = alloc_workqueue("reverse_migrate_wq",
 					WQ_UNBOUND | WQ_FREEZABLE, 0);

@@ -35,7 +35,7 @@ int hw_sm750_map(struct sm750_dev *sm750_dev, struct pci_dev *pdev)
 	sm750_dev->vidreg_start  = pci_resource_start(pdev, 1);
 	sm750_dev->vidreg_size = SZ_2M;
 
-	pr_info("mmio phyAddr = %lx\n", sm750_dev->vidreg_start);
+	pr_debug("mmio phyAddr = %lx\n", sm750_dev->vidreg_start);
 
 	/*
 	 * reserve the vidreg space of smi adaptor
@@ -57,7 +57,7 @@ int hw_sm750_map(struct sm750_dev *sm750_dev, struct pci_dev *pdev)
 		ret = -EFAULT;
 		goto exit;
 	} else {
-		pr_info("mmio virtual addr = %p\n", sm750_dev->pvReg);
+		pr_debug("mmio virtual addr = %p\n", sm750_dev->pvReg);
 	}
 
 	sm750_dev->accel.dprBase = sm750_dev->pvReg + DE_BASE_ADDR_TYPE1;
@@ -74,7 +74,7 @@ int hw_sm750_map(struct sm750_dev *sm750_dev, struct pci_dev *pdev)
 	 * @ddk750_get_vm_size function can be safe.
 	 */
 	sm750_dev->vidmem_size = ddk750_get_vm_size();
-	pr_info("video memory phyAddr = %lx, size = %u bytes\n",
+	pr_debug("video memory phyAddr = %lx, size = %u bytes\n",
 		sm750_dev->vidmem_start, sm750_dev->vidmem_size);
 
 	/* reserve the vidmem space of smi adaptor */
@@ -85,7 +85,7 @@ int hw_sm750_map(struct sm750_dev *sm750_dev, struct pci_dev *pdev)
 		ret = -EFAULT;
 		goto exit;
 	} else {
-		pr_info("video memory vaddr = %p\n", sm750_dev->pvMem);
+		pr_debug("video memory vaddr = %p\n", sm750_dev->pvMem);
 	}
 exit:
 	return ret;
@@ -165,11 +165,11 @@ int hw_sm750_inithw(struct sm750_dev *sm750_dev, struct pci_dev *pdev)
 			 * The following register values for CH7301 are from
 			 * Chrontel app note and our experiment.
 			 */
-			pr_info("yes,CH7301 DVI chip found\n");
+			pr_debug("yes,CH7301 DVI chip found\n");
 			sm750_sw_i2c_write_reg(0xec, 0x1d, 0x16);
 			sm750_sw_i2c_write_reg(0xec, 0x21, 0x9);
 			sm750_sw_i2c_write_reg(0xec, 0x49, 0xC0);
-			pr_info("okay,CH7301 DVI chip setup done\n");
+			pr_debug("okay,CH7301 DVI chip setup done\n");
 		}
 	}
 
@@ -194,14 +194,14 @@ int hw_sm750_output_setMode(struct lynxfb_output *output,
 
 	if (sm750_get_chip_type() != SM750LE) {
 		if (channel == sm750_primary) {
-			pr_info("primary channel\n");
+			pr_debug("primary channel\n");
 			if (output->paths & sm750_panel)
 				disp_set |= do_LCD1_PRI;
 			if (output->paths & sm750_crt)
 				disp_set |= do_CRT_PRI;
 
 		} else {
-			pr_info("secondary channel\n");
+			pr_debug("secondary channel\n");
 			if (output->paths & sm750_panel)
 				disp_set |= do_LCD1_SEC;
 			if (output->paths & sm750_crt)
@@ -217,7 +217,7 @@ int hw_sm750_output_setMode(struct lynxfb_output *output,
 		poke32(DISPLAY_CONTROL_750LE, reg);
 	}
 
-	pr_info("ddk setlogicdispout done\n");
+	pr_debug("ddk setlogicdispout done\n");
 	return ret;
 }
 

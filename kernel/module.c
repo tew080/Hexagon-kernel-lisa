@@ -1421,7 +1421,7 @@ static int verify_namespace_is_imported(const struct load_info *info,
 #ifdef CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS
 		pr_warn(
 #else
-		pr_err(
+		pr_debug(
 #endif
 			"%s: module uses symbol (%s) from namespace %s, but does not import it.\n",
 			mod->name, kernel_symbol_name(sym), namespace);
@@ -1438,7 +1438,7 @@ static bool inherit_taint(struct module *mod, struct module *owner)
 		return true;
 
 	if (mod->using_gplonly_symbols) {
-		pr_err("%s: module using GPL-only symbols uses symbols from proprietary module %s.\n",
+		pr_debug("%s: module using GPL-only symbols uses symbols from proprietary module %s.\n",
 			mod->name, owner->name);
 		return false;
 	}
@@ -1872,14 +1872,14 @@ static int mod_sysfs_init(struct module *mod)
 	struct kobject *kobj;
 
 	if (!module_sysfs_initialized) {
-		pr_err("%s: module sysfs not initialized\n", mod->name);
+		pr_debug("%s: module sysfs not initialized\n", mod->name);
 		err = -EINVAL;
 		goto out;
 	}
 
 	kobj = kset_find_obj(module_kset, mod->name);
 	if (kobj) {
-		pr_err("%s: module is already loaded\n", mod->name);
+		pr_debug("%s: module is already loaded\n", mod->name);
 		kobject_put(kobj);
 		err = -EINVAL;
 		goto out;
@@ -2349,7 +2349,7 @@ static int verify_exported_symbols(struct module *mod)
 		for (s = arr[i].sym; s < arr[i].sym + arr[i].num; s++) {
 			if (find_symbol(kernel_symbol_name(s), &owner, NULL,
 					NULL, true, false)) {
-				pr_err("%s: exports duplicate symbol %s"
+				pr_debug("%s: exports duplicate symbol %s"
 				       " (owned by %s)\n",
 				       mod->name, kernel_symbol_name(s),
 				       module_name(owner));
@@ -3081,14 +3081,14 @@ static int elf_validity_check(struct load_info *info)
 		default:
 			err = validate_section_offset(info, shdr);
 			if (err < 0) {
-				pr_err("Invalid ELF section in module (section %u type %u)\n",
+				pr_debug("Invalid ELF section in module (section %u type %u)\n",
 					i, shdr->sh_type);
 				return err;
 			}
 
 			if (shdr->sh_flags & SHF_ALLOC) {
 				if (shdr->sh_name >= strhdr->sh_size) {
-					pr_err("Invalid ELF section name in module (section %u type %u)\n",
+					pr_debug("Invalid ELF section name in module (section %u type %u)\n",
 					       i, shdr->sh_type);
 					return -ENOEXEC;
 				}
@@ -3133,7 +3133,7 @@ static int check_modinfo_livepatch(struct module *mod, struct load_info *info)
 static int check_modinfo_livepatch(struct module *mod, struct load_info *info)
 {
 	if (get_modinfo(info, "livepatch")) {
-		pr_err("%s: module is marked as livepatch module, but livepatch support is disabled",
+		pr_debug("%s: module is marked as livepatch module, but livepatch support is disabled",
 		       mod->name);
 		return -ENOEXEC;
 	}
@@ -3286,7 +3286,7 @@ static int check_modinfo(struct module *mod, struct load_info *info, int flags)
 		if (err)
 			return err;
 	} else if (!same_magic(modmagic, vermagic, info->index.vers)) {
-		pr_err("%s: version magic '%s' should be '%s'\n",
+		pr_debug("%s: version magic '%s' should be '%s'\n",
 		       info->name, modmagic, vermagic);
 		return -ENOEXEC;
 	}
@@ -3979,7 +3979,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
 	 */
 	err = elf_validity_check(info);
 	if (err) {
-		pr_err("Module has invalid ELF structures\n");
+		pr_debug("Module has invalid ELF structures\n");
 		goto free_copy;
 	}
 

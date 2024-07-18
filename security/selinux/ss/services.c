@@ -132,7 +132,7 @@ static int selinux_set_mapping(struct policydb *pol,
 
 		p_out->value = string_to_security_class(pol, p_in->name);
 		if (!p_out->value) {
-			pr_info("SELinux:  Class %s not defined in policy.\n",
+			pr_debug("SELinux:  Class %s not defined in policy.\n",
 			       p_in->name);
 			if (pol->reject_unknown)
 				goto err;
@@ -151,7 +151,7 @@ static int selinux_set_mapping(struct policydb *pol,
 			p_out->perms[k] = string_to_av_perm(pol, p_out->value,
 							    p_in->perms[k]);
 			if (!p_out->perms[k]) {
-				pr_info("SELinux:  Permission %s in class %s not defined in policy.\n",
+				pr_debug("SELinux:  Permission %s in class %s not defined in policy.\n",
 				       p_in->perms[k], p_in->name);
 				if (pol->reject_unknown)
 					goto err;
@@ -164,7 +164,7 @@ static int selinux_set_mapping(struct policydb *pol,
 	}
 
 	if (print_unknown_handle)
-		pr_info("SELinux: the above unknown classes and permissions will be %s\n",
+		pr_debug("SELinux: the above unknown classes and permissions will be %s\n",
 		       pol->allow_unknown ? "allowed" : "denied");
 
 	out_map->size = i;
@@ -2020,7 +2020,7 @@ static int convert_context(struct context *oldc, struct context *newc, void *p)
 			       oldc->str, -rc);
 			return rc;
 		}
-		pr_info("SELinux:  Context %s became valid (mapped).\n",
+		pr_debug("SELinux:  Context %s became valid (mapped).\n",
 			oldc->str);
 		return 0;
 	}
@@ -2101,7 +2101,7 @@ bad:
 	newc->str = s;
 	newc->len = len;
 	newc->hash = context_compute_hash(s);
-	pr_info("SELinux:  Context %s became invalid (unmapped).\n",
+	pr_debug("SELinux:  Context %s became invalid (unmapped).\n",
 		newc->str);
 	return 0;
 }
@@ -2116,13 +2116,13 @@ static void security_load_policycaps(struct selinux_state *state)
 		state->policycap[i] = ebitmap_get_bit(&p->policycaps, i);
 
 	for (i = 0; i < ARRAY_SIZE(selinux_policycap_names); i++)
-		pr_info("SELinux:  policy capability %s=%d\n",
+		pr_debug("SELinux:  policy capability %s=%d\n",
 			selinux_policycap_names[i],
 			ebitmap_get_bit(&p->policycaps, i));
 
 	ebitmap_for_each_positive_bit(&p->policycaps, node, i) {
 		if (i >= ARRAY_SIZE(selinux_policycap_names))
-			pr_info("SELinux:  unknown policy capability %u\n",
+			pr_debug("SELinux:  unknown policy capability %u\n",
 				i);
 	}
 
@@ -2217,9 +2217,9 @@ int security_load_policy(struct selinux_state *state, void *data, size_t len)
 	newpolicydb->len = len;
 	/* If switching between different policy types, log MLS status */
 	if (policydb->mls_enabled && !newpolicydb->mls_enabled)
-		pr_info("SELinux: Disabling MLS support...\n");
+		pr_debug("SELinux: Disabling MLS support...\n");
 	else if (!policydb->mls_enabled && newpolicydb->mls_enabled)
-		pr_info("SELinux: Enabling MLS support...\n");
+		pr_debug("SELinux: Enabling MLS support...\n");
 
 	rc = policydb_load_isids(newpolicydb, newsidtab);
 	if (rc) {

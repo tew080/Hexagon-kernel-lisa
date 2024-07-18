@@ -222,24 +222,24 @@ test_hash_init(void)
 	/* Issue notices about skipped tests. */
 #ifdef HAVE_ARCH__HASH_32
 #if HAVE_ARCH__HASH_32 != 1
-	pr_info("__hash_32() is arch-specific; not compared to generic.");
+	pr_debug("__hash_32() is arch-specific; not compared to generic.");
 #endif
 #else
-	pr_info("__hash_32() has no arch implementation to test.");
+	pr_debug("__hash_32() has no arch implementation to test.");
 #endif
 #ifdef HAVE_ARCH_HASH_32
 #if HAVE_ARCH_HASH_32 != 1
-	pr_info("hash_32() is arch-specific; not compared to generic.");
+	pr_debug("hash_32() is arch-specific; not compared to generic.");
 #endif
 #else
-	pr_info("hash_32() has no arch implementation to test.");
+	pr_debug("hash_32() has no arch implementation to test.");
 #endif
 #ifdef HAVE_ARCH_HASH_64
 #if HAVE_ARCH_HASH_64 != 1
-	pr_info("hash_64() is arch-specific; not compared to generic.");
+	pr_debug("hash_64() is arch-specific; not compared to generic.");
 #endif
 #else
-	pr_info("hash_64() has no arch implementation to test.");
+	pr_debug("hash_64() has no arch implementation to test.");
 #endif
 
 	pr_notice("%u tests passed.", tests);

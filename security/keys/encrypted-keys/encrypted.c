@@ -180,7 +180,7 @@ static int datablob_parse(char *datablob, const char **format,
 
 	keyword = strsep(&datablob, " \t");
 	if (!keyword) {
-		pr_info("encrypted_key: insufficient parameters specified\n");
+		pr_debug("encrypted_key: insufficient parameters specified\n");
 		return ret;
 	}
 	key_cmd = match_token(keyword, key_tokens, args);
@@ -206,12 +206,12 @@ static int datablob_parse(char *datablob, const char **format,
 	}
 
 	if (!*master_desc) {
-		pr_info("encrypted_key: master key parameter is missing\n");
+		pr_debug("encrypted_key: master key parameter is missing\n");
 		goto out;
 	}
 
 	if (valid_master_desc(*master_desc, NULL) < 0) {
-		pr_info("encrypted_key: master key parameter \'%s\' "
+		pr_debug("encrypted_key: master key parameter \'%s\' "
 			"is invalid\n", *master_desc);
 		goto out;
 	}
@@ -219,7 +219,7 @@ static int datablob_parse(char *datablob, const char **format,
 	if (decrypted_datalen) {
 		*decrypted_datalen = strsep(&datablob, " \t");
 		if (!*decrypted_datalen) {
-			pr_info("encrypted_key: keylen parameter is missing\n");
+			pr_debug("encrypted_key: keylen parameter is missing\n");
 			goto out;
 		}
 	}
@@ -227,7 +227,7 @@ static int datablob_parse(char *datablob, const char **format,
 	switch (key_cmd) {
 	case Opt_new:
 		if (!decrypted_datalen) {
-			pr_info("encrypted_key: keyword \'%s\' not allowed "
+			pr_debug("encrypted_key: keyword \'%s\' not allowed "
 				"when called from .update method\n", keyword);
 			break;
 		}
@@ -235,20 +235,20 @@ static int datablob_parse(char *datablob, const char **format,
 		break;
 	case Opt_load:
 		if (!decrypted_datalen) {
-			pr_info("encrypted_key: keyword \'%s\' not allowed "
+			pr_debug("encrypted_key: keyword \'%s\' not allowed "
 				"when called from .update method\n", keyword);
 			break;
 		}
 		*hex_encoded_iv = strsep(&datablob, " \t");
 		if (!*hex_encoded_iv) {
-			pr_info("encrypted_key: hex blob is missing\n");
+			pr_debug("encrypted_key: hex blob is missing\n");
 			break;
 		}
 		ret = 0;
 		break;
 	case Opt_update:
 		if (decrypted_datalen) {
-			pr_info("encrypted_key: keyword \'%s\' not allowed "
+			pr_debug("encrypted_key: keyword \'%s\' not allowed "
 				"when called from .instantiate method\n",
 				keyword);
 			break;
@@ -256,7 +256,7 @@ static int datablob_parse(char *datablob, const char **format,
 		ret = 0;
 		break;
 	case Opt_err:
-		pr_info("encrypted_key: keyword \'%s\' not recognized\n",
+		pr_debug("encrypted_key: keyword \'%s\' not recognized\n",
 			keyword);
 		break;
 	}
@@ -441,10 +441,10 @@ static struct key *request_master_key(struct encrypted_key_payload *epayload,
 		int ret = PTR_ERR(mkey);
 
 		if (ret == -ENOTSUPP)
-			pr_info("encrypted_key: key %s not supported",
+			pr_debug("encrypted_key: key %s not supported",
 				epayload->master_desc);
 		else
-			pr_info("encrypted_key: key %s not found",
+			pr_debug("encrypted_key: key %s not found",
 				epayload->master_desc);
 		goto out;
 	}

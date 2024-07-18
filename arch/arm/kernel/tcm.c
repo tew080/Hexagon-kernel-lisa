@@ -143,7 +143,7 @@ static int __init setup_tcm_bank(u8 type, u8 bank, u8 banks,
 		       type ? "I" : "D", bank);
 		return -EINVAL;
 	} else {
-		pr_info("CPU: found %sTCM%d %dk @ %08x, %senabled\n",
+		pr_debug("CPU: found %sTCM%d %dk @ %08x, %senabled\n",
 			type ? "I" : "D",
 			bank,
 			tcm_size,
@@ -170,7 +170,7 @@ static int __init setup_tcm_bank(u8 type, u8 bank, u8 banks,
 	/* Increase offset */
 	*offset += (tcm_size << 10);
 
-	pr_info("CPU: moved %sTCM%d %dk to %08x, enabled\n",
+	pr_debug("CPU: moved %sTCM%d %dk to %08x, enabled\n",
 		type ? "I" : "D",
 		bank,
 		tcm_size,
@@ -271,7 +271,7 @@ void __init tcm_init(void)
 	 */
 	if (cpu_architecture() < CPU_ARCH_ARMv5) {
 		if (dtcm_code_sz || itcm_code_sz)
-			pr_info("CPU TCM: %u bytes of DTCM and %u bytes of "
+			pr_debug("CPU TCM: %u bytes of DTCM and %u bytes of "
 				"ITCM code compiled in, but no TCM present "
 				"in pre-v5 CPU\n", dtcm_code_sz, itcm_code_sz);
 		return;
@@ -305,7 +305,7 @@ void __init tcm_init(void)
 		}
 		/* This means you compiled more code than fits into DTCM */
 		if (dtcm_code_sz > (dtcm_end - DTCM_OFFSET)) {
-			pr_info("CPU DTCM: %u bytes of code compiled to "
+			pr_debug("CPU DTCM: %u bytes of code compiled to "
 				"DTCM but only %lu bytes of DTCM present\n",
 				dtcm_code_sz, (dtcm_end - DTCM_OFFSET));
 			goto no_dtcm;
@@ -329,7 +329,7 @@ void __init tcm_init(void)
 			 start, end);
 		dtcm_present = true;
 	} else if (dtcm_code_sz) {
-		pr_info("CPU DTCM: %u bytes of code compiled to DTCM but no "
+		pr_debug("CPU DTCM: %u bytes of code compiled to DTCM but no "
 			"DTCM banks present in CPU\n", dtcm_code_sz);
 	}
 
@@ -343,7 +343,7 @@ no_dtcm:
 		}
 		/* This means you compiled more code than fits into ITCM */
 		if (itcm_code_sz > (itcm_end - ITCM_OFFSET)) {
-			pr_info("CPU ITCM: %u bytes of code compiled to "
+			pr_debug("CPU ITCM: %u bytes of code compiled to "
 				"ITCM but only %lu bytes of ITCM present\n",
 				itcm_code_sz, (itcm_end - ITCM_OFFSET));
 			goto unregister;
@@ -367,7 +367,7 @@ no_dtcm:
 			 start, end);
 		itcm_present = true;
 	} else if (itcm_code_sz) {
-		pr_info("CPU ITCM: %u bytes of code compiled to ITCM but no "
+		pr_debug("CPU ITCM: %u bytes of code compiled to ITCM but no "
 			"ITCM banks present in CPU\n", itcm_code_sz);
 	}
 

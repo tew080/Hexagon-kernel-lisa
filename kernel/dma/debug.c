@@ -685,7 +685,7 @@ static struct dma_debug_entry *dma_entry_alloc(void)
 		if (dma_debug_create_entries(GFP_ATOMIC)) {
 			global_disable = true;
 			spin_unlock_irqrestore(&free_entries_lock, flags);
-			pr_err("debugging out of memory - disabling\n");
+			pr_debug("debugging out of memory - disabling\n");
 			return NULL;
 		}
 		__dma_entry_alloc_check_leak();
@@ -923,7 +923,7 @@ void dma_debug_add_bus(struct bus_type *bus)
 
 	nb = kzalloc(sizeof(struct notifier_block), GFP_KERNEL);
 	if (nb == NULL) {
-		pr_err("dma_debug_add_bus: out of memory\n");
+		pr_debug("dma_debug_add_bus: out of memory\n");
 		return;
 	}
 
@@ -956,7 +956,7 @@ static int dma_debug_init(void)
 		pr_warn("%d debug entries requested but only %d allocated\n",
 			nr_prealloc_entries, nr_total_entries);
 	} else {
-		pr_err("debugging out of memory error - disabled\n");
+		pr_debug("debugging out of memory error - disabled\n");
 		global_disable = true;
 
 		return 0;

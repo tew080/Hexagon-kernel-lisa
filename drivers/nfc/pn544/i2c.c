@@ -241,7 +241,7 @@ static int pn544_hci_i2c_enable(void *phy_id)
 {
 	struct pn544_i2c_phy *phy = phy_id;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	pn544_hci_i2c_enable_mode(phy, PN544_HCI_MODE);
 
@@ -338,7 +338,7 @@ static int check_crc(u8 *buf, int buflen)
 	if (buf[len - 2] != (crc & 0xff) || buf[len - 1] != (crc >> 8)) {
 		pr_err("CRC error 0x%x != 0x%x 0x%x\n",
 		       crc, buf[len - 1], buf[len - 2]);
-		pr_info("%s: BAD CRC\n", __func__);
+		pr_debug("%s: BAD CRC\n", __func__);
 		print_hex_dump(KERN_DEBUG, "crc: ", DUMP_PREFIX_NONE,
 			       16, 2, buf, buflen, false);
 		return -EPERM;
@@ -528,7 +528,7 @@ static int pn544_hci_i2c_fw_download(void *phy_id, const char *firmware_name,
 {
 	struct pn544_i2c_phy *phy = phy_id;
 
-	pr_info("Starting Firmware Download (%s)\n", firmware_name);
+	pr_debug("Starting Firmware Download (%s)\n", firmware_name);
 
 	strcpy(phy->firmware_name, firmware_name);
 
@@ -543,7 +543,7 @@ static int pn544_hci_i2c_fw_download(void *phy_id, const char *firmware_name,
 static void pn544_hci_i2c_fw_work_complete(struct pn544_i2c_phy *phy,
 					   int result)
 {
-	pr_info("Firmware Download Complete, result=%d\n", result);
+	pr_debug("Firmware Download Complete, result=%d\n", result);
 
 	pn544_hci_i2c_disable(phy);
 

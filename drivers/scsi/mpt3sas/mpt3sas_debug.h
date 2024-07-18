@@ -156,13 +156,13 @@ _debug_dump_mf(void *mpi_request, int sz)
 	int i;
 	__le32 *mfp = (__le32 *)mpi_request;
 
-	pr_info("mf:\n\t");
+	pr_debug("mf:\n\t");
 	for (i = 0; i < sz; i++) {
 		if (i && ((i % 8) == 0))
-			pr_info("\n\t");
-		pr_info("%08x ", le32_to_cpu(mfp[i]));
+			pr_debug("\n\t");
+		pr_debug("%08x ", le32_to_cpu(mfp[i]));
 	}
-	pr_info("\n");
+	pr_debug("\n");
 }
 /**
  * _debug_dump_reply - print message frame contents
@@ -175,13 +175,13 @@ _debug_dump_reply(void *mpi_request, int sz)
 	int i;
 	__le32 *mfp = (__le32 *)mpi_request;
 
-	pr_info("reply:\n\t");
+	pr_debug("reply:\n\t");
 	for (i = 0; i < sz; i++) {
 		if (i && ((i % 8) == 0))
-			pr_info("\n\t");
-		pr_info("%08x ", le32_to_cpu(mfp[i]));
+			pr_debug("\n\t");
+		pr_debug("%08x ", le32_to_cpu(mfp[i]));
 	}
-	pr_info("\n");
+	pr_debug("\n");
 }
 /**
  * _debug_dump_config - print config page contents
@@ -194,13 +194,13 @@ _debug_dump_config(void *mpi_request, int sz)
 	int i;
 	__le32 *mfp = (__le32 *)mpi_request;
 
-	pr_info("config:\n\t");
+	pr_debug("config:\n\t");
 	for (i = 0; i < sz; i++) {
 		if (i && ((i % 8) == 0))
-			pr_info("\n\t");
-		pr_info("%08x ", le32_to_cpu(mfp[i]));
+			pr_debug("\n\t");
+		pr_debug("%08x ", le32_to_cpu(mfp[i]));
 	}
-	pr_info("\n");
+	pr_debug("\n");
 }
 
 #endif /* MPT3SAS_DEBUG_H_INCLUDED */

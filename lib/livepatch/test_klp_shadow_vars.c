@@ -62,7 +62,7 @@ static void *shadow_get(void *obj, unsigned long id)
 {
 	void *ret = klp_shadow_get(obj, id);
 
-	pr_info("klp_%s(obj=PTR%d, id=0x%lx) = PTR%d\n",
+	pr_debug("klp_%s(obj=PTR%d, id=0x%lx) = PTR%d\n",
 		__func__, ptr_id(obj), id, ptr_id(ret));
 
 	return ret;
@@ -74,7 +74,7 @@ static void *shadow_alloc(void *obj, unsigned long id, size_t size,
 {
 	void *ret = klp_shadow_alloc(obj, id, size, gfp_flags, ctor,
 				     ctor_data);
-	pr_info("klp_%s(obj=PTR%d, id=0x%lx, size=%zx, gfp_flags=%pGg), ctor=PTR%d, ctor_data=PTR%d = PTR%d\n",
+	pr_debug("klp_%s(obj=PTR%d, id=0x%lx, size=%zx, gfp_flags=%pGg), ctor=PTR%d, ctor_data=PTR%d = PTR%d\n",
 		__func__, ptr_id(obj), id, size, &gfp_flags, ptr_id(ctor),
 		ptr_id(ctor_data), ptr_id(ret));
 	return ret;
@@ -86,7 +86,7 @@ static void *shadow_get_or_alloc(void *obj, unsigned long id, size_t size,
 {
 	void *ret = klp_shadow_get_or_alloc(obj, id, size, gfp_flags, ctor,
 					    ctor_data);
-	pr_info("klp_%s(obj=PTR%d, id=0x%lx, size=%zx, gfp_flags=%pGg), ctor=PTR%d, ctor_data=PTR%d = PTR%d\n",
+	pr_debug("klp_%s(obj=PTR%d, id=0x%lx, size=%zx, gfp_flags=%pGg), ctor=PTR%d, ctor_data=PTR%d = PTR%d\n",
 		__func__, ptr_id(obj), id, size, &gfp_flags, ptr_id(ctor),
 		ptr_id(ctor_data), ptr_id(ret));
 	return ret;
@@ -95,14 +95,14 @@ static void *shadow_get_or_alloc(void *obj, unsigned long id, size_t size,
 static void shadow_free(void *obj, unsigned long id, klp_shadow_dtor_t dtor)
 {
 	klp_shadow_free(obj, id, dtor);
-	pr_info("klp_%s(obj=PTR%d, id=0x%lx, dtor=PTR%d)\n",
+	pr_debug("klp_%s(obj=PTR%d, id=0x%lx, dtor=PTR%d)\n",
 		__func__, ptr_id(obj), id, ptr_id(dtor));
 }
 
 static void shadow_free_all(unsigned long id, klp_shadow_dtor_t dtor)
 {
 	klp_shadow_free_all(id, dtor);
-	pr_info("klp_%s(id=0x%lx, dtor=PTR%d)\n",
+	pr_debug("klp_%s(id=0x%lx, dtor=PTR%d)\n",
 		__func__, id, ptr_id(dtor));
 }
 
@@ -112,7 +112,7 @@ static int shadow_ctor(void *obj, void *shadow_data, void *ctor_data)
 {
 	int **shadow_int = shadow_data;
 	*shadow_int = ctor_data;
-	pr_info("%s: PTR%d -> PTR%d\n",
+	pr_debug("%s: PTR%d -> PTR%d\n",
 		__func__, ptr_id(shadow_int), ptr_id(ctor_data));
 
 	return 0;
@@ -120,7 +120,7 @@ static int shadow_ctor(void *obj, void *shadow_data, void *ctor_data)
 
 static void shadow_dtor(void *obj, void *shadow_data)
 {
-	pr_info("%s(obj=PTR%d, shadow_data=PTR%d)\n",
+	pr_debug("%s(obj=PTR%d, shadow_data=PTR%d)\n",
 		__func__, ptr_id(obj), ptr_id(shadow_data));
 }
 
@@ -148,7 +148,7 @@ static int test_klp_shadow_vars_init(void)
 	 */
 	ret = shadow_get(obj, id);
 	if (!ret)
-		pr_info("  got expected NULL result\n");
+		pr_debug("  got expected NULL result\n");
 
 	/*
 	 * Allocate a few shadow variables with different <obj> and <id>.
@@ -173,20 +173,20 @@ static int test_klp_shadow_vars_init(void)
 	if (!ret)
 		return -EINVAL;
 	if (ret == sv1 && *sv1 == &var1)
-		pr_info("  got expected PTR%d -> PTR%d result\n",
+		pr_debug("  got expected PTR%d -> PTR%d result\n",
 			ptr_id(sv1), ptr_id(*sv1));
 
 	ret = shadow_get(obj + 1, id);
 	if (!ret)
 		return -EINVAL;
 	if (ret == sv2 && *sv2 == &var2)
-		pr_info("  got expected PTR%d -> PTR%d result\n",
+		pr_debug("  got expected PTR%d -> PTR%d result\n",
 			ptr_id(sv2), ptr_id(*sv2));
 	ret = shadow_get(obj, id + 1);
 	if (!ret)
 		return -EINVAL;
 	if (ret == sv3 && *sv3 == &var3)
-		pr_info("  got expected PTR%d -> PTR%d result\n",
+		pr_debug("  got expected PTR%d -> PTR%d result\n",
 			ptr_id(sv3), ptr_id(*sv3));
 
 	/*
@@ -201,7 +201,7 @@ static int test_klp_shadow_vars_init(void)
 	if (!ret)
 		return -EINVAL;
 	if (ret == sv4 && *sv4 == &var4)
-		pr_info("  got expected PTR%d -> PTR%d result\n",
+		pr_debug("  got expected PTR%d -> PTR%d result\n",
 			ptr_id(sv4), ptr_id(*sv4));
 
 	/*
@@ -211,17 +211,17 @@ static int test_klp_shadow_vars_init(void)
 	shadow_free(obj, id, shadow_dtor);			/* sv1 */
 	ret = shadow_get(obj, id);
 	if (!ret)
-		pr_info("  got expected NULL result\n");
+		pr_debug("  got expected NULL result\n");
 
 	shadow_free(obj + 1, id, shadow_dtor);			/* sv2 */
 	ret = shadow_get(obj + 1, id);
 	if (!ret)
-		pr_info("  got expected NULL result\n");
+		pr_debug("  got expected NULL result\n");
 
 	shadow_free(obj + 2, id, shadow_dtor);			/* sv4 */
 	ret = shadow_get(obj + 2, id);
 	if (!ret)
-		pr_info("  got expected NULL result\n");
+		pr_debug("  got expected NULL result\n");
 
 	/*
 	 * We should still find an <id+1> variable.
@@ -230,7 +230,7 @@ static int test_klp_shadow_vars_init(void)
 	if (!ret)
 		return -EINVAL;
 	if (ret == sv3 && *sv3 == &var3)
-		pr_info("  got expected PTR%d -> PTR%d result\n",
+		pr_debug("  got expected PTR%d -> PTR%d result\n",
 			ptr_id(sv3), ptr_id(*sv3));
 
 	/*
@@ -239,7 +239,7 @@ static int test_klp_shadow_vars_init(void)
 	shadow_free_all(id + 1, shadow_dtor);			/* sv3 */
 	ret = shadow_get(obj, id);
 	if (!ret)
-		pr_info("  shadow_get() got expected NULL result\n");
+		pr_debug("  shadow_get() got expected NULL result\n");
 
 
 	free_ptr_list();

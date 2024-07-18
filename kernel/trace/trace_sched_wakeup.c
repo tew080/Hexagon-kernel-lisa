@@ -609,28 +609,28 @@ static void start_wakeup_tracer(struct trace_array *tr)
 
 	ret = register_trace_sched_wakeup(probe_wakeup, NULL);
 	if (ret) {
-		pr_info("wakeup trace: Couldn't activate tracepoint"
+		pr_debug("wakeup trace: Couldn't activate tracepoint"
 			" probe to kernel_sched_wakeup\n");
 		return;
 	}
 
 	ret = register_trace_sched_wakeup_new(probe_wakeup, NULL);
 	if (ret) {
-		pr_info("wakeup trace: Couldn't activate tracepoint"
+		pr_debug("wakeup trace: Couldn't activate tracepoint"
 			" probe to kernel_sched_wakeup_new\n");
 		goto fail_deprobe;
 	}
 
 	ret = register_trace_sched_switch(probe_wakeup_sched_switch, NULL);
 	if (ret) {
-		pr_info("sched trace: Couldn't activate tracepoint"
+		pr_debug("sched trace: Couldn't activate tracepoint"
 			" probe to kernel_sched_switch\n");
 		goto fail_deprobe_wake_new;
 	}
 
 	ret = register_trace_sched_migrate_task(probe_wakeup_migrate_task, NULL);
 	if (ret) {
-		pr_info("wakeup trace: Couldn't activate tracepoint"
+		pr_debug("wakeup trace: Couldn't activate tracepoint"
 			" probe to kernel_sched_migrate_task\n");
 		goto fail_deprobe_sched_switch;
 	}

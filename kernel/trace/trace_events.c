@@ -2404,7 +2404,7 @@ static void trace_module_add_events(struct module *mod)
 
 	/* Don't add infrastructure for mods without tracepoints */
 	if (trace_module_has_bad_taint(mod)) {
-		pr_err("%s: module has bad taint, not creating trace events\n",
+		pr_debug("%s: module has bad taint, not creating trace events\n",
 		       mod->name);
 		return;
 	}

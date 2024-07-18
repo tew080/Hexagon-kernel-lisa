@@ -315,14 +315,14 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
 	image->control_code_page = kimage_alloc_control_pages(image,
 					   get_order(KEXEC_CONTROL_PAGE_SIZE));
 	if (!image->control_code_page) {
-		pr_err("Could not allocate control_code_buffer\n");
+		pr_debug("Could not allocate control_code_buffer\n");
 		goto out_free_post_load_bufs;
 	}
 
 	if (!kexec_on_panic) {
 		image->swap_page = kimage_alloc_control_pages(image, 0);
 		if (!image->swap_page) {
-			pr_err("Could not allocate swap buffer\n");
+			pr_debug("Could not allocate swap buffer\n");
 			goto out_free_control_pages;
 		}
 	}
@@ -1127,7 +1127,7 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
 		return -EINVAL;
 
 	if (sym->st_size != size) {
-		pr_err("symbol %s size mismatch: expected %lu actual %u\n",
+		pr_debug("symbol %s size mismatch: expected %lu actual %u\n",
 		       name, (unsigned long)sym->st_size, size);
 		return -EINVAL;
 	}
@@ -1135,7 +1135,7 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
 	sec = pi->sechdrs + sym->st_shndx;
 
 	if (sec->sh_type == SHT_NOBITS) {
-		pr_err("symbol %s is in a bss section. Cannot %s\n", name,
+		pr_debug("symbol %s is in a bss section. Cannot %s\n", name,
 		       get_value ? "get" : "set");
 		return -EINVAL;
 	}

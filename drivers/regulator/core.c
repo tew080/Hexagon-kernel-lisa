@@ -42,7 +42,7 @@
 #define rdev_warn(rdev, fmt, ...)					\
 	pr_warn("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
 #define rdev_info(rdev, fmt, ...)					\
-	pr_info("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
+	pr_debug("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
 #define rdev_dbg(rdev, fmt, ...)					\
 	pr_debug("%s: " fmt, rdev_get_name(rdev), ##__VA_ARGS__)
 
@@ -2274,7 +2274,7 @@ int regulator_register_supply_alias(struct device *dev, const char *id,
 
 	list_add(&map->list, &regulator_supply_alias_list);
 
-	pr_info("Adding alias for supply %s,%s -> %s,%s\n",
+	pr_debug("Adding alias for supply %s,%s -> %s,%s\n",
 		id, dev_name(dev), alias_id, dev_name(alias_dev));
 
 	return 0;
@@ -6226,20 +6226,20 @@ static int _regulator_debug_print_enabled(struct device *dev, void *data)
 		mode = rdev->desc->ops->get_mode(rdev);
 
 	if (uV != -EPERM && mode != -EPERM)
-		pr_info("%s[%u] %d uV, mode=%d\n",
+		pr_debug("%s[%u] %d uV, mode=%d\n",
 			rdev_get_name(rdev), rdev->use_count, uV, mode);
 	else if (uV != -EPERM)
-		pr_info("%s[%u] %d uV\n",
+		pr_debug("%s[%u] %d uV\n",
 			rdev_get_name(rdev), rdev->use_count, uV);
 	else if (mode != -EPERM)
-		pr_info("%s[%u], mode=%d\n",
+		pr_debug("%s[%u], mode=%d\n",
 			rdev_get_name(rdev), rdev->use_count, mode);
 	else
-		pr_info("%s[%u]\n", rdev_get_name(rdev), rdev->use_count);
+		pr_debug("%s[%u]\n", rdev_get_name(rdev), rdev->use_count);
 
 	/* Print a header if there are consumers. */
 	if (rdev->open_count)
-		pr_info("  %-32s EN    Min_uV   Max_uV  load_uA\n",
+		pr_debug("  %-32s EN    Min_uV   Max_uV  load_uA\n",
 			"Device-Supply");
 
 	list_for_each_entry(reg, &rdev->consumer_list, list) {
@@ -6248,7 +6248,7 @@ static int _regulator_debug_print_enabled(struct device *dev, void *data)
 		else
 			supply_name = "(null)-(null)";
 
-		pr_info("  %-32s %d   %8d %8d %8d\n", supply_name,
+		pr_debug("  %-32s %d   %8d %8d %8d\n", supply_name,
 			reg->enable_count,
 			reg->voltage[PM_SUSPEND_ON].min_uV,
 			reg->voltage[PM_SUSPEND_ON].max_uV,
@@ -6269,7 +6269,7 @@ void regulator_debug_print_enabled(void)
 	if (likely(!debug_suspend))
 		return;
 
-	pr_info("Enabled regulators:\n");
+	pr_debug("Enabled regulators:\n");
 	class_for_each_device(&regulator_class, NULL, NULL,
 			     _regulator_debug_print_enabled);
 }

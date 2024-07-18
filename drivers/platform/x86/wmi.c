@@ -463,13 +463,13 @@ EXPORT_SYMBOL_GPL(wmi_set_block);
 
 static void wmi_dump_wdg(const struct guid_block *g)
 {
-	pr_info("%pUL:\n", &g->guid);
+	pr_debug("%pUL:\n", &g->guid);
 	if (g->flags & ACPI_WMI_EVENT)
-		pr_info("\tnotify_id: 0x%02X\n", g->notify_id);
+		pr_debug("\tnotify_id: 0x%02X\n", g->notify_id);
 	else
-		pr_info("\tobject_id: %2pE\n", g->object_id);
-	pr_info("\tinstance_count: %d\n", g->instance_count);
-	pr_info("\tflags: %#x", g->flags);
+		pr_debug("\tobject_id: %2pE\n", g->object_id);
+	pr_debug("\tinstance_count: %d\n", g->instance_count);
+	pr_debug("\tflags: %#x", g->flags);
 	if (g->flags) {
 		if (g->flags & ACPI_WMI_EXPENSIVE)
 			pr_cont(" ACPI_WMI_EXPENSIVE");
@@ -492,7 +492,7 @@ static void wmi_notify_debug(u32 value, void *context)
 
 	status = wmi_get_event_data(value, &response);
 	if (status != AE_OK) {
-		pr_info("bad event status 0x%x\n", status);
+		pr_debug("bad event status 0x%x\n", status);
 		return;
 	}
 
@@ -501,7 +501,7 @@ static void wmi_notify_debug(u32 value, void *context)
 	if (!obj)
 		return;
 
-	pr_info("DEBUG Event ");
+	pr_debug("DEBUG Event ");
 	switch(obj->type) {
 	case ACPI_TYPE_BUFFER:
 		pr_cont("BUFFER_TYPE - length %d\n", obj->buffer.length);
@@ -1325,7 +1325,7 @@ static void acpi_wmi_notify_handler(acpi_handle handle, u32 event,
 	}
 
 	if (debug_event)
-		pr_info("DEBUG Event GUID: %pUL\n", &wblock->gblock.guid);
+		pr_debug("DEBUG Event GUID: %pUL\n", &wblock->gblock.guid);
 
 	acpi_bus_generate_netlink_event(
 		wblock->acpi_device->pnp.device_class,

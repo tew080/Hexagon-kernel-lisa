@@ -96,7 +96,7 @@ static irqreturn_t modem_err_ready_intr_handler(int irq, void *drv_data)
 {
 	struct modem_data *drv = drv_data;
 
-	pr_info("Subsystem error monitoring/handling services are up from%s\n",
+	pr_debug("Subsystem error monitoring/handling services are up from%s\n",
 					drv->subsys_desc.name);
 	complete(&drv->err_ready);
 	return IRQ_HANDLED;
@@ -120,7 +120,7 @@ static irqreturn_t modem_stop_ack_intr_handler(int irq, void *drv_data)
 {
 	struct modem_data *drv = drv_data;
 
-	pr_info("Received stop ack interrupt from modem\n");
+	pr_debug("Received stop ack interrupt from modem\n");
 	complete(&drv->stop_ack);
 	return IRQ_HANDLED;
 }
@@ -129,7 +129,7 @@ static irqreturn_t modem_shutdown_ack_intr_handler(int irq, void *drv_data)
 {
 	struct modem_data *drv = drv_data;
 
-	pr_info("Received stop shutdown interrupt from modem\n");
+	pr_debug("Received stop shutdown interrupt from modem\n");
 	complete_shutdown_ack(&drv->subsys_desc);
 	return IRQ_HANDLED;
 }
@@ -138,7 +138,7 @@ static irqreturn_t modem_ramdump_disable_intr_handler(int irq, void *drv_data)
 {
 	struct modem_data *drv = drv_data;
 
-	pr_info("Received ramdump disable interrupt from modem\n");
+	pr_debug("Received ramdump disable interrupt from modem\n");
 	drv->subsys_desc.ramdump_disable = 1;
 	return IRQ_HANDLED;
 }
@@ -195,7 +195,7 @@ static int modem_powerup(const struct subsys_desc *subsys)
 		return ret;
 	}
 
-	pr_info("pil_boot is successful from %s and waiting for error ready\n",
+	pr_debug("pil_boot is successful from %s and waiting for error ready\n",
 			drv->subsys_desc.name);
 	pil_enable_all_irqs(drv);
 	ret = wait_for_err_ready(drv);

@@ -309,7 +309,7 @@ static int rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
 		ret = dma_init_coherent_memory(rmem->base, rmem->base,
 					       rmem->size, &mem);
 		if (ret) {
-			pr_err("Reserved memory: failed to init DMA memory pool at %pa, size %ld MiB\n",
+			pr_debug("Reserved memory: failed to init DMA memory pool at %pa, size %ld MiB\n",
 				&rmem->base, (unsigned long)rmem->size / SZ_1M);
 			return ret;
 		}
@@ -343,7 +343,7 @@ static int __init rmem_dma_setup(struct reserved_mem *rmem)
 
 #ifdef CONFIG_ARM
 	if (!of_get_flat_dt_prop(node, "no-map", NULL)) {
-		pr_err("Reserved memory: regions without no-map are not yet supported\n");
+		pr_debug("Reserved memory: regions without no-map are not yet supported\n");
 		return -EINVAL;
 	}
 

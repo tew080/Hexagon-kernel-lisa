@@ -697,13 +697,13 @@ static int usb_pcwd_probe(struct usb_interface *interface,
 	else
 		sprintf(fw_ver_str, "<card no answer>");
 
-	pr_info("Found card (Firmware: %s) with temp option\n", fw_ver_str);
+	pr_debug("Found card (Firmware: %s) with temp option\n", fw_ver_str);
 
 	/* Get switch settings */
 	usb_pcwd_send_command(usb_pcwd, CMD_GET_DIP_SWITCH_SETTINGS, &dummy,
 							&option_switches);
 
-	pr_info("Option switches (0x%02x): Temperature Reset Enable=%s, Power On Delay=%s\n",
+	pr_debug("Option switches (0x%02x): Temperature Reset Enable=%s, Power On Delay=%s\n",
 		option_switches,
 		((option_switches & 0x10) ? "ON" : "OFF"),
 		((option_switches & 0x08) ? "ON" : "OFF"));
@@ -716,7 +716,7 @@ static int usb_pcwd_probe(struct usb_interface *interface,
 	 * if not reset to the default */
 	if (usb_pcwd_set_heartbeat(usb_pcwd, heartbeat)) {
 		usb_pcwd_set_heartbeat(usb_pcwd, WATCHDOG_HEARTBEAT);
-		pr_info("heartbeat value must be 0<heartbeat<65536, using %d\n",
+		pr_debug("heartbeat value must be 0<heartbeat<65536, using %d\n",
 			WATCHDOG_HEARTBEAT);
 	}
 
@@ -743,7 +743,7 @@ static int usb_pcwd_probe(struct usb_interface *interface,
 	/* we can register the device now, as it is ready */
 	usb_set_intfdata(interface, usb_pcwd);
 
-	pr_info("initialized. heartbeat=%d sec (nowayout=%d)\n",
+	pr_debug("initialized. heartbeat=%d sec (nowayout=%d)\n",
 		heartbeat, nowayout);
 
 	return 0;
@@ -801,7 +801,7 @@ static void usb_pcwd_disconnect(struct usb_interface *interface)
 
 	mutex_unlock(&disconnect_mutex);
 
-	pr_info("USB PC Watchdog disconnected\n");
+	pr_debug("USB PC Watchdog disconnected\n");
 }
 
 module_usb_driver(usb_pcwd_driver);

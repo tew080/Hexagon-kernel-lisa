@@ -256,7 +256,7 @@ static bool __ref msm_pm_spm_power_collapse(
 	bool save_cpu_regs = (cpu_online(cpu) || from_idle);
 
 	if (MSM_PM_DEBUG_POWER_COLLAPSE & msm_pm_debug_mask)
-		pr_info("CPU%u: %s: notify_rpm %d\n",
+		pr_debug("CPU%u: %s: notify_rpm %d\n",
 			cpu, __func__, (int) notify_rpm);
 
 	ret = msm_spm_set_low_power_mode(mode, notify_rpm);
@@ -267,7 +267,7 @@ static bool __ref msm_pm_spm_power_collapse(
 	msm_pm_boot_config_before_pc(cpu, virt_to_phys(entry));
 
 	if (MSM_PM_DEBUG_RESET_VECTOR & msm_pm_debug_mask)
-		pr_info("CPU%u: %s: program vector to %pK\n",
+		pr_debug("CPU%u: %s: program vector to %pK\n",
 			cpu, __func__, entry);
 
 	msm_jtag_save_state();
@@ -283,7 +283,7 @@ static bool __ref msm_pm_spm_power_collapse(
 	msm_pm_boot_config_after_pc(cpu);
 
 	if (MSM_PM_DEBUG_POWER_COLLAPSE & msm_pm_debug_mask)
-		pr_info("CPU%u: %s: msm_pm_collapse returned, collapsed %d\n",
+		pr_debug("CPU%u: %s: msm_pm_collapse returned, collapsed %d\n",
 			cpu, __func__, collapsed);
 
 	ret = msm_spm_set_low_power_mode(MSM_SPM_MODE_CLOCK_GATING, false);
@@ -320,7 +320,7 @@ static int ramp_up_first_cpu(int cpu, int saved_rate)
 	int rc = 0;
 
 	if (MSM_PM_DEBUG_CLOCK & msm_pm_debug_mask)
-		pr_info("CPU%u: %s: restore clock rate\n",
+		pr_debug("CPU%u: %s: restore clock rate\n",
 				cpu, __func__);
 
 	clk_enable(l2_clk);
@@ -345,11 +345,11 @@ static bool msm_pm_power_collapse(bool from_idle)
 	bool collapsed;
 
 	if (MSM_PM_DEBUG_POWER_COLLAPSE & msm_pm_debug_mask)
-		pr_info("CPU%u: %s: idle %d\n",
+		pr_debug("CPU%u: %s: idle %d\n",
 			cpu, __func__, (int)from_idle);
 
 	if (MSM_PM_DEBUG_POWER_COLLAPSE & msm_pm_debug_mask)
-		pr_info("CPU%u: %s: pre power down\n", cpu, __func__);
+		pr_debug("CPU%u: %s: pre power down\n", cpu, __func__);
 
 	if (cpu_online(cpu) && !msm_no_ramp_down_pc)
 		saved_acpuclk_rate = ramp_down_last_cpu(cpu);
@@ -361,10 +361,10 @@ static bool msm_pm_power_collapse(bool from_idle)
 		ramp_up_first_cpu(cpu, saved_acpuclk_rate);
 
 	if (MSM_PM_DEBUG_POWER_COLLAPSE & msm_pm_debug_mask)
-		pr_info("CPU%u: %s: post power up\n", cpu, __func__);
+		pr_debug("CPU%u: %s: post power up\n", cpu, __func__);
 
 	if (MSM_PM_DEBUG_POWER_COLLAPSE & msm_pm_debug_mask)
-		pr_info("CPU%u: %s: return\n", cpu, __func__);
+		pr_debug("CPU%u: %s: return\n", cpu, __func__);
 	return collapsed;
 }
 /******************************************************************************
@@ -401,7 +401,7 @@ bool msm_cpu_pm_enter_sleep(enum msm_pm_sleep_mode mode, bool from_idle)
 
 	if ((!from_idle  && cpu_online(cpu))
 			|| (MSM_PM_DEBUG_IDLE & msm_pm_debug_mask))
-		pr_info("CPU%u:%s mode:%d during %s\n", cpu, __func__,
+		pr_debug("CPU%u:%s mode:%d during %s\n", cpu, __func__,
 				mode, from_idle ? "idle" : "suspend");
 
 	if (execute[mode])
@@ -772,7 +772,7 @@ skip_save_imem:
 
 		ret = msm_pm_clk_init(pdev);
 		if (ret) {
-			pr_info("msm_pm_clk_init returned error\n");
+			pr_debug("msm_pm_clk_init returned error\n");
 			return ret;
 		}
 	}

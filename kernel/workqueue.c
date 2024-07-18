@@ -2305,7 +2305,7 @@ __acquires(&pool->lock)
 	lock_map_release(&pwq->wq->lockdep_map);
 
 	if (unlikely(in_atomic() || lockdep_depth(current) > 0)) {
-		pr_err("BUG: workqueue leaked lock or atomic: %s/0x%08x/%d\n"
+		pr_debug("BUG: workqueue leaked lock or atomic: %s/0x%08x/%d\n"
 		       "     last function: %ps\n",
 		       current->comm, preempt_count(), task_pid_nr(current),
 		       worker->current_func);

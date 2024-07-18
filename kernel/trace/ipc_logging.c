@@ -147,7 +147,7 @@ static void register_minidump(u64 vaddr, u64 size,
 
 		ret = msm_minidump_add_region(&md_entry);
 		if (ret < 0) {
-			pr_err(
+			pr_debug(
 		 "Failed to register log buffer %s_%d in Minidump ret %d\n",
 		  buf_name, index, ret);
 
@@ -314,7 +314,7 @@ void ipc_log_write(void *ctxt, struct encode_context *ectxt)
 	unsigned long flags;
 
 	if (!ilctxt || !ectxt) {
-		pr_err("%s: Invalid ipc_log or encode context\n", __func__);
+		pr_debug("%s: Invalid ipc_log or encode context\n", __func__);
 		return;
 	}
 
@@ -365,7 +365,7 @@ EXPORT_SYMBOL(ipc_log_write);
 void msg_encode_start(struct encode_context *ectxt, uint32_t type)
 {
 	if (!ectxt) {
-		pr_err("%s: Invalid encode context\n", __func__);
+		pr_debug("%s: Invalid encode context\n", __func__);
 		return;
 	}
 
@@ -381,7 +381,7 @@ EXPORT_SYMBOL(msg_encode_start);
 void msg_encode_end(struct encode_context *ectxt)
 {
 	if (!ectxt) {
-		pr_err("%s: Invalid encode context\n", __func__);
+		pr_debug("%s: Invalid encode context\n", __func__);
 		return;
 	}
 
@@ -402,11 +402,11 @@ static inline int tsv_write_data(struct encode_context *ectxt,
 				 void *data, uint32_t size)
 {
 	if (!ectxt) {
-		pr_err("%s: Invalid encode context\n", __func__);
+		pr_debug("%s: Invalid encode context\n", __func__);
 		return -EINVAL;
 	}
 	if ((ectxt->offset + size) > MAX_MSG_SIZE) {
-		pr_err("%s: No space to encode further\n", __func__);
+		pr_debug("%s: No space to encode further\n", __func__);
 		return -EINVAL;
 	}
 
@@ -595,7 +595,7 @@ int ipc_log_extract(void *ctxt, char *buff, int size)
 		if (deserialize_func)
 			deserialize_func(&ectxt, &dctxt);
 		else
-			pr_err("%s: unknown message 0x%x\n",
+			pr_debug("%s: unknown message 0x%x\n",
 				__func__, ectxt.hdr.type);
 		read_lock_irqsave(&context_list_lock_lha1, flags);
 		spin_lock(&ilctxt->context_lock_lhb1);

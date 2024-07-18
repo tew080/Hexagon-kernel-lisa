@@ -98,7 +98,7 @@ static int mei_nfc_if_version(struct nfc_mei_phy *phy)
 	size_t if_version_length;
 	int bytes_recv, r;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	memset(&cmd, 0, sizeof(struct mei_nfc_cmd));
 	cmd.hdr.cmd = MEI_NFC_CMD_MAINTENANCE;
@@ -146,7 +146,7 @@ static int mei_nfc_connect(struct nfc_mei_phy *phy)
 	size_t connect_length, connect_resp_length;
 	int bytes_recv, r;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	connect_length = sizeof(struct mei_nfc_cmd) +
 			sizeof(struct mei_nfc_connect);
@@ -190,10 +190,10 @@ static int mei_nfc_connect(struct nfc_mei_phy *phy)
 
 	MEI_DUMP_NFC_HDR("connect reply", &reply->hdr);
 
-	pr_info("IVN 0x%x Vendor ID 0x%x\n",
+	pr_debug("IVN 0x%x Vendor ID 0x%x\n",
 		 connect_resp->fw_ivn, connect_resp->vendor_id);
 
-	pr_info("ME FW %d.%d.%d.%d\n",
+	pr_debug("ME FW %d.%d.%d.%d\n",
 		connect_resp->me_major, connect_resp->me_minor,
 		connect_resp->me_hotfix, connect_resp->me_build);
 
@@ -320,7 +320,7 @@ static int nfc_mei_phy_enable(void *phy_id)
 	int r;
 	struct nfc_mei_phy *phy = phy_id;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	if (phy->powered == 1)
 		return 0;
@@ -363,7 +363,7 @@ static void nfc_mei_phy_disable(void *phy_id)
 {
 	struct nfc_mei_phy *phy = phy_id;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	mei_cldev_disable(phy->cldev);
 

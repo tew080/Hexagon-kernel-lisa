@@ -223,16 +223,16 @@ struct net_device *e1000_get_hw_dev(struct e1000_hw *hw)
 static int __init e1000_init_module(void)
 {
 	int ret;
-	pr_info("%s - version %s\n", e1000_driver_string, e1000_driver_version);
+	pr_debug("%s - version %s\n", e1000_driver_string, e1000_driver_version);
 
-	pr_info("%s\n", e1000_copyright);
+	pr_debug("%s\n", e1000_copyright);
 
 	ret = pci_register_driver(&e1000_driver);
 	if (copybreak != COPYBREAK_DEFAULT) {
 		if (copybreak == 0)
-			pr_info("copybreak disabled\n");
+			pr_debug("copybreak disabled\n");
 		else
-			pr_info("copybreak enabled for "
+			pr_debug("copybreak enabled for "
 				   "packets <= %u bytes\n", copybreak);
 	}
 	return ret;
@@ -2449,7 +2449,7 @@ static void e1000_watchdog(struct work_struct *work)
 						   &adapter->link_duplex);
 
 			ctrl = er32(CTRL);
-			pr_info("%s NIC Link is Up %d Mbps %s, "
+			pr_debug("%s NIC Link is Up %d Mbps %s, "
 				"Flow Control: %s\n",
 				netdev->name,
 				adapter->link_speed,
@@ -2486,7 +2486,7 @@ static void e1000_watchdog(struct work_struct *work)
 		if (netif_carrier_ok(netdev)) {
 			adapter->link_speed = 0;
 			adapter->link_duplex = 0;
-			pr_info("%s NIC Link is Down\n",
+			pr_debug("%s NIC Link is Down\n",
 				netdev->name);
 			netif_carrier_off(netdev);
 
@@ -3353,9 +3353,9 @@ static void e1000_regdump(struct e1000_adapter *adapter)
 	regs_buff[36] = er32(RDFTS);
 	regs_buff[37] = er32(RDFPC);
 
-	pr_info("Register dump\n");
+	pr_debug("Register dump\n");
 	for (i = 0; i < NUM_REGS; i++)
-		pr_info("%-15s  %08x\n", reg_name[i], regs_buff[i]);
+		pr_debug("%-15s  %08x\n", reg_name[i], regs_buff[i]);
 }
 
 /*
@@ -3375,7 +3375,7 @@ static void e1000_dump(struct e1000_adapter *adapter)
 	e1000_regdump(adapter);
 
 	/* transmit dump */
-	pr_info("TX Desc ring0 dump\n");
+	pr_debug("TX Desc ring0 dump\n");
 
 	/* Transmit Descriptor Formats - DEXT[29] is 0 (Legacy) or 1 (Extended)
 	 *
@@ -3404,8 +3404,8 @@ static void e1000_dump(struct e1000_adapter *adapter)
 	 *   +----------------------------------------------------------------+
 	 *   63       48 47     40 39  36 35    32 31     24 23  20 19        0
 	 */
-	pr_info("Tc[desc]     [Ce CoCsIpceCoS] [MssHlRSCm0Plen] [bi->dma       ] leng  ntw timestmp         bi->skb\n");
-	pr_info("Td[desc]     [address 63:0  ] [VlaPoRSCm1Dlen] [bi->dma       ] leng  ntw timestmp         bi->skb\n");
+	pr_debug("Tc[desc]     [Ce CoCsIpceCoS] [MssHlRSCm0Plen] [bi->dma       ] leng  ntw timestmp         bi->skb\n");
+	pr_debug("Td[desc]     [address 63:0  ] [VlaPoRSCm1Dlen] [bi->dma       ] leng  ntw timestmp         bi->skb\n");
 
 	if (!netif_msg_tx_done(adapter))
 		goto rx_ring_summary;
@@ -3426,7 +3426,7 @@ static void e1000_dump(struct e1000_adapter *adapter)
 		else
 			type = "";
 
-		pr_info("T%c[0x%03X]    %016llX %016llX %016llX %04X  %3X %016llX %p %s\n",
+		pr_debug("T%c[0x%03X]    %016llX %016llX %016llX %04X  %3X %016llX %p %s\n",
 			((le64_to_cpu(u->b) & (1<<20)) ? 'd' : 'c'), i,
 			le64_to_cpu(u->a), le64_to_cpu(u->b),
 			(u64)buffer_info->dma, buffer_info->length,
@@ -3436,7 +3436,7 @@ static void e1000_dump(struct e1000_adapter *adapter)
 
 rx_ring_summary:
 	/* receive dump */
-	pr_info("\nRX Desc ring dump\n");
+	pr_debug("\nRX Desc ring dump\n");
 
 	/* Legacy Receive Descriptor Format
 	 *
@@ -3447,7 +3447,7 @@ rx_ring_summary:
 	 * +-----------------------------------------------------+
 	 * 63       48 47    40 39      32 31         16 15      0
 	 */
-	pr_info("R[desc]      [address 63:0  ] [vl er S cks ln] [bi->dma       ] [bi->skb]\n");
+	pr_debug("R[desc]      [address 63:0  ] [vl er S cks ln] [bi->dma       ] [bi->skb]\n");
 
 	if (!netif_msg_rx_status(adapter))
 		goto exit;
@@ -3466,16 +3466,16 @@ rx_ring_summary:
 		else
 			type = "";
 
-		pr_info("R[0x%03X]     %016llX %016llX %016llX %p %s\n",
+		pr_debug("R[0x%03X]     %016llX %016llX %016llX %p %s\n",
 			i, le64_to_cpu(u->a), le64_to_cpu(u->b),
 			(u64)buffer_info->dma, buffer_info->rxbuf.data, type);
 	} /* for */
 
 	/* dump the descriptor caches */
 	/* rx */
-	pr_info("Rx descriptor cache in 64bit format\n");
+	pr_debug("Rx descriptor cache in 64bit format\n");
 	for (i = 0x6000; i <= 0x63FF ; i += 0x10) {
-		pr_info("R%04X: %08X|%08X %08X|%08X\n",
+		pr_debug("R%04X: %08X|%08X %08X|%08X\n",
 			i,
 			readl(adapter->hw.hw_addr + i+4),
 			readl(adapter->hw.hw_addr + i),
@@ -3483,9 +3483,9 @@ rx_ring_summary:
 			readl(adapter->hw.hw_addr + i+8));
 	}
 	/* tx */
-	pr_info("Tx descriptor cache in 64bit format\n");
+	pr_debug("Tx descriptor cache in 64bit format\n");
 	for (i = 0x7000; i <= 0x73FF ; i += 0x10) {
-		pr_info("T%04X: %08X|%08X %08X|%08X\n",
+		pr_debug("T%04X: %08X|%08X %08X|%08X\n",
 			i,
 			readl(adapter->hw.hw_addr + i+4),
 			readl(adapter->hw.hw_addr + i),
@@ -3577,7 +3577,7 @@ static int e1000_change_mtu(struct net_device *netdev, int new_mtu)
 	     (max_frame == MAXIMUM_ETHERNET_VLAN_SIZE)))
 		adapter->rx_buffer_len = MAXIMUM_ETHERNET_VLAN_SIZE;
 
-	pr_info("%s changing MTU from %d to %d\n",
+	pr_debug("%s changing MTU from %d to %d\n",
 		netdev->name, netdev->mtu, new_mtu);
 	netdev->mtu = new_mtu;
 
@@ -5325,7 +5325,7 @@ static void e1000_io_resume(struct pci_dev *pdev)
 
 	if (netif_running(netdev)) {
 		if (e1000_up(adapter)) {
-			pr_info("can't bring device back up after reset\n");
+			pr_debug("can't bring device back up after reset\n");
 			return;
 		}
 	}

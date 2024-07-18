@@ -289,7 +289,7 @@ static int hdaps_probe(struct platform_device *dev)
 	if (ret)
 		return ret;
 
-	pr_info("device successfully initialized\n");
+	pr_debug("device successfully initialized\n");
 	return 0;
 }
 
@@ -473,7 +473,7 @@ static struct attribute_group hdaps_attribute_group = {
 /* hdaps_dmi_match - found a match.  return one, short-circuiting the hunt. */
 static int __init hdaps_dmi_match(const struct dmi_system_id *id)
 {
-	pr_info("%s detected\n", id->ident);
+	pr_debug("%s detected\n", id->ident);
 	return 1;
 }
 
@@ -481,7 +481,7 @@ static int __init hdaps_dmi_match(const struct dmi_system_id *id)
 static int __init hdaps_dmi_match_invert(const struct dmi_system_id *id)
 {
 	hdaps_invert = (unsigned long)id->driver_data;
-	pr_info("inverting axis (%u) readings\n", hdaps_invert);
+	pr_debug("inverting axis (%u) readings\n", hdaps_invert);
 	return hdaps_dmi_match(id);
 }
 
@@ -587,7 +587,7 @@ static int __init hdaps_init(void)
 	if (ret)
 		goto out_idev;
 
-	pr_info("driver successfully loaded\n");
+	pr_debug("driver successfully loaded\n");
 	return 0;
 
 out_idev:
@@ -614,7 +614,7 @@ static void __exit hdaps_exit(void)
 	platform_driver_unregister(&hdaps_driver);
 	release_region(HDAPS_LOW_PORT, HDAPS_NR_PORTS);
 
-	pr_info("driver unloaded\n");
+	pr_debug("driver unloaded\n");
 }
 
 module_init(hdaps_init);

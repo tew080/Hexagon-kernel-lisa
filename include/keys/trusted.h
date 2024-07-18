@@ -53,33 +53,33 @@ int oiap(struct tpm_buf *tb, uint32_t *handle, unsigned char *nonce);
 #if TPM_DEBUG
 static inline void dump_options(struct trusted_key_options *o)
 {
-	pr_info("trusted_key: sealing key type %d\n", o->keytype);
-	pr_info("trusted_key: sealing key handle %0X\n", o->keyhandle);
-	pr_info("trusted_key: pcrlock %d\n", o->pcrlock);
-	pr_info("trusted_key: pcrinfo %d\n", o->pcrinfo_len);
+	pr_debug("trusted_key: sealing key type %d\n", o->keytype);
+	pr_debug("trusted_key: sealing key handle %0X\n", o->keyhandle);
+	pr_debug("trusted_key: pcrlock %d\n", o->pcrlock);
+	pr_debug("trusted_key: pcrinfo %d\n", o->pcrinfo_len);
 	print_hex_dump(KERN_INFO, "pcrinfo ", DUMP_PREFIX_NONE,
 		       16, 1, o->pcrinfo, o->pcrinfo_len, 0);
 }
 
 static inline void dump_payload(struct trusted_key_payload *p)
 {
-	pr_info("trusted_key: key_len %d\n", p->key_len);
+	pr_debug("trusted_key: key_len %d\n", p->key_len);
 	print_hex_dump(KERN_INFO, "key ", DUMP_PREFIX_NONE,
 		       16, 1, p->key, p->key_len, 0);
-	pr_info("trusted_key: bloblen %d\n", p->blob_len);
+	pr_debug("trusted_key: bloblen %d\n", p->blob_len);
 	print_hex_dump(KERN_INFO, "blob ", DUMP_PREFIX_NONE,
 		       16, 1, p->blob, p->blob_len, 0);
-	pr_info("trusted_key: migratable %d\n", p->migratable);
+	pr_debug("trusted_key: migratable %d\n", p->migratable);
 }
 
 static inline void dump_sess(struct osapsess *s)
 {
 	print_hex_dump(KERN_INFO, "trusted-key: handle ", DUMP_PREFIX_NONE,
 		       16, 1, &s->handle, 4, 0);
-	pr_info("trusted-key: secret:\n");
+	pr_debug("trusted-key: secret:\n");
 	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_NONE,
 		       16, 1, &s->secret, SHA1_DIGEST_SIZE, 0);
-	pr_info("trusted-key: enonce:\n");
+	pr_debug("trusted-key: enonce:\n");
 	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_NONE,
 		       16, 1, &s->enonce, SHA1_DIGEST_SIZE, 0);
 }
@@ -88,7 +88,7 @@ static inline void dump_tpm_buf(unsigned char *buf)
 {
 	int len;
 
-	pr_info("\ntrusted-key: tpm buffer\n");
+	pr_debug("\ntrusted-key: tpm buffer\n");
 	len = LOAD32(buf, TPM_SIZE_OFFSET);
 	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_NONE, 16, 1, buf, len, 0);
 }

@@ -599,7 +599,7 @@ int slatecom_ahb_write(void *handle, uint32_t ahb_start_addr,
 		tx_buf = fxd_mem_buffer;
 		is_cma_used = true;
 	} else {
-		pr_info("DMA memory used for size[%d]\n", txn_len);
+		pr_debug("DMA memory used for size[%d]\n", txn_len);
 		tx_buf = dma_alloc_coherent(&spi->dev, txn_len,
 						&dma_hndl, GFP_KERNEL);
 	}
@@ -865,7 +865,7 @@ int slatecom_resume(void *handle)
 	 * handle is provided before SLATECOM probed
 	 */
 	if (cntx->state == SLATECOM_PROB_WAIT) {
-		pr_info("handle is provided before SLATECOM probed\n");
+		pr_debug("handle is provided before SLATECOM probed\n");
 		if (!is_slatecom_ready())
 			return -EAGAIN;
 		cntx->slate_spi = container_of(slate_com_drv,
@@ -1037,7 +1037,7 @@ static int slate_spi_probe(struct spi_device *spi)
 	slate_spi = devm_kzalloc(&spi->dev, sizeof(*slate_spi),
 				   GFP_KERNEL | GFP_ATOMIC);
 
-	pr_info("%s started\n", __func__);
+	pr_debug("%s started\n", __func__);
 
 	if (!slate_spi)
 		return -ENOMEM;
@@ -1074,8 +1074,8 @@ static int slate_spi_probe(struct spi_device *spi)
 
 	atomic_set(&slate_is_spi_active, 1);
 	dma_set_coherent_mask(&spi->dev, DMA_BIT_MASK(64));
-	pr_info("%s success\n", __func__);
-	pr_info("Bgcom Probed successfully\n");
+	pr_debug("%s success\n", __func__);
+	pr_debug("Bgcom Probed successfully\n");
 	return ret;
 
 err_ret:
@@ -1120,7 +1120,7 @@ static int slatecom_pm_suspend(struct device *dev)
 		atomic_set(&slate_is_spi_active, 0);
 		disable_irq(slate_irq);
 	}
-	pr_info("suspended with : %d\n", ret);
+	pr_debug("suspended with : %d\n", ret);
 	return ret;
 }
 
@@ -1134,7 +1134,7 @@ static int slatecom_pm_resume(struct device *dev)
 	clnt_handle.slate_spi = spi;
 	atomic_set(&slate_is_spi_active, 1);
 	ret = slatecom_resume(&clnt_handle);
-	pr_info("Bgcom resumed with : %d\n", ret);
+	pr_debug("Bgcom resumed with : %d\n", ret);
 	return ret;
 }
 

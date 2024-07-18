@@ -285,7 +285,7 @@ static ssize_t firmware_name_store(struct device *dev,
 	if (p)
 		count = p - buf;
 
-	pr_info("Changing subsys fw_name to %s\n", buf);
+	pr_debug("Changing subsys fw_name to %s\n", buf);
 	mutex_lock(&track->lock);
 	strlcpy(subsys->desc->fw_name, buf,
 			min(count + 1, sizeof(subsys->desc->fw_name)));
@@ -637,7 +637,7 @@ static int subsystem_shutdown(struct subsys_device *dev, void *data)
 	const char *name = dev->desc->name;
 	int ret;
 
-	pr_info("[%s:%d]: Shutting down %s\n",
+	pr_debug("[%s:%d]: Shutting down %s\n",
 			current->comm, current->pid, name);
 	ret = dev->desc->shutdown(dev->desc, true);
 	if (ret < 0) {
@@ -684,7 +684,7 @@ static int subsystem_powerup(struct subsys_device *dev, void *data)
 	const char *name = dev->desc->name;
 	int ret;
 
-	pr_info("[%s:%d]: Powering up %s\n", current->comm, current->pid, name);
+	pr_debug("[%s:%d]: Powering up %s\n", current->comm, current->pid, name);
 
 	ret = dev->desc->powerup(dev->desc);
 	if (ret < 0) {
@@ -831,7 +831,7 @@ static void *__subsystem_get(const char *name, const char *fw_name)
 	mutex_lock(&track->lock);
 	if (!subsys->count) {
 		if (fw_name) {
-			pr_info("Changing subsys fw_name to %s\n", fw_name);
+			pr_debug("Changing subsys fw_name to %s\n", fw_name);
 			strlcpy(subsys->desc->fw_name, fw_name,
 				sizeof(subsys->desc->fw_name));
 		}
@@ -1006,7 +1006,7 @@ static void subsystem_restart_wq_func(struct work_struct *work)
 		goto err;
 	notify_each_subsys_device(list, count, SUBSYS_AFTER_POWERUP, NULL);
 
-	pr_info("[%s:%d]: Restart sequence for %s completed.\n",
+	pr_debug("[%s:%d]: Restart sequence for %s completed.\n",
 			current->comm, current->pid, desc->name);
 
 err:
@@ -1096,7 +1096,7 @@ int subsystem_restart_dev(struct subsys_device *dev)
 		return -EBUSY;
 	}
 
-	pr_info("Restart sequence requested for %s, restart_level = %s.\n",
+	pr_debug("Restart sequence requested for %s, restart_level = %s.\n",
 		name, restart_levels[dev->restart_level]);
 
 	if (disable_restart_work == DISABLE_SSR) {
@@ -1376,7 +1376,7 @@ static struct subsys_soc_restart_order *ssr_parse_restart_orders(struct
 		if (!ssr_node)
 			return ERR_PTR(-ENXIO);
 		of_node_put(ssr_node);
-		pr_info("%s device has been added to %s's restart group\n",
+		pr_debug("%s device has been added to %s's restart group\n",
 						ssr_node->name, desc->name);
 		order->device_ptrs[i] = ssr_node;
 	}

@@ -336,10 +336,10 @@ int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
 
 	/* Big endian vmlinux has type ET_DYN. */
 	if (ehdr->e_type != ET_EXEC && ehdr->e_type != ET_DYN) {
-		pr_err("Not an ELF executable.\n");
+		pr_debug("Not an ELF executable.\n");
 		goto error;
 	} else if (!elf_info->proghdrs) {
-		pr_err("No ELF program header.\n");
+		pr_debug("No ELF program header.\n");
 		goto error;
 	}
 
@@ -350,7 +350,7 @@ int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
 		 * to kexec ordinay executables.
 		 */
 		if (elf_info->proghdrs[i].p_type == PT_INTERP) {
-			pr_err("Requires an ELF interpreter.\n");
+			pr_debug("Requires an ELF interpreter.\n");
 			goto error;
 		}
 	}

@@ -463,12 +463,12 @@ static void z8530_status(struct z8530_channel *chan)
 	if (altered & chan->dcdcheck)
 	{
 		if (status & chan->dcdcheck) {
-			pr_info("%s: DCD raised\n", chan->dev->name);
+			pr_debug("%s: DCD raised\n", chan->dev->name);
 			write_zsreg(chan, R3, chan->regs[3] | RxENABLE);
 			if (chan->netdevice)
 				netif_carrier_on(chan->netdevice);
 		} else {
-			pr_info("%s: DCD lost\n", chan->dev->name);
+			pr_debug("%s: DCD lost\n", chan->dev->name);
 			write_zsreg(chan, R3, chan->regs[3] & ~RxENABLE);
 			z8530_flush_fifo(chan);
 			if (chan->netdevice)
@@ -583,12 +583,12 @@ static void z8530_dma_status(struct z8530_channel *chan)
 	if (altered & chan->dcdcheck)
 	{
 		if (status & chan->dcdcheck) {
-			pr_info("%s: DCD raised\n", chan->dev->name);
+			pr_debug("%s: DCD raised\n", chan->dev->name);
 			write_zsreg(chan, R3, chan->regs[3] | RxENABLE);
 			if (chan->netdevice)
 				netif_carrier_on(chan->netdevice);
 		} else {
-			pr_info("%s: DCD lost\n", chan->dev->name);
+			pr_debug("%s: DCD lost\n", chan->dev->name);
 			write_zsreg(chan, R3, chan->regs[3] & ~RxENABLE);
 			z8530_flush_fifo(chan);
 			if (chan->netdevice)
@@ -1223,7 +1223,7 @@ static const char *z8530_type_name[]={
 
 void z8530_describe(struct z8530_dev *dev, char *mapping, unsigned long io)
 {
-	pr_info("%s: %s found at %s 0x%lX, IRQ %d\n",
+	pr_debug("%s: %s found at %s 0x%lX, IRQ %d\n",
 		dev->name, 
 		z8530_type_name[dev->type],
 		mapping,

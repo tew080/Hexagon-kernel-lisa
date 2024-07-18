@@ -160,7 +160,7 @@ static void wdt_startup(void)
 
 	wdt_change(WDT_ENABLE);
 
-	pr_info("Watchdog timer is now enabled\n");
+	pr_debug("Watchdog timer is now enabled\n");
 }
 
 static void wdt_turnoff(void)
@@ -170,7 +170,7 @@ static void wdt_turnoff(void)
 
 	wdt_change(WDT_DISABLE);
 
-	pr_info("Watchdog timer is now disabled...\n");
+	pr_debug("Watchdog timer is now disabled...\n");
 }
 
 static void wdt_keepalive(void)
@@ -351,7 +351,7 @@ static int __init w83877f_wdt_init(void)
 
 	if (timeout < 1 || timeout > 3600) { /* arbitrary upper limit */
 		timeout = WATCHDOG_TIMEOUT;
-		pr_info("timeout value must be 1 <= x <= 3600, using %d\n",
+		pr_debug("timeout value must be 1 <= x <= 3600, using %d\n",
 			timeout);
 	}
 
@@ -381,7 +381,7 @@ static int __init w83877f_wdt_init(void)
 		goto err_out_reboot;
 	}
 
-	pr_info("WDT driver for W83877F initialised. timeout=%d sec (nowayout=%d)\n",
+	pr_debug("WDT driver for W83877F initialised. timeout=%d sec (nowayout=%d)\n",
 		timeout, nowayout);
 
 	return 0;

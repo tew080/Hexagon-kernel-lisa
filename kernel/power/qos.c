@@ -154,12 +154,12 @@ static int pm_qos_debug_show(struct seq_file *s, void *unused)
 	int active_reqs = 0;
 
 	if (IS_ERR_OR_NULL(qos)) {
-		pr_err("%s: bad qos param!\n", __func__);
+		pr_debug("%s: bad qos param!\n", __func__);
 		return -EINVAL;
 	}
 	c = qos->constraints;
 	if (IS_ERR_OR_NULL(c)) {
-		pr_err("%s: Bad constraints on qos?\n", __func__);
+		pr_debug("%s: Bad constraints on qos?\n", __func__);
 		return -EINVAL;
 	}
 
@@ -820,7 +820,7 @@ static int __init pm_qos_power_init(void)
 	for (i = PM_QOS_CPU_DMA_LATENCY; i < PM_QOS_NUM_CLASSES; i++) {
 		ret = register_pm_qos_misc(pm_qos_array[i], d);
 		if (ret < 0) {
-			pr_err("%s: %s setup failed\n",
+			pr_debug("%s: %s setup failed\n",
 			       __func__, pm_qos_array[i]->name);
 			return ret;
 		}

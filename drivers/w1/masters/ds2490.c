@@ -212,17 +212,17 @@ static int ds_send_control(struct ds_device *dev, u16 value, u16 index)
 
 static inline void ds_print_msg(unsigned char *buf, unsigned char *str, int off)
 {
-	pr_info("%45s: %8x\n", str, buf[off]);
+	pr_debug("%45s: %8x\n", str, buf[off]);
 }
 
 static void ds_dump_status(struct ds_device *dev, unsigned char *buf, int count)
 {
 	int i;
 
-	pr_info("0x%x: count=%d, status: ", dev->ep[EP_STATUS], count);
+	pr_debug("0x%x: count=%d, status: ", dev->ep[EP_STATUS], count);
 	for (i = 0; i < count; ++i)
-		pr_info("%02x ", buf[i]);
-	pr_info("\n");
+		pr_debug("%02x ", buf[i]);
+	pr_debug("\n");
 
 	if (count >= 16) {
 		ds_print_msg(buf, "enable flag", 0);
@@ -250,21 +250,21 @@ static void ds_dump_status(struct ds_device *dev, unsigned char *buf, int count)
 		}
 		ds_print_msg(buf, "Result Register Value: ", i);
 		if (buf[i] & RR_NRS)
-			pr_info("NRS: Reset no presence or ...\n");
+			pr_debug("NRS: Reset no presence or ...\n");
 		if (buf[i] & RR_SH)
-			pr_info("SH: short on reset or set path\n");
+			pr_debug("SH: short on reset or set path\n");
 		if (buf[i] & RR_APP)
-			pr_info("APP: alarming presence on reset\n");
+			pr_debug("APP: alarming presence on reset\n");
 		if (buf[i] & RR_VPP)
-			pr_info("VPP: 12V expected not seen\n");
+			pr_debug("VPP: 12V expected not seen\n");
 		if (buf[i] & RR_CMP)
-			pr_info("CMP: compare error\n");
+			pr_debug("CMP: compare error\n");
 		if (buf[i] & RR_CRC)
-			pr_info("CRC: CRC error detected\n");
+			pr_debug("CRC: CRC error detected\n");
 		if (buf[i] & RR_RDP)
-			pr_info("RDP: redirected page\n");
+			pr_debug("RDP: redirected page\n");
 		if (buf[i] & RR_EOS)
-			pr_info("EOS: end of search error\n");
+			pr_debug("EOS: end of search error\n");
 	}
 }
 
@@ -331,7 +331,7 @@ static int ds_recv_data(struct ds_device *dev, unsigned char *buf, int size)
 	err = usb_bulk_msg(dev->udev, usb_rcvbulkpipe(dev->udev, dev->ep[EP_DATA_IN]),
 				buf, size, &count, 1000);
 	if (err < 0) {
-		pr_info("Clearing ep0x%x.\n", dev->ep[EP_DATA_IN]);
+		pr_debug("Clearing ep0x%x.\n", dev->ep[EP_DATA_IN]);
 		usb_clear_halt(dev->udev, usb_rcvbulkpipe(dev->udev, dev->ep[EP_DATA_IN]));
 		ds_recv_status(dev, NULL, true);
 		return err;
@@ -439,7 +439,7 @@ static int ds_wait_status(struct ds_device *dev, struct ds_status *st)
 	} while (!(st->status & ST_IDLE) && !(err < 0) && ++count < 100);
 
 	if (err >= 16 && st->status & ST_EPOF) {
-		pr_info("Resetting device after ST_EPOF.\n");
+		pr_debug("Resetting device after ST_EPOF.\n");
 		ds_reset_device(dev);
 		/* Always dump the device status. */
 		count = 101;
@@ -980,7 +980,7 @@ static int ds_probe(struct usb_interface *intf,
 
 	dev = kzalloc(sizeof(struct ds_device), GFP_KERNEL);
 	if (!dev) {
-		pr_info("Failed to allocate new DS9490R structure.\n");
+		pr_debug("Failed to allocate new DS9490R structure.\n");
 		return -ENOMEM;
 	}
 	dev->udev = usb_get_dev(udev);
@@ -1012,7 +1012,7 @@ static int ds_probe(struct usb_interface *intf,
 
 	iface_desc = intf->cur_altsetting;
 	if (iface_desc->desc.bNumEndpoints != NUM_EP-1) {
-		pr_info("Num endpoints=%d. It is not DS9490R.\n",
+		pr_debug("Num endpoints=%d. It is not DS9490R.\n",
 			iface_desc->desc.bNumEndpoints);
 		err = -EINVAL;
 		goto err_out_clear;

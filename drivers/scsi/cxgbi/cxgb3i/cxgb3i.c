@@ -306,7 +306,7 @@ static u32 send_rx_credits(struct cxgbi_sock *csk, u32 credits)
 
 	skb = alloc_wr(sizeof(*req), 0, GFP_ATOMIC);
 	if (!skb) {
-		pr_info("csk 0x%p, credit %u, OOM.\n", csk, credits);
+		pr_debug("csk 0x%p, credit %u, OOM.\n", csk, credits);
 		return 0;
 	}
 	req = (struct cpl_rx_data_ack *)skb->head;
@@ -500,7 +500,7 @@ static int do_act_establish(struct t3cdev *tdev, struct sk_buff *skb, void *ctx)
 	}
 
 	if (unlikely(csk->state != CTP_ACTIVE_OPEN))
-		pr_info("csk 0x%p,%u,0x%lx,%u, got EST.\n",
+		pr_debug("csk 0x%p,%u,0x%lx,%u, got EST.\n",
 			csk, csk->state, csk->flags, csk->tid);
 
 	csk->copied_seq = csk->rcv_wup = csk->rcv_nxt = rcv_isn;
@@ -573,7 +573,7 @@ static int do_act_open_rpl(struct t3cdev *tdev, struct sk_buff *skb, void *ctx)
 	struct cxgbi_sock *csk = ctx;
 	struct cpl_act_open_rpl *rpl = cplhdr(skb);
 
-	pr_info("csk 0x%p,%u,0x%lx,%u, status %u, %pI4:%u-%pI4:%u.\n",
+	pr_debug("csk 0x%p,%u,0x%lx,%u, status %u, %pI4:%u-%pI4:%u.\n",
 		csk, csk->state, csk->flags, csk->atid, rpl->status,
 		&csk->saddr.sin_addr.s_addr, ntohs(csk->saddr.sin_port),
 		&csk->daddr.sin_addr.s_addr, ntohs(csk->daddr.sin_port));
@@ -936,12 +936,12 @@ static void update_address(struct cxgbi_hba *chba)
 		    chba->ipv4addr != cxgb3i_get_private_ipv4addr(chba->vdev)) {
 			cxgb3i_set_private_ipv4addr(chba->vdev, chba->ipv4addr);
 			cxgb3i_set_private_ipv4addr(chba->ndev, 0);
-			pr_info("%s set %pI4.\n",
+			pr_debug("%s set %pI4.\n",
 				chba->vdev->name, &chba->ipv4addr);
 		} else if (chba->ipv4addr !=
 				cxgb3i_get_private_ipv4addr(chba->ndev)) {
 			cxgb3i_set_private_ipv4addr(chba->ndev, chba->ipv4addr);
-			pr_info("%s set %pI4.\n",
+			pr_debug("%s set %pI4.\n",
 				chba->ndev->name, &chba->ipv4addr);
 		}
 	} else if (cxgb3i_get_private_ipv4addr(chba->ndev)) {
@@ -1069,7 +1069,7 @@ static int cxgb3i_ofld_init(struct cxgbi_device *cdev)
 	cdev->csk_alloc_cpls = alloc_cpls;
 	cdev->csk_init_act_open = init_act_open;
 
-	pr_info("cdev 0x%p, offload up, added.\n", cdev);
+	pr_debug("cdev 0x%p, offload up, added.\n", cdev);
 	return 0;
 }
 
@@ -1244,7 +1244,7 @@ static int cxgb3i_ddp_init(struct cxgbi_device *cdev)
 	ppmax = (uinfo.ulimit - uinfo.llimit + 1) >> PPOD_SIZE_SHIFT;
 	tagmask = cxgbi_tagmask_set(ppmax);
 
-	pr_info("T3 %s: 0x%x~0x%x, 0x%x, tagmask 0x%x -> 0x%x.\n",
+	pr_debug("T3 %s: 0x%x~0x%x, 0x%x, tagmask 0x%x -> 0x%x.\n",
 		ndev->name, uinfo.llimit, uinfo.ulimit, ppmax, uinfo.tagmask,
 		tagmask);
 
@@ -1290,7 +1290,7 @@ static void cxgb3i_dev_close(struct t3cdev *t3dev)
 	struct cxgbi_device *cdev = cxgbi_device_find_by_lldev(t3dev);
 
 	if (!cdev || cdev->flags & CXGBI_FLAG_ADAPTER_RESET) {
-		pr_info("0x%p close, f 0x%x.\n", cdev, cdev ? cdev->flags : 0);
+		pr_debug("0x%p close, f 0x%x.\n", cdev, cdev ? cdev->flags : 0);
 		return;
 	}
 
@@ -1308,7 +1308,7 @@ static void cxgb3i_dev_open(struct t3cdev *t3dev)
 	int i, err;
 
 	if (cdev) {
-		pr_info("0x%p, updating.\n", cdev);
+		pr_debug("0x%p, updating.\n", cdev);
 		return;
 	}
 
@@ -1332,13 +1332,13 @@ static void cxgb3i_dev_open(struct t3cdev *t3dev)
 
 	err = cxgb3i_ddp_init(cdev);
 	if (err) {
-		pr_info("0x%p ddp init failed %d\n", cdev, err);
+		pr_debug("0x%p ddp init failed %d\n", cdev, err);
 		goto err_out;
 	}
 
 	err = cxgb3i_ofld_init(cdev);
 	if (err) {
-		pr_info("0x%p offload init failed\n", cdev);
+		pr_debug("0x%p offload init failed\n", cdev);
 		goto err_out;
 	}
 
@@ -1351,7 +1351,7 @@ static void cxgb3i_dev_open(struct t3cdev *t3dev)
 		cdev->hbas[i]->ipv4addr =
 			cxgb3i_get_private_ipv4addr(cdev->ports[i]);
 
-	pr_info("cdev 0x%p, f 0x%x, t3dev 0x%p open, err %d.\n",
+	pr_debug("cdev 0x%p, f 0x%x, t3dev 0x%p open, err %d.\n",
 		cdev, cdev ? cdev->flags : 0, t3dev, err);
 	return;
 

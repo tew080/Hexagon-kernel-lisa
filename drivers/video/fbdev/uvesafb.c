@@ -442,7 +442,7 @@ static int uvesafb_vbe_getinfo(struct uvesafb_ktask *task,
 		return -EINVAL;
 	}
 
-	pr_info("");
+	pr_debug("");
 
 	/*
 	 * Convert string pointers and the mode list pointer into
@@ -568,20 +568,20 @@ static int uvesafb_vbe_getpmi(struct uvesafb_ktask *task,
 						+ task->t.regs.edi);
 		par->pmi_start = (u8 *)par->pmi_base + par->pmi_base[1];
 		par->pmi_pal = (u8 *)par->pmi_base + par->pmi_base[2];
-		pr_info("protected mode interface info at %04x:%04x\n",
+		pr_debug("protected mode interface info at %04x:%04x\n",
 			(u16)task->t.regs.es, (u16)task->t.regs.edi);
-		pr_info("pmi: set display start = %p, set palette = %p\n",
+		pr_debug("pmi: set display start = %p, set palette = %p\n",
 			par->pmi_start, par->pmi_pal);
 
 		if (par->pmi_base[3]) {
-			pr_info("pmi: ports =");
+			pr_debug("pmi: ports =");
 			for (i = par->pmi_base[3]/2;
 					par->pmi_base[i] != 0xffff; i++)
 				pr_cont(" %x", par->pmi_base[i]);
 			pr_cont("\n");
 
 			if (par->pmi_base[i] != 0xffff) {
-				pr_info("can't handle memory requests, pmi disabled\n");
+				pr_debug("can't handle memory requests, pmi disabled\n");
 				par->ypan = par->pmi_setpal = 0;
 			}
 		}
@@ -630,13 +630,13 @@ static int uvesafb_vbe_getedid(struct uvesafb_ktask *task, struct fb_info *info)
 		return -EINVAL;
 
 	if ((task->t.regs.ebx & 0x3) == 3) {
-		pr_info("VBIOS/hardware supports both DDC1 and DDC2 transfers\n");
+		pr_debug("VBIOS/hardware supports both DDC1 and DDC2 transfers\n");
 	} else if ((task->t.regs.ebx & 0x3) == 2) {
-		pr_info("VBIOS/hardware supports DDC2 transfers\n");
+		pr_debug("VBIOS/hardware supports DDC2 transfers\n");
 	} else if ((task->t.regs.ebx & 0x3) == 1) {
-		pr_info("VBIOS/hardware supports DDC1 transfers\n");
+		pr_debug("VBIOS/hardware supports DDC1 transfers\n");
 	} else {
-		pr_info("VBIOS/hardware doesn't support DDC transfers\n");
+		pr_debug("VBIOS/hardware doesn't support DDC transfers\n");
 		return -EINVAL;
 	}
 
@@ -710,12 +710,12 @@ static void uvesafb_vbe_getmonspecs(struct uvesafb_ktask *task,
 	}
 
 	if (info->monspecs.gtf)
-		pr_info("monitor limits: vf = %d Hz, hf = %d kHz, clk = %d MHz\n",
+		pr_debug("monitor limits: vf = %d Hz, hf = %d kHz, clk = %d MHz\n",
 			info->monspecs.vfmax,
 			(int)(info->monspecs.hfmax / 1000),
 			(int)(info->monspecs.dclkmax / 1000000));
 	else
-		pr_info("no monitor limits have been set, default refresh rate will be used\n");
+		pr_debug("no monitor limits have been set, default refresh rate will be used\n");
 
 	/* Add VBE modes to the modelist. */
 	for (i = 0; i < par->vbe_modes_cnt; i++) {
@@ -847,7 +847,7 @@ static int uvesafb_vbe_init_mode(struct fb_info *info)
 				goto gotmode;
 			}
 		}
-		pr_info("requested VBE mode 0x%x is unavailable\n", vbemode);
+		pr_debug("requested VBE mode 0x%x is unavailable\n", vbemode);
 		vbemode = 0;
 	}
 
@@ -1497,11 +1497,11 @@ static void uvesafb_init_info(struct fb_info *info, struct vbe_mode_ib *mode)
 				 mode->bytes_per_scan_line;
 
 	if (par->ypan && info->var.yres_virtual > info->var.yres) {
-		pr_info("scrolling: %s using protected mode interface, yres_virtual=%d\n",
+		pr_debug("scrolling: %s using protected mode interface, yres_virtual=%d\n",
 			(par->ypan > 1) ? "ywrap" : "ypan",
 			info->var.yres_virtual);
 	} else {
-		pr_info("scrolling: redraw\n");
+		pr_debug("scrolling: redraw\n");
 		info->var.yres_virtual = info->var.yres;
 		par->ypan = 0;
 	}
@@ -1742,7 +1742,7 @@ static int uvesafb_probe(struct platform_device *dev)
 		goto out_unmap;
 	}
 
-	pr_info("framebuffer at 0x%lx, mapped to 0x%p, using %dk, total %dk\n",
+	pr_debug("framebuffer at 0x%lx, mapped to 0x%p, using %dk, total %dk\n",
 		info->fix.smem_start, info->screen_base,
 		info->fix.smem_len / 1024, par->vbe_ib.total_memory * 64);
 	fb_info(info, "%s frame buffer device\n", info->fix.id);

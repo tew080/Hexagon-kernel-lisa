@@ -126,7 +126,7 @@ static int smk_bu_note(char *note, struct smack_known *sskp,
 		rc = 0;
 
 	smk_bu_mode(mode, acc);
-	pr_info("Smack %s: (%s %s %s) %s\n", smk_bu_mess[rc],
+	pr_debug("Smack %s: (%s %s %s) %s\n", smk_bu_mess[rc],
 		sskp->smk_known, oskp->smk_known, acc, note);
 	return 0;
 }
@@ -147,7 +147,7 @@ static int smk_bu_current(char *note, struct smack_known *oskp,
 		rc = 0;
 
 	smk_bu_mode(mode, acc);
-	pr_info("Smack %s: (%s %s %s) %s %s\n", smk_bu_mess[rc],
+	pr_debug("Smack %s: (%s %s %s) %s %s\n", smk_bu_mess[rc],
 		tsp->smk_task->smk_known, oskp->smk_known,
 		acc, current->comm, note);
 	return 0;
@@ -169,7 +169,7 @@ static int smk_bu_task(struct task_struct *otp, int mode, int rc)
 		rc = 0;
 
 	smk_bu_mode(mode, acc);
-	pr_info("Smack %s: (%s %s %s) %s to %s\n", smk_bu_mess[rc],
+	pr_debug("Smack %s: (%s %s %s) %s to %s\n", smk_bu_mess[rc],
 		tsp->smk_task->smk_known, smk_task->smk_known, acc,
 		current->comm, otp->comm);
 	return 0;
@@ -186,7 +186,7 @@ static int smk_bu_inode(struct inode *inode, int mode, int rc)
 	char acc[SMK_NUM_ACCESS_TYPE + 1];
 
 	if (isp->smk_flags & SMK_INODE_IMPURE)
-		pr_info("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
+		pr_debug("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
 			inode->i_sb->s_id, inode->i_ino, current->comm);
 
 	if (rc <= 0)
@@ -199,7 +199,7 @@ static int smk_bu_inode(struct inode *inode, int mode, int rc)
 
 	smk_bu_mode(mode, acc);
 
-	pr_info("Smack %s: (%s %s %s) inode=(%s %ld) %s\n", smk_bu_mess[rc],
+	pr_debug("Smack %s: (%s %s %s) inode=(%s %ld) %s\n", smk_bu_mess[rc],
 		tsp->smk_task->smk_known, isp->smk_inode->smk_known, acc,
 		inode->i_sb->s_id, inode->i_ino, current->comm);
 	return 0;
@@ -218,7 +218,7 @@ static int smk_bu_file(struct file *file, int mode, int rc)
 	char acc[SMK_NUM_ACCESS_TYPE + 1];
 
 	if (isp->smk_flags & SMK_INODE_IMPURE)
-		pr_info("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
+		pr_debug("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
 			inode->i_sb->s_id, inode->i_ino, current->comm);
 
 	if (rc <= 0)
@@ -227,7 +227,7 @@ static int smk_bu_file(struct file *file, int mode, int rc)
 		rc = 0;
 
 	smk_bu_mode(mode, acc);
-	pr_info("Smack %s: (%s %s %s) file=(%s %ld %pD) %s\n", smk_bu_mess[rc],
+	pr_debug("Smack %s: (%s %s %s) file=(%s %ld %pD) %s\n", smk_bu_mess[rc],
 		sskp->smk_known, smk_of_inode(inode)->smk_known, acc,
 		inode->i_sb->s_id, inode->i_ino, file,
 		current->comm);
@@ -248,7 +248,7 @@ static int smk_bu_credfile(const struct cred *cred, struct file *file,
 	char acc[SMK_NUM_ACCESS_TYPE + 1];
 
 	if (isp->smk_flags & SMK_INODE_IMPURE)
-		pr_info("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
+		pr_debug("Smack Unconfined Corruption: inode=(%s %ld) %s\n",
 			inode->i_sb->s_id, inode->i_ino, current->comm);
 
 	if (rc <= 0)
@@ -257,7 +257,7 @@ static int smk_bu_credfile(const struct cred *cred, struct file *file,
 		rc = 0;
 
 	smk_bu_mode(mode, acc);
-	pr_info("Smack %s: (%s %s %s) file=(%s %ld %pD) %s\n", smk_bu_mess[rc],
+	pr_debug("Smack %s: (%s %s %s) file=(%s %ld %pD) %s\n", smk_bu_mess[rc],
 		sskp->smk_known, smk_of_inode(inode)->smk_known, acc,
 		inode->i_sb->s_id, inode->i_ino, file,
 		current->comm);
@@ -4822,15 +4822,15 @@ static __init int smack_init(void)
 	security_add_hooks(smack_hooks, ARRAY_SIZE(smack_hooks), "smack");
 	smack_enabled = 1;
 
-	pr_info("Smack:  Initializing.\n");
+	pr_debug("Smack:  Initializing.\n");
 #ifdef CONFIG_SECURITY_SMACK_NETFILTER
-	pr_info("Smack:  Netfilter enabled.\n");
+	pr_debug("Smack:  Netfilter enabled.\n");
 #endif
 #ifdef SMACK_IPV6_PORT_LABELING
-	pr_info("Smack:  IPv6 port labeling enabled.\n");
+	pr_debug("Smack:  IPv6 port labeling enabled.\n");
 #endif
 #ifdef SMACK_IPV6_SECMARK_LABELING
-	pr_info("Smack:  IPv6 Netfilter enabled.\n");
+	pr_debug("Smack:  IPv6 Netfilter enabled.\n");
 #endif
 
 	/* initialize the smack_known_list */

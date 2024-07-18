@@ -340,9 +340,9 @@ int cdsprm_compute_vtcm_test(unsigned int vtcm_test_data)
 		gcdsprm.b_vtcm_test_partitioning =
 		rpmsg_v2.fs.vtcm_partition.command;
 		if (result)
-			pr_info("VTCM partition test failed\n");
+			pr_debug("VTCM partition test failed\n");
 		else {
-			pr_info("VTCM partition test command set to %d\n",
+			pr_debug("VTCM partition test command set to %d\n",
 				rpmsg_v2.fs.vtcm_partition.command);
 		}
 	}
@@ -391,9 +391,9 @@ int cdsprm_compute_vtcm_set_partition_map(unsigned int b_vtcm_partitioning)
 				rpmsg_v2.fs.vtcm_partition.command;
 
 		if (result)
-			pr_info("VTCM partition and map failed\n");
+			pr_debug("VTCM partition and map failed\n");
 		else {
-			pr_info("VTCM partition and map info set to %d\n",
+			pr_debug("VTCM partition and map info set to %d\n",
 					gcdsprm.b_vtcm_partitioning);
 		}
 	}
@@ -1577,7 +1577,7 @@ static int __init cdsprm_init(void)
 
 	gcdsprm.b_rpmsg_register = true;
 
-	pr_info("Init successful\n");
+	pr_debug("Init successful\n");
 
 	return 0;
 bail:
@@ -1592,7 +1592,7 @@ static void __exit cdsprm_exit(void)
 {
 	struct sysmon_msg_tx rpmsg_msg_tx;
 
-	pr_info("Exit module called\n");
+	pr_debug("Exit module called\n");
 	if (gcdsprm.qos_request) {
 		set_qos_latency(PM_QOS_RESUME_LATENCY_DEFAULT_VALUE);
 		gcdsprm.latency_request = PM_QOS_RESUME_LATENCY_DEFAULT_VALUE;
@@ -1693,7 +1693,7 @@ static void __exit cdsprm_exit(void)
 	gcdsprm.hvx_tcdev = NULL;
 	gcdsprm.cdsp_tcdev = NULL;
 
-	pr_info("Exited\n");
+	pr_debug("Exited\n");
 }
 
 module_init(cdsprm_init);

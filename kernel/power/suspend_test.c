@@ -39,7 +39,7 @@ void suspend_test_finish(const char *label)
 	unsigned msec;
 
 	msec = jiffies_to_msecs(abs(nj));
-	pr_info("PM: %s took %d.%03d seconds\n", label,
+	pr_debug("PM: %s took %d.%03d seconds\n", label,
 			msec / 1000, msec % 1000);
 
 	/* Warning on suspend means the RTC alarm period needs to be

@@ -251,7 +251,7 @@ static int fza_reset(struct fza_private *fp)
 	uint status, state;
 	long t;
 
-	pr_info("%s: resetting the board...\n", fp->name);
+	pr_debug("%s: resetting the board...\n", fp->name);
 
 	spin_lock_irqsave(&fp->lock, flags);
 	fp->state_chg_flag = 0;
@@ -275,7 +275,7 @@ static int fza_reset(struct fza_private *fp)
 		       fp->name, state, FZA_STATUS_GET_TEST(status));
 		return -EIO;
 	}
-	pr_info("%s: OK\n", fp->name);
+	pr_debug("%s: OK\n", fp->name);
 	pr_debug("%s: RESET: %lums elapsed\n", fp->name,
 		 (45 * HZ - t) * 1000 / HZ);
 
@@ -955,10 +955,10 @@ static irqreturn_t fza_interrupt(int irq, void *dev_id)
 		status = readw_u(&fp->regs->status);
 		if (FZA_STATUS_GET_LINK(status) == FZA_LINK_ON) {
 			netif_carrier_on(dev);
-			pr_info("%s: link available\n", fp->name);
+			pr_debug("%s: link available\n", fp->name);
 		} else {
 			netif_carrier_off(dev);
-			pr_info("%s: link unavailable\n", fp->name);
+			pr_debug("%s: link unavailable\n", fp->name);
 		}
 	}
 
@@ -992,7 +992,7 @@ static irqreturn_t fza_interrupt(int irq, void *dev_id)
 			fp->ring_smt_tx_index = 0;
 			fp->ring_smt_rx_index = 0;
 			if (fp->state > state) {
-				pr_info("%s: OK\n", fp->name);
+				pr_debug("%s: OK\n", fp->name);
 				fza_cmd_send(dev, FZA_RING_CMD_INIT);
 			}
 			break;
@@ -1021,7 +1021,7 @@ static irqreturn_t fza_interrupt(int irq, void *dev_id)
 			pr_warn("%s: halted, reason: %x\n", fp->name,
 				FZA_STATUS_GET_HALT(status));
 			fza_regs_dump(fp);
-			pr_info("%s: resetting the board...\n", fp->name);
+			pr_debug("%s: resetting the board...\n", fp->name);
 			fza_do_reset(fp);
 			fp->timer_state = 0;
 			fp->reset_timer.expires = jiffies + 45 * HZ;
@@ -1048,7 +1048,7 @@ static void fza_reset_timer(struct timer_list *t)
 
 	if (!fp->timer_state) {
 		pr_err("%s: RESET timed out!\n", fp->name);
-		pr_info("%s: trying harder...\n", fp->name);
+		pr_debug("%s: trying harder...\n", fp->name);
 
 		/* Assert the board reset. */
 		writew_o(FZA_RESET_INIT, &fp->regs->reset);
@@ -1293,7 +1293,7 @@ static int fza_probe(struct device *bdev)
 	int ret, i;
 
 	if (!version_printed) {
-		pr_info("%s", version);
+		pr_debug("%s", version);
 		version_printed = 1;
 	}
 
@@ -1338,7 +1338,7 @@ static int fza_probe(struct device *bdev)
 	fp->mmio = mmio;
 	dev->irq = tdev->interrupt;
 
-	pr_info("%s: DEC FDDIcontroller 700 or 700-C at 0x%08llx, irq %d\n",
+	pr_debug("%s: DEC FDDIcontroller 700 or 700-C at 0x%08llx, irq %d\n",
 		fp->name, (long long)tdev->resource.start, dev->irq);
 	pr_debug("%s: mapped at: 0x%p\n", fp->name, mmio);
 
@@ -1461,7 +1461,7 @@ static int fza_probe(struct device *bdev)
 	pr_debug("    smt_ver_min: %u\n", readl_u(&init->smt_ver_min));
 	pr_debug("       pmd_type: %u\n", readl_u(&init->pmd_type));
 
-	pr_info("%s: model %s, address %pMF\n",
+	pr_debug("%s: model %s, address %pMF\n",
 		fp->name,
 		pmd_type == FZA_PMD_TYPE_TW ?
 			"700-C (DEFZA-CA), ThinWire PMD selected" :
@@ -1469,7 +1469,7 @@ static int fza_probe(struct device *bdev)
 				"700-C (DEFZA-CA), STP PMD selected" :
 				"700 (DEFZA-AA), MMF PMD",
 		dev->dev_addr);
-	pr_info("%s: ROM rev. %.4s, firmware rev. %.4s, RMC rev. %.4s, "
+	pr_debug("%s: ROM rev. %.4s, firmware rev. %.4s, RMC rev. %.4s, "
 		"SMT ver. %u\n", fp->name, rom_rev, fw_rev, rmc_rev, smt_ver);
 
 	/* Now that we fetched initial parameters just shut the interface
@@ -1486,7 +1486,7 @@ static int fza_probe(struct device *bdev)
 	if (ret != 0)
 		goto err_out_irq;
 
-	pr_info("%s: registered as %s\n", fp->name, dev->name);
+	pr_debug("%s: registered as %s\n", fp->name, dev->name);
 	fp->name = (const char *)dev->name;
 
 	get_device(bdev);

@@ -196,7 +196,7 @@ lec_send(struct atm_vcc *vcc, struct sk_buff *skb)
 
 static void lec_tx_timeout(struct net_device *dev)
 {
-	pr_info("%s\n", dev->name);
+	pr_debug("%s\n", dev->name);
 	netif_trans_update(dev);
 	netif_wake_queue(dev);
 }
@@ -215,7 +215,7 @@ static netdev_tx_t lec_start_xmit(struct sk_buff *skb,
 
 	pr_debug("called\n");
 	if (!priv->lecd) {
-		pr_info("%s:No lecd attached\n", dev->name);
+		pr_debug("%s:No lecd attached\n", dev->name);
 		dev->stats.tx_errors++;
 		netif_stop_queue(dev);
 		kfree_skb(skb);
@@ -415,7 +415,7 @@ static int lec_atm_send(struct atm_vcc *vcc, struct sk_buff *skb)
 			priv->lane2_ops = &lane2_ops;
 		rtnl_lock();
 		if (dev_set_mtu(dev, mesg->content.config.mtu))
-			pr_info("%s: change_mtu to %d failed\n",
+			pr_debug("%s: change_mtu to %d failed\n",
 				dev->name, mesg->content.config.mtu);
 		rtnl_unlock();
 		priv->is_proxy = mesg->content.config.is_proxy;
@@ -458,7 +458,7 @@ static int lec_atm_send(struct atm_vcc *vcc, struct sk_buff *skb)
 #endif /* IS_ENABLED(CONFIG_BRIDGE) */
 		break;
 	default:
-		pr_info("%s: Unknown message type %d\n", dev->name, mesg->type);
+		pr_debug("%s: Unknown message type %d\n", dev->name, mesg->type);
 		dev_kfree_skb(skb);
 		return -EINVAL;
 	}
@@ -479,13 +479,13 @@ static void lec_atm_close(struct atm_vcc *vcc)
 	lec_arp_destroy(priv);
 
 	if (skb_peek(&sk_atm(vcc)->sk_receive_queue))
-		pr_info("%s closing with messages pending\n", dev->name);
+		pr_debug("%s closing with messages pending\n", dev->name);
 	while ((skb = skb_dequeue(&sk_atm(vcc)->sk_receive_queue))) {
 		atm_return(vcc, skb->truesize);
 		dev_kfree_skb(skb);
 	}
 
-	pr_info("%s: Shut down!\n", dev->name);
+	pr_debug("%s: Shut down!\n", dev->name);
 	module_put(THIS_MODULE);
 }
 
@@ -667,7 +667,7 @@ static void lec_pop(struct atm_vcc *vcc, struct sk_buff *skb)
 	struct net_device *dev = skb->dev;
 
 	if (vpriv == NULL) {
-		pr_info("vpriv = NULL!?!?!?\n");
+		pr_debug("vpriv = NULL!?!?!?\n");
 		return;
 	}
 
@@ -689,7 +689,7 @@ static int lec_vcc_attach(struct atm_vcc *vcc, void __user *arg)
 	/* Lecd must be up in this case */
 	bytes_left = copy_from_user(&ioc_data, arg, sizeof(struct atmlec_ioc));
 	if (bytes_left != 0)
-		pr_info("copy from user failed for %d bytes\n", bytes_left);
+		pr_debug("copy from user failed for %d bytes\n", bytes_left);
 	if (ioc_data.dev_num < 0 || ioc_data.dev_num >= MAX_LEC_ITF)
 		return -EINVAL;
 	ioc_data.dev_num = array_index_nospec(ioc_data.dev_num, MAX_LEC_ITF);
@@ -1046,7 +1046,7 @@ static int __init lane_module_init(void)
 #endif
 
 	register_atm_ioctl(&lane_ioctl_ops);
-	pr_info("lec.c: initialized\n");
+	pr_debug("lec.c: initialized\n");
 	return 0;
 }
 
@@ -1149,7 +1149,7 @@ static int lane2_associate_req(struct net_device *dev, const u8 *lan_dst,
 	skb_copy_to_linear_data(skb, tlvs, sizeoftlvs);
 	retval = send_to_lecd(priv, l_associate_req, NULL, NULL, skb);
 	if (retval != 0)
-		pr_info("lec.c: lane2_associate_req() failed\n");
+		pr_debug("lec.c: lane2_associate_req() failed\n");
 	/*
 	 * If the previous association has changed we must
 	 * somehow notify other LANE entities about the change
@@ -1187,8 +1187,8 @@ static void lane2_associate_ind(struct net_device *dev, const u8 *mac_addr,
 	entry->sizeoftlvs = sizeoftlvs;
 #endif
 #if 0
-	pr_info("\n");
-	pr_info("dump of tlvs, sizeoftlvs=%d\n", sizeoftlvs);
+	pr_debug("\n");
+	pr_debug("dump of tlvs, sizeoftlvs=%d\n", sizeoftlvs);
 	while (i < sizeoftlvs)
 		pr_cont("%02x ", tlvs[i++]);
 
@@ -1362,7 +1362,7 @@ static void dump_arp_table(struct lec_priv *priv)
 	char buf[256];
 	int i, j, offset;
 
-	pr_info("Dump %p:\n", priv);
+	pr_debug("Dump %p:\n", priv);
 	for (i = 0; i < LEC_ARP_TABLE_SIZE; i++) {
 		hlist_for_each_entry(rulla,
 				     &priv->lec_arp_tables[i], next) {
@@ -1390,12 +1390,12 @@ static void dump_arp_table(struct lec_priv *priv)
 				    "Flags:%x, Packets_flooded:%x, Status: %s ",
 				    rulla->flags, rulla->packets_flooded,
 				    get_status_string(rulla->status));
-			pr_info("%s\n", buf);
+			pr_debug("%s\n", buf);
 		}
 	}
 
 	if (!hlist_empty(&priv->lec_no_forward))
-		pr_info("No forward\n");
+		pr_debug("No forward\n");
 	hlist_for_each_entry(rulla, &priv->lec_no_forward, next) {
 		offset = 0;
 		offset += sprintf(buf + offset, "Mac: %pM", rulla->mac_addr);
@@ -1416,11 +1416,11 @@ static void dump_arp_table(struct lec_priv *priv)
 				  "Flags:%x, Packets_flooded:%x, Status: %s ",
 				  rulla->flags, rulla->packets_flooded,
 				  get_status_string(rulla->status));
-		pr_info("%s\n", buf);
+		pr_debug("%s\n", buf);
 	}
 
 	if (!hlist_empty(&priv->lec_arp_empty_ones))
-		pr_info("Empty ones\n");
+		pr_debug("Empty ones\n");
 	hlist_for_each_entry(rulla, &priv->lec_arp_empty_ones, next) {
 		offset = 0;
 		offset += sprintf(buf + offset, "Mac: %pM", rulla->mac_addr);
@@ -1441,11 +1441,11 @@ static void dump_arp_table(struct lec_priv *priv)
 				  "Flags:%x, Packets_flooded:%x, Status: %s ",
 				  rulla->flags, rulla->packets_flooded,
 				  get_status_string(rulla->status));
-		pr_info("%s", buf);
+		pr_debug("%s", buf);
 	}
 
 	if (!hlist_empty(&priv->mcast_fwds))
-		pr_info("Multicast Forward VCCs\n");
+		pr_debug("Multicast Forward VCCs\n");
 	hlist_for_each_entry(rulla, &priv->mcast_fwds, next) {
 		offset = 0;
 		offset += sprintf(buf + offset, "Mac: %pM", rulla->mac_addr);
@@ -1466,7 +1466,7 @@ static void dump_arp_table(struct lec_priv *priv)
 				  "Flags:%x, Packets_flooded:%x, Status: %s ",
 				  rulla->flags, rulla->packets_flooded,
 				  get_status_string(rulla->status));
-		pr_info("%s\n", buf);
+		pr_debug("%s\n", buf);
 	}
 
 }
@@ -1555,7 +1555,7 @@ static struct lec_arp_table *make_entry(struct lec_priv *priv,
 
 	to_return = kzalloc(sizeof(struct lec_arp_table), GFP_ATOMIC);
 	if (!to_return) {
-		pr_info("LEC: Arp entry kmalloc failed\n");
+		pr_debug("LEC: Arp entry kmalloc failed\n");
 		return NULL;
 	}
 	ether_addr_copy(to_return->mac_addr, mac_addr);
@@ -1958,7 +1958,7 @@ lec_vcc_added(struct lec_priv *priv, const struct atmlec_ioc *ioc_data,
 #if 0
 		entry = lec_arp_find(priv, bus_mac);
 		if (!entry) {
-			pr_info("LEC_ARP: Multicast entry not found!\n");
+			pr_debug("LEC_ARP: Multicast entry not found!\n");
 			goto out;
 		}
 		memcpy(entry->atm_addr, ioc_data->atm_addr, ATM_ESA_LEN);

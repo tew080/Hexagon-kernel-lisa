@@ -1203,7 +1203,7 @@ static void eeepc_input_notify(struct eeepc_laptop *eeepc, int event)
 	if (!eeepc->inputdev)
 		return;
 	if (!sparse_keymap_report_event(eeepc->inputdev, event, 1, true))
-		pr_info("Unknown key %x pressed\n", event);
+		pr_debug("Unknown key %x pressed\n", event);
 }
 
 static void eeepc_acpi_notify(struct acpi_device *device, u32 event)
@@ -1277,9 +1277,9 @@ static void eeepc_dmi_check(struct eeepc_laptop *eeepc)
 	 */
 	if (strcmp(model, "701") == 0 || strcmp(model, "702") == 0) {
 		eeepc->cpufv_disabled = true;
-		pr_info("model %s does not officially support setting cpu speed\n",
+		pr_debug("model %s does not officially support setting cpu speed\n",
 			model);
-		pr_info("cpufv disabled to avoid instability\n");
+		pr_debug("cpufv disabled to avoid instability\n");
 	}
 
 	/*
@@ -1292,7 +1292,7 @@ static void eeepc_dmi_check(struct eeepc_laptop *eeepc)
 	if (strcmp(model, "1005HA") == 0 || strcmp(model, "1201N") == 0 ||
 	    strcmp(model, "1005PE") == 0) {
 		eeepc->hotplug_disabled = true;
-		pr_info("wlan hotplug disabled\n");
+		pr_debug("wlan hotplug disabled\n");
 	}
 }
 
@@ -1304,7 +1304,7 @@ static void cmsg_quirk(struct eeepc_laptop *eeepc, int cm, const char *name)
 	   Check if cm_getv[cm] works and, if yes, assume cm should be set. */
 	if (!(eeepc->cm_supported & (1 << cm))
 	    && !read_acpi_int(eeepc->handle, cm_getv[cm], &dummy)) {
-		pr_info("%s (%x) not reported by BIOS, enabling anyway\n",
+		pr_debug("%s (%x) not reported by BIOS, enabling anyway\n",
 			name, 1 << cm);
 		eeepc->cm_supported |= 1 << cm;
 	}
@@ -1345,7 +1345,7 @@ static int eeepc_acpi_init(struct eeepc_laptop *eeepc)
 		return -ENODEV;
 	}
 	cmsg_quirks(eeepc);
-	pr_info("Get control methods supported: 0x%x\n", eeepc->cm_supported);
+	pr_debug("Get control methods supported: 0x%x\n", eeepc->cm_supported);
 
 	return 0;
 }

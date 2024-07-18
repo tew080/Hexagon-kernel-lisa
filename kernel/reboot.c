@@ -563,7 +563,7 @@ static int __init reboot_setup(char *str)
 			else
 				*mode = REBOOT_SOFT;
 			if (reboot_cpu >= num_possible_cpus()) {
-				pr_err("Ignoring the CPU number in reboot= option. "
+				pr_debug("Ignoring the CPU number in reboot= option. "
 				       "CPU %d exceeds possible cpu number %d\n",
 				       reboot_cpu, num_possible_cpus());
 				reboot_cpu = 0;

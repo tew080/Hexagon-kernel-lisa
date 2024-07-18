@@ -297,7 +297,7 @@ static void prepare_ptd(struct isp1362_hcd *isp1362_hcd, struct urb *urb,
 		else
 			len = max_transfer_size(epq, buf_len, ep->maxpacket);
 		if (len == 0)
-			pr_info("%s: Sending ZERO packet: %d\n", __func__,
+			pr_debug("%s: Sending ZERO packet: %d\n", __func__,
 			     urb->transfer_flags & URB_ZERO_PACKET);
 		DBG(1, "%s: OUT   len %d/%d/%d from URB\n", __func__, len, ep->maxpacket,
 		    (int)buf_len);
@@ -1143,7 +1143,7 @@ static irqreturn_t isp1362_irq(struct usb_hcd *hcd)
 			isp1362_hcd->rhport[1] = isp1362_read_reg32(isp1362_hcd, HCRHPORT2);
 		}
 		if (intstat & OHCI_INTR_RD) {
-			pr_info("%s: RESUME DETECTED\n", __func__);
+			pr_debug("%s: RESUME DETECTED\n", __func__);
 			isp1362_show_reg(isp1362_hcd, HCCONTROL);
 			usb_hcd_resume_root_hub(hcd);
 		}
@@ -1157,7 +1157,7 @@ static irqreturn_t isp1362_irq(struct usb_hcd *hcd)
 		handled = 1;
 		svc_mask &= ~HCuPINT_SUSP;
 
-		pr_info("%s: SUSPEND IRQ\n", __func__);
+		pr_debug("%s: SUSPEND IRQ\n", __func__);
 	}
 
 	if (irqstat & HCuPINT_CLKRDY) {
@@ -1165,7 +1165,7 @@ static irqreturn_t isp1362_irq(struct usb_hcd *hcd)
 		handled = 1;
 		isp1362_hcd->irqenb &= ~HCuPINT_CLKRDY;
 		svc_mask &= ~HCuPINT_CLKRDY;
-		pr_info("%s: CLKRDY IRQ\n", __func__);
+		pr_debug("%s: CLKRDY IRQ\n", __func__);
 	}
 
 	if (svc_mask)
@@ -1461,7 +1461,7 @@ static void isp1362_endpoint_disable(struct usb_hcd *hcd, struct usb_host_endpoi
 			DBG(1, "%s: Removing ep %p req %d PTD[%d] $%04x\n", __func__,
 			    ep, ep->num_req, ep->ptd_index, ep->ptd_offset);
 			remove_ptd(isp1362_hcd, ep);
-			pr_info("%s: Waiting for Interrupt to clean up\n", __func__);
+			pr_debug("%s: Waiting for Interrupt to clean up\n", __func__);
 		}
 	}
 	spin_unlock_irqrestore(&isp1362_hcd->lock, flags);
@@ -1840,7 +1840,7 @@ static int isp1362_bus_resume(struct usb_hcd *hcd)
 
 	spin_lock_irqsave(&isp1362_hcd->lock, flags);
 	isp1362_hcd->hc_control = isp1362_read_reg32(isp1362_hcd, HCCONTROL);
-	pr_info("%s: HCCONTROL: %08x\n", __func__, isp1362_hcd->hc_control);
+	pr_debug("%s: HCCONTROL: %08x\n", __func__, isp1362_hcd->hc_control);
 	if (hcd->state == HC_STATE_RESUMING) {
 		pr_warn("%s: duplicate resume\n", __func__);
 		status = 0;

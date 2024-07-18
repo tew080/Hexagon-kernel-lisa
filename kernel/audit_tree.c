@@ -791,7 +791,7 @@ static int audit_launch_prune(void)
 	prune_thread = kthread_run(prune_tree_thread, NULL,
 				"audit_prune_tree");
 	if (IS_ERR(prune_thread)) {
-		pr_err("cannot start thread audit_prune_tree");
+		pr_debug("cannot start thread audit_prune_tree");
 		prune_thread = NULL;
 		return -ENOMEM;
 	}

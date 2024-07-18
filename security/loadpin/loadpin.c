@@ -80,26 +80,26 @@ static void check_pinning_enforcement(struct super_block *mnt_sb)
 
 		ro = bdev_read_only(mnt_sb->s_bdev);
 		bdevname(mnt_sb->s_bdev, bdev);
-		pr_info("%s (%u:%u): %s\n", bdev,
+		pr_debug("%s (%u:%u): %s\n", bdev,
 			MAJOR(mnt_sb->s_bdev->bd_dev),
 			MINOR(mnt_sb->s_bdev->bd_dev),
 			ro ? "read-only" : "writable");
 	} else
-		pr_info("mnt_sb lacks block device, treating as: writable\n");
+		pr_debug("mnt_sb lacks block device, treating as: writable\n");
 
 	if (!ro) {
 		if (!register_sysctl_paths(loadpin_sysctl_path,
 					   loadpin_sysctl_table))
 			pr_notice("sysctl registration failed!\n");
 		else
-			pr_info("enforcement can be disabled.\n");
+			pr_debug("enforcement can be disabled.\n");
 	} else
-		pr_info("load pinning engaged.\n");
+		pr_debug("load pinning engaged.\n");
 }
 #else
 static void check_pinning_enforcement(struct super_block *mnt_sb)
 {
-	pr_info("load pinning engaged.\n");
+	pr_debug("load pinning engaged.\n");
 }
 #endif
 
@@ -112,7 +112,7 @@ static void loadpin_sb_free_security(struct super_block *mnt_sb)
 	 */
 	if (!IS_ERR_OR_NULL(pinned_root) && mnt_sb == pinned_root) {
 		pinned_root = ERR_PTR(-EIO);
-		pr_info("umount pinned fs: refusing further loads\n");
+		pr_debug("umount pinned fs: refusing further loads\n");
 	}
 }
 
@@ -210,7 +210,7 @@ static void __init parse_exclude(void)
 
 		for (j = 0; j < ARRAY_SIZE(ignore_read_file_id); j++) {
 			if (strcmp(cur, kernel_read_file_str[j]) == 0) {
-				pr_info("excluding: %s\n",
+				pr_debug("excluding: %s\n",
 					kernel_read_file_str[j]);
 				ignore_read_file_id[j] = 1;
 				/*
@@ -224,7 +224,7 @@ static void __init parse_exclude(void)
 
 static int __init loadpin_init(void)
 {
-	pr_info("ready to pin (currently %senforcing)\n",
+	pr_debug("ready to pin (currently %senforcing)\n",
 		enforce ? "" : "not ");
 	parse_exclude();
 	security_add_hooks(loadpin_hooks, ARRAY_SIZE(loadpin_hooks), "loadpin");

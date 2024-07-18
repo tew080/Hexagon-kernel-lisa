@@ -125,7 +125,7 @@ void ehea_dump(void *adr, int len, char *msg)
 	int x;
 	unsigned char *deb = adr;
 	for (x = 0; x < len; x += 16) {
-		pr_info("%s adr=%p ofs=%04x %016llx %016llx\n",
+		pr_debug("%s adr=%p ofs=%04x %016llx %016llx\n",
 			msg, deb, x, *((u64 *)&deb[0]), *((u64 *)&deb[8]));
 		deb += 16;
 	}
@@ -1116,7 +1116,7 @@ int ehea_set_portspeed(struct ehea_port *port, u32 port_speed)
 		}
 	} else {
 		if (hret == H_AUTHORITY) {
-			pr_info("Hypervisor denied setting port speed\n");
+			pr_debug("Hypervisor denied setting port speed\n");
 			ret = -EPERM;
 		} else {
 			ret = -EIO;
@@ -1479,7 +1479,7 @@ static int ehea_init_port_res(struct ehea_port *port, struct ehea_port_res *pr,
 	}
 
 	if (netif_msg_ifup(port))
-		pr_info("Send CQ: act_nr_cqes=%d, Recv CQ: act_nr_cqes=%d\n",
+		pr_debug("Send CQ: act_nr_cqes=%d, Recv CQ: act_nr_cqes=%d\n",
 			pr->send_cq->attr.act_nr_of_cqes,
 			pr->recv_cq->attr.act_nr_of_cqes);
 
@@ -1517,7 +1517,7 @@ static int ehea_init_port_res(struct ehea_port *port, struct ehea_port_res *pr,
 	}
 
 	if (netif_msg_ifup(port))
-		pr_info("QP: qp_nr=%d\n act_nr_snd_wqe=%d\n nr_rwqe_rq1=%d\n nr_rwqe_rq2=%d\n nr_rwqe_rq3=%d\n",
+		pr_debug("QP: qp_nr=%d\n act_nr_snd_wqe=%d\n nr_rwqe_rq1=%d\n nr_rwqe_rq2=%d\n nr_rwqe_rq3=%d\n",
 			init_attr->qp_nr,
 			init_attr->act_nr_send_wqes,
 			init_attr->act_nr_rwqes_rq1,
@@ -1771,7 +1771,7 @@ out:
 static void ehea_promiscuous_error(u64 hret, int enable)
 {
 	if (hret == H_AUTHORITY)
-		pr_info("Hypervisor denied %sabling promiscuous mode\n",
+		pr_debug("Hypervisor denied %sabling promiscuous mode\n",
 			enable == 1 ? "en" : "dis");
 	else
 		pr_err("failed %sabling promiscuous mode\n",
@@ -1937,7 +1937,7 @@ static void ehea_set_multicast_list(struct net_device *dev)
 		}
 
 		if (netdev_mc_count(dev) > port->adapter->max_mc_mac) {
-			pr_info("Mcast registration limit reached (0x%llx). Use ALLMULTI!\n",
+			pr_debug("Mcast registration limit reached (0x%llx). Use ALLMULTI!\n",
 				port->adapter->max_mc_mac);
 			goto out;
 		}
@@ -2712,7 +2712,7 @@ static void ehea_rereg_mrs(void)
 	int ret, i;
 	struct ehea_adapter *adapter;
 
-	pr_info("LPAR memory changed - re-initializing driver\n");
+	pr_debug("LPAR memory changed - re-initializing driver\n");
 
 	list_for_each_entry(adapter, &adapter_list, list)
 		if (adapter->active_ports) {
@@ -2782,7 +2782,7 @@ static void ehea_rereg_mrs(void)
 				}
 			}
 		}
-	pr_info("re-initializing driver complete\n");
+	pr_debug("re-initializing driver complete\n");
 out:
 	return;
 }
@@ -3138,7 +3138,7 @@ static ssize_t ehea_probe_port(struct device *dev,
 	eth_dn = ehea_get_eth_dn(adapter, logical_port_id);
 
 	if (!eth_dn) {
-		pr_info("no logical port with id %d found\n", logical_port_id);
+		pr_debug("no logical port with id %d found\n", logical_port_id);
 		return -EINVAL;
 	}
 
@@ -3228,7 +3228,7 @@ static int ehea_reboot_notifier(struct notifier_block *nb,
 				unsigned long action, void *unused)
 {
 	if (action == SYS_RESTART) {
-		pr_info("Reboot: freeing all eHEA resources\n");
+		pr_debug("Reboot: freeing all eHEA resources\n");
 		ibmebus_unregister_driver(&ehea_driver);
 	}
 	return NOTIFY_DONE;
@@ -3248,11 +3248,11 @@ static int ehea_mem_notifier(struct notifier_block *nb,
 
 	switch (action) {
 	case MEM_CANCEL_OFFLINE:
-		pr_info("memory offlining canceled");
+		pr_debug("memory offlining canceled");
 		/* Fall through - re-add canceled memory block */
 
 	case MEM_ONLINE:
-		pr_info("memory is going online");
+		pr_debug("memory is going online");
 		set_bit(__EHEA_STOP_XFER, &ehea_driver_flags);
 		if (ehea_add_sect_bmap(arg->start_pfn, arg->nr_pages))
 			goto out_unlock;
@@ -3260,7 +3260,7 @@ static int ehea_mem_notifier(struct notifier_block *nb,
 		break;
 
 	case MEM_GOING_OFFLINE:
-		pr_info("memory is going offline");
+		pr_debug("memory is going offline");
 		set_bit(__EHEA_STOP_XFER, &ehea_driver_flags);
 		if (ehea_rem_sect_bmap(arg->start_pfn, arg->nr_pages))
 			goto out_unlock;
@@ -3314,25 +3314,25 @@ static int ehea_register_memory_hooks(void)
 
 	ret = ehea_create_busmap();
 	if (ret) {
-		pr_info("ehea_create_busmap failed\n");
+		pr_debug("ehea_create_busmap failed\n");
 		goto out;
 	}
 
 	ret = register_reboot_notifier(&ehea_reboot_nb);
 	if (ret) {
-		pr_info("register_reboot_notifier failed\n");
+		pr_debug("register_reboot_notifier failed\n");
 		goto out;
 	}
 
 	ret = register_memory_notifier(&ehea_mem_nb);
 	if (ret) {
-		pr_info("register_memory_notifier failed\n");
+		pr_debug("register_memory_notifier failed\n");
 		goto out2;
 	}
 
 	ret = crash_shutdown_register(ehea_crash_handler);
 	if (ret) {
-		pr_info("crash_shutdown_register failed\n");
+		pr_debug("crash_shutdown_register failed\n");
 		goto out3;
 	}
 
@@ -3355,7 +3355,7 @@ static void ehea_unregister_memory_hooks(void)
 
 	unregister_reboot_notifier(&ehea_reboot_nb);
 	if (crash_shutdown_unregister(ehea_crash_handler))
-		pr_info("failed unregistering crash handler\n");
+		pr_debug("failed unregistering crash handler\n");
 	unregister_memory_notifier(&ehea_mem_nb);
 }
 
@@ -3499,22 +3499,22 @@ static int check_module_parm(void)
 
 	if ((rq1_entries < EHEA_MIN_ENTRIES_QP) ||
 	    (rq1_entries > EHEA_MAX_ENTRIES_RQ1)) {
-		pr_info("Bad parameter: rq1_entries\n");
+		pr_debug("Bad parameter: rq1_entries\n");
 		ret = -EINVAL;
 	}
 	if ((rq2_entries < EHEA_MIN_ENTRIES_QP) ||
 	    (rq2_entries > EHEA_MAX_ENTRIES_RQ2)) {
-		pr_info("Bad parameter: rq2_entries\n");
+		pr_debug("Bad parameter: rq2_entries\n");
 		ret = -EINVAL;
 	}
 	if ((rq3_entries < EHEA_MIN_ENTRIES_QP) ||
 	    (rq3_entries > EHEA_MAX_ENTRIES_RQ3)) {
-		pr_info("Bad parameter: rq3_entries\n");
+		pr_debug("Bad parameter: rq3_entries\n");
 		ret = -EINVAL;
 	}
 	if ((sq_entries < EHEA_MIN_ENTRIES_QP) ||
 	    (sq_entries > EHEA_MAX_ENTRIES_SQ)) {
-		pr_info("Bad parameter: sq_entries\n");
+		pr_debug("Bad parameter: sq_entries\n");
 		ret = -EINVAL;
 	}
 
@@ -3532,7 +3532,7 @@ static int __init ehea_module_init(void)
 {
 	int ret;
 
-	pr_info("IBM eHEA ethernet device driver (Release %s)\n", DRV_VERSION);
+	pr_debug("IBM eHEA ethernet device driver (Release %s)\n", DRV_VERSION);
 
 	memset(&ehea_fw_handles, 0, sizeof(ehea_fw_handles));
 	memset(&ehea_bcmc_regs, 0, sizeof(ehea_bcmc_regs));

@@ -124,7 +124,7 @@ int qman_test_api(void)
 	int err;
 	struct qman_fq *fq = &fq_base;
 
-	pr_info("%s(): Starting\n", __func__);
+	pr_debug("%s(): Starting\n", __func__);
 	fd_init(&fd);
 	fd_init(&fd_dq);
 
@@ -143,7 +143,7 @@ int qman_test_api(void)
 	err = do_enqueues(fq);
 	if (err)
 		goto failed;
-	pr_info("VDQCR (till-empty);\n");
+	pr_debug("VDQCR (till-empty);\n");
 	frmcnt = QM_VDQCR_NUMFRAMES_TILLEMPTY;
 	err = qman_volatile_dequeue(fq, VDQCR_FLAGS, frmcnt);
 	if (err) {
@@ -153,14 +153,14 @@ int qman_test_api(void)
 	err = do_enqueues(fq);
 	if (err)
 		goto failed;
-	pr_info("VDQCR (%d of %d);\n", NUM_PARTIAL, NUM_ENQUEUES);
+	pr_debug("VDQCR (%d of %d);\n", NUM_PARTIAL, NUM_ENQUEUES);
 	frmcnt = QM_VDQCR_NUMFRAMES_SET(NUM_PARTIAL);
 	err = qman_volatile_dequeue(fq, VDQCR_FLAGS, frmcnt);
 	if (err) {
 		pr_crit("qman_volatile_dequeue() failed\n");
 		goto failed;
 	}
-	pr_info("VDQCR (%d of %d);\n", NUM_ENQUEUES - NUM_PARTIAL,
+	pr_debug("VDQCR (%d of %d);\n", NUM_ENQUEUES - NUM_PARTIAL,
 		NUM_ENQUEUES);
 	frmcnt = QM_VDQCR_NUMFRAMES_SET(NUM_ENQUEUES - NUM_PARTIAL);
 	err = qman_volatile_dequeue(fq, VDQCR_FLAGS, frmcnt);
@@ -172,7 +172,7 @@ int qman_test_api(void)
 	err = do_enqueues(fq);
 	if (err)
 		goto failed;
-	pr_info("scheduled dequeue (till-empty)\n");
+	pr_debug("scheduled dequeue (till-empty)\n");
 	err = qman_schedule_fq(fq);
 	if (err) {
 		pr_crit("qman_schedule_fq() failed\n");
@@ -198,7 +198,7 @@ int qman_test_api(void)
 		goto failed;
 	}
 	qman_destroy_fq(fq);
-	pr_info("%s(): Finished\n", __func__);
+	pr_debug("%s(): Finished\n", __func__);
 	return 0;
 
 failed:
@@ -239,7 +239,7 @@ static void cb_fqs(struct qman_portal *p, struct qman_fq *fq,
 		WARN_ON(1);
 		return;
 	}
-	pr_info("Retirement message received\n");
+	pr_debug("Retirement message received\n");
 	retire_complete = 1;
 	wake_up(&waitqueue);
 }

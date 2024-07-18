@@ -194,7 +194,7 @@ int __weak kgdb_validate_break_address(unsigned long addr)
 		return err;
 	err = kgdb_arch_remove_breakpoint(&tmp);
 	if (err)
-		pr_err("Critical breakpoint error, kernel memory destroyed at: %lx\n",
+		pr_debug("Critical breakpoint error, kernel memory destroyed at: %lx\n",
 		       addr);
 	return err;
 }
@@ -421,7 +421,7 @@ int dbg_remove_all_break(void)
 			goto setundefined;
 		error = kgdb_arch_remove_breakpoint(&kgdb_break[i]);
 		if (error)
-			pr_err("breakpoint remove failed: %lx\n",
+			pr_debug("breakpoint remove failed: %lx\n",
 			       kgdb_break[i].bpt_addr);
 setundefined:
 		kgdb_break[i].state = BP_UNDEFINED;
@@ -1082,7 +1082,7 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
 	if (dbg_io_ops) {
 		spin_unlock(&kgdb_registration_lock);
 
-		pr_err("Another I/O driver is already registered with KGDB\n");
+		pr_debug("Another I/O driver is already registered with KGDB\n");
 		return -EBUSY;
 	}
 

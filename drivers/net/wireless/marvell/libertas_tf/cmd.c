@@ -124,7 +124,7 @@ int lbtf_update_hw_spec(struct lbtf_private *priv)
 	/* if it's unidentified region code, use the default (USA) */
 	if (i >= MRVDRV_MAX_REGION_CODE) {
 		priv->regioncode = 0x10;
-		pr_info("unidentified region code; using the default (USA)\n");
+		pr_debug("unidentified region code; using the default (USA)\n");
 	}
 
 	if (priv->current_addr[0] == 0xff)
@@ -256,7 +256,7 @@ static void lbtf_submit_command(struct lbtf_private *priv,
 	spin_unlock_irqrestore(&priv->driver_lock, flags);
 
 	if (ret) {
-		pr_info("DNLD_CMD: hw_host_to_card failed: %d\n", ret);
+		pr_debug("DNLD_CMD: hw_host_to_card failed: %d\n", ret);
 		/* Let the timer kick in and retry, and potentially reset
 		   the whole thing if the condition persists */
 		timeo = HZ;
@@ -681,7 +681,7 @@ int __lbtf_cmd(struct lbtf_private *priv, uint16_t command,
 	ret = wait_event_interruptible(cmdnode->cmdwait_q,
 				       cmdnode->cmdwaitqwoken);
 	if (ret) {
-		pr_info("PREP_CMD: command 0x%04x interrupted by signal: %d\n",
+		pr_debug("PREP_CMD: command 0x%04x interrupted by signal: %d\n",
 			    command, ret);
 		goto done;
 	}
@@ -689,7 +689,7 @@ int __lbtf_cmd(struct lbtf_private *priv, uint16_t command,
 	spin_lock_irqsave(&priv->driver_lock, flags);
 	ret = cmdnode->result;
 	if (ret)
-		pr_info("PREP_CMD: command 0x%04x failed: %d\n",
+		pr_debug("PREP_CMD: command 0x%04x failed: %d\n",
 			    command, ret);
 
 	__lbtf_cleanup_and_insert_cmd(priv, cmdnode);
@@ -770,7 +770,7 @@ int lbtf_process_rx_command(struct lbtf_private *priv)
 		switch (respcmd) {
 		case CMD_RET(CMD_GET_HW_SPEC):
 		case CMD_RET(CMD_802_11_RESET):
-			pr_info("libertastf: reset failed\n");
+			pr_debug("libertastf: reset failed\n");
 			break;
 
 		}

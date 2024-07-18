@@ -205,7 +205,7 @@ static int rcu_print_task_stall(struct rcu_node *rnp)
 
 	if (!rcu_preempt_blocked_readers_cgp(rnp))
 		return 0;
-	pr_err("\tTasks blocked on level-%d rcu_node (CPUs %d-%d):",
+	pr_debug("\tTasks blocked on level-%d rcu_node (CPUs %d-%d):",
 	       rnp->level, rnp->grplo, rnp->grphi);
 	t = list_entry(rnp->gp_tasks->prev,
 		       struct task_struct, rcu_node_entry);
@@ -315,7 +315,7 @@ static void print_cpu_stall_info(int cpu)
 	}
 	print_cpu_stall_fast_no_hz(fast_no_hz, cpu);
 	delta = rcu_seq_ctr(rdp->mynode->gp_seq - rdp->rcu_iw_gp_seq);
-	pr_err("\t%d-%c%c%c%c: (%lu %s) idle=%03x/%ld/%#lx softirq=%u/%u fqs=%ld %s\n",
+	pr_debug("\t%d-%c%c%c%c: (%lu %s) idle=%03x/%ld/%#lx softirq=%u/%u fqs=%ld %s\n",
 	       cpu,
 	       "O."[!!cpu_online(cpu)],
 	       "o."[!!(rdp->grpmask & rdp->mynode->qsmaskinit)],
@@ -339,14 +339,14 @@ static void rcu_check_gp_kthread_starvation(void)
 
 	j = jiffies - READ_ONCE(rcu_state.gp_activity);
 	if (j > 2 * HZ) {
-		pr_err("%s kthread starved for %ld jiffies! g%ld f%#x %s(%d) ->state=%#lx ->cpu=%d\n",
+		pr_debug("%s kthread starved for %ld jiffies! g%ld f%#x %s(%d) ->state=%#lx ->cpu=%d\n",
 		       rcu_state.name, j,
 		       (long)rcu_seq_current(&rcu_state.gp_seq),
 		       READ_ONCE(rcu_state.gp_flags),
 		       gp_state_getname(rcu_state.gp_state), rcu_state.gp_state,
 		       gpk ? gpk->state : ~0, gpk ? task_cpu(gpk) : -1);
 		if (gpk) {
-			pr_err("RCU grace-period kthread stack dump:\n");
+			pr_debug("RCU grace-period kthread stack dump:\n");
 			sched_show_task(gpk);
 			wake_up_process(gpk);
 		}
@@ -373,7 +373,7 @@ static void print_other_cpu_stall(unsigned long gp_seq)
 	 * See Documentation/RCU/stallwarn.txt for info on how to debug
 	 * RCU CPU stall warnings.
 	 */
-	pr_err("INFO: %s detected stalls on CPUs/tasks:\n", rcu_state.name);
+	pr_debug("INFO: %s detected stalls on CPUs/tasks:\n", rcu_state.name);
 	rcu_for_each_leaf_node(rnp) {
 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
 		ndetected += rcu_print_task_stall(rnp);
@@ -400,11 +400,11 @@ static void print_other_cpu_stall(unsigned long gp_seq)
 			rcu_print_detail_task_stall_rnp(rnp);
 	} else {
 		if (rcu_seq_current(&rcu_state.gp_seq) != gp_seq) {
-			pr_err("INFO: Stall ended before state dump start\n");
+			pr_debug("INFO: Stall ended before state dump start\n");
 		} else {
 			j = jiffies;
 			gpa = READ_ONCE(rcu_state.gp_activity);
-			pr_err("All QSes seen, last %s kthread activity %ld (%ld-%ld), jiffies_till_next_fqs=%ld, root ->qsmask %#lx\n",
+			pr_debug("All QSes seen, last %s kthread activity %ld (%ld-%ld), jiffies_till_next_fqs=%ld, root ->qsmask %#lx\n",
 			       rcu_state.name, j - gpa, j, gpa,
 			       READ_ONCE(jiffies_till_next_fqs),
 			       rcu_get_root()->qsmask);
@@ -442,7 +442,7 @@ static void print_cpu_stall(void)
 	 * See Documentation/RCU/stallwarn.txt for info on how to debug
 	 * RCU CPU stall warnings.
 	 */
-	pr_err("INFO: %s self-detected stall on CPU\n", rcu_state.name);
+	pr_debug("INFO: %s self-detected stall on CPU\n", rcu_state.name);
 	raw_spin_lock_irqsave_rcu_node(rdp->mynode, flags);
 	print_cpu_stall_info(smp_processor_id());
 	raw_spin_unlock_irqrestore_rcu_node(rdp->mynode, flags);

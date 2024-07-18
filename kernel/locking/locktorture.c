@@ -729,7 +729,7 @@ static void lock_torture_stats_print(void)
 
 	buf = kmalloc(size, GFP_KERNEL);
 	if (!buf) {
-		pr_err("lock_torture_stats_print: Out of memory, need: %d",
+		pr_debug("lock_torture_stats_print: Out of memory, need: %d",
 		       size);
 		return;
 	}
@@ -741,7 +741,7 @@ static void lock_torture_stats_print(void)
 	if (cxt.cur_ops->readlock) {
 		buf = kmalloc(size, GFP_KERNEL);
 		if (!buf) {
-			pr_err("lock_torture_stats_print: Out of memory, need: %d",
+			pr_debug("lock_torture_stats_print: Out of memory, need: %d",
 			       size);
 			return;
 		}

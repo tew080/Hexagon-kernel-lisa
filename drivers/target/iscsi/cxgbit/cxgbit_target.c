@@ -1125,7 +1125,7 @@ static int cxgbit_handle_nop_out(struct cxgbit_sock *csk, struct iscsi_cmd *cmd)
 			 * drop this PDU and let the
 			 * initiator plug the CmdSN gap.
 			 */
-			pr_info("Dropping NOPOUT"
+			pr_debug("Dropping NOPOUT"
 				" Command CmdSN: 0x%08x due to"
 				" DataCRC error.\n", hdr->cmdsn);
 			ret = 0;
@@ -1192,7 +1192,7 @@ cxgbit_handle_text_cmd(struct cxgbit_sock *csk, struct iscsi_cmd *cmd)
 			 * drop this PDU and let the
 			 * initiator plug the CmdSN gap.
 			 */
-			pr_info("Dropping Text"
+			pr_debug("Dropping Text"
 				" Command CmdSN: 0x%08x due to"
 				" DataCRC error.\n", hdr->cmdsn);
 			return 0;
@@ -1404,19 +1404,19 @@ static void cxgbit_lro_skb_dump(struct sk_buff *skb)
 	struct cxgbit_lro_pdu_cb *pdu_cb = cxgbit_skb_lro_pdu_cb(skb, 0);
 	u8 i;
 
-	pr_info("skb 0x%p, head 0x%p, 0x%p, len %u,%u, frags %u.\n",
+	pr_debug("skb 0x%p, head 0x%p, 0x%p, len %u,%u, frags %u.\n",
 		skb, skb->head, skb->data, skb->len, skb->data_len,
 		ssi->nr_frags);
-	pr_info("skb 0x%p, lro_cb, csk 0x%p, pdu %u, %u.\n",
+	pr_debug("skb 0x%p, lro_cb, csk 0x%p, pdu %u, %u.\n",
 		skb, lro_cb->csk, lro_cb->pdu_idx, lro_cb->pdu_totallen);
 
 	for (i = 0; i < lro_cb->pdu_idx; i++, pdu_cb++)
-		pr_info("skb 0x%p, pdu %d, %u, f 0x%x, seq 0x%x, dcrc 0x%x, "
+		pr_debug("skb 0x%p, pdu %d, %u, f 0x%x, seq 0x%x, dcrc 0x%x, "
 			"frags %u.\n",
 			skb, i, pdu_cb->pdulen, pdu_cb->flags, pdu_cb->seq,
 			pdu_cb->ddigest, pdu_cb->frags);
 	for (i = 0; i < ssi->nr_frags; i++)
-		pr_info("skb 0x%p, frag %d, off %u, sz %u.\n",
+		pr_debug("skb 0x%p, frag %d, off %u, sz %u.\n",
 			skb, i, skb_frag_off(&ssi->frags[i]),
 			skb_frag_size(&ssi->frags[i]));
 }
@@ -1555,7 +1555,7 @@ static int cxgbit_rx_lro_skb(struct cxgbit_sock *csk, struct sk_buff *skb)
 
 	if ((pdu_cb->flags & PDUCBF_RX_HDR) &&
 	    (pdu_cb->seq != csk->rcv_nxt)) {
-		pr_info("csk 0x%p, tid 0x%x, seq 0x%x != 0x%x.\n",
+		pr_debug("csk 0x%p, tid 0x%x, seq 0x%x != 0x%x.\n",
 			csk, csk->tid, pdu_cb->seq, csk->rcv_nxt);
 		cxgbit_lro_skb_dump(skb);
 		return ret;

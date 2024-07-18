@@ -345,12 +345,12 @@ static void igb_regdump(struct e1000_hw *hw, struct igb_reg_info *reginfo)
 			regs[n] = rd32(E1000_TXDCTL(n));
 		break;
 	default:
-		pr_info("%-15s %08x\n", reginfo->name, rd32(reginfo->ofs));
+		pr_debug("%-15s %08x\n", reginfo->name, rd32(reginfo->ofs));
 		return;
 	}
 
 	snprintf(rname, 16, "%s%s", reginfo->name, "[0-3]");
-	pr_info("%-15s %08x %08x %08x %08x\n", rname, regs[0], regs[1],
+	pr_debug("%-15s %08x %08x %08x %08x\n", rname, regs[0], regs[1],
 		regs[2], regs[3]);
 }
 
@@ -374,14 +374,14 @@ static void igb_dump(struct igb_adapter *adapter)
 	/* Print netdevice Info */
 	if (netdev) {
 		dev_info(&adapter->pdev->dev, "Net device Info\n");
-		pr_info("Device Name     state            trans_start\n");
-		pr_info("%-15s %016lX %016lX\n", netdev->name,
+		pr_debug("Device Name     state            trans_start\n");
+		pr_debug("%-15s %016lX %016lX\n", netdev->name,
 			netdev->state, dev_trans_start(netdev));
 	}
 
 	/* Print Registers */
 	dev_info(&adapter->pdev->dev, "Register Dump\n");
-	pr_info(" Register Name   Value\n");
+	pr_debug(" Register Name   Value\n");
 	for (reginfo = (struct igb_reg_info *)igb_reg_info_tbl;
 	     reginfo->name; reginfo++) {
 		igb_regdump(hw, reginfo);
@@ -392,12 +392,12 @@ static void igb_dump(struct igb_adapter *adapter)
 		goto exit;
 
 	dev_info(&adapter->pdev->dev, "TX Rings Summary\n");
-	pr_info("Queue [NTU] [NTC] [bi(ntc)->dma  ] leng ntw timestamp\n");
+	pr_debug("Queue [NTU] [NTC] [bi(ntc)->dma  ] leng ntw timestamp\n");
 	for (n = 0; n < adapter->num_tx_queues; n++) {
 		struct igb_tx_buffer *buffer_info;
 		tx_ring = adapter->tx_ring[n];
 		buffer_info = &tx_ring->tx_buffer_info[tx_ring->next_to_clean];
-		pr_info(" %5d %5X %5X %016llX %04X %p %016llX\n",
+		pr_debug(" %5d %5X %5X %016llX %04X %p %016llX\n",
 			n, tx_ring->next_to_use, tx_ring->next_to_clean,
 			(u64)dma_unmap_addr(buffer_info, dma),
 			dma_unmap_len(buffer_info, len),
@@ -424,10 +424,10 @@ static void igb_dump(struct igb_adapter *adapter)
 
 	for (n = 0; n < adapter->num_tx_queues; n++) {
 		tx_ring = adapter->tx_ring[n];
-		pr_info("------------------------------------\n");
-		pr_info("TX QUEUE INDEX = %d\n", tx_ring->queue_index);
-		pr_info("------------------------------------\n");
-		pr_info("T [desc]     [address 63:0  ] [PlPOCIStDDM Ln] [bi->dma       ] leng  ntw timestamp        bi->skb\n");
+		pr_debug("------------------------------------\n");
+		pr_debug("TX QUEUE INDEX = %d\n", tx_ring->queue_index);
+		pr_debug("------------------------------------\n");
+		pr_debug("T [desc]     [address 63:0  ] [PlPOCIStDDM Ln] [bi->dma       ] leng  ntw timestamp        bi->skb\n");
 
 		for (i = 0; tx_ring->desc && (i < tx_ring->count); i++) {
 			const char *next_desc;
@@ -445,7 +445,7 @@ static void igb_dump(struct igb_adapter *adapter)
 			else
 				next_desc = "";
 
-			pr_info("T [0x%03X]    %016llX %016llX %016llX %04X  %p %016llX %p%s\n",
+			pr_debug("T [0x%03X]    %016llX %016llX %016llX %04X  %p %016llX %p%s\n",
 				i, le64_to_cpu(u0->a),
 				le64_to_cpu(u0->b),
 				(u64)dma_unmap_addr(buffer_info, dma),
@@ -466,10 +466,10 @@ static void igb_dump(struct igb_adapter *adapter)
 	/* Print RX Rings Summary */
 rx_ring_summary:
 	dev_info(&adapter->pdev->dev, "RX Rings Summary\n");
-	pr_info("Queue [NTU] [NTC]\n");
+	pr_debug("Queue [NTU] [NTC]\n");
 	for (n = 0; n < adapter->num_rx_queues; n++) {
 		rx_ring = adapter->rx_ring[n];
-		pr_info(" %5d %5X %5X\n",
+		pr_debug(" %5d %5X %5X\n",
 			n, rx_ring->next_to_use, rx_ring->next_to_clean);
 	}
 
@@ -502,11 +502,11 @@ rx_ring_summary:
 
 	for (n = 0; n < adapter->num_rx_queues; n++) {
 		rx_ring = adapter->rx_ring[n];
-		pr_info("------------------------------------\n");
-		pr_info("RX QUEUE INDEX = %d\n", rx_ring->queue_index);
-		pr_info("------------------------------------\n");
-		pr_info("R  [desc]      [ PktBuf     A0] [  HeadBuf   DD] [bi->dma       ] [bi->skb] <-- Adv Rx Read format\n");
-		pr_info("RWB[desc]      [PcsmIpSHl PtRs] [vl er S cks ln] ---------------- [bi->skb] <-- Adv Rx Write-Back format\n");
+		pr_debug("------------------------------------\n");
+		pr_debug("RX QUEUE INDEX = %d\n", rx_ring->queue_index);
+		pr_debug("------------------------------------\n");
+		pr_debug("R  [desc]      [ PktBuf     A0] [  HeadBuf   DD] [bi->dma       ] [bi->skb] <-- Adv Rx Read format\n");
+		pr_debug("RWB[desc]      [PcsmIpSHl PtRs] [vl er S cks ln] ---------------- [bi->skb] <-- Adv Rx Write-Back format\n");
 
 		for (i = 0; i < rx_ring->count; i++) {
 			const char *next_desc;
@@ -525,13 +525,13 @@ rx_ring_summary:
 
 			if (staterr & E1000_RXD_STAT_DD) {
 				/* Descriptor Done */
-				pr_info("%s[0x%03X]     %016llX %016llX ---------------- %s\n",
+				pr_debug("%s[0x%03X]     %016llX %016llX ---------------- %s\n",
 					"RWB", i,
 					le64_to_cpu(u0->a),
 					le64_to_cpu(u0->b),
 					next_desc);
 			} else {
-				pr_info("%s[0x%03X]     %016llX %016llX %016llX %s\n",
+				pr_debug("%s[0x%03X]     %016llX %016llX %016llX %s\n",
 					"R  ", i,
 					le64_to_cpu(u0->a),
 					le64_to_cpu(u0->b),
@@ -666,9 +666,9 @@ static int __init igb_init_module(void)
 {
 	int ret;
 
-	pr_info("%s - version %s\n",
+	pr_debug("%s - version %s\n",
 	       igb_driver_string, igb_driver_version);
-	pr_info("%s\n", igb_copyright);
+	pr_debug("%s\n", igb_copyright);
 
 #ifdef CONFIG_IGB_DCA
 	dca_register_notify(&dca_notifier);

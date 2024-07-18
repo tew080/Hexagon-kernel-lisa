@@ -434,24 +434,24 @@ static int cosa_probe(int base, int irq, int dma)
 	/* Checking validity of parameters: */
 	/* IRQ should be 2-7 or 10-15; negative IRQ means autoprobe */
 	if ((irq >= 0  && irq < 2) || irq > 15 || (irq < 10 && irq > 7)) {
-		pr_info("invalid IRQ %d\n", irq);
+		pr_debug("invalid IRQ %d\n", irq);
 		return -1;
 	}
 	/* I/O address should be between 0x100 and 0x3ff and should be
 	 * multiple of 8. */
 	if (base < 0x100 || base > 0x3ff || base & 0x7) {
-		pr_info("invalid I/O address 0x%x\n", base);
+		pr_debug("invalid I/O address 0x%x\n", base);
 		return -1;
 	}
 	/* DMA should be 0,1 or 3-7 */
 	if (dma < 0 || dma == 4 || dma > 7) {
-		pr_info("invalid DMA %d\n", dma);
+		pr_debug("invalid DMA %d\n", dma);
 		return -1;
 	}
 	/* and finally, on 16-bit COSA DMA should be 4-7 and 
 	 * I/O base should not be multiple of 0x10 */
 	if (((base & 0x8) && dma < 4) || (!(base & 0x8) && dma > 3)) {
-		pr_info("8/16 bit base and DMA mismatch (base=0x%x, dma=%d)\n",
+		pr_debug("8/16 bit base and DMA mismatch (base=0x%x, dma=%d)\n",
 			base, dma);
 		return -1;
 	}
@@ -478,7 +478,7 @@ static int cosa_probe(int base, int irq, int dma)
 	else {
 /* Print a warning only if we are not autoprobing */
 #ifndef COSA_ISA_AUTOPROBE
-		pr_info("valid signature not found at 0x%x\n", base);
+		pr_debug("valid signature not found at 0x%x\n", base);
 #endif
 		err = -1;
 		goto err_out;
@@ -493,7 +493,7 @@ static int cosa_probe(int base, int irq, int dma)
 	/* Now do IRQ autoprobe */
 	if (irq < 0) {
 		unsigned long irqs;
-/*		pr_info("IRQ autoprobe\n"); */
+/*		pr_debug("IRQ autoprobe\n"); */
 		irqs = probe_irq_on();
 		/* 
 		 * Enable interrupt on tx buffer empty (it sure is) 
@@ -511,13 +511,13 @@ static int cosa_probe(int base, int irq, int dma)
 		cosa_getdata8(cosa);
 
 		if (irq < 0) {
-			pr_info("multiple interrupts obtained (%d, board at 0x%x)\n",
+			pr_debug("multiple interrupts obtained (%d, board at 0x%x)\n",
 				irq, cosa->datareg);
 			err = -1;
 			goto err_out;
 		}
 		if (irq == 0) {
-			pr_info("no interrupt obtained (board at 0x%x)\n",
+			pr_debug("no interrupt obtained (board at 0x%x)\n",
 				cosa->datareg);
 		/*	return -1; */
 		}
@@ -584,7 +584,7 @@ static int cosa_probe(int base, int irq, int dma)
 		}
 	}
 
-	pr_info("cosa%d: %s (%s at 0x%x irq %d dma %d), %d channels\n",
+	pr_debug("cosa%d: %s (%s at 0x%x irq %d dma %d), %d channels\n",
 		cosa->num, cosa->id_string, cosa->type,
 		cosa->datareg, cosa->irq, cosa->dma, cosa->nchannels);
 
@@ -914,7 +914,7 @@ static int chrdev_tx_done(struct channel_data *chan, int size)
 
 static __poll_t cosa_poll(struct file *file, poll_table *poll)
 {
-	pr_info("cosa_poll is here\n");
+	pr_debug("cosa_poll is here\n");
 	return 0;
 }
 
@@ -999,14 +999,14 @@ static inline int cosa_reset(struct cosa_data *cosa)
 {
 	char idstring[COSA_MAX_ID_STRING];
 	if (cosa->usage > 1)
-		pr_info("cosa%d: WARNING: reset requested with cosa->usage > 1 (%d). Odd things may happen.\n",
+		pr_debug("cosa%d: WARNING: reset requested with cosa->usage > 1 (%d). Odd things may happen.\n",
 			cosa->num, cosa->usage);
 	cosa->firmware_status &= ~(COSA_FW_RESET|COSA_FW_START);
 	if (cosa_reset_and_read_id(cosa, idstring) < 0) {
 		pr_notice("cosa%d: reset failed\n", cosa->num);
 		return -EIO;
 	}
-	pr_info("cosa%d: resetting device: %s\n", cosa->num, idstring);
+	pr_debug("cosa%d: resetting device: %s\n", cosa->num, idstring);
 	cosa->firmware_status |= COSA_FW_RESET;
 	return 0;
 }
@@ -1018,7 +1018,7 @@ static inline int cosa_download(struct cosa_data *cosa, void __user *arg)
 	int i;
 
 	if (cosa->usage > 1)
-		pr_info("%s: WARNING: download of microcode requested with cosa->usage > 1 (%d). Odd things may happen.\n",
+		pr_debug("%s: WARNING: download of microcode requested with cosa->usage > 1 (%d). Odd things may happen.\n",
 			cosa->name, cosa->usage);
 	if (!(cosa->firmware_status & COSA_FW_RESET)) {
 		pr_notice("%s: reset the card first (status %d)\n",
@@ -1044,7 +1044,7 @@ static inline int cosa_download(struct cosa_data *cosa, void __user *arg)
 			  cosa->num, i);
 		return -EIO;
 	}
-	pr_info("cosa%d: downloading microcode - 0x%04x bytes at 0x%04x\n",
+	pr_debug("cosa%d: downloading microcode - 0x%04x bytes at 0x%04x\n",
 		cosa->num, d.len, d.addr);
 	cosa->firmware_status |= COSA_FW_RESET|COSA_FW_DOWNLOAD;
 	return 0;
@@ -1057,7 +1057,7 @@ static inline int cosa_readmem(struct cosa_data *cosa, void __user *arg)
 	int i;
 
 	if (cosa->usage > 1)
-		pr_info("cosa%d: WARNING: readmem requested with cosa->usage > 1 (%d). Odd things may happen.\n",
+		pr_debug("cosa%d: WARNING: readmem requested with cosa->usage > 1 (%d). Odd things may happen.\n",
 			cosa->num, cosa->usage);
 	if (!(cosa->firmware_status & COSA_FW_RESET)) {
 		pr_notice("%s: reset the card first (status %d)\n",
@@ -1076,7 +1076,7 @@ static inline int cosa_readmem(struct cosa_data *cosa, void __user *arg)
 		pr_notice("cosa%d: reading memory failed: %d\n", cosa->num, i);
 		return -EIO;
 	}
-	pr_info("cosa%d: reading card memory - 0x%04x bytes at 0x%04x\n",
+	pr_debug("cosa%d: reading card memory - 0x%04x bytes at 0x%04x\n",
 		cosa->num, d.len, d.addr);
 	cosa->firmware_status |= COSA_FW_RESET;
 	return 0;
@@ -1088,7 +1088,7 @@ static inline int cosa_start(struct cosa_data *cosa, int address)
 	int i;
 
 	if (cosa->usage > 1)
-		pr_info("cosa%d: WARNING: start microcode requested with cosa->usage > 1 (%d). Odd things may happen.\n",
+		pr_debug("cosa%d: WARNING: start microcode requested with cosa->usage > 1 (%d). Odd things may happen.\n",
 			cosa->num, cosa->usage);
 
 	if ((cosa->firmware_status & (COSA_FW_RESET|COSA_FW_DOWNLOAD))
@@ -1103,7 +1103,7 @@ static inline int cosa_start(struct cosa_data *cosa, int address)
 			  cosa->num, address, i);
 		return -EIO;
 	}
-	pr_info("cosa%d: starting microcode at 0x%04x\n", cosa->num, address);
+	pr_debug("cosa%d: starting microcode at 0x%04x\n", cosa->num, address);
 	cosa->startaddr = address;
 	cosa->firmware_status |= COSA_FW_START;
 	return 0;
@@ -1233,7 +1233,7 @@ static int cosa_start_tx(struct channel_data *chan, char *buf, int len)
 #ifdef DEBUG_DATA
 	int i;
 
-	pr_info("cosa%dc%d: starting tx(0x%x)",
+	pr_debug("cosa%dc%d: starting tx(0x%x)",
 		chan->cosa->num, chan->num, len);
 	for (i=0; i<len; i++)
 		pr_cont(" %02x", buf[i]&0xff);
@@ -1331,7 +1331,7 @@ static void cosa_kick(struct cosa_data *cosa)
 	if (test_bit(TXBIT, &cosa->rxtx))
 		s = "TX DMA";
 
-	pr_info("%s: %s timeout - restarting\n", cosa->name, s);
+	pr_debug("%s: %s timeout - restarting\n", cosa->name, s);
 	spin_lock_irqsave(&cosa->lock, flags);
 	cosa->rxtx = 0;
 
@@ -1365,7 +1365,7 @@ static int cosa_dma_able(struct channel_data *chan, char *buf, int len)
 		return 0;
 	if ((b^ (b+len)) & 0x10000) {
 		if (count++ < 5)
-			pr_info("%s: packet spanning a 64k boundary\n",
+			pr_debug("%s: packet spanning a 64k boundary\n",
 				chan->name);
 		return 0;
 	}
@@ -1476,7 +1476,7 @@ static int readmem(struct cosa_data *cosa, char __user *microcode, int length, i
 		char c;
 		int i;
 		if ((i=get_wait_data(cosa)) == -1) {
-			pr_info("0x%04x bytes remaining\n", length);
+			pr_debug("0x%04x bytes remaining\n", length);
 			return -11;
 		}
 		c=i;
@@ -1555,7 +1555,7 @@ static int get_wait_data(struct cosa_data *cosa)
 			short r;
 			r = cosa_getdata8(cosa);
 #if 0
-			pr_info("get_wait_data returning after %d retries\n",
+			pr_debug("get_wait_data returning after %d retries\n",
 				999-retries);
 #endif
 			return r;
@@ -1563,7 +1563,7 @@ static int get_wait_data(struct cosa_data *cosa)
 		/* sleep if not ready to read */
 		schedule_timeout_interruptible(1);
 	}
-	pr_info("timeout in get_wait_data (status 0x%x)\n",
+	pr_debug("timeout in get_wait_data (status 0x%x)\n",
 		cosa_getstatus(cosa));
 	return -1;
 }
@@ -1581,7 +1581,7 @@ static int put_wait_data(struct cosa_data *cosa, int data)
 		if (cosa_getstatus(cosa) & SR_TX_RDY) {
 			cosa_putdata8(cosa, data);
 #if 0
-			pr_info("Putdata: %d retries\n", 999-retries);
+			pr_debug("Putdata: %d retries\n", 999-retries);
 #endif
 			return 0;
 		}
@@ -1590,7 +1590,7 @@ static int put_wait_data(struct cosa_data *cosa, int data)
 		schedule_timeout_interruptible(1);
 #endif
 	}
-	pr_info("cosa%d: timeout in put_wait_data (status 0x%x)\n",
+	pr_debug("cosa%d: timeout in put_wait_data (status 0x%x)\n",
 		cosa->num, cosa_getstatus(cosa));
 	return -1;
 }
@@ -1661,7 +1661,7 @@ static inline void tx_interrupt(struct cosa_data *cosa, int status)
 {
 	unsigned long flags, flags1;
 #ifdef DEBUG_IRQS
-	pr_info("cosa%d: SR_DOWN_REQUEST status=0x%04x\n", cosa->num, status);
+	pr_debug("cosa%d: SR_DOWN_REQUEST status=0x%04x\n", cosa->num, status);
 #endif
 	spin_lock_irqsave(&cosa->lock, flags);
 	set_bit(TXBIT, &cosa->rxtx);
@@ -1752,14 +1752,14 @@ static inline void tx_interrupt(struct cosa_data *cosa, int status)
 	if (cosa->busmaster) {
 		unsigned long addr = virt_to_bus(cosa->txbuf);
 		int count=0;
-		pr_info("busmaster IRQ\n");
+		pr_debug("busmaster IRQ\n");
 		while (!(cosa_getstatus(cosa)&SR_TX_RDY)) {
 			count++;
 			udelay(10);
 			if (count > 1000) break;
 		}
-		pr_info("status %x\n", cosa_getstatus(cosa));
-		pr_info("ready after %d loops\n", count);
+		pr_debug("status %x\n", cosa_getstatus(cosa));
+		pr_debug("ready after %d loops\n", count);
 		cosa_putdata16(cosa, (addr >> 16)&0xffff);
 
 		count = 0;
@@ -1768,7 +1768,7 @@ static inline void tx_interrupt(struct cosa_data *cosa, int status)
 			if (count > 1000) break;
 			udelay(10);
 		}
-		pr_info("ready after %d loops\n", count);
+		pr_debug("ready after %d loops\n", count);
 		cosa_putdata16(cosa, addr &0xffff);
 		flags1 = claim_dma_lock();
 		set_dma_mode(cosa->dma, DMA_MODE_CASCADE);
@@ -1796,7 +1796,7 @@ static inline void rx_interrupt(struct cosa_data *cosa, int status)
 {
 	unsigned long flags;
 #ifdef DEBUG_IRQS
-	pr_info("cosa%d: SR_UP_REQUEST\n", cosa->num);
+	pr_debug("cosa%d: SR_UP_REQUEST\n", cosa->num);
 #endif
 
 	spin_lock_irqsave(&cosa->lock, flags);
@@ -1819,7 +1819,7 @@ static inline void rx_interrupt(struct cosa_data *cosa, int status)
 			debug_data_in(cosa, cosa->rxsize & 0xff);
 #endif
 #if 0
-			pr_info("cosa%d: receive rxsize = (0x%04x)\n",
+			pr_debug("cosa%d: receive rxsize = (0x%04x)\n",
 				cosa->num, cosa->rxsize);
 #endif
 		}
@@ -1829,7 +1829,7 @@ static inline void rx_interrupt(struct cosa_data *cosa, int status)
 		debug_data_in(cosa, cosa->rxsize);
 #endif
 #if 0
-		pr_info("cosa%d: receive rxsize = (0x%04x)\n",
+		pr_debug("cosa%d: receive rxsize = (0x%04x)\n",
 			cosa->num, cosa->rxsize);
 #endif
 	}
@@ -1849,7 +1849,7 @@ static inline void rx_interrupt(struct cosa_data *cosa, int status)
 
 	if (!cosa->rxbuf) {
 reject:		/* Reject the packet */
-		pr_info("cosa%d: rejecting packet on channel %d\n",
+		pr_debug("cosa%d: rejecting packet on channel %d\n",
 			cosa->num, cosa->rxchan->num);
 		cosa->rxbuf = cosa->bouncebuf;
 	}
@@ -1896,7 +1896,7 @@ static inline void eot_interrupt(struct cosa_data *cosa, int status)
 #ifdef DEBUG_DATA
 	{
 		int i;
-		pr_info("cosa%dc%d: done rx(0x%x)",
+		pr_debug("cosa%dc%d: done rx(0x%x)",
 			cosa->num, cosa->rxchan->num, cosa->rxsize);
 		for (i=0; i<cosa->rxsize; i++)
 			pr_cont(" %02x", cosa->rxbuf[i]&0xff);
@@ -1934,7 +1934,7 @@ static irqreturn_t cosa_interrupt(int irq, void *cosa_)
 again:
 	status = cosa_getstatus(cosa);
 #ifdef DEBUG_IRQS
-	pr_info("cosa%d: got IRQ, status 0x%02x\n", cosa->num, status & 0xff);
+	pr_debug("cosa%d: got IRQ, status 0x%02x\n", cosa->num, status & 0xff);
 #endif
 #ifdef DEBUG_IO
 	debug_status_in(cosa, status);
@@ -1955,15 +1955,15 @@ again:
 			udelay(100);
 			goto again;
 		}
-		pr_info("cosa%d: unknown status 0x%02x in IRQ after %d retries\n",
+		pr_debug("cosa%d: unknown status 0x%02x in IRQ after %d retries\n",
 			cosa->num, status & 0xff, count);
 	}
 #ifdef DEBUG_IRQS
 	if (count)
-		pr_info("%s: %d-times got unknown status in IRQ\n",
+		pr_debug("%s: %d-times got unknown status in IRQ\n",
 			cosa->name, count);
 	else
-		pr_info("%s: returning from IRQ\n", cosa->name);
+		pr_debug("%s: returning from IRQ\n", cosa->name);
 #endif
 	return IRQ_HANDLED;
 }
@@ -1994,7 +1994,7 @@ static void debug_status_in(struct cosa_data *cosa, int status)
 		s = "NO_REQ";
 		break;
 	}
-	pr_info("%s: IO: status -> 0x%02x (%s%s%s%s)\n",
+	pr_debug("%s: IO: status -> 0x%02x (%s%s%s%s)\n",
 		cosa->name,
 		status,
 		status & SR_USR_RQ ? "USR_RQ|" : "",
@@ -2005,7 +2005,7 @@ static void debug_status_in(struct cosa_data *cosa, int status)
 
 static void debug_status_out(struct cosa_data *cosa, int status)
 {
-	pr_info("%s: IO: status <- 0x%02x (%s%s%s%s%s%s)\n",
+	pr_debug("%s: IO: status <- 0x%02x (%s%s%s%s%s%s)\n",
 		cosa->name,
 		status,
 		status & SR_RX_DMA_ENA  ? "RXDMA|"  : "!rxdma|",
@@ -2018,17 +2018,17 @@ static void debug_status_out(struct cosa_data *cosa, int status)
 
 static void debug_data_in(struct cosa_data *cosa, int data)
 {
-	pr_info("%s: IO: data -> 0x%04x\n", cosa->name, data);
+	pr_debug("%s: IO: data -> 0x%04x\n", cosa->name, data);
 }
 
 static void debug_data_out(struct cosa_data *cosa, int data)
 {
-	pr_info("%s: IO: data <- 0x%04x\n", cosa->name, data);
+	pr_debug("%s: IO: data <- 0x%04x\n", cosa->name, data);
 }
 
 static void debug_data_cmd(struct cosa_data *cosa, int data)
 {
-	pr_info("%s: IO: data <- 0x%04x (%s|%s)\n",
+	pr_debug("%s: IO: data <- 0x%04x (%s|%s)\n",
 		cosa->name, data,
 		data & SR_RDY_RCV ? "RX_RDY" : "!rx_rdy",
 		data & SR_RDY_SND ? "TX_RDY" : "!tx_rdy");

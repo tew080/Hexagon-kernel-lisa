@@ -324,19 +324,19 @@ static int ex_rs_helper(struct rs_control *rs, struct wspace *ws,
 	int errs, eras, retval;
 
 	if (v >= V_PROGRESS)
-		pr_info("  %s\n", desc[method]);
+		pr_debug("  %s\n", desc[method]);
 
 	for (errs = 0; errs <= nroots / 2; errs++)
 		for (eras = 0; eras <= nroots - 2 * errs; eras++)
 			test_uc(rs, len, errs, eras, trials, &stat, ws, method);
 
 	if (v >= V_CSUMMARY) {
-		pr_info("    Decodes wrong:        %d / %d\n",
+		pr_debug("    Decodes wrong:        %d / %d\n",
 				stat.dwrong, stat.nwords);
-		pr_info("    Wrong return value:   %d / %d\n",
+		pr_debug("    Wrong return value:   %d / %d\n",
 				stat.irv, stat.nwords);
 		if (method != IN_PLACE)
-			pr_info("    Wrong error position: %d\n", stat.wepos);
+			pr_debug("    Wrong error position: %d\n", stat.wepos);
 	}
 
 	retval = stat.dwrong + stat.wepos + stat.irv;
@@ -354,7 +354,7 @@ static int exercise_rs(struct rs_control *rs, struct wspace *ws,
 	int i;
 
 	if (v >= V_PROGRESS)
-		pr_info("Testing up to error correction capacity...\n");
+		pr_debug("Testing up to error correction capacity...\n");
 
 	for (i = 0; i <= IN_PLACE; i++)
 		retval |= ex_rs_helper(rs, ws, len, trials, i);
@@ -412,7 +412,7 @@ static int exercise_rs_bc(struct rs_control *rs, struct wspace *ws,
 	int errs, eras, cutoff;
 
 	if (v >= V_PROGRESS)
-		pr_info("Testing beyond error correction capacity...\n");
+		pr_debug("Testing beyond error correction capacity...\n");
 
 	for (errs = 1; errs <= nroots; errs++) {
 		eras = nroots - 2 * errs + 1;
@@ -425,11 +425,11 @@ static int exercise_rs_bc(struct rs_control *rs, struct wspace *ws,
 	}
 
 	if (v >= V_CSUMMARY) {
-		pr_info("  decoder gives up:        %d / %d\n",
+		pr_debug("  decoder gives up:        %d / %d\n",
 				stat.rfail, stat.nwords);
-		pr_info("  decoder returns success: %d / %d\n",
+		pr_debug("  decoder returns success: %d / %d\n",
 				stat.rsuccess, stat.nwords);
-		pr_info("    not a codeword:        %d / %d\n",
+		pr_debug("    not a codeword:        %d / %d\n",
 				stat.noncw, stat.rsuccess);
 	}
 
@@ -468,7 +468,7 @@ static int run_exercise(struct etab *e)
 
 		prev_pad = pad;
 		if (v >= V_PROGRESS) {
-			pr_info("Testing (%d,%d)_%d code...\n",
+			pr_debug("Testing (%d,%d)_%d code...\n",
 					len, kk - pad, nn + 1);
 		}
 
@@ -501,7 +501,7 @@ static int __init test_rslib_init(void)
 	if (fail)
 		pr_warn("rslib: test failed\n");
 	else
-		pr_info("rslib: test ok\n");
+		pr_debug("rslib: test ok\n");
 
 	return -EAGAIN; /* Fail will directly unload the module */
 }

@@ -128,7 +128,7 @@ static int snd_ps3_verify_dma_stop(struct snd_ps3_card_info *card,
 			}
 		} while (!done && --retries);
 		if (!retries && force_stop) {
-			pr_info("%s: DMA ch %d is not stopped.",
+			pr_debug("%s: DMA ch %d is not stopped.",
 				__func__, dma_ch);
 			/* last resort. force to stop dma.
 			 *  NOTE: this cause DMA done interrupts
@@ -465,7 +465,7 @@ static int snd_ps3_set_avsetting(struct snd_pcm_substream *substream)
 		avs.avs_audio_rate = PS3AV_CMD_AUDIO_FS_96K;
 		break;
 	default:
-		pr_info("%s: invalid rate %d\n", __func__,
+		pr_debug("%s: invalid rate %d\n", __func__,
 			substream->runtime->rate);
 		return 1;
 	}
@@ -479,7 +479,7 @@ static int snd_ps3_set_avsetting(struct snd_pcm_substream *substream)
 		avs.avs_audio_width = PS3AV_CMD_AUDIO_WORD_BITS_24;
 		break;
 	default:
-		pr_info("%s: invalid width %d\n", __func__,
+		pr_debug("%s: invalid width %d\n", __func__,
 			snd_pcm_format_width(substream->runtime->format));
 		return 1;
 	}
@@ -774,7 +774,7 @@ static int snd_ps3_map_mmio(void)
 			the_card.ps3_dev->m_region->len);
 
 	if (!the_card.mapped_mmio_vaddr) {
-		pr_info("%s: ioremap 0 failed p=%#lx l=%#lx \n",
+		pr_debug("%s: ioremap 0 failed p=%#lx l=%#lx \n",
 		       __func__, the_card.ps3_dev->m_region->lpar_addr,
 		       the_card.ps3_dev->m_region->len);
 		return -ENXIO;
@@ -800,14 +800,14 @@ static int snd_ps3_allocate_irq(void)
 	/* get irq outlet */
 	ret = lv1_gpu_device_map(1, &lpar_addr, &lpar_size);
 	if (ret) {
-		pr_info("%s: device map 1 failed %d\n", __func__,
+		pr_debug("%s: device map 1 failed %d\n", __func__,
 			ret);
 		return -ENXIO;
 	}
 
 	mapped = ioremap(lpar_addr, lpar_size);
 	if (!mapped) {
-		pr_info("%s: ioremap 1 failed \n", __func__);
+		pr_debug("%s: ioremap 1 failed \n", __func__);
 		return -ENXIO;
 	}
 
@@ -816,21 +816,21 @@ static int snd_ps3_allocate_irq(void)
 	iounmap(mapped);
 	ret = lv1_gpu_device_unmap(1);
 	if (ret)
-		pr_info("%s: unmap 1 failed\n", __func__);
+		pr_debug("%s: unmap 1 failed\n", __func__);
 
 	/* irq */
 	ret = ps3_irq_plug_setup(PS3_BINDING_CPU_ANY,
 				 the_card.audio_irq_outlet,
 				 &the_card.irq_no);
 	if (ret) {
-		pr_info("%s:ps3_alloc_irq failed (%d)\n", __func__, ret);
+		pr_debug("%s:ps3_alloc_irq failed (%d)\n", __func__, ret);
 		return ret;
 	}
 
 	ret = request_irq(the_card.irq_no, snd_ps3_interrupt, 0,
 			  SND_PS3_DRIVER_NAME, &the_card);
 	if (ret) {
-		pr_info("%s: request_irq failed (%d)\n", __func__, ret);
+		pr_debug("%s: request_irq failed (%d)\n", __func__, ret);
 		goto cleanup_irq;
 	}
 
@@ -859,7 +859,7 @@ static void snd_ps3_audio_set_base_addr(uint64_t ioaddr_start)
 
 	ret = lv1_gpu_attribute(0x100, 0x007, val);
 	if (ret)
-		pr_info("%s: gpu_attribute failed %d\n", __func__,
+		pr_debug("%s: gpu_attribute failed %d\n", __func__,
 			ret);
 }
 
@@ -930,7 +930,7 @@ static int snd_ps3_driver_probe(struct ps3_system_bus_device *dev)
 	/* setup MMIO */
 	ret = lv1_gpu_device_map(2, &lpar_addr, &lpar_size);
 	if (ret) {
-		pr_info("%s: device map 2 failed %d\n", __func__, ret);
+		pr_debug("%s: device map 2 failed %d\n", __func__, ret);
 		goto clean_open;
 	}
 	ps3_mmio_region_init(dev, dev->m_region, lpar_addr, lpar_size,
@@ -950,7 +950,7 @@ static int snd_ps3_driver_probe(struct ps3_system_bus_device *dev)
 
 	ret = ps3_dma_region_create(dev->d_region);
 	if (ret) {
-		pr_info("%s: region_create\n", __func__);
+		pr_debug("%s: region_create\n", __func__);
 		goto clean_mmio;
 	}
 
@@ -1024,7 +1024,7 @@ static int snd_ps3_driver_probe(struct ps3_system_bus_device *dev)
 				   &the_card.null_buffer_start_dma_addr,
 				   GFP_KERNEL);
 	if (!the_card.null_buffer_start_vaddr) {
-		pr_info("%s: nullbuffer alloc failed\n", __func__);
+		pr_debug("%s: nullbuffer alloc failed\n", __func__);
 		ret = -ENOMEM;
 		goto clean_card;
 	}
@@ -1039,7 +1039,7 @@ static int snd_ps3_driver_probe(struct ps3_system_bus_device *dev)
 	if (ret < 0)
 		goto clean_dma_map;
 
-	pr_info("%s started. start_delay=%dms\n",
+	pr_debug("%s started. start_delay=%dms\n",
 		the_card.card->longname, the_card.start_delay);
 	return 0;
 
@@ -1071,7 +1071,7 @@ clean_open:
 static int snd_ps3_driver_remove(struct ps3_system_bus_device *dev)
 {
 	int ret;
-	pr_info("%s:start id=%d\n", __func__,  dev->match_id);
+	pr_debug("%s:start id=%d\n", __func__,  dev->match_id);
 	if (dev->match_id != PS3_MATCH_ID_SOUND)
 		return -ENXIO;
 
@@ -1081,7 +1081,7 @@ static int snd_ps3_driver_remove(struct ps3_system_bus_device *dev)
 	 */
 	ret = snd_card_free(the_card.card);
 	if (ret)
-		pr_info("%s: ctl freecard=%d\n", __func__, ret);
+		pr_debug("%s: ctl freecard=%d\n", __func__, ret);
 
 	dma_free_coherent(&dev->core,
 			  PAGE_SIZE,
@@ -1095,7 +1095,7 @@ static int snd_ps3_driver_remove(struct ps3_system_bus_device *dev)
 
 	lv1_gpu_device_unmap(2);
 	ps3_close_hv_device(dev);
-	pr_info("%s:end id=%d\n", __func__, dev->match_id);
+	pr_debug("%s:end id=%d\n", __func__, dev->match_id);
 	return 0;
 } /* snd_ps3_remove */
 

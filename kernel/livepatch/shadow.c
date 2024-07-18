@@ -147,7 +147,7 @@ static void *__klp_shadow_get_or_alloc(void *obj, unsigned long id,
 		if (err) {
 			spin_unlock_irqrestore(&klp_shadow_lock, flags);
 			kfree(new_shadow);
-			pr_err("Failed to construct shadow variable <%p, %lx> (%d)\n",
+			pr_debug("Failed to construct shadow variable <%p, %lx> (%d)\n",
 			       obj, id, err);
 			return NULL;
 		}

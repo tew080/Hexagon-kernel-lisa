@@ -298,11 +298,11 @@ static int mip6_destopt_offset(struct xfrm_state *x, struct sk_buff *skb,
 static int mip6_destopt_init_state(struct xfrm_state *x)
 {
 	if (x->id.spi) {
-		pr_info("%s: spi is not 0: %u\n", __func__, x->id.spi);
+		pr_debug("%s: spi is not 0: %u\n", __func__, x->id.spi);
 		return -EINVAL;
 	}
 	if (x->props.mode != XFRM_MODE_ROUTEOPTIMIZATION) {
-		pr_info("%s: state's mode is not %u: %u\n",
+		pr_debug("%s: state's mode is not %u: %u\n",
 			__func__, XFRM_MODE_ROUTEOPTIMIZATION, x->props.mode);
 		return -EINVAL;
 	}
@@ -433,11 +433,11 @@ static int mip6_rthdr_offset(struct xfrm_state *x, struct sk_buff *skb,
 static int mip6_rthdr_init_state(struct xfrm_state *x)
 {
 	if (x->id.spi) {
-		pr_info("%s: spi is not 0: %u\n", __func__, x->id.spi);
+		pr_debug("%s: spi is not 0: %u\n", __func__, x->id.spi);
 		return -EINVAL;
 	}
 	if (x->props.mode != XFRM_MODE_ROUTEOPTIMIZATION) {
-		pr_info("%s: state's mode is not %u: %u\n",
+		pr_debug("%s: state's mode is not %u: %u\n",
 			__func__, XFRM_MODE_ROUTEOPTIMIZATION, x->props.mode);
 		return -EINVAL;
 	}
@@ -469,18 +469,18 @@ static const struct xfrm_type mip6_rthdr_type = {
 
 static int __init mip6_init(void)
 {
-	pr_info("Mobile IPv6\n");
+	pr_debug("Mobile IPv6\n");
 
 	if (xfrm_register_type(&mip6_destopt_type, AF_INET6) < 0) {
-		pr_info("%s: can't add xfrm type(destopt)\n", __func__);
+		pr_debug("%s: can't add xfrm type(destopt)\n", __func__);
 		goto mip6_destopt_xfrm_fail;
 	}
 	if (xfrm_register_type(&mip6_rthdr_type, AF_INET6) < 0) {
-		pr_info("%s: can't add xfrm type(rthdr)\n", __func__);
+		pr_debug("%s: can't add xfrm type(rthdr)\n", __func__);
 		goto mip6_rthdr_xfrm_fail;
 	}
 	if (rawv6_mh_filter_register(mip6_mh_filter) < 0) {
-		pr_info("%s: can't add rawv6 mh filter\n", __func__);
+		pr_debug("%s: can't add rawv6 mh filter\n", __func__);
 		goto mip6_rawv6_mh_fail;
 	}
 
@@ -498,7 +498,7 @@ static int __init mip6_init(void)
 static void __exit mip6_fini(void)
 {
 	if (rawv6_mh_filter_unregister(mip6_mh_filter) < 0)
-		pr_info("%s: can't remove rawv6 mh filter\n", __func__);
+		pr_debug("%s: can't remove rawv6 mh filter\n", __func__);
 	xfrm_unregister_type(&mip6_rthdr_type, AF_INET6);
 	xfrm_unregister_type(&mip6_destopt_type, AF_INET6);
 }

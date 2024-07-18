@@ -160,7 +160,7 @@ static void wdt_startup(void)
 	/* Start the timer */
 	mod_timer(&timer, jiffies + WDT_INTERVAL);
 
-	pr_info("Watchdog timer is now enabled\n");
+	pr_debug("Watchdog timer is now enabled\n");
 }
 
 static void wdt_turnoff(void)
@@ -168,7 +168,7 @@ static void wdt_turnoff(void)
 	/* Stop the timer */
 	del_timer_sync(&timer);
 	wdt_change(WDT_DISABLE);
-	pr_info("Watchdog timer is now disabled...\n");
+	pr_debug("Watchdog timer is now disabled...\n");
 }
 
 static void wdt_keepalive(void)
@@ -362,11 +362,11 @@ static int __init alim7101_wdt_init(void)
 	struct pci_dev *ali1543_south;
 	char tmp;
 
-	pr_info("Steve Hill <steve@navaho.co.uk>\n");
+	pr_debug("Steve Hill <steve@navaho.co.uk>\n");
 	alim7101_pmu = pci_get_device(PCI_VENDOR_ID_AL, PCI_DEVICE_ID_AL_M7101,
 		NULL);
 	if (!alim7101_pmu) {
-		pr_info("ALi M7101 PMU not present - WDT not set\n");
+		pr_debug("ALi M7101 PMU not present - WDT not set\n");
 		return -EBUSY;
 	}
 
@@ -376,26 +376,26 @@ static int __init alim7101_wdt_init(void)
 	ali1543_south = pci_get_device(PCI_VENDOR_ID_AL, PCI_DEVICE_ID_AL_M1533,
 		NULL);
 	if (!ali1543_south) {
-		pr_info("ALi 1543 South-Bridge not present - WDT not set\n");
+		pr_debug("ALi 1543 South-Bridge not present - WDT not set\n");
 		goto err_out;
 	}
 	pci_read_config_byte(ali1543_south, 0x5e, &tmp);
 	pci_dev_put(ali1543_south);
 	if ((tmp & 0x1e) == 0x00) {
 		if (!use_gpio) {
-			pr_info("Detected old alim7101 revision 'a1d'.  If this is a cobalt board, set the 'use_gpio' module parameter.\n");
+			pr_debug("Detected old alim7101 revision 'a1d'.  If this is a cobalt board, set the 'use_gpio' module parameter.\n");
 			goto err_out;
 		}
 		nowayout = 1;
 	} else if ((tmp & 0x1e) != 0x12 && (tmp & 0x1e) != 0x00) {
-		pr_info("ALi 1543 South-Bridge does not have the correct revision number (???1001?) - WDT not set\n");
+		pr_debug("ALi 1543 South-Bridge does not have the correct revision number (???1001?) - WDT not set\n");
 		goto err_out;
 	}
 
 	if (timeout < 1 || timeout > 3600) {
 		/* arbitrary upper limit */
 		timeout = WATCHDOG_TIMEOUT;
-		pr_info("timeout value must be 1 <= x <= 3600, using %d\n",
+		pr_debug("timeout value must be 1 <= x <= 3600, using %d\n",
 			timeout);
 	}
 
@@ -421,7 +421,7 @@ static int __init alim7101_wdt_init(void)
 	if (nowayout)
 		__module_get(THIS_MODULE);
 
-	pr_info("WDT driver for ALi M7101 initialised. timeout=%d sec (nowayout=%d)\n",
+	pr_debug("WDT driver for ALi M7101 initialised. timeout=%d sec (nowayout=%d)\n",
 		timeout, nowayout);
 	return 0;
 

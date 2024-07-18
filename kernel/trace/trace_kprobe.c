@@ -1617,7 +1617,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
 				is_return);
 
 	if (IS_ERR(tk)) {
-		pr_info("Failed to allocate trace_probe.(%d)\n",
+		pr_debug("Failed to allocate trace_probe.(%d)\n",
 			(int)PTR_ERR(tk));
 		return ERR_CAST(tk);
 	}
@@ -1765,13 +1765,13 @@ static __init int kprobe_trace_self_tests_init(void)
 		return -ENODEV;
 
 	if (kprobe_boot_events_enabled) {
-		pr_info("Skipping kprobe tests due to kprobe_event on cmdline\n");
+		pr_debug("Skipping kprobe tests due to kprobe_event on cmdline\n");
 		return 0;
 	}
 
 	target = kprobe_trace_selftest_target;
 
-	pr_info("Testing kprobe tracing: ");
+	pr_debug("Testing kprobe tracing: ");
 
 	ret = trace_run_command("p:testprobe kprobe_trace_selftest_target $stack $stack0 +0($stack)",
 				create_or_delete_trace_kprobe);

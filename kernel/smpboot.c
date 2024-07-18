@@ -55,7 +55,7 @@ static inline void idle_init(unsigned int cpu)
 	if (!tsk) {
 		tsk = fork_idle(cpu);
 		if (IS_ERR(tsk))
-			pr_err("SMP: fork_idle() failed for CPU %u\n", cpu);
+			pr_debug("SMP: fork_idle() failed for CPU %u\n", cpu);
 		else
 			per_cpu(idle_threads, cpu) = tsk;
 	}

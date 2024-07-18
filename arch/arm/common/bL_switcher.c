@@ -472,7 +472,7 @@ static int bL_switcher_halve_cpus(void)
 		if (match != -1) {
 			bL_switcher_cpu_pairing[i] = match;
 			cpumask_clear_cpu(match, &available_cpus);
-			pr_info("CPU%d paired with CPU%d\n", i, match);
+			pr_debug("CPU%d paired with CPU%d\n", i, match);
 		}
 	}
 
@@ -493,7 +493,7 @@ static int bL_switcher_halve_cpus(void)
 			return -EINVAL;
 		}
 		bL_gic_id[cpu][cluster] = gic_id;
-		pr_info("GIC ID for CPU %u cluster %u is %u\n",
+		pr_debug("GIC ID for CPU %u cluster %u is %u\n",
 			cpu, cluster, gic_id);
 
 		if (bL_switcher_cpu_pairing[i] != -1) {
@@ -562,7 +562,7 @@ static int bL_switcher_enable(void)
 		return 0;
 	}
 
-	pr_info("big.LITTLE switcher initializing\n");
+	pr_debug("big.LITTLE switcher initializing\n");
 
 	ret = bL_activation_notify(BL_NOTIFY_PRE_ENABLE);
 	if (ret)
@@ -585,7 +585,7 @@ static int bL_switcher_enable(void)
 
 	bL_switcher_active = 1;
 	bL_activation_notify(BL_NOTIFY_POST_ENABLE);
-	pr_info("big.LITTLE switcher initialized\n");
+	pr_debug("big.LITTLE switcher initialized\n");
 	goto out;
 
 error:

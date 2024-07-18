@@ -1374,7 +1374,7 @@ static int cnss_setup_fw_image_table(int mode)
 		penv->bdata_dma_size = sizeof(struct image_desc_hdr) +
 			sizeof(struct segment_desc) * image_hdr->segments_cnt;
 	}
-	pr_info("%s: Mode %d: Image setup table built on host\n", __func__, mode);
+	pr_debug("%s: Mode %d: Image setup table built on host\n", __func__, mode);
 
 	return file_size;
 err_free:
@@ -1836,7 +1836,7 @@ static int cnss_wlan_runtime_suspend(struct device *dev)
 	if (wdrv && wdrv->runtime_ops && wdrv->runtime_ops->runtime_suspend)
 		ret = wdrv->runtime_ops->runtime_suspend(to_pci_dev(dev));
 
-	pr_info("cnss: runtime suspend status: %d\n", ret);
+	pr_debug("cnss: runtime suspend status: %d\n", ret);
 
 	return ret;
 }
@@ -1861,7 +1861,7 @@ static int cnss_wlan_runtime_resume(struct device *dev)
 	if (wdrv && wdrv->runtime_ops && wdrv->runtime_ops->runtime_resume)
 		ret = wdrv->runtime_ops->runtime_resume(to_pci_dev(dev));
 
-	pr_info("cnss: runtime resume status: %d\n", ret);
+	pr_debug("cnss: runtime resume status: %d\n", ret);
 
 	return ret;
 }
@@ -1945,7 +1945,7 @@ static ssize_t fw_image_setup_store(struct device *dev,
 		return -ENODEV;
 
 	mutex_lock(&penv->fw_setup_stat_lock);
-	pr_info("%s: Firmware setup in progress\n", __func__);
+	pr_debug("%s: Firmware setup in progress\n", __func__);
 
 	if (kstrtoint(buf, 0, &val)) {
 		mutex_unlock(&penv->fw_setup_stat_lock);
@@ -1954,7 +1954,7 @@ static ssize_t fw_image_setup_store(struct device *dev,
 
 	if (val == FW_IMAGE_FTM || val == FW_IMAGE_MISSION ||
 	    val == FW_IMAGE_BDATA) {
-		pr_info("%s: fw image setup triggered %d\n", __func__, val);
+		pr_debug("%s: fw image setup triggered %d\n", __func__, val);
 		ret = cnss_setup_fw_image_table(val);
 		if (ret != 0) {
 			pr_err("%s: Invalid parsing of FW image files %d\n",
@@ -1969,7 +1969,7 @@ static ssize_t fw_image_setup_store(struct device *dev,
 		penv->bmi_test = val;
 	}
 
-	pr_info("%s: Firmware setup completed\n", __func__);
+	pr_debug("%s: Firmware setup completed\n", __func__);
 	mutex_unlock(&penv->fw_setup_stat_lock);
 	return count;
 }
@@ -2191,7 +2191,7 @@ u8 *cnss_pci_get_wlan_mac_address(u32 *num)
 	}
 
 	if (!penv->is_wlan_mac_set) {
-		pr_info("%s: Platform Driver doesn't have any mac address\n",
+		pr_debug("%s: Platform Driver doesn't have any mac address\n",
 			__func__);
 		goto end;
 	}
@@ -2225,7 +2225,7 @@ u8 *cnss_get_wlan_mac_address(struct device *dev, u32 *num)
 	}
 
 	if (!penv->is_wlan_mac_set) {
-		pr_info("%s: Platform Driver doesn't have any mac address\n",
+		pr_debug("%s: Platform Driver doesn't have any mac address\n",
 			__func__);
 		goto end;
 	}
@@ -2275,7 +2275,7 @@ int cnss_pcie_set_wlan_mac_address(const u8 *in, u32 len)
 	}
 
 	if (penv->is_wlan_mac_set) {
-		pr_info("%s: Already MAC address are configured\n", __func__);
+		pr_debug("%s: Already MAC address are configured\n", __func__);
 		return 0;
 	}
 
@@ -3063,7 +3063,7 @@ static int cnss_probe(struct platform_device *pdev)
 		 penv->ramdump_addr, &penv->ramdump_phys);
 
 	if (penv->ramdump_size == 0) {
-		pr_info("%s: CNSS ramdump will not be collected\n", __func__);
+		pr_debug("%s: CNSS ramdump will not be collected\n", __func__);
 		goto skip_ramdump;
 	}
 

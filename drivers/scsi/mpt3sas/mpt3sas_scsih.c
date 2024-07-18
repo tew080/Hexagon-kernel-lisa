@@ -301,7 +301,7 @@ _scsih_set_debug_level(const char *val, const struct kernel_param *kp)
 	if (ret)
 		return ret;
 
-	pr_info("setting logging_level(0x%08x)\n", logging_level);
+	pr_debug("setting logging_level(0x%08x)\n", logging_level);
 	spin_lock(&gioc_lock);
 	list_for_each_entry(ioc, &mpt3sas_ioc_list, list)
 		ioc->logging_level = logging_level;
@@ -6256,7 +6256,7 @@ _scsih_sas_topology_change_event_debug(struct MPT3SAS_ADAPTER *ioc,
 		break;
 	}
 	ioc_info(ioc, "sas topology change: (%s)\n", status_str);
-	pr_info("\thandle(0x%04x), enclosure_handle(0x%04x) " \
+	pr_debug("\thandle(0x%04x), enclosure_handle(0x%04x) " \
 	    "start_phy(%02d), count(%d)\n",
 	    le16_to_cpu(event_data->ExpanderDevHandle),
 	    le16_to_cpu(event_data->EnclosureHandle),
@@ -6290,7 +6290,7 @@ _scsih_sas_topology_change_event_debug(struct MPT3SAS_ADAPTER *ioc,
 		}
 		link_rate = event_data->PHY[i].LinkRate >> 4;
 		prev_link_rate = event_data->PHY[i].LinkRate & 0xF;
-		pr_info("\tphy(%02d), attached_handle(0x%04x): %s:" \
+		pr_debug("\tphy(%02d), attached_handle(0x%04x): %s:" \
 		    " link rate: new(0x%02x), old(0x%02x)\n", phy_number,
 		    handle, status_str, link_rate, prev_link_rate);
 
@@ -6989,7 +6989,7 @@ _scsih_pcie_topology_change_event_debug(struct MPT3SAS_ADAPTER *ioc,
 		break;
 	}
 	ioc_info(ioc, "pcie topology change: (%s)\n", status_str);
-	pr_info("\tswitch_handle(0x%04x), enclosure_handle(0x%04x)"
+	pr_debug("\tswitch_handle(0x%04x), enclosure_handle(0x%04x)"
 		"start_port(%02d), count(%d)\n",
 		le16_to_cpu(event_data->SwitchDevHandle),
 		le16_to_cpu(event_data->EnclosureHandle),
@@ -7025,7 +7025,7 @@ _scsih_pcie_topology_change_event_debug(struct MPT3SAS_ADAPTER *ioc,
 			MPI26_EVENT_PCIE_TOPO_PI_RATE_MASK;
 		prev_link_rate = event_data->PortEntry[i].PreviousPortInfo &
 			MPI26_EVENT_PCIE_TOPO_PI_RATE_MASK;
-		pr_info("\tport(%02d), attached_handle(0x%04x): %s:"
+		pr_debug("\tport(%02d), attached_handle(0x%04x): %s:"
 			" link rate: new(0x%02x), old(0x%02x)\n", port_number,
 			handle, status_str, link_rate, prev_link_rate);
 	}
@@ -8033,7 +8033,7 @@ _scsih_sas_ir_config_change_event_debug(struct MPT3SAS_ADAPTER *ioc,
 			element_str = "unknown element";
 			break;
 		}
-		pr_info("\t(%s:%s), vol handle(0x%04x), " \
+		pr_debug("\t(%s:%s), vol handle(0x%04x), " \
 		    "pd handle(0x%04x), pd num(0x%02x)\n", element_str,
 		    reason_str, le16_to_cpu(element->VolDevHandle),
 		    le16_to_cpu(element->PhysDiskDevHandle),
@@ -8453,7 +8453,7 @@ Mpi2SasDevicePage0_t *sas_device_pg0)
 			if (sas_device->handle == le16_to_cpu(
 			    sas_device_pg0->DevHandle))
 				goto out;
-			pr_info("\thandle changed from(0x%04x)!!!\n",
+			pr_debug("\thandle changed from(0x%04x)!!!\n",
 			    sas_device->handle);
 			sas_device->handle = le16_to_cpu(
 			    sas_device_pg0->DevHandle);
@@ -8611,7 +8611,7 @@ _scsih_mark_responding_pcie_device(struct MPT3SAS_ADAPTER *ioc,
 			if (pcie_device->handle == le16_to_cpu(
 			    pcie_device_pg0->DevHandle))
 				goto out;
-			pr_info("\thandle changed from(0x%04x)!!!\n",
+			pr_debug("\thandle changed from(0x%04x)!!!\n",
 			    pcie_device->handle);
 			pcie_device->handle = le16_to_cpu(
 			    pcie_device_pg0->DevHandle);
@@ -8714,7 +8714,7 @@ _scsih_mark_responding_raid_device(struct MPT3SAS_ADAPTER *ioc, u64 wwid,
 				    flags);
 				return;
 			}
-			pr_info("\thandle changed from(0x%04x)!!!\n",
+			pr_debug("\thandle changed from(0x%04x)!!!\n",
 			    raid_device->handle);
 			raid_device->handle = handle;
 			if (sas_target_priv_data)
@@ -8833,7 +8833,7 @@ _scsih_mark_responding_expander(struct MPT3SAS_ADAPTER *ioc,
 
 		if (sas_expander->handle == handle)
 			goto out;
-		pr_info("\texpander(0x%016llx): handle changed" \
+		pr_debug("\texpander(0x%016llx): handle changed" \
 		    " from(0x%04x) to (0x%04x)!!!\n",
 		    (unsigned long long)sas_expander->sas_address,
 		    sas_expander->handle, handle);
@@ -8878,7 +8878,7 @@ _scsih_search_responding_expanders(struct MPT3SAS_ADAPTER *ioc)
 
 		handle = le16_to_cpu(expander_pg0.DevHandle);
 		sas_address = le64_to_cpu(expander_pg0.SASAddress);
-		pr_info("\texpander present: handle(0x%04x), sas_addr(0x%016llx)\n",
+		pr_debug("\texpander present: handle(0x%04x), sas_addr(0x%016llx)\n",
 			handle,
 		    (unsigned long long)sas_address);
 		_scsih_mark_responding_expander(ioc, &expander_pg0);
@@ -11097,7 +11097,7 @@ _mpt3sas_init(void)
 {
 	int error;
 
-	pr_info("%s version %s loaded\n", MPT3SAS_DRIVER_NAME,
+	pr_debug("%s version %s loaded\n", MPT3SAS_DRIVER_NAME,
 					MPT3SAS_DRIVER_VERSION);
 
 	mpt3sas_transport_template =
@@ -11153,7 +11153,7 @@ _mpt3sas_init(void)
 static void __exit
 _mpt3sas_exit(void)
 {
-	pr_info("mpt3sas version %s unloading\n",
+	pr_debug("mpt3sas version %s unloading\n",
 				MPT3SAS_DRIVER_VERSION);
 
 	mpt3sas_ctl_exit(hbas_to_enumerate);

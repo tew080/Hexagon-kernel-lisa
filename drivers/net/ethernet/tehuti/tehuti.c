@@ -103,9 +103,9 @@ static void print_hw_id(struct pci_dev *pdev)
 	pci_read_config_word(pdev, PCI_LINK_STATUS_REG, &pci_link_status);
 	pci_read_config_word(pdev, PCI_DEV_CTRL_REG, &pci_ctrl);
 
-	pr_info("%s%s\n", BDX_NIC_NAME,
+	pr_debug("%s%s\n", BDX_NIC_NAME,
 		nic->port_num == 1 ? "" : ", 2-Port");
-	pr_info("srom 0x%x fpga %d build %u lane# %d max_pl 0x%x mrrs 0x%x\n",
+	pr_debug("srom 0x%x fpga %d build %u lane# %d max_pl 0x%x mrrs 0x%x\n",
 		readl(nic->regs + SROM_VER), readl(nic->regs + FPGA_VER) & 0xFFF,
 		readl(nic->regs + FPGA_SEED),
 		GET_LINK_STATUS_LANES(pci_link_status),
@@ -114,7 +114,7 @@ static void print_hw_id(struct pci_dev *pdev)
 
 static void print_fw_id(struct pci_nic *nic)
 {
-	pr_info("fw 0x%x\n", readl(nic->regs + FW_VER));
+	pr_debug("fw 0x%x\n", readl(nic->regs + FW_VER));
 }
 
 static void print_eth_id(struct net_device *ndev)
@@ -2436,8 +2436,8 @@ static struct pci_driver bdx_pci_driver = {
  */
 static void __init print_driver_id(void)
 {
-	pr_info("%s, %s\n", BDX_DRV_DESC, BDX_DRV_VERSION);
-	pr_info("Options: hw_csum %s\n", BDX_MSI_STRING);
+	pr_debug("%s, %s\n", BDX_DRV_DESC, BDX_DRV_VERSION);
+	pr_debug("Options: hw_csum %s\n", BDX_MSI_STRING);
 }
 
 static int __init bdx_module_init(void)

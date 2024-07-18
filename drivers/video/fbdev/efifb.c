@@ -150,12 +150,12 @@ static void efifb_show_boot_graphics(struct fb_info *info)
 		return;
 
 	if (!bgrt_tab.image_address) {
-		pr_info("efifb: No BGRT, not showing boot graphics\n");
+		pr_debug("efifb: No BGRT, not showing boot graphics\n");
 		return;
 	}
 
 	if (bgrt_tab.status & 0x06) {
-		pr_info("efifb: BGRT rotation bits set, not showing boot graphics\n");
+		pr_debug("efifb: BGRT rotation bits set, not showing boot graphics\n");
 		return;
 	}
 
@@ -166,7 +166,7 @@ static void efifb_show_boot_graphics(struct fb_info *info)
 	/* bgrt_tab.status is unreliable, so we don't check it */
 
 	if (si->lfb_depth != 32) {
-		pr_info("efifb: not 32 bits, not showing boot graphics\n");
+		pr_debug("efifb: not 32 bits, not showing boot graphics\n");
 		return;
 	}
 
@@ -206,7 +206,7 @@ static void efifb_show_boot_graphics(struct fb_info *info)
 	if (!efifb_bgrt_sanity_check(si, bmp_width))
 		goto error;
 
-	pr_info("efifb: showing boot graphics\n");
+	pr_debug("efifb: showing boot graphics\n");
 
 	for (y = 0; y < si->lfb_height; y++, dst += si->lfb_linelength) {
 		/* Only background? */
@@ -494,9 +494,9 @@ static int efifb_probe(struct platform_device *dev)
 
 	efifb_show_boot_graphics(info);
 
-	pr_info("efifb: framebuffer at 0x%lx, using %dk, total %dk\n",
+	pr_debug("efifb: framebuffer at 0x%lx, using %dk, total %dk\n",
 	       efifb_fix.smem_start, size_remap/1024, size_total/1024);
-	pr_info("efifb: mode is %dx%dx%d, linelength=%d, pages=%d\n",
+	pr_debug("efifb: mode is %dx%dx%d, linelength=%d, pages=%d\n",
 	       efifb_defined.xres, efifb_defined.yres,
 	       efifb_defined.bits_per_pixel, efifb_fix.line_length,
 	       screen_info.pages);
@@ -504,7 +504,7 @@ static int efifb_probe(struct platform_device *dev)
 	efifb_defined.xres_virtual = efifb_defined.xres;
 	efifb_defined.yres_virtual = efifb_fix.smem_len /
 					efifb_fix.line_length;
-	pr_info("efifb: scrolling: redraw\n");
+	pr_debug("efifb: scrolling: redraw\n");
 	efifb_defined.yres_virtual = efifb_defined.yres;
 
 	/* some dummy values for timing to make fbset happy */
@@ -522,7 +522,7 @@ static int efifb_probe(struct platform_device *dev)
 	efifb_defined.transp.offset = screen_info.rsvd_pos;
 	efifb_defined.transp.length = screen_info.rsvd_size;
 
-	pr_info("efifb: %s: "
+	pr_debug("efifb: %s: "
 	       "size=%d:%d:%d:%d, shift=%d:%d:%d:%d\n",
 	       "Truecolor",
 	       screen_info.rsvd_size,

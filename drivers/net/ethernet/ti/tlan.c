@@ -400,7 +400,7 @@ static int __init tlan_probe(void)
 {
 	int rc = -ENODEV;
 
-	pr_info("%s", tlan_banner);
+	pr_debug("%s", tlan_banner);
 
 	TLAN_DBG(TLAN_DEBUG_PROBE, "Starting PCI Probe....\n");
 
@@ -416,7 +416,7 @@ static int __init tlan_probe(void)
 	TLAN_DBG(TLAN_DEBUG_PROBE, "Starting EISA Probe....\n");
 	tlan_eisa_probe();
 
-	pr_info("%d device%s installed, PCI: %d  EISA: %d\n",
+	pr_debug("%d device%s installed, PCI: %d  EISA: %d\n",
 		tlan_devices_installed, tlan_devices_installed == 1 ? "" : "s",
 		tlan_have_pci, tlan_have_eisa);
 
@@ -713,7 +713,7 @@ static void  __init tlan_eisa_probe(void)
 		}
 
 		if (debug == 0x10)
-			pr_info("Found one\n");
+			pr_debug("Found one\n");
 
 
 		/* Get irq from board */
@@ -741,12 +741,12 @@ static void  __init tlan_eisa_probe(void)
 
 out:
 		if (debug == 0x10)
-			pr_info("None found\n");
+			pr_debug("None found\n");
 		continue;
 
 out2:
 		if (debug == 0x10)
-			pr_info("Card found but it is not enabled, skipping\n");
+			pr_debug("Card found but it is not enabled, skipping\n");
 		continue;
 
 	}
@@ -2019,13 +2019,13 @@ static void tlan_print_dio(u16 io_base)
 	u32 data0, data1;
 	int	i;
 
-	pr_info("Contents of internal registers for io base 0x%04hx\n",
+	pr_debug("Contents of internal registers for io base 0x%04hx\n",
 		io_base);
-	pr_info("Off.  +0        +4\n");
+	pr_debug("Off.  +0        +4\n");
 	for (i = 0; i < 0x4C; i += 8) {
 		data0 = tlan_dio_read32(io_base, i);
 		data1 = tlan_dio_read32(io_base, i + 0x4);
-		pr_info("0x%02x  0x%08x 0x%08x\n", i, data0, data1);
+		pr_debug("0x%02x  0x%08x 0x%08x\n", i, data0, data1);
 	}
 
 }
@@ -2054,13 +2054,13 @@ static void tlan_print_list(struct tlan_list *list, char *type, int num)
 {
 	int i;
 
-	pr_info("%s List %d at %p\n", type, num, list);
-	pr_info("   Forward    = 0x%08x\n",  list->forward);
-	pr_info("   CSTAT      = 0x%04hx\n", list->c_stat);
-	pr_info("   Frame Size = 0x%04hx\n", list->frame_size);
+	pr_debug("%s List %d at %p\n", type, num, list);
+	pr_debug("   Forward    = 0x%08x\n",  list->forward);
+	pr_debug("   CSTAT      = 0x%04hx\n", list->c_stat);
+	pr_debug("   Frame Size = 0x%04hx\n", list->frame_size);
 	/* for (i = 0; i < 10; i++) { */
 	for (i = 0; i < 2; i++) {
-		pr_info("   Buffer[%d].count, addr = 0x%08x, 0x%08x\n",
+		pr_debug("   Buffer[%d].count, addr = 0x%08x, 0x%08x\n",
 			i, list->buffer[i].count, list->buffer[i].address);
 	}
 
@@ -2425,13 +2425,13 @@ static void tlan_phy_print(struct net_device *dev)
 		netdev_info(dev, "Unmanaged PHY\n");
 	} else if (phy <= TLAN_PHY_MAX_ADDR) {
 		netdev_info(dev, "PHY 0x%02x\n", phy);
-		pr_info("   Off.  +0     +1     +2     +3\n");
+		pr_debug("   Off.  +0     +1     +2     +3\n");
 		for (i = 0; i < 0x20; i += 4) {
 			tlan_mii_read_reg(dev, phy, i, &data0);
 			tlan_mii_read_reg(dev, phy, i + 1, &data1);
 			tlan_mii_read_reg(dev, phy, i + 2, &data2);
 			tlan_mii_read_reg(dev, phy, i + 3, &data3);
-			pr_info("   0x%02x 0x%04hx 0x%04hx 0x%04hx 0x%04hx\n",
+			pr_debug("   0x%02x 0x%04hx 0x%04hx 0x%04hx 0x%04hx\n",
 				i, data0, data1, data2, data3);
 		}
 	} else {

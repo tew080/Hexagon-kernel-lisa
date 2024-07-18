@@ -1589,7 +1589,7 @@ create_local_trace_uprobe(char *name, unsigned long offs,
 				is_return);
 
 	if (IS_ERR(tu)) {
-		pr_info("Failed to allocate trace_uprobe.(%d)\n",
+		pr_debug("Failed to allocate trace_uprobe.(%d)\n",
 			(int)PTR_ERR(tu));
 		path_put(&path);
 		return ERR_CAST(tu);

@@ -186,7 +186,7 @@ void start_kernel_secondary(void)
 	notify_cpu_starting(cpu);
 	set_cpu_online(cpu, true);
 
-	pr_info("## CPU%u LIVE ##: Executing Code...\n", cpu);
+	pr_debug("## CPU%u LIVE ##: Executing Code...\n", cpu);
 
 	local_irq_enable();
 	preempt_disable();
@@ -209,8 +209,8 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
 
 	secondary_idle_tsk = idle;
 
-	pr_info("Idle Task [%d] %p", cpu, idle);
-	pr_info("Trying to bring up CPU%u ...\n", cpu);
+	pr_debug("Idle Task [%d] %p", cpu, idle);
+	pr_debug("Trying to bring up CPU%u ...\n", cpu);
 
 	if (plat_smp_ops.cpu_kick)
 		plat_smp_ops.cpu_kick(cpu,
@@ -226,7 +226,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
 	}
 
 	if (!cpu_online(cpu)) {
-		pr_info("Timeout: CPU%u FAILED to comeup !!!\n", cpu);
+		pr_debug("Timeout: CPU%u FAILED to comeup !!!\n", cpu);
 		return -1;
 	}
 
@@ -385,7 +385,7 @@ irqreturn_t do_IPI(int irq, void *dev_id)
 
 		rc = __do_IPI(msg);
 		if (rc)
-			pr_info("IPI with bogus msg %ld in %ld\n", msg, copy);
+			pr_debug("IPI with bogus msg %ld in %ld\n", msg, copy);
 		pending &= ~(1U << msg);
 	} while (pending);
 

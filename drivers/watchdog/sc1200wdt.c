@@ -171,7 +171,7 @@ static int sc1200wdt_open(struct inode *inode, struct file *file)
 		timeout = MAX_TIMEOUT;
 
 	sc1200wdt_start();
-	pr_info("Watchdog enabled, timeout = %d min(s)", timeout);
+	pr_debug("Watchdog enabled, timeout = %d min(s)", timeout);
 
 	return stream_open(inode, file);
 }
@@ -249,7 +249,7 @@ static int sc1200wdt_release(struct inode *inode, struct file *file)
 {
 	if (expect_close == 42) {
 		sc1200wdt_stop();
-		pr_info("Watchdog disabled\n");
+		pr_debug("Watchdog disabled\n");
 	} else {
 		sc1200wdt_write_data(WDTO, timeout);
 		pr_crit("Unexpected close!, timeout = %d min(s)\n", timeout);
@@ -359,7 +359,7 @@ static int scl200wdt_pnp_probe(struct pnp_dev *dev,
 		return -EBUSY;
 	}
 
-	pr_info("PnP device found at io port %#x/%d\n", io, io_len);
+	pr_debug("PnP device found at io port %#x/%d\n", io, io_len);
 	return 0;
 }
 
@@ -385,7 +385,7 @@ static int __init sc1200wdt_init(void)
 {
 	int ret;
 
-	pr_info("%s\n", SC1200_MODULE_VER);
+	pr_debug("%s\n", SC1200_MODULE_VER);
 
 #if defined CONFIG_PNP
 	if (isapnp) {

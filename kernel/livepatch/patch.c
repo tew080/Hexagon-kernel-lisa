@@ -184,7 +184,7 @@ static int klp_patch_func(struct klp_func *func)
 		ftrace_loc =
 			klp_get_ftrace_location((unsigned long)func->old_func);
 		if (!ftrace_loc) {
-			pr_err("failed to find location for function '%s'\n",
+			pr_debug("failed to find location for function '%s'\n",
 				func->old_name);
 			return -EINVAL;
 		}
@@ -205,14 +205,14 @@ static int klp_patch_func(struct klp_func *func)
 
 		ret = ftrace_set_filter_ip(&ops->fops, ftrace_loc, 0, 0);
 		if (ret) {
-			pr_err("failed to set ftrace filter for function '%s' (%d)\n",
+			pr_debug("failed to set ftrace filter for function '%s' (%d)\n",
 			       func->old_name, ret);
 			goto err;
 		}
 
 		ret = register_ftrace_function(&ops->fops);
 		if (ret) {
-			pr_err("failed to register ftrace handler for function '%s' (%d)\n",
+			pr_debug("failed to register ftrace handler for function '%s' (%d)\n",
 			       func->old_name, ret);
 			ftrace_set_filter_ip(&ops->fops, ftrace_loc, 1, 0);
 			goto err;

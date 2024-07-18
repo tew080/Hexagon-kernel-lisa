@@ -344,7 +344,7 @@ static void __init cacheid_init(void)
 		cacheid = CACHEID_VIVT;
 	}
 
-	pr_info("CPU: %s data cache, %s instruction cache\n",
+	pr_debug("CPU: %s data cache, %s instruction cache\n",
 		cache_is_vivt() ? "VIVT" :
 		cache_is_vipt_aliasing() ? "VIPT aliasing" :
 		cache_is_vipt_nonaliasing() ? "PIPT / VIPT nonaliasing" : "unknown",
@@ -426,7 +426,7 @@ static void __init patch_aeabi_idiv(void)
 	if (!(elf_hwcap & mask))
 		return;
 
-	pr_info("CPU: div instructions available: patching division code\n");
+	pr_debug("CPU: div instructions available: patching division code\n");
 
 	fn_addr = ((uintptr_t)&__aeabi_uidiv) & ~1;
 	asm ("" : "+g" (fn_addr));
@@ -602,7 +602,7 @@ void __init smp_setup_processor_id(void)
 	 */
 	set_my_cpu_offset(0);
 
-	pr_info("Booting Linux on physical CPU 0x%x\n", mpidr);
+	pr_debug("Booting Linux on physical CPU 0x%x\n", mpidr);
 }
 
 struct mpidr_hash mpidr_hash;
@@ -708,7 +708,7 @@ static void __init setup_processor(void)
 	cpu_cache = *list->cache;
 #endif
 
-	pr_info("CPU: %s [%08x] revision %d (ARMv%s), cr=%08lx\n",
+	pr_debug("CPU: %s [%08x] revision %d (ARMv%s), cr=%08lx\n",
 		list->cpu_name, midr, midr & 15,
 		proc_arch[cpu_architecture()], get_cr());
 
@@ -784,12 +784,12 @@ int __init arm_add_memory(u64 start, u64 size)
 
 	if (aligned_start < PHYS_OFFSET) {
 		if (aligned_start + size <= PHYS_OFFSET) {
-			pr_info("Ignoring memory below PHYS_OFFSET: 0x%08llx-0x%08llx\n",
+			pr_debug("Ignoring memory below PHYS_OFFSET: 0x%08llx-0x%08llx\n",
 				aligned_start, aligned_start + size);
 			return -EINVAL;
 		}
 
-		pr_info("Ignoring memory below PHYS_OFFSET: 0x%08llx-0x%08llx\n",
+		pr_debug("Ignoring memory below PHYS_OFFSET: 0x%08llx-0x%08llx\n",
 			aligned_start, (u64)PHYS_OFFSET);
 
 		size -= PHYS_OFFSET - aligned_start;
@@ -1030,7 +1030,7 @@ static void __init reserve_crashkernel(void)
 		return;
 	}
 
-	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+	pr_debug("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
 		(unsigned long)(crash_size >> 20),
 		(unsigned long)(crash_base >> 20),
 		(unsigned long)(total_mem >> 20));
@@ -1065,14 +1065,14 @@ void __init hyp_mode_check(void)
 	sync_boot_mode();
 
 	if (is_hyp_mode_available()) {
-		pr_info("CPU: All CPU(s) started in HYP mode.\n");
-		pr_info("CPU: Virtualization extensions available.\n");
+		pr_debug("CPU: All CPU(s) started in HYP mode.\n");
+		pr_debug("CPU: Virtualization extensions available.\n");
 	} else if (is_hyp_mode_mismatched()) {
 		pr_warn("CPU: WARNING: CPU(s) started in wrong/inconsistent modes (primary CPU mode 0x%x)\n",
 			__boot_cpu_mode & MODE_MASK);
 		pr_warn("CPU: This may indicate a broken bootloader or firmware.\n");
 	} else
-		pr_info("CPU: All CPU(s) started in SVC mode.\n");
+		pr_debug("CPU: All CPU(s) started in SVC mode.\n");
 #endif
 }
 

@@ -48,7 +48,7 @@ static noinline void print_reg_file(long *reg_rev, int start_num)
 
 	/* To continue printing callee regs on same line as scratch regs */
 	if (start_num == 0)
-		pr_info("%s", buf);
+		pr_debug("%s", buf);
 	else
 		pr_cont("%s\n", buf);
 }
@@ -78,7 +78,7 @@ static void print_task_path_n_nm(struct task_struct *tsk)
 	}
 
 done:
-	pr_info("Path: %s\n", !IS_ERR(path_nm) ? path_nm : "?");
+	pr_debug("Path: %s\n", !IS_ERR(path_nm) ? path_nm : "?");
 }
 
 static void show_faulting_vma(unsigned long address)
@@ -104,13 +104,13 @@ static void show_faulting_vma(unsigned long address)
 			if (IS_ERR(nm))
 				nm = "?";
 		}
-		pr_info("    @off 0x%lx in [%s]\n"
+		pr_debug("    @off 0x%lx in [%s]\n"
 			"    VMA: 0x%08lx to 0x%08lx\n",
 			vma->vm_start < TASK_UNMAPPED_BASE ?
 				address : address - vma->vm_start,
 			nm, vma->vm_start, vma->vm_end);
 	} else
-		pr_info("    @No matching VMA found\n");
+		pr_debug("    @No matching VMA found\n");
 
 	up_read(&active_mm->mmap_sem);
 }
@@ -120,7 +120,7 @@ static void show_ecr_verbose(struct pt_regs *regs)
 	unsigned int vec, cause_code;
 	unsigned long address;
 
-	pr_info("\n[ECR   ]: 0x%08lx => ", regs->event);
+	pr_debug("\n[ECR   ]: 0x%08lx => ", regs->event);
 
 	/* For Data fault, this is data address not instruction addr */
 	address = current->thread.fault_address;
@@ -191,14 +191,14 @@ void show_regs(struct pt_regs *regs)
 
 	show_ecr_verbose(regs);
 
-	pr_info("[EFA   ]: 0x%08lx\n[BLINK ]: %pS\n[ERET  ]: %pS\n",
+	pr_debug("[EFA   ]: 0x%08lx\n[BLINK ]: %pS\n[ERET  ]: %pS\n",
 		current->thread.fault_address,
 		(void *)regs->blink, (void *)regs->ret);
 
 	if (user_mode(regs))
 		show_faulting_vma(regs->ret); /* faulting code, not data */
 
-	pr_info("[STAT32]: 0x%08lx", regs->status32);
+	pr_debug("[STAT32]: 0x%08lx", regs->status32);
 
 #define STS_BIT(r, bit)	r->status32 & STATUS_##bit##_MASK ? #bit" " : ""
 
@@ -214,9 +214,9 @@ void show_regs(struct pt_regs *regs)
 			(regs->status32 & STATUS_U_MASK) ? "U " : "K ",
 			STS_BIT(regs, DE), STS_BIT(regs, AE));
 #endif
-	pr_info("BTA: 0x%08lx\t SP: 0x%08lx\t FP: 0x%08lx\n",
+	pr_debug("BTA: 0x%08lx\t SP: 0x%08lx\t FP: 0x%08lx\n",
 		regs->bta, regs->sp, regs->fp);
-	pr_info("LPS: 0x%08lx\tLPE: 0x%08lx\tLPC: 0x%08lx\n",
+	pr_debug("LPS: 0x%08lx\tLPE: 0x%08lx\tLPC: 0x%08lx\n",
 	       regs->lp_start, regs->lp_end, regs->lp_count);
 
 	/* print regs->r0 thru regs->r12
@@ -238,7 +238,7 @@ void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
 	current->thread.fault_address = address;
 
 	/* Show fault description */
-	pr_info("\n%s\n", str);
+	pr_debug("\n%s\n", str);
 
 	/* Caller and Callee regs */
 	show_regs(regs);

@@ -459,13 +459,13 @@ void setup_processor(void)
 	read_arc_build_cfg_regs();
 	arc_init_IRQ();
 
-	pr_info("%s", arc_cpu_mumbojumbo(cpu_id, str, sizeof(str)));
+	pr_debug("%s", arc_cpu_mumbojumbo(cpu_id, str, sizeof(str)));
 
 	arc_mmu_init();
 	arc_cache_init();
 
-	pr_info("%s", arc_extn_mumbojumbo(cpu_id, str, sizeof(str)));
-	pr_info("%s", arc_platform_smp_cpuinfo());
+	pr_debug("%s", arc_extn_mumbojumbo(cpu_id, str, sizeof(str)));
+	pr_debug("%s", arc_platform_smp_cpuinfo());
 
 	arc_chk_core_config();
 }

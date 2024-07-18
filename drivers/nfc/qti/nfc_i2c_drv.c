@@ -169,7 +169,7 @@ ssize_t nfc_i2c_dev_read(struct file *filp, char __user *buf,
 				break;
 
 			if (!gpio_get_value(nfc_dev->gpio.ven)) {
-				pr_info("%s: ven low in read !\n", __func__);
+				pr_debug("%s: ven low in read !\n", __func__);
 				ret = -ENODEV;
 				goto err;
 			}
@@ -277,7 +277,7 @@ int nfc_i2c_dev_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	struct platform_gpio nfc_gpio;
 	struct platform_ldo nfc_ldo;
 
-	pr_info("%s: enter\n", __func__);
+	pr_debug("%s: enter\n", __func__);
 
 	//retrieve details of gpios from dt
 
@@ -350,7 +350,7 @@ int nfc_i2c_dev_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		goto err_mutex_destroy;
 	}
 	/* interrupt initializations */
-	pr_info("%s : requesting IRQ %d\n", __func__, client->irq);
+	pr_debug("%s : requesting IRQ %d\n", __func__, client->irq);
 	i2c_dev->irq_enabled = true;
 	ret = request_irq(client->irq, i2c_irq_handler,
 			  IRQF_TRIGGER_HIGH, client->name, nfc_dev);
@@ -377,7 +377,7 @@ int nfc_i2c_dev_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	i2c_dev->irq_wake_up = false;
 	nfc_dev->is_ese_session_active = false;
 
-	pr_info("%s success\n", __func__);
+	pr_debug("%s success\n", __func__);
 	return 0;
 
 err_nfcc_hw_check:
@@ -411,7 +411,7 @@ int nfc_i2c_dev_remove(struct i2c_client *client)
 	int ret = 0;
 	struct nfc_dev *nfc_dev = NULL;
 
-	pr_info("%s: remove device\n", __func__);
+	pr_debug("%s: remove device\n", __func__);
 	nfc_dev = i2c_get_clientdata(client);
 	if (!nfc_dev) {
 		pr_err("%s: device doesn't exist anymore\n", __func__);
@@ -528,7 +528,7 @@ static int __init nfc_i2c_dev_init(void)
 {
 	int ret = 0;
 
-	pr_info("Loading NFC I2C driver\n");
+	pr_debug("Loading NFC I2C driver\n");
 	ret = i2c_add_driver(&nfc_i2c_dev_driver);
 	if (ret != 0)
 		pr_err("NFC I2C add driver error ret %d\n", ret);
@@ -539,7 +539,7 @@ module_init(nfc_i2c_dev_init);
 
 static void __exit nfc_i2c_dev_exit(void)
 {
-	pr_info("Unloading NFC I2C driver\n");
+	pr_debug("Unloading NFC I2C driver\n");
 	i2c_del_driver(&nfc_i2c_dev_driver);
 }
 

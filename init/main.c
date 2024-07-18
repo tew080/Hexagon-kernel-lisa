@@ -539,11 +539,11 @@ static void __init report_meminit(void)
 	else
 		stack = "off";
 
-	pr_info("mem auto-init: stack:%s, heap alloc:%s, heap free:%s\n",
+	pr_debug("mem auto-init: stack:%s, heap alloc:%s, heap free:%s\n",
 		stack, want_init_on_alloc(GFP_KERNEL) ? "on" : "off",
 		want_init_on_free() ? "on" : "off");
 	if (want_init_on_free())
-		pr_info("mem auto-init: clearing system memory may take some time...\n");
+		pr_debug("mem auto-init: clearing system memory may take some time...\n");
 }
 
 /*
@@ -1044,7 +1044,7 @@ static void __init do_pre_smp_initcalls(void)
 static int run_init_process(const char *init_filename)
 {
 	argv_init[0] = init_filename;
-	pr_info("Run %s as init process\n", init_filename);
+	pr_debug("Run %s as init process\n", init_filename);
 	return do_execve(getname_kernel(init_filename),
 		(const char __user *const __user *)argv_init,
 		(const char __user *const __user *)envp_init);
@@ -1091,7 +1091,7 @@ static void mark_readonly(void)
 		mark_rodata_ro();
 		rodata_test();
 	} else
-		pr_info("Kernel memory protection disabled.\n");
+		pr_debug("Kernel memory protection disabled.\n");
 }
 #else
 static inline void mark_readonly(void)

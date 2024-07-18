@@ -1141,7 +1141,7 @@ static void __init log_buf_len_update(u64 size)
 {
 	if (size > (u64)LOG_BUF_LEN_MAX) {
 		size = (u64)LOG_BUF_LEN_MAX;
-		pr_err("log_buf over 2G is not supported.\n");
+		pr_debug("log_buf over 2G is not supported.\n");
 	}
 
 	if (size)
@@ -1232,7 +1232,7 @@ void __init setup_log_buf(int early)
 
 	new_log_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
 	if (unlikely(!new_log_buf)) {
-		pr_err("log_buf_len: %lu bytes not available\n",
+		pr_debug("log_buf_len: %lu bytes not available\n",
 			new_log_buf_len);
 		return;
 	}

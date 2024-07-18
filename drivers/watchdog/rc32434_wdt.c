@@ -113,7 +113,7 @@ static void rc32434_wdt_start(void)
 	SET_BITS(wdt_reg->wtc, or, nand);
 
 	spin_unlock(&rc32434_wdt_device.io_lock);
-	pr_info("Started watchdog timer\n");
+	pr_debug("Started watchdog timer\n");
 }
 
 static void rc32434_wdt_stop(void)
@@ -124,7 +124,7 @@ static void rc32434_wdt_stop(void)
 	SET_BITS(wdt_reg->wtc, 0, 1 << RC32434_WTC_EN);
 
 	spin_unlock(&rc32434_wdt_device.io_lock);
-	pr_info("Stopped watchdog timer\n");
+	pr_debug("Stopped watchdog timer\n");
 }
 
 static void rc32434_wdt_ping(void)
@@ -281,7 +281,7 @@ static int rc32434_wdt_probe(struct platform_device *pdev)
 	 * if not reset to the default */
 	if (rc32434_wdt_set(timeout)) {
 		rc32434_wdt_set(WATCHDOG_TIMEOUT);
-		pr_info("timeout value must be between 0 and %d\n",
+		pr_debug("timeout value must be between 0 and %d\n",
 			WTCOMP2SEC((u32)-1));
 	}
 
@@ -291,7 +291,7 @@ static int rc32434_wdt_probe(struct platform_device *pdev)
 		return ret;
 	}
 
-	pr_info("Watchdog Timer version " VERSION ", timer margin: %d sec\n",
+	pr_debug("Watchdog Timer version " VERSION ", timer margin: %d sec\n",
 		timeout);
 
 	return 0;

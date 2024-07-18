@@ -405,7 +405,7 @@ static int microread_im_transceive(struct nfc_hci_dev *hdev,
 	u8 control_bits;
 	u16 crc;
 
-	pr_info("data exchange to gate 0x%x\n", target->hci_reader_gate);
+	pr_debug("data exchange to gate 0x%x\n", target->hci_reader_gate);
 
 	if (target->hci_reader_gate == MICROREAD_GATE_ID_P2P_INITIATOR) {
 		*(u8 *)skb_push(skb, 1) = 0;
@@ -437,7 +437,7 @@ static int microread_im_transceive(struct nfc_hci_dev *hdev,
 		control_bits = 0xDB;
 		break;
 	default:
-		pr_info("Abort im_transceive to invalid gate 0x%x\n",
+		pr_debug("Abort im_transceive to invalid gate 0x%x\n",
 			target->hci_reader_gate);
 		return 1;
 	}
@@ -473,7 +473,7 @@ static void microread_target_discovered(struct nfc_hci_dev *hdev, u8 gate,
 	struct nfc_target *targets;
 	int r = 0;
 
-	pr_info("target discovered to gate 0x%x\n", gate);
+	pr_debug("target discovered to gate 0x%x\n", gate);
 
 	targets = kzalloc(sizeof(struct nfc_target), GFP_KERNEL);
 	if (targets == NULL) {
@@ -530,7 +530,7 @@ static void microread_target_discovered(struct nfc_hci_dev *hdev, u8 gate,
 		targets->nfcid1_len = 8;
 		break;
 	default:
-		pr_info("discard target discovered to gate 0x%x\n", gate);
+		pr_debug("discard target discovered to gate 0x%x\n", gate);
 		goto exit_free;
 	}
 
@@ -553,7 +553,7 @@ static int microread_event_received(struct nfc_hci_dev *hdev, u8 pipe,
 	u8 gate = hdev->pipes[pipe].gate;
 	u8 mode;
 
-	pr_info("Microread received event 0x%x to gate 0x%x\n", event, gate);
+	pr_debug("Microread received event 0x%x to gate 0x%x\n", event, gate);
 
 	switch (event) {
 	case MICROREAD_EVT_MREAD_CARD_FOUND:

@@ -335,7 +335,7 @@ static int __init set_force_caps(const struct dmi_system_id *dmi)
 {
 	if (force_caps == -1) {
 		force_caps = (uintptr_t)dmi->driver_data;
-		pr_info("Found %s, set force_caps to 0x%x\n", dmi->ident, force_caps);
+		pr_debug("Found %s, set force_caps to 0x%x\n", dmi->ident, force_caps);
 	}
 	return 1;
 }
@@ -635,7 +635,7 @@ static int __init
 video_set_backlight_video_vendor(const struct dmi_system_id *d)
 {
 	interface->capability &= ~ACER_CAP_BRIGHTNESS;
-	pr_info("Brightness must be controlled by generic video driver\n");
+	pr_debug("Brightness must be controlled by generic video driver\n");
 	return 0;
 }
 
@@ -1300,7 +1300,7 @@ static void __init type_aa_dmi_decode(const struct dmi_header *header, void *d)
 	has_type_aa = true;
 	type_aa = (struct hotkey_function_type_aa *) header;
 
-	pr_info("Function bitmap for Communication Button: 0x%x\n",
+	pr_debug("Function bitmap for Communication Button: 0x%x\n",
 		type_aa->commun_func_bitmap);
 	commun_func_bitmap = type_aa->commun_func_bitmap;
 
@@ -1344,7 +1344,7 @@ static acpi_status __init WMID_set_capabilities(void)
 		return AE_ERROR;
 	}
 
-	pr_info("Function bitmap for Communication Device: 0x%x\n", devices);
+	pr_debug("Function bitmap for Communication Device: 0x%x\n", devices);
 	if (devices & 0x07)
 		interface->capability |= ACER_CAP_WIRELESS;
 	if (devices & 0x40)
@@ -1954,7 +1954,7 @@ static int __init acer_wmi_enable_ec_raw(void)
 			return_value.error_code,
 			return_value.ec_return_value);
 	else
-		pr_info("Enabled EC raw mode\n");
+		pr_debug("Enabled EC raw mode\n");
 
 	return status;
 }
@@ -2252,10 +2252,10 @@ static int __init acer_wmi_init(void)
 {
 	int err;
 
-	pr_info("Acer Laptop ACPI-WMI Extras\n");
+	pr_debug("Acer Laptop ACPI-WMI Extras\n");
 
 	if (dmi_check_system(acer_blacklist)) {
-		pr_info("Blacklisted hardware detected - not loading\n");
+		pr_debug("Blacklisted hardware detected - not loading\n");
 		return -ENODEV;
 	}
 
@@ -2352,7 +2352,7 @@ static int __init acer_wmi_init(void)
 			return -ENODEV;
 		}
 	} else if (ec_raw_mode) {
-		pr_info("No WMID EC raw mode enable method\n");
+		pr_debug("No WMID EC raw mode enable method\n");
 	}
 
 	if (wmi_has_guid(ACERWMID_EVENT_GUID)) {
@@ -2415,7 +2415,7 @@ static void __exit acer_wmi_exit(void)
 	platform_device_unregister(acer_platform_device);
 	platform_driver_unregister(&acer_platform_driver);
 
-	pr_info("Acer Laptop WMI Extras unloaded\n");
+	pr_debug("Acer Laptop WMI Extras unloaded\n");
 	return;
 }
 

@@ -298,18 +298,18 @@ static int __init xpram_setup_sizes(unsigned long pages)
 			mem_auto_no++;
 	}
 	
-	pr_info("  number of devices (partitions): %d \n", xpram_devs);
+	pr_debug("  number of devices (partitions): %d \n", xpram_devs);
 	for (i = 0; i < xpram_devs; i++) {
 		if (xpram_sizes[i])
-			pr_info("  size of partition %d: %u kB\n",
+			pr_debug("  size of partition %d: %u kB\n",
 				i, xpram_sizes[i]);
 		else
-			pr_info("  size of partition %d to be set "
+			pr_debug("  size of partition %d to be set "
 				"automatically\n",i);
 	}
-	pr_info("  memory needed (for sized partitions): %lu kB\n",
+	pr_debug("  memory needed (for sized partitions): %lu kB\n",
 		mem_needed);
-	pr_info("  partitions to be sized automatically: %d\n",
+	pr_debug("  partitions to be sized automatically: %d\n",
 		mem_auto_no);
 
 	if (mem_needed > pages * 4) {
@@ -325,7 +325,7 @@ static int __init xpram_setup_sizes(unsigned long pages)
 	 */
 	if (mem_auto_no) {
 		mem_auto = ((pages - mem_needed / 4) / mem_auto_no) * 4;
-		pr_info("  automatically determined "
+		pr_debug("  automatically determined "
 			"partition size: %lu kB\n", mem_auto);
 		for (i = 0; i < xpram_devs; i++)
 			if (xpram_sizes[i] == 0)
@@ -452,7 +452,7 @@ static int __init xpram_init(void)
 		return -ENODEV;
 	}
 	xpram_pages = xpram_highest_page_index() + 1;
-	pr_info("  %u pages expanded memory found (%lu KB).\n",
+	pr_debug("  %u pages expanded memory found (%lu KB).\n",
 		xpram_pages, (unsigned long) xpram_pages*4);
 	rc = xpram_setup_sizes(xpram_pages);
 	if (rc)

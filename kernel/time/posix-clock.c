@@ -168,7 +168,7 @@ int posix_clock_register(struct posix_clock *clk, struct device *dev)
 	cdev_init(&clk->cdev, &posix_clock_file_operations);
 	err = cdev_device_add(&clk->cdev, dev);
 	if (err) {
-		pr_err("%s unable to add device %d:%d\n",
+		pr_debug("%s unable to add device %d:%d\n",
 			dev_name(dev), MAJOR(dev->devt), MINOR(dev->devt));
 		return err;
 	}

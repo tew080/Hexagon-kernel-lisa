@@ -1179,7 +1179,7 @@ dump_eps(struct usb_hcd *hcd)
 		}
 
 		epnum = usb_endpoint_num(&ep->desc);
-		pr_info("EP%0u %u lst %04u rtr %u nak %6u rxmt %u: %s\n",
+		pr_debug("EP%0u %u lst %04u rtr %u nak %6u rxmt %u: %s\n",
 			epnum, max3421_ep->pkt_state, max3421_ep->last_active,
 			max3421_ep->retries, max3421_ep->naks,
 			max3421_ep->retransmit, ubuf);
@@ -1241,13 +1241,13 @@ max3421_handle_irqs(struct usb_hcd *hcd)
 			max3421_hcd->port_status |=  USB_PORT_STAT_ENABLE;
 		} else {
 			/* BUSEVENT due to completion of Bus Resume */
-			pr_info("%s: BUSEVENT Bus Resume Done\n", __func__);
+			pr_debug("%s: BUSEVENT Bus Resume Done\n", __func__);
 		}
 	}
 	if (hirq & BIT(MAX3421_HI_RWU_BIT))
-		pr_info("%s: RWU\n", __func__);
+		pr_debug("%s: RWU\n", __func__);
 	if (hirq & BIT(MAX3421_HI_SUSDN_BIT))
-		pr_info("%s: SUSDN\n", __func__);
+		pr_debug("%s: SUSDN\n", __func__);
 
 	chg = (old_port_status ^ max3421_hcd->port_status);
 	max3421_hcd->port_status |= chg << 16;
@@ -1271,7 +1271,7 @@ max3421_handle_irqs(struct usb_hcd *hcd)
 					break;	/* error or buffer full */
 				dp += ret;
 			}
-			pr_info("%s: hrsl_stats %s\n", __func__, sbuf);
+			pr_debug("%s: hrsl_stats %s\n", __func__, sbuf);
 			memset(max3421_hcd->err_stat, 0,
 			       sizeof(max3421_hcd->err_stat));
 			last_time = jiffies;

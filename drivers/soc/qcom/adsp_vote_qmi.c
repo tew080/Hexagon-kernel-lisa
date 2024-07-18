@@ -77,9 +77,9 @@ static int pgs_vote_send_sync_msg(struct qmi_handle *dev, int vote)
 	}
 
 	if (!vote)
-		pr_info("ADSP manual unvoting is successful\n");
+		pr_debug("ADSP manual unvoting is successful\n");
 	else
-		pr_info("ADSP manual voting is successful\n");
+		pr_debug("ADSP manual voting is successful\n");
 
 out:
 	kfree(req);
@@ -94,7 +94,7 @@ static int send_adsp_manual_unvote(struct device *dev)
 	int ret = 0;
 	struct qmi_handle *qmi_dev = (struct qmi_handle *) dev_get_drvdata(dev);
 
-	pr_info("ADSP unvoting initiated\n");
+	pr_debug("ADSP unvoting initiated\n");
 	ret = pgs_vote_send_sync_msg(qmi_dev, 0);
 
 	if (ret < 0)
@@ -107,7 +107,7 @@ static int send_adsp_manual_vote(struct device *dev)
 	int ret = 0;
 	struct qmi_handle *qmi_dev = (struct qmi_handle *) dev_get_drvdata(dev);
 
-	pr_info("ADSP voting initiated\n");
+	pr_debug("ADSP voting initiated\n");
 	ret = pgs_vote_send_sync_msg(qmi_dev, 1);
 
 	if (ret < 0)
@@ -204,7 +204,7 @@ static int adsp_manual_vote_driver_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, (void *) dev);
 	adsp_qmi_client = dev;
 	pgdata = pdev;
-	pr_info("ADSP vote device is registered successfully\n");
+	pr_debug("ADSP vote device is registered successfully\n");
 
 	dent_adsp_vote = debugfs_create_dir("adsp_manual_vote", NULL);
 	if (IS_ERR_OR_NULL(dent_adsp_vote)) {

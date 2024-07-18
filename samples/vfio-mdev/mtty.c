@@ -161,11 +161,11 @@ static void dump_buffer(u8 *buf, uint32_t count)
 #if defined(DEBUG)
 	int i;
 
-	pr_info("Buffer:\n");
+	pr_debug("Buffer:\n");
 	for (i = 0; i < count; i++) {
-		pr_info("%2x ", *(buf + i));
+		pr_debug("%2x ", *(buf + i));
 		if ((i + 1) % 16 == 0)
-			pr_info("\n");
+			pr_debug("\n");
 	}
 #endif
 }
@@ -266,7 +266,7 @@ static void handle_pci_cfg_write(struct mdev_state *mdev_state, u16 offset,
 		}
 
 		cfg_addr = *(u32 *)buf;
-		pr_info("BAR%d addr 0x%x\n", bar_index, cfg_addr);
+		pr_debug("BAR%d addr 0x%x\n", bar_index, cfg_addr);
 
 		if (cfg_addr == 0xffffffff) {
 			bar_mask = mdev_state->bar_mask[bar_index];
@@ -282,7 +282,7 @@ static void handle_pci_cfg_write(struct mdev_state *mdev_state, u16 offset,
 		STORE_LE32(&mdev_state->vconfig[offset], 0);
 		break;
 	default:
-		pr_info("PCI config write @0x%x of %d bytes not handled\n",
+		pr_debug("PCI config write @0x%x of %d bytes not handled\n",
 			offset, count);
 		break;
 	}
@@ -656,7 +656,7 @@ static ssize_t mdev_access(struct mdev_device *mdev, u8 *buf, size_t count,
 	case VFIO_PCI_CONFIG_REGION_INDEX:
 
 #if defined(DEBUG)
-		pr_info("%s: PCI config space %s at offset 0x%llx\n",
+		pr_debug("%s: PCI config space %s at offset 0x%llx\n",
 			 __func__, is_write ? "write" : "read", offset);
 #endif
 		if (is_write) {
@@ -677,7 +677,7 @@ static ssize_t mdev_access(struct mdev_device *mdev, u8 *buf, size_t count,
 			dump_buffer(buf, count);
 
 #if defined(DEBUG_REGS)
-			pr_info("%s: BAR%d  WR @0x%llx %s val:0x%02x dlab:%d\n",
+			pr_debug("%s: BAR%d  WR @0x%llx %s val:0x%02x dlab:%d\n",
 				__func__, index, offset, wr_reg[offset],
 				*buf, mdev_state->s[index].dlab);
 #endif
@@ -687,7 +687,7 @@ static ssize_t mdev_access(struct mdev_device *mdev, u8 *buf, size_t count,
 			dump_buffer(buf, count);
 
 #if defined(DEBUG_REGS)
-			pr_info("%s: BAR%d  RD @0x%llx %s val:0x%02x dlab:%d\n",
+			pr_debug("%s: BAR%d  RD @0x%llx %s val:0x%02x dlab:%d\n",
 				__func__, index, offset, rd_reg[offset],
 				*buf, mdev_state->s[index].dlab);
 #endif
@@ -791,7 +791,7 @@ static int mtty_reset(struct mdev_device *mdev)
 	if (!mdev_state)
 		return -EINVAL;
 
-	pr_info("%s: called\n", __func__);
+	pr_debug("%s: called\n", __func__);
 
 	return 0;
 }
@@ -936,7 +936,7 @@ static int mtty_set_irqs(struct mdev_device *mdev, uint32_t flags,
 		case VFIO_IRQ_SET_ACTION_TRIGGER:
 		{
 			if (flags & VFIO_IRQ_SET_DATA_NONE) {
-				pr_info("%s: disable INTx\n", __func__);
+				pr_debug("%s: disable INTx\n", __func__);
 				if (mdev_state->intx_evtfd)
 					eventfd_ctx_put(mdev_state->intx_evtfd);
 				break;
@@ -972,7 +972,7 @@ static int mtty_set_irqs(struct mdev_device *mdev, uint32_t flags,
 			if (flags & VFIO_IRQ_SET_DATA_NONE) {
 				if (mdev_state->msi_evtfd)
 					eventfd_ctx_put(mdev_state->msi_evtfd);
-				pr_info("%s: disable MSI\n", __func__);
+				pr_debug("%s: disable MSI\n", __func__);
 				mdev_state->irq_index = VFIO_PCI_INTX_IRQ_INDEX;
 				break;
 			}
@@ -999,13 +999,13 @@ static int mtty_set_irqs(struct mdev_device *mdev, uint32_t flags,
 	}
 	break;
 	case VFIO_PCI_MSIX_IRQ_INDEX:
-		pr_info("%s: MSIX_IRQ\n", __func__);
+		pr_debug("%s: MSIX_IRQ\n", __func__);
 		break;
 	case VFIO_PCI_ERR_IRQ_INDEX:
-		pr_info("%s: ERR_IRQ\n", __func__);
+		pr_debug("%s: ERR_IRQ\n", __func__);
 		break;
 	case VFIO_PCI_REQ_IRQ_INDEX:
-		pr_info("%s: REQ_IRQ\n", __func__);
+		pr_debug("%s: REQ_IRQ\n", __func__);
 		break;
 	}
 
@@ -1022,7 +1022,7 @@ static int mtty_trigger_interrupt(struct mdev_state *mdev_state)
 		return -EINVAL;
 	else if ((mdev_state->irq_index == VFIO_PCI_INTX_IRQ_INDEX) &&
 		 (!mdev_state->intx_evtfd)) {
-		pr_info("%s: Intr eventfd not found\n", __func__);
+		pr_debug("%s: Intr eventfd not found\n", __func__);
 		return -EINVAL;
 	}
 
@@ -1032,7 +1032,7 @@ static int mtty_trigger_interrupt(struct mdev_state *mdev_state)
 		ret = eventfd_signal(mdev_state->intx_evtfd, 1);
 
 #if defined(DEBUG_INTR)
-	pr_info("Intx triggered\n");
+	pr_debug("Intx triggered\n");
 #endif
 	if (ret != 1)
 		pr_err("%s: eventfd signal failed (%d)\n", __func__, ret);
@@ -1248,13 +1248,13 @@ static long mtty_ioctl(struct mdev_device *mdev, unsigned int cmd,
 
 static int mtty_open(struct mdev_device *mdev)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	return 0;
 }
 
 static void mtty_close(struct mdev_device *mdev)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 }
 
 static ssize_t
@@ -1410,7 +1410,7 @@ static int __init mtty_dev_init(void)
 {
 	int ret = 0;
 
-	pr_info("mtty_dev: %s\n", __func__);
+	pr_debug("mtty_dev: %s\n", __func__);
 
 	memset(&mtty_dev, 0, sizeof(mtty_dev));
 
@@ -1427,7 +1427,7 @@ static int __init mtty_dev_init(void)
 	cdev_init(&mtty_dev.vd_cdev, &vd_fops);
 	cdev_add(&mtty_dev.vd_cdev, mtty_dev.vd_devt, MINORMASK + 1);
 
-	pr_info("major_number:%d\n", MAJOR(mtty_dev.vd_devt));
+	pr_debug("major_number:%d\n", MAJOR(mtty_dev.vd_devt));
 
 	mtty_dev.vd_class = class_create(THIS_MODULE, MTTY_CLASS_NAME);
 
@@ -1479,7 +1479,7 @@ static void __exit mtty_dev_exit(void)
 	unregister_chrdev_region(mtty_dev.vd_devt, MINORMASK + 1);
 	class_destroy(mtty_dev.vd_class);
 	mtty_dev.vd_class = NULL;
-	pr_info("mtty_dev: Unloaded!\n");
+	pr_debug("mtty_dev: Unloaded!\n");
 }
 
 module_init(mtty_dev_init)

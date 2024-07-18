@@ -566,18 +566,18 @@ static int br_mdb_parse(struct sk_buff *skb, struct nlmsghdr *nlh,
 
 	bpm = nlmsg_data(nlh);
 	if (bpm->ifindex == 0) {
-		pr_info("PF_BRIDGE: br_mdb_parse() with invalid ifindex\n");
+		pr_debug("PF_BRIDGE: br_mdb_parse() with invalid ifindex\n");
 		return -EINVAL;
 	}
 
 	dev = __dev_get_by_index(net, bpm->ifindex);
 	if (dev == NULL) {
-		pr_info("PF_BRIDGE: br_mdb_parse() with unknown ifindex\n");
+		pr_debug("PF_BRIDGE: br_mdb_parse() with unknown ifindex\n");
 		return -ENODEV;
 	}
 
 	if (!(dev->priv_flags & IFF_EBRIDGE)) {
-		pr_info("PF_BRIDGE: br_mdb_parse() with non-bridge\n");
+		pr_debug("PF_BRIDGE: br_mdb_parse() with non-bridge\n");
 		return -EOPNOTSUPP;
 	}
 
@@ -585,13 +585,13 @@ static int br_mdb_parse(struct sk_buff *skb, struct nlmsghdr *nlh,
 
 	if (!tb[MDBA_SET_ENTRY] ||
 	    nla_len(tb[MDBA_SET_ENTRY]) != sizeof(struct br_mdb_entry)) {
-		pr_info("PF_BRIDGE: br_mdb_parse() with invalid attr\n");
+		pr_debug("PF_BRIDGE: br_mdb_parse() with invalid attr\n");
 		return -EINVAL;
 	}
 
 	entry = nla_data(tb[MDBA_SET_ENTRY]);
 	if (!is_valid_mdb_entry(entry)) {
-		pr_info("PF_BRIDGE: br_mdb_parse() with invalid entry\n");
+		pr_debug("PF_BRIDGE: br_mdb_parse() with invalid entry\n");
 		return -EINVAL;
 	}
 

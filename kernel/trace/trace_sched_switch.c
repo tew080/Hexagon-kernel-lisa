@@ -53,21 +53,21 @@ static int tracing_sched_register(void)
 
 	ret = register_trace_sched_wakeup(probe_sched_wakeup, NULL);
 	if (ret) {
-		pr_info("wakeup trace: Couldn't activate tracepoint"
+		pr_debug("wakeup trace: Couldn't activate tracepoint"
 			" probe to kernel_sched_wakeup\n");
 		return ret;
 	}
 
 	ret = register_trace_sched_wakeup_new(probe_sched_wakeup, NULL);
 	if (ret) {
-		pr_info("wakeup trace: Couldn't activate tracepoint"
+		pr_debug("wakeup trace: Couldn't activate tracepoint"
 			" probe to kernel_sched_wakeup_new\n");
 		goto fail_deprobe;
 	}
 
 	ret = register_trace_sched_switch(probe_sched_switch, NULL);
 	if (ret) {
-		pr_info("sched trace: Couldn't activate tracepoint"
+		pr_debug("sched trace: Couldn't activate tracepoint"
 			" probe to kernel_sched_switch\n");
 		goto fail_deprobe_wake_new;
 	}

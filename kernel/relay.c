@@ -531,7 +531,7 @@ int relay_prepare_cpu(unsigned int cpu)
 			continue;
 		buf = relay_open_buf(chan, cpu);
 		if (!buf) {
-			pr_err("relay: cpu %d buffer creation failed\n", cpu);
+			pr_debug("relay: cpu %d buffer creation failed\n", cpu);
 			mutex_unlock(&relay_channels_mutex);
 			return -ENOMEM;
 		}

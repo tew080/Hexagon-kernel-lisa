@@ -1451,7 +1451,7 @@ static int ms_scsi_test_unit_ready(struct us_data *us, struct scsi_cmnd *srb)
 {
 	struct ene_ub6250_info *info = (struct ene_ub6250_info *)(us->extra);
 
-	/* pr_info("MS_SCSI_Test_Unit_Ready\n"); */
+	/* pr_debug("MS_SCSI_Test_Unit_Ready\n"); */
 	if ((info->MS_Status & MS_Insert) && (info->MS_Status & MS_Ready)) {
 		return USB_STOR_TRANSPORT_GOOD;
 	} else {
@@ -1680,7 +1680,7 @@ static int ms_scsi_read(struct us_data *us, struct scsi_cmnd *srb)
 
 		result = ene_load_bincode(us, MS_RW_PATTERN);
 		if (result != USB_STOR_XFER_GOOD) {
-			pr_info("Load MS RW pattern Fail !!\n");
+			pr_debug("Load MS RW pattern Fail !!\n");
 			result = USB_STOR_TRANSPORT_ERROR;
 			goto exit;
 		}
@@ -1711,7 +1711,7 @@ static int ms_scsi_read(struct us_data *us, struct scsi_cmnd *srb)
 
 			result = ene_send_scsi_cmd(us, FDIR_READ, buf+offset, 0);
 			if (result != USB_STOR_XFER_GOOD) {
-				pr_info("MS_SCSI_Read --- result = %x\n", result);
+				pr_debug("MS_SCSI_Read --- result = %x\n", result);
 				result = USB_STOR_TRANSPORT_ERROR;
 				goto exit;
 			}
@@ -1750,7 +1750,7 @@ static int ms_scsi_write(struct us_data *us, struct scsi_cmnd *srb)
 	if (info->MS_Status & MS_IsMSPro) {
 		result = ene_load_bincode(us, MSP_RW_PATTERN);
 		if (result != USB_STOR_XFER_GOOD) {
-			pr_info("Load MSP RW pattern Fail !!\n");
+			pr_debug("Load MSP RW pattern Fail !!\n");
 			return USB_STOR_TRANSPORT_ERROR;
 		}
 
@@ -1781,7 +1781,7 @@ static int ms_scsi_write(struct us_data *us, struct scsi_cmnd *srb)
 
 		result = ene_load_bincode(us, MS_RW_PATTERN);
 		if (result != USB_STOR_XFER_GOOD) {
-			pr_info("Load MS RW pattern Fail !!\n");
+			pr_debug("Load MS RW pattern Fail !!\n");
 			result = USB_STOR_TRANSPORT_ERROR;
 			goto exit;
 		}
@@ -1801,7 +1801,7 @@ static int ms_scsi_write(struct us_data *us, struct scsi_cmnd *srb)
 			result = ms_read_copyblock(us, oldphy, newphy, PhyBlockAddr, PageNum, buf+offset, len);
 
 			if (result != USB_STOR_XFER_GOOD) {
-				pr_info("MS_SCSI_Write --- result = %x\n", result);
+				pr_debug("MS_SCSI_Write --- result = %x\n", result);
 				result =  USB_STOR_TRANSPORT_ERROR;
 				goto exit;
 			}
@@ -2364,7 +2364,7 @@ static int ene_ub6250_probe(struct usb_interface *intf,
 
 	misc_reg03 = info->bbuf[0];
 	if (!(misc_reg03 & 0x01)) {
-		pr_info("ums_eneub6250: This driver only supports SD/MS cards. "
+		pr_debug("ums_eneub6250: This driver only supports SD/MS cards. "
 			"It does not support SM cards.\n");
 	}
 

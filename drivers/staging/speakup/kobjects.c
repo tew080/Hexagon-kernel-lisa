@@ -90,7 +90,7 @@ static void report_char_chartab_status(int reset, int received, int used,
 	char buf[80];
 
 	if (reset) {
-		pr_info("%s reset to defaults\n", object_type[do_characters]);
+		pr_debug("%s reset to defaults\n", object_type[do_characters]);
 	} else if (received) {
 		len = snprintf(buf, sizeof(buf),
 			       " updated %d of %d %s\n",
@@ -99,7 +99,7 @@ static void report_char_chartab_status(int reset, int received, int used,
 			snprintf(buf + (len - 1), sizeof(buf) - (len - 1),
 				 " with %d reject%s\n",
 				 rejected, rejected > 1 ? "s" : "");
-		pr_info("%s", buf);
+		pr_debug("%s", buf);
 	}
 }
 
@@ -280,7 +280,7 @@ static ssize_t keymap_store(struct kobject *kobj, struct kobj_attribute *attr,
 	}
 	if (strchr("dDrR", *in_buff)) {
 		spk_set_key_info(spk_key_defaults, spk_key_buf);
-		pr_info("keymap set to default values\n");
+		pr_debug("keymap set to default values\n");
 		kfree(in_buff);
 		spin_unlock_irqrestore(&speakup_info.spinlock, flags);
 		return count;
@@ -610,7 +610,7 @@ static inline void spk_reset_default_value(char *header_name,
 			spk_set_num_var(synth_default_value[idx],
 					param, E_NEW_DEFAULT);
 			spk_set_num_var(0, param, E_DEFAULT);
-			pr_info("%s reset to default value\n", param->name);
+			pr_debug("%s reset to default value\n", param->name);
 		}
 	}
 }
@@ -696,7 +696,7 @@ ssize_t spk_var_store(struct kobject *kobj, struct kobj_attribute *attr,
 	spin_unlock_irqrestore(&speakup_info.spinlock, flags);
 
 	if (ret == -ERESTART)
-		pr_info("%s reset to default value\n", param->name);
+		pr_debug("%s reset to default value\n", param->name);
 	return count;
 }
 EXPORT_SYMBOL_GPL(spk_var_store);
@@ -734,7 +734,7 @@ static void report_msg_status(int reset, int received, int used,
 	char buf[160];
 
 	if (reset) {
-		pr_info("i18n messages from group %s reset to defaults\n",
+		pr_debug("i18n messages from group %s reset to defaults\n",
 			groupname);
 	} else if (received) {
 		len = snprintf(buf, sizeof(buf),
@@ -744,7 +744,7 @@ static void report_msg_status(int reset, int received, int used,
 			snprintf(buf + (len - 1), sizeof(buf) - (len - 1),
 				 " with %d reject%s\n",
 				 rejected, rejected > 1 ? "s" : "");
-		pr_info("%s", buf);
+		pr_debug("%s", buf);
 	}
 }
 

@@ -550,38 +550,38 @@ static void encx24j600_hw_init_rx(struct encx24j600_priv *priv)
 static void encx24j600_dump_config(struct encx24j600_priv *priv,
 				   const char *msg)
 {
-	pr_info(DRV_NAME ": %s\n", msg);
+	pr_debug(DRV_NAME ": %s\n", msg);
 
 	/* CHIP configuration */
-	pr_info(DRV_NAME " ECON1:   %04X\n", encx24j600_read_reg(priv, ECON1));
-	pr_info(DRV_NAME " ECON2:   %04X\n", encx24j600_read_reg(priv, ECON2));
-	pr_info(DRV_NAME " ERXFCON: %04X\n", encx24j600_read_reg(priv,
+	pr_debug(DRV_NAME " ECON1:   %04X\n", encx24j600_read_reg(priv, ECON1));
+	pr_debug(DRV_NAME " ECON2:   %04X\n", encx24j600_read_reg(priv, ECON2));
+	pr_debug(DRV_NAME " ERXFCON: %04X\n", encx24j600_read_reg(priv,
 								 ERXFCON));
-	pr_info(DRV_NAME " ESTAT:   %04X\n", encx24j600_read_reg(priv, ESTAT));
-	pr_info(DRV_NAME " EIR:     %04X\n", encx24j600_read_reg(priv, EIR));
-	pr_info(DRV_NAME " EIDLED:  %04X\n", encx24j600_read_reg(priv, EIDLED));
+	pr_debug(DRV_NAME " ESTAT:   %04X\n", encx24j600_read_reg(priv, ESTAT));
+	pr_debug(DRV_NAME " EIR:     %04X\n", encx24j600_read_reg(priv, EIR));
+	pr_debug(DRV_NAME " EIDLED:  %04X\n", encx24j600_read_reg(priv, EIDLED));
 
 	/* MAC layer configuration */
-	pr_info(DRV_NAME " MACON1:  %04X\n", encx24j600_read_reg(priv, MACON1));
-	pr_info(DRV_NAME " MACON2:  %04X\n", encx24j600_read_reg(priv, MACON2));
-	pr_info(DRV_NAME " MAIPG:   %04X\n", encx24j600_read_reg(priv, MAIPG));
-	pr_info(DRV_NAME " MACLCON: %04X\n", encx24j600_read_reg(priv,
+	pr_debug(DRV_NAME " MACON1:  %04X\n", encx24j600_read_reg(priv, MACON1));
+	pr_debug(DRV_NAME " MACON2:  %04X\n", encx24j600_read_reg(priv, MACON2));
+	pr_debug(DRV_NAME " MAIPG:   %04X\n", encx24j600_read_reg(priv, MAIPG));
+	pr_debug(DRV_NAME " MACLCON: %04X\n", encx24j600_read_reg(priv,
 								 MACLCON));
-	pr_info(DRV_NAME " MABBIPG: %04X\n", encx24j600_read_reg(priv,
+	pr_debug(DRV_NAME " MABBIPG: %04X\n", encx24j600_read_reg(priv,
 								 MABBIPG));
 
 	/* PHY configuation */
-	pr_info(DRV_NAME " PHCON1:  %04X\n", encx24j600_read_phy(priv, PHCON1));
-	pr_info(DRV_NAME " PHCON2:  %04X\n", encx24j600_read_phy(priv, PHCON2));
-	pr_info(DRV_NAME " PHANA:   %04X\n", encx24j600_read_phy(priv, PHANA));
-	pr_info(DRV_NAME " PHANLPA: %04X\n", encx24j600_read_phy(priv,
+	pr_debug(DRV_NAME " PHCON1:  %04X\n", encx24j600_read_phy(priv, PHCON1));
+	pr_debug(DRV_NAME " PHCON2:  %04X\n", encx24j600_read_phy(priv, PHCON2));
+	pr_debug(DRV_NAME " PHANA:   %04X\n", encx24j600_read_phy(priv, PHANA));
+	pr_debug(DRV_NAME " PHANLPA: %04X\n", encx24j600_read_phy(priv,
 								 PHANLPA));
-	pr_info(DRV_NAME " PHANE:   %04X\n", encx24j600_read_phy(priv, PHANE));
-	pr_info(DRV_NAME " PHSTAT1: %04X\n", encx24j600_read_phy(priv,
+	pr_debug(DRV_NAME " PHANE:   %04X\n", encx24j600_read_phy(priv, PHANE));
+	pr_debug(DRV_NAME " PHSTAT1: %04X\n", encx24j600_read_phy(priv,
 								 PHSTAT1));
-	pr_info(DRV_NAME " PHSTAT2: %04X\n", encx24j600_read_phy(priv,
+	pr_debug(DRV_NAME " PHSTAT2: %04X\n", encx24j600_read_phy(priv,
 								 PHSTAT2));
-	pr_info(DRV_NAME " PHSTAT3: %04X\n", encx24j600_read_phy(priv,
+	pr_debug(DRV_NAME " PHSTAT3: %04X\n", encx24j600_read_phy(priv,
 								 PHSTAT3));
 }
 

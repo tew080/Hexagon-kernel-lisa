@@ -5,7 +5,7 @@
 /* Smart-Peripheral-Switch (SPS) Module. */
 
 #include <linux/types.h>	/* u32 */
-#include <linux/kernel.h>	/* pr_info() */
+#include <linux/kernel.h>	/* pr_debug() */
 #include <linux/module.h>	/* module_init() */
 #include <linux/slab.h>		/* kzalloc() */
 #include <linux/mutex.h>	/* mutex */
@@ -139,15 +139,15 @@ static ssize_t sps_set_info(struct file *file, const char __user *buf,
 	for (i = 0; i < sizeof(str) && (str[i] >= '0') && (str[i] <= '9'); ++i)
 		buf_size_kb = (buf_size_kb * 10) + (str[i] - '0');
 
-	pr_info("sps:debugfs: input buffer size is %dKB\n", buf_size_kb);
+	pr_debug("sps:debugfs: input buffer size is %dKB\n", buf_size_kb);
 
 	if ((logging_option == 0) || (logging_option == 2)) {
-		pr_info("sps:debugfs: need to first turn on recording\n");
+		pr_debug("sps:debugfs: need to first turn on recording\n");
 		return -EFAULT;
 	}
 
 	if (buf_size_kb < 1) {
-		pr_info("sps:debugfs:buffer size should be no less than 1KB\n");
+		pr_debug("sps:debugfs:buffer size should be no less than 1KB\n");
 		return -EFAULT;
 	}
 
@@ -162,7 +162,7 @@ static ssize_t sps_set_info(struct file *file, const char __user *buf,
 	if (debugfs_record_enabled) {
 		if (debugfs_buf_size == new_buf_size) {
 			/* need do nothing */
-			pr_info(
+			pr_debug(
 				"sps:debugfs: input buffer size is the same as before\n"
 				);
 			mutex_unlock(&sps_debugfs_lock);
@@ -224,7 +224,7 @@ static ssize_t sps_set_logging_option(struct file *file, const char __user *buf,
 	if (ret)
 		return ret;
 
-	pr_info("sps:debugfs: try to change logging option to %d\n", option);
+	pr_debug("sps:debugfs: try to change logging option to %d\n", option);
 
 	if (option > 3) {
 		pr_err("sps:debugfs: invalid logging option:%d\n", option);
@@ -270,7 +270,7 @@ static ssize_t sps_set_bam_addr(struct file *file, const char __user *buf,
 	if (ret)
 		return ret;
 
-	pr_info("sps:debugfs:input BAM physical address:0x%x\n", bam_addr);
+	pr_debug("sps:debugfs:input BAM physical address:0x%x\n", bam_addr);
 
 	bam = phy2bam(bam_addr);
 
@@ -344,7 +344,7 @@ static ssize_t sps_set_bam_addr(struct file *file, const char __user *buf,
 		if (testbus_sel)
 			print_bam_test_bus_reg(vir_addr, testbus_sel);
 		else {
-			pr_info("sps:output TEST_BUS_REG for all TEST_BUS_SEL\n");
+			pr_debug("sps:output TEST_BUS_REG for all TEST_BUS_SEL\n");
 			print_bam_test_bus_reg(vir_addr, testbus_sel);
 		}
 		break;
@@ -484,7 +484,7 @@ static ssize_t sps_set_bam_addr(struct file *file, const char __user *buf,
 			print_bam_pipe_desc_fifo(vir_addr, i, 100);
 		break;
 	default:
-		pr_info("sps:no dump option is chosen yet\n");
+		pr_debug("sps:no dump option is chosen yet\n");
 	}
 
 	return count;
@@ -698,7 +698,7 @@ int sps_get_bam_debug_info(unsigned long dev, u32 option, u32 para,
 		if (tb_sel)
 			print_bam_test_bus_reg(vir_addr, tb_sel);
 		else
-			pr_info("sps:TEST_BUS_SEL should NOT be zero\n");
+			pr_debug("sps:TEST_BUS_SEL should NOT be zero\n");
 		break;
 	case 14: /* output partial desc FIFO of selected pipes */
 		if (desc_sel == 0)
@@ -836,7 +836,7 @@ int sps_get_bam_debug_info(unsigned long dev, u32 option, u32 para,
 			print_bam_pipe_desc_fifo(vir_addr, i, 100);
 		break;
 	default:
-		pr_info("sps:no option is chosen yet\n");
+		pr_debug("sps:no option is chosen yet\n");
 	}
 
 	return res;

@@ -599,11 +599,11 @@ static long spss_utils_ioctl(struct file *file,
 			memcpy(&tmp, data, sizeof(tmp));
 			is_ssr_disabled = (bool) tmp; /* u32 to bool */
 
-			pr_info("SSR disabled state updated to: %d\n",
+			pr_debug("SSR disabled state updated to: %d\n",
 				 is_ssr_disabled);
 		}
 
-		pr_info("is_iar_active [%d] is_ssr_disabled [%d].\n",
+		pr_debug("is_iar_active [%d] is_ssr_disabled [%d].\n",
 			is_iar_active, is_ssr_disabled);
 		break;
 
@@ -875,7 +875,7 @@ static int spss_parse_dt(struct device_node *node)
 	iounmap(spss_emul_type_reg);
 
 	if (!is_cmac_and_iar_feature_supported) {
-		pr_info("legacy SPSS not support cmac & iar feature.\n");
+		pr_debug("legacy SPSS not support cmac & iar feature.\n");
 		goto out;
 	}
 	/* PIL-SPSS area */
@@ -910,7 +910,7 @@ static int spss_parse_dt(struct device_node *node)
 
 	/* cmac buffer after spss firmware end */
 	cmac_mem_addr = pil_addr + pil_size;
-	pr_info("iar_buf_addr [0x%08x].\n", cmac_mem_addr);
+	pr_debug("iar_buf_addr [0x%08x].\n", cmac_mem_addr);
 
 	memset(saved_fw_cmac, 0xA5, sizeof(saved_fw_cmac));
 	memset(saved_apps_cmac, 0xA5, sizeof(saved_apps_cmac));
@@ -1088,10 +1088,10 @@ static int spss_utils_pil_callback(struct notifier_block *nb,
 		mutex_unlock(&event_lock);
 		break;
 	case SUBSYS_BEFORE_POWERUP:
-		pr_info("[SUBSYS_BEFORE_POWERUP] event.\n");
+		pr_debug("[SUBSYS_BEFORE_POWERUP] event.\n");
 
 		if (!is_cmac_and_iar_feature_supported) {
-			pr_info("legacy SPSS not support cmac,iar feature.\n");
+			pr_debug("legacy SPSS not support cmac,iar feature.\n");
 			break;
 		}
 		if (is_iar_active && is_ssr_disabled) {
@@ -1100,7 +1100,7 @@ static int spss_utils_pil_callback(struct notifier_block *nb,
 		}
 		break;
 	case SUBSYS_AFTER_POWERUP:
-		pr_info("[SUBSYS_AFTER_POWERUP] event.\n");
+		pr_debug("[SUBSYS_AFTER_POWERUP] event.\n");
 		mutex_lock(&event_lock);
 		event_id = SPSS_EVENT_ID_SPU_POWER_UP;
 		complete_all(&spss_events[event_id]);
@@ -1112,7 +1112,7 @@ static int spss_utils_pil_callback(struct notifier_block *nb,
 		mutex_unlock(&event_lock);
 
 		if (!is_cmac_and_iar_feature_supported) {
-			pr_info("legacy SPSS not support cmac,iar feature.\n");
+			pr_debug("legacy SPSS not support cmac,iar feature.\n");
 			break;
 		}
 		/*
@@ -1143,7 +1143,7 @@ static int spss_utils_pil_callback(struct notifier_block *nb,
 		pr_debug("[SUBSYS_BEFORE_AUTH_AND_RESET] event.\n");
 
 		if (!is_cmac_and_iar_feature_supported) {
-			pr_info("legacy SPSS not support cmac,iar feature.\n");
+			pr_debug("legacy SPSS not support cmac,iar feature.\n");
 			break;
 		}
 		/* do nothing if IAR is not active */
@@ -1181,7 +1181,7 @@ static int spss_probe(struct platform_device *pdev)
 	 */
 	if (of_property_read_bool(pdev->dev.of_node,
 				"qcom,no-cmac-and-iar-feature-support")) {
-		pr_info("legacy SPSS not support cmac & iar feature.\n");
+		pr_debug("legacy SPSS not support cmac & iar feature.\n");
 		is_cmac_and_iar_feature_supported = false;
 	}
 
@@ -1250,7 +1250,7 @@ static int spss_probe(struct platform_device *pdev)
 	is_iar_active = false;
 	is_ssr_disabled = false;
 
-	pr_info("Probe completed successfully, [%s].\n", firmware_name);
+	pr_debug("Probe completed successfully, [%s].\n", firmware_name);
 
 	return 0;
 }

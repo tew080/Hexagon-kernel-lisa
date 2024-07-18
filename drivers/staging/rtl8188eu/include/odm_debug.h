@@ -71,7 +71,7 @@
 
 /*------------------------Export Marco Definition---------------------------*/
 #define RT_PRINTK(fmt, args...)				\
-	pr_info("%s(): " fmt, __func__, ## args);
+	pr_debug("%s(): " fmt, __func__, ## args);
 
 #ifndef ASSERT
 	#define ASSERT(expr)
@@ -80,14 +80,14 @@
 #define ODM_RT_TRACE(pDM_Odm, comp, level, fmt)				\
 	if (((comp) & pDM_Odm->DebugComponents) &&			\
 	    (level <= pDM_Odm->DebugLevel)) {				\
-		pr_info("[ODM-8188E] ");				\
+		pr_debug("[ODM-8188E] ");				\
 		RT_PRINTK fmt;						\
 	}
 
 #define ODM_RT_ASSERT(pDM_Odm, expr, fmt)				\
 	if (!(expr)) {							\
-		pr_info("Assertion failed! %s at ......\n", #expr);	\
-		pr_info("      ......%s,%s,line=%d\n", __FILE__,	\
+		pr_debug("Assertion failed! %s at ......\n", #expr);	\
+		pr_debug("      ......%s,%s,line=%d\n", __FILE__,	\
 			__func__, __LINE__);				\
 		RT_PRINTK fmt;						\
 		ASSERT(false);						\

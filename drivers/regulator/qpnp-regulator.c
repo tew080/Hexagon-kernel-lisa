@@ -601,7 +601,7 @@ static inline int qpnp_vreg_read(struct qpnp_regulator *vreg, u16 addr, u8 *buf,
 	if (!rc && (qpnp_vreg_debug_mask & QPNP_VREG_DEBUG_READS)) {
 		str[0] = '\0';
 		fill_string(str, DEBUG_PRINT_BUFFER_SIZE, buf, len);
-		pr_info(" %-11s:  read(0x%04X), sid=%d, len=%d; %s\n",
+		pr_debug(" %-11s:  read(0x%04X), sid=%d, len=%d; %s\n",
 			vreg->rdesc.name, vreg->base_addr + addr,
 			to_spmi_device(vreg->pdev->dev.parent)->usid, len,
 			str);
@@ -619,7 +619,7 @@ static inline int qpnp_vreg_write(struct qpnp_regulator *vreg, u16 addr,
 	if (qpnp_vreg_debug_mask & QPNP_VREG_DEBUG_WRITES) {
 		str[0] = '\0';
 		fill_string(str, DEBUG_PRINT_BUFFER_SIZE, buf, len);
-		pr_info("%-11s: write(0x%04X), sid=%d, len=%d; %s\n",
+		pr_debug("%-11s: write(0x%04X), sid=%d, len=%d; %s\n",
 			vreg->rdesc.name, vreg->base_addr + addr,
 			to_spmi_device(vreg->pdev->dev.parent)->usid, len,
 			str);
@@ -1336,7 +1336,7 @@ static int qpnp_regulator_vs_clear_ocp(struct qpnp_regulator *vreg)
 		vreg_err(vreg, "qpnp_vreg_masked_write failed, rc=%d\n", rc);
 
 	if (qpnp_vreg_debug_mask & QPNP_VREG_DEBUG_OCP) {
-		pr_info("%s: switch state toggled after OCP event\n",
+		pr_debug("%s: switch state toggled after OCP event\n",
 			vreg->rdesc.name);
 	}
 
@@ -1377,7 +1377,7 @@ static irqreturn_t qpnp_regulator_vs_ocp_isr(int irq, void *data)
 	vreg->ocp_count++;
 
 	if (qpnp_vreg_debug_mask & QPNP_VREG_DEBUG_OCP) {
-		pr_info("%s: VS OCP triggered, count = %d, delay = %lld us\n",
+		pr_debug("%s: VS OCP triggered, count = %d, delay = %lld us\n",
 			vreg->rdesc.name, vreg->ocp_count,
 			ocp_trigger_delay_us);
 	}
@@ -1499,7 +1499,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		pc_mode_label[5] =
 		     mode_reg & QPNP_COMMON_MODE_FOLLOW_HW_EN0_MASK ? '0' : '_';
 
-		pr_info("%s %-11s: %s, v=%7d uV, mode=%s, pc_en=%s, alt_mode=%s\n",
+		pr_debug("%s %-11s: %s, v=%7d uV, mode=%s, pc_en=%s, alt_mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label, uV,
 			mode_label, pc_enable_label, pc_mode_label);
 		break;
@@ -1520,7 +1520,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		pc_mode_label[6] =
 		     mode_reg & QPNP_COMMON_MODE_FOLLOW_HW_EN0_MASK ? '0' : '_';
 
-		pr_info("%s %-11s: %s, v=%7d uV, mode=%s, pc_en=%s, alt_mode=%s\n",
+		pr_debug("%s %-11s: %s, v=%7d uV, mode=%s, pc_en=%s, alt_mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label, uV,
 			mode_label, pc_enable_label, pc_mode_label);
 		break;
@@ -1529,7 +1529,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		pc_mode_label[0] =
 		     mode_reg & QPNP_COMMON_MODE_BYPASS_MASK ? 'B' : '_';
 
-		pr_info("%s %-11s: %s, v=%7d uV, alt_mode=%s\n",
+		pr_debug("%s %-11s: %s, v=%7d uV, alt_mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label, uV,
 			pc_mode_label);
 		break;
@@ -1540,16 +1540,16 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		pc_mode_label[1] =
 		     mode_reg & QPNP_COMMON_MODE_FOLLOW_AWAKE_MASK  ? 'W' : '_';
 
-		pr_info("%s %-11s: %s, mode=%s, pc_en=%s, alt_mode=%s\n",
+		pr_debug("%s %-11s: %s, mode=%s, pc_en=%s, alt_mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label,
 			mode_label, pc_enable_label, pc_mode_label);
 		break;
 	case QPNP_REGULATOR_LOGICAL_TYPE_BOOST:
-		pr_info("%s %-11s: %s, v=%7d uV\n",
+		pr_debug("%s %-11s: %s, v=%7d uV\n",
 			action_label, vreg->rdesc.name, enable_label, uV);
 		break;
 	case QPNP_REGULATOR_LOGICAL_TYPE_BOOST_BYP:
-		pr_info("%s %-11s: %s, v=%7d uV\n",
+		pr_debug("%s %-11s: %s, v=%7d uV\n",
 			action_label, vreg->rdesc.name, enable_label, uV);
 		break;
 	case QPNP_REGULATOR_LOGICAL_TYPE_FTSMPS:
@@ -1557,7 +1557,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		pc_mode_label[0] =
 		     mode_reg & QPNP_COMMON_MODE_AUTO_MASK          ? 'A' : '_';
 
-		pr_info("%s %-11s: %s, v=%7d uV, mode=%s, alt_mode=%s\n",
+		pr_debug("%s %-11s: %s, v=%7d uV, mode=%s, alt_mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label, uV,
 			mode_label, pc_mode_label);
 		break;
@@ -1566,7 +1566,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		mode_reg = vreg->ctrl_reg[QPNP_COMMON_IDX_MODE];
 		pc_mode_label[0] =
 		     mode_reg & QPNP_COMMON_MODE_FOLLOW_AWAKE_MASK  ? 'W' : '_';
-		pr_info("%s %-11s: %s, v=%7d uV, mode=%s, alt_mode=%s\n",
+		pr_debug("%s %-11s: %s, v=%7d uV, mode=%s, alt_mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label, uV,
 			mode_label, pc_mode_label);
 		break;
@@ -1576,7 +1576,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		     mode_reg & QPNP_COMMON_MODE_BYPASS_MASK        ? 'B' : '_';
 		pc_mode_label[1] =
 		     mode_reg & QPNP_COMMON_MODE_FOLLOW_AWAKE_MASK  ? 'W' : '_';
-		pr_info("%s %-11s: %s, v=%7d uV, mode=%s, alt_mode=%s\n",
+		pr_debug("%s %-11s: %s, v=%7d uV, mode=%s, alt_mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label, uV,
 			mode_label, pc_mode_label);
 		break;
@@ -1584,7 +1584,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		mode_reg = vreg->ctrl_reg[QPNP_COMMON_IDX_MODE];
 		mode_label = qpnp_common2_mode_label[mode_reg
 						     & QPNP_COMMON2_MODE_MASK];
-		pr_info("%s %-11s: %s, v=%7d uV, mode=%s\n",
+		pr_debug("%s %-11s: %s, v=%7d uV, mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label, uV,
 			mode_label);
 		break;
@@ -1594,7 +1594,7 @@ static void qpnp_vreg_show_state(struct regulator_dev *rdev,
 		mode_reg = vreg->ctrl_reg[QPNP_COMMON_IDX_MODE];
 		mode_label = qpnp_common3_mode_label[mode_reg
 						     & QPNP_COMMON3_MODE_MASK];
-		pr_info("%s %-11s: %s, v=%7d uV, mode=%s\n",
+		pr_debug("%s %-11s: %s, v=%7d uV, mode=%s\n",
 			action_label, vreg->rdesc.name, enable_label, uV,
 			mode_label);
 		break;
@@ -2535,7 +2535,7 @@ static int qpnp_regulator_probe(struct platform_device *pdev)
 	qpnp_vreg_create_debugfs(vreg);
 
 	if (qpnp_vreg_debug_mask & QPNP_VREG_DEBUG_INIT && vreg->slew_rate)
-		pr_info("%-11s: step rate=%d uV/us\n", vreg->rdesc.name,
+		pr_debug("%-11s: step rate=%d uV/us\n", vreg->rdesc.name,
 			vreg->slew_rate);
 
 	qpnp_vreg_show_state(vreg->rdev, QPNP_REGULATOR_ACTION_INIT);

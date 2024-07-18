@@ -773,14 +773,14 @@ static struct rfkill *bt_rfkill;
 
 static int dmi_check_cb(const struct dmi_system_id *id)
 {
-	pr_info("Identified laptop model '%s'\n", id->ident);
+	pr_debug("Identified laptop model '%s'\n", id->ident);
 	extra_features = false;
 	return 1;
 }
 
 static int dmi_check_cb_extra(const struct dmi_system_id *id)
 {
-	pr_info("Identified laptop model '%s', enabling extra features\n",
+	pr_debug("Identified laptop model '%s', enabling extra features\n",
 		id->ident);
 	extra_features = true;
 	return 1;
@@ -1012,7 +1012,7 @@ static int __init compal_init(void)
 	if (ret)
 		goto err_rfkill;
 
-	pr_info("Driver " DRIVER_VERSION " successfully loaded\n");
+	pr_debug("Driver " DRIVER_VERSION " successfully loaded\n");
 	return 0;
 
 err_rfkill:
@@ -1088,7 +1088,7 @@ static void __exit compal_cleanup(void)
 	rfkill_destroy(wifi_rfkill);
 	rfkill_destroy(bt_rfkill);
 
-	pr_info("Driver unloaded\n");
+	pr_debug("Driver unloaded\n");
 }
 
 static int compal_remove(struct platform_device *pdev)
@@ -1098,7 +1098,7 @@ static int compal_remove(struct platform_device *pdev)
 	if (!extra_features)
 		return 0;
 
-	pr_info("Unloading: resetting fan control to motherboard\n");
+	pr_debug("Unloading: resetting fan control to motherboard\n");
 	pwm_disable_control();
 
 	data = platform_get_drvdata(pdev);

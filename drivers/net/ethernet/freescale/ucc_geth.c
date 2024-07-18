@@ -362,8 +362,8 @@ static int dump_init_enet_entries(struct ucc_geth_private *ugeth,
 				init_enet_offset =
 				    (in_be32(p_start) &
 				     ENET_INIT_PARAM_PTR_MASK);
-				pr_info("Init enet entry %d:\n", i);
-				pr_info("Base address: 0x%08x\n",
+				pr_debug("Init enet entry %d:\n", i);
+				pr_debug("Base address: 0x%08x\n",
 					(u32)qe_muram_addr(init_enet_offset));
 				mem_disp(qe_muram_addr(init_enet_offset),
 					 thread_size);
@@ -564,7 +564,7 @@ static void dump_bds(struct ucc_geth_private *ugeth)
 			length =
 			    (ugeth->ug_info->bdRingLenTx[i] *
 			     sizeof(struct qe_bd));
-			pr_info("TX BDs[%d]\n", i);
+			pr_debug("TX BDs[%d]\n", i);
 			mem_disp(ugeth->p_tx_bd_ring[i], length);
 		}
 	}
@@ -573,7 +573,7 @@ static void dump_bds(struct ucc_geth_private *ugeth)
 			length =
 			    (ugeth->ug_info->bdRingLenRx[i] *
 			     sizeof(struct qe_bd));
-			pr_info("RX BDs[%d]\n", i);
+			pr_debug("RX BDs[%d]\n", i);
 			mem_disp(ugeth->p_rx_bd_ring[i], length);
 		}
 	}
@@ -583,91 +583,91 @@ static void dump_regs(struct ucc_geth_private *ugeth)
 {
 	int i;
 
-	pr_info("UCC%d Geth registers:\n", ugeth->ug_info->uf_info.ucc_num + 1);
-	pr_info("Base address: 0x%08x\n", (u32)ugeth->ug_regs);
+	pr_debug("UCC%d Geth registers:\n", ugeth->ug_info->uf_info.ucc_num + 1);
+	pr_debug("Base address: 0x%08x\n", (u32)ugeth->ug_regs);
 
-	pr_info("maccfg1    : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("maccfg1    : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->maccfg1,
 		in_be32(&ugeth->ug_regs->maccfg1));
-	pr_info("maccfg2    : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("maccfg2    : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->maccfg2,
 		in_be32(&ugeth->ug_regs->maccfg2));
-	pr_info("ipgifg     : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("ipgifg     : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->ipgifg,
 		in_be32(&ugeth->ug_regs->ipgifg));
-	pr_info("hafdup     : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("hafdup     : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->hafdup,
 		in_be32(&ugeth->ug_regs->hafdup));
-	pr_info("ifctl      : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("ifctl      : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->ifctl,
 		in_be32(&ugeth->ug_regs->ifctl));
-	pr_info("ifstat     : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("ifstat     : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->ifstat,
 		in_be32(&ugeth->ug_regs->ifstat));
-	pr_info("macstnaddr1: addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("macstnaddr1: addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->macstnaddr1,
 		in_be32(&ugeth->ug_regs->macstnaddr1));
-	pr_info("macstnaddr2: addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("macstnaddr2: addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->macstnaddr2,
 		in_be32(&ugeth->ug_regs->macstnaddr2));
-	pr_info("uempr      : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("uempr      : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->uempr,
 		in_be32(&ugeth->ug_regs->uempr));
-	pr_info("utbipar    : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("utbipar    : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->utbipar,
 		in_be32(&ugeth->ug_regs->utbipar));
-	pr_info("uescr      : addr - 0x%08x, val - 0x%04x\n",
+	pr_debug("uescr      : addr - 0x%08x, val - 0x%04x\n",
 		(u32)&ugeth->ug_regs->uescr,
 		in_be16(&ugeth->ug_regs->uescr));
-	pr_info("tx64       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("tx64       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->tx64,
 		in_be32(&ugeth->ug_regs->tx64));
-	pr_info("tx127      : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("tx127      : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->tx127,
 		in_be32(&ugeth->ug_regs->tx127));
-	pr_info("tx255      : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("tx255      : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->tx255,
 		in_be32(&ugeth->ug_regs->tx255));
-	pr_info("rx64       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("rx64       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->rx64,
 		in_be32(&ugeth->ug_regs->rx64));
-	pr_info("rx127      : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("rx127      : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->rx127,
 		in_be32(&ugeth->ug_regs->rx127));
-	pr_info("rx255      : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("rx255      : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->rx255,
 		in_be32(&ugeth->ug_regs->rx255));
-	pr_info("txok       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("txok       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->txok,
 		in_be32(&ugeth->ug_regs->txok));
-	pr_info("txcf       : addr - 0x%08x, val - 0x%04x\n",
+	pr_debug("txcf       : addr - 0x%08x, val - 0x%04x\n",
 		(u32)&ugeth->ug_regs->txcf,
 		in_be16(&ugeth->ug_regs->txcf));
-	pr_info("tmca       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("tmca       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->tmca,
 		in_be32(&ugeth->ug_regs->tmca));
-	pr_info("tbca       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("tbca       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->tbca,
 		in_be32(&ugeth->ug_regs->tbca));
-	pr_info("rxfok      : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("rxfok      : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->rxfok,
 		in_be32(&ugeth->ug_regs->rxfok));
-	pr_info("rxbok      : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("rxbok      : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->rxbok,
 		in_be32(&ugeth->ug_regs->rxbok));
-	pr_info("rbyt       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("rbyt       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->rbyt,
 		in_be32(&ugeth->ug_regs->rbyt));
-	pr_info("rmca       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("rmca       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->rmca,
 		in_be32(&ugeth->ug_regs->rmca));
-	pr_info("rbca       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("rbca       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->rbca,
 		in_be32(&ugeth->ug_regs->rbca));
-	pr_info("scar       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("scar       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->scar,
 		in_be32(&ugeth->ug_regs->scar));
-	pr_info("scam       : addr - 0x%08x, val - 0x%08x\n",
+	pr_debug("scam       : addr - 0x%08x, val - 0x%08x\n",
 		(u32)&ugeth->ug_regs->scam,
 		in_be32(&ugeth->ug_regs->scam));
 
@@ -694,12 +694,12 @@ static void dump_regs(struct ucc_geth_private *ugeth)
 			break;
 		}
 
-		pr_info("Thread data TXs:\n");
-		pr_info("Base address: 0x%08x\n",
+		pr_debug("Thread data TXs:\n");
+		pr_debug("Base address: 0x%08x\n",
 			(u32)ugeth->p_thread_data_tx);
 		for (i = 0; i < numThreadsTxNumerical; i++) {
-			pr_info("Thread data TX[%d]:\n", i);
-			pr_info("Base address: 0x%08x\n",
+			pr_debug("Thread data TX[%d]:\n", i);
+			pr_debug("Base address: 0x%08x\n",
 				(u32)&ugeth->p_thread_data_tx[i]);
 			mem_disp((u8 *) & ugeth->p_thread_data_tx[i],
 				 sizeof(struct ucc_geth_thread_data_tx));
@@ -728,228 +728,228 @@ static void dump_regs(struct ucc_geth_private *ugeth)
 			break;
 		}
 
-		pr_info("Thread data RX:\n");
-		pr_info("Base address: 0x%08x\n",
+		pr_debug("Thread data RX:\n");
+		pr_debug("Base address: 0x%08x\n",
 			(u32)ugeth->p_thread_data_rx);
 		for (i = 0; i < numThreadsRxNumerical; i++) {
-			pr_info("Thread data RX[%d]:\n", i);
-			pr_info("Base address: 0x%08x\n",
+			pr_debug("Thread data RX[%d]:\n", i);
+			pr_debug("Base address: 0x%08x\n",
 				(u32)&ugeth->p_thread_data_rx[i]);
 			mem_disp((u8 *) & ugeth->p_thread_data_rx[i],
 				 sizeof(struct ucc_geth_thread_data_rx));
 		}
 	}
 	if (ugeth->p_exf_glbl_param) {
-		pr_info("EXF global param:\n");
-		pr_info("Base address: 0x%08x\n",
+		pr_debug("EXF global param:\n");
+		pr_debug("Base address: 0x%08x\n",
 			(u32)ugeth->p_exf_glbl_param);
 		mem_disp((u8 *) ugeth->p_exf_glbl_param,
 			 sizeof(*ugeth->p_exf_glbl_param));
 	}
 	if (ugeth->p_tx_glbl_pram) {
-		pr_info("TX global param:\n");
-		pr_info("Base address: 0x%08x\n", (u32)ugeth->p_tx_glbl_pram);
-		pr_info("temoder      : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("TX global param:\n");
+		pr_debug("Base address: 0x%08x\n", (u32)ugeth->p_tx_glbl_pram);
+		pr_debug("temoder      : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_tx_glbl_pram->temoder,
 			in_be16(&ugeth->p_tx_glbl_pram->temoder));
-	       pr_info("sqptr        : addr - 0x%08x, val - 0x%08x\n",
+	       pr_debug("sqptr        : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->sqptr,
 			in_be32(&ugeth->p_tx_glbl_pram->sqptr));
-		pr_info("schedulerbasepointer: addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("schedulerbasepointer: addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->schedulerbasepointer,
 			in_be32(&ugeth->p_tx_glbl_pram->schedulerbasepointer));
-		pr_info("txrmonbaseptr: addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("txrmonbaseptr: addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->txrmonbaseptr,
 			in_be32(&ugeth->p_tx_glbl_pram->txrmonbaseptr));
-		pr_info("tstate       : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("tstate       : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->tstate,
 			in_be32(&ugeth->p_tx_glbl_pram->tstate));
-		pr_info("iphoffset[0] : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("iphoffset[0] : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_tx_glbl_pram->iphoffset[0],
 			ugeth->p_tx_glbl_pram->iphoffset[0]);
-		pr_info("iphoffset[1] : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("iphoffset[1] : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_tx_glbl_pram->iphoffset[1],
 			ugeth->p_tx_glbl_pram->iphoffset[1]);
-		pr_info("iphoffset[2] : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("iphoffset[2] : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_tx_glbl_pram->iphoffset[2],
 			ugeth->p_tx_glbl_pram->iphoffset[2]);
-		pr_info("iphoffset[3] : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("iphoffset[3] : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_tx_glbl_pram->iphoffset[3],
 			ugeth->p_tx_glbl_pram->iphoffset[3]);
-		pr_info("iphoffset[4] : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("iphoffset[4] : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_tx_glbl_pram->iphoffset[4],
 			ugeth->p_tx_glbl_pram->iphoffset[4]);
-		pr_info("iphoffset[5] : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("iphoffset[5] : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_tx_glbl_pram->iphoffset[5],
 			ugeth->p_tx_glbl_pram->iphoffset[5]);
-		pr_info("iphoffset[6] : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("iphoffset[6] : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_tx_glbl_pram->iphoffset[6],
 			ugeth->p_tx_glbl_pram->iphoffset[6]);
-		pr_info("iphoffset[7] : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("iphoffset[7] : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_tx_glbl_pram->iphoffset[7],
 			ugeth->p_tx_glbl_pram->iphoffset[7]);
-		pr_info("vtagtable[0] : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("vtagtable[0] : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->vtagtable[0],
 			in_be32(&ugeth->p_tx_glbl_pram->vtagtable[0]));
-		pr_info("vtagtable[1] : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("vtagtable[1] : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->vtagtable[1],
 			in_be32(&ugeth->p_tx_glbl_pram->vtagtable[1]));
-		pr_info("vtagtable[2] : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("vtagtable[2] : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->vtagtable[2],
 			in_be32(&ugeth->p_tx_glbl_pram->vtagtable[2]));
-		pr_info("vtagtable[3] : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("vtagtable[3] : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->vtagtable[3],
 			in_be32(&ugeth->p_tx_glbl_pram->vtagtable[3]));
-		pr_info("vtagtable[4] : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("vtagtable[4] : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->vtagtable[4],
 			in_be32(&ugeth->p_tx_glbl_pram->vtagtable[4]));
-		pr_info("vtagtable[5] : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("vtagtable[5] : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->vtagtable[5],
 			in_be32(&ugeth->p_tx_glbl_pram->vtagtable[5]));
-		pr_info("vtagtable[6] : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("vtagtable[6] : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->vtagtable[6],
 			in_be32(&ugeth->p_tx_glbl_pram->vtagtable[6]));
-		pr_info("vtagtable[7] : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("vtagtable[7] : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->vtagtable[7],
 			in_be32(&ugeth->p_tx_glbl_pram->vtagtable[7]));
-		pr_info("tqptr        : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("tqptr        : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_tx_glbl_pram->tqptr,
 			in_be32(&ugeth->p_tx_glbl_pram->tqptr));
 	}
 	if (ugeth->p_rx_glbl_pram) {
-		pr_info("RX global param:\n");
-		pr_info("Base address: 0x%08x\n", (u32)ugeth->p_rx_glbl_pram);
-		pr_info("remoder         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("RX global param:\n");
+		pr_debug("Base address: 0x%08x\n", (u32)ugeth->p_rx_glbl_pram);
+		pr_debug("remoder         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->remoder,
 			in_be32(&ugeth->p_rx_glbl_pram->remoder));
-		pr_info("rqptr           : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("rqptr           : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->rqptr,
 			in_be32(&ugeth->p_rx_glbl_pram->rqptr));
-		pr_info("typeorlen       : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("typeorlen       : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_rx_glbl_pram->typeorlen,
 			in_be16(&ugeth->p_rx_glbl_pram->typeorlen));
-		pr_info("rxgstpack       : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("rxgstpack       : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_rx_glbl_pram->rxgstpack,
 			ugeth->p_rx_glbl_pram->rxgstpack);
-		pr_info("rxrmonbaseptr   : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("rxrmonbaseptr   : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->rxrmonbaseptr,
 			in_be32(&ugeth->p_rx_glbl_pram->rxrmonbaseptr));
-		pr_info("intcoalescingptr: addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("intcoalescingptr: addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->intcoalescingptr,
 			in_be32(&ugeth->p_rx_glbl_pram->intcoalescingptr));
-		pr_info("rstate          : addr - 0x%08x, val - 0x%02x\n",
+		pr_debug("rstate          : addr - 0x%08x, val - 0x%02x\n",
 			(u32)&ugeth->p_rx_glbl_pram->rstate,
 			ugeth->p_rx_glbl_pram->rstate);
-		pr_info("mrblr           : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("mrblr           : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_rx_glbl_pram->mrblr,
 			in_be16(&ugeth->p_rx_glbl_pram->mrblr));
-		pr_info("rbdqptr         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("rbdqptr         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->rbdqptr,
 			in_be32(&ugeth->p_rx_glbl_pram->rbdqptr));
-		pr_info("mflr            : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("mflr            : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_rx_glbl_pram->mflr,
 			in_be16(&ugeth->p_rx_glbl_pram->mflr));
-		pr_info("minflr          : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("minflr          : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_rx_glbl_pram->minflr,
 			in_be16(&ugeth->p_rx_glbl_pram->minflr));
-		pr_info("maxd1           : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("maxd1           : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_rx_glbl_pram->maxd1,
 			in_be16(&ugeth->p_rx_glbl_pram->maxd1));
-		pr_info("maxd2           : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("maxd2           : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_rx_glbl_pram->maxd2,
 			in_be16(&ugeth->p_rx_glbl_pram->maxd2));
-		pr_info("ecamptr         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("ecamptr         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->ecamptr,
 			in_be32(&ugeth->p_rx_glbl_pram->ecamptr));
-		pr_info("l2qt            : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l2qt            : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l2qt,
 			in_be32(&ugeth->p_rx_glbl_pram->l2qt));
-		pr_info("l3qt[0]         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l3qt[0]         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l3qt[0],
 			in_be32(&ugeth->p_rx_glbl_pram->l3qt[0]));
-		pr_info("l3qt[1]         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l3qt[1]         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l3qt[1],
 			in_be32(&ugeth->p_rx_glbl_pram->l3qt[1]));
-		pr_info("l3qt[2]         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l3qt[2]         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l3qt[2],
 			in_be32(&ugeth->p_rx_glbl_pram->l3qt[2]));
-		pr_info("l3qt[3]         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l3qt[3]         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l3qt[3],
 			in_be32(&ugeth->p_rx_glbl_pram->l3qt[3]));
-		pr_info("l3qt[4]         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l3qt[4]         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l3qt[4],
 			in_be32(&ugeth->p_rx_glbl_pram->l3qt[4]));
-		pr_info("l3qt[5]         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l3qt[5]         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l3qt[5],
 			in_be32(&ugeth->p_rx_glbl_pram->l3qt[5]));
-		pr_info("l3qt[6]         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l3qt[6]         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l3qt[6],
 			in_be32(&ugeth->p_rx_glbl_pram->l3qt[6]));
-		pr_info("l3qt[7]         : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("l3qt[7]         : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->l3qt[7],
 			in_be32(&ugeth->p_rx_glbl_pram->l3qt[7]));
-		pr_info("vlantype        : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("vlantype        : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_rx_glbl_pram->vlantype,
 			in_be16(&ugeth->p_rx_glbl_pram->vlantype));
-		pr_info("vlantci         : addr - 0x%08x, val - 0x%04x\n",
+		pr_debug("vlantci         : addr - 0x%08x, val - 0x%04x\n",
 			(u32)&ugeth->p_rx_glbl_pram->vlantci,
 			in_be16(&ugeth->p_rx_glbl_pram->vlantci));
 		for (i = 0; i < 64; i++)
-			pr_info("addressfiltering[%d]: addr - 0x%08x, val - 0x%02x\n",
+			pr_debug("addressfiltering[%d]: addr - 0x%08x, val - 0x%02x\n",
 				i,
 				(u32)&ugeth->p_rx_glbl_pram->addressfiltering[i],
 				ugeth->p_rx_glbl_pram->addressfiltering[i]);
-		pr_info("exfGlobalParam  : addr - 0x%08x, val - 0x%08x\n",
+		pr_debug("exfGlobalParam  : addr - 0x%08x, val - 0x%08x\n",
 			(u32)&ugeth->p_rx_glbl_pram->exfGlobalParam,
 			in_be32(&ugeth->p_rx_glbl_pram->exfGlobalParam));
 	}
 	if (ugeth->p_send_q_mem_reg) {
-		pr_info("Send Q memory registers:\n");
-		pr_info("Base address: 0x%08x\n", (u32)ugeth->p_send_q_mem_reg);
+		pr_debug("Send Q memory registers:\n");
+		pr_debug("Base address: 0x%08x\n", (u32)ugeth->p_send_q_mem_reg);
 		for (i = 0; i < ugeth->ug_info->numQueuesTx; i++) {
-			pr_info("SQQD[%d]:\n", i);
-			pr_info("Base address: 0x%08x\n",
+			pr_debug("SQQD[%d]:\n", i);
+			pr_debug("Base address: 0x%08x\n",
 				(u32)&ugeth->p_send_q_mem_reg->sqqd[i]);
 			mem_disp((u8 *) & ugeth->p_send_q_mem_reg->sqqd[i],
 				 sizeof(struct ucc_geth_send_queue_qd));
 		}
 	}
 	if (ugeth->p_scheduler) {
-		pr_info("Scheduler:\n");
-		pr_info("Base address: 0x%08x\n", (u32)ugeth->p_scheduler);
+		pr_debug("Scheduler:\n");
+		pr_debug("Base address: 0x%08x\n", (u32)ugeth->p_scheduler);
 		mem_disp((u8 *) ugeth->p_scheduler,
 			 sizeof(*ugeth->p_scheduler));
 	}
 	if (ugeth->p_tx_fw_statistics_pram) {
-		pr_info("TX FW statistics pram:\n");
-		pr_info("Base address: 0x%08x\n",
+		pr_debug("TX FW statistics pram:\n");
+		pr_debug("Base address: 0x%08x\n",
 			(u32)ugeth->p_tx_fw_statistics_pram);
 		mem_disp((u8 *) ugeth->p_tx_fw_statistics_pram,
 			 sizeof(*ugeth->p_tx_fw_statistics_pram));
 	}
 	if (ugeth->p_rx_fw_statistics_pram) {
-		pr_info("RX FW statistics pram:\n");
-		pr_info("Base address: 0x%08x\n",
+		pr_debug("RX FW statistics pram:\n");
+		pr_debug("Base address: 0x%08x\n",
 			(u32)ugeth->p_rx_fw_statistics_pram);
 		mem_disp((u8 *) ugeth->p_rx_fw_statistics_pram,
 			 sizeof(*ugeth->p_rx_fw_statistics_pram));
 	}
 	if (ugeth->p_rx_irq_coalescing_tbl) {
-		pr_info("RX IRQ coalescing tables:\n");
-		pr_info("Base address: 0x%08x\n",
+		pr_debug("RX IRQ coalescing tables:\n");
+		pr_debug("Base address: 0x%08x\n",
 			(u32)ugeth->p_rx_irq_coalescing_tbl);
 		for (i = 0; i < ugeth->ug_info->numQueuesRx; i++) {
-			pr_info("RX IRQ coalescing table entry[%d]:\n", i);
-			pr_info("Base address: 0x%08x\n",
+			pr_debug("RX IRQ coalescing table entry[%d]:\n", i);
+			pr_debug("Base address: 0x%08x\n",
 				(u32)&ugeth->p_rx_irq_coalescing_tbl->
 				coalescingentry[i]);
-			pr_info("interruptcoalescingmaxvalue: addr - 0x%08x, val - 0x%08x\n",
+			pr_debug("interruptcoalescingmaxvalue: addr - 0x%08x, val - 0x%08x\n",
 				(u32)&ugeth->p_rx_irq_coalescing_tbl->
 				coalescingentry[i].interruptcoalescingmaxvalue,
 				in_be32(&ugeth->p_rx_irq_coalescing_tbl->
 					coalescingentry[i].
 					interruptcoalescingmaxvalue));
-			pr_info("interruptcoalescingcounter : addr - 0x%08x, val - 0x%08x\n",
+			pr_debug("interruptcoalescingcounter : addr - 0x%08x, val - 0x%08x\n",
 				(u32)&ugeth->p_rx_irq_coalescing_tbl->
 				coalescingentry[i].interruptcoalescingcounter,
 				in_be32(&ugeth->p_rx_irq_coalescing_tbl->
@@ -958,27 +958,27 @@ static void dump_regs(struct ucc_geth_private *ugeth)
 		}
 	}
 	if (ugeth->p_rx_bd_qs_tbl) {
-		pr_info("RX BD QS tables:\n");
-		pr_info("Base address: 0x%08x\n", (u32)ugeth->p_rx_bd_qs_tbl);
+		pr_debug("RX BD QS tables:\n");
+		pr_debug("Base address: 0x%08x\n", (u32)ugeth->p_rx_bd_qs_tbl);
 		for (i = 0; i < ugeth->ug_info->numQueuesRx; i++) {
-			pr_info("RX BD QS table[%d]:\n", i);
-			pr_info("Base address: 0x%08x\n",
+			pr_debug("RX BD QS table[%d]:\n", i);
+			pr_debug("Base address: 0x%08x\n",
 				(u32)&ugeth->p_rx_bd_qs_tbl[i]);
-			pr_info("bdbaseptr        : addr - 0x%08x, val - 0x%08x\n",
+			pr_debug("bdbaseptr        : addr - 0x%08x, val - 0x%08x\n",
 				(u32)&ugeth->p_rx_bd_qs_tbl[i].bdbaseptr,
 				in_be32(&ugeth->p_rx_bd_qs_tbl[i].bdbaseptr));
-			pr_info("bdptr            : addr - 0x%08x, val - 0x%08x\n",
+			pr_debug("bdptr            : addr - 0x%08x, val - 0x%08x\n",
 				(u32)&ugeth->p_rx_bd_qs_tbl[i].bdptr,
 				in_be32(&ugeth->p_rx_bd_qs_tbl[i].bdptr));
-			pr_info("externalbdbaseptr: addr - 0x%08x, val - 0x%08x\n",
+			pr_debug("externalbdbaseptr: addr - 0x%08x, val - 0x%08x\n",
 				(u32)&ugeth->p_rx_bd_qs_tbl[i].externalbdbaseptr,
 				in_be32(&ugeth->p_rx_bd_qs_tbl[i].
 					externalbdbaseptr));
-			pr_info("externalbdptr    : addr - 0x%08x, val - 0x%08x\n",
+			pr_debug("externalbdptr    : addr - 0x%08x, val - 0x%08x\n",
 				(u32)&ugeth->p_rx_bd_qs_tbl[i].externalbdptr,
 				in_be32(&ugeth->p_rx_bd_qs_tbl[i].externalbdptr));
-			pr_info("ucode RX Prefetched BDs:\n");
-			pr_info("Base address: 0x%08x\n",
+			pr_debug("ucode RX Prefetched BDs:\n");
+			pr_debug("Base address: 0x%08x\n",
 				(u32)qe_muram_addr(in_be32
 						   (&ugeth->p_rx_bd_qs_tbl[i].
 						    bdbaseptr)));
@@ -991,8 +991,8 @@ static void dump_regs(struct ucc_geth_private *ugeth)
 	}
 	if (ugeth->p_init_enet_param_shadow) {
 		int size;
-		pr_info("Init enet param shadow:\n");
-		pr_info("Base address: 0x%08x\n",
+		pr_debug("Init enet param shadow:\n");
+		pr_debug("Base address: 0x%08x\n",
 			(u32) ugeth->p_init_enet_param_shadow);
 		mem_disp((u8 *) ugeth->p_init_enet_param_shadow,
 			 sizeof(*ugeth->p_init_enet_param_shadow));
@@ -3856,7 +3856,7 @@ static int ucc_geth_probe(struct platform_device* ofdev)
 	}
 
 	if (netif_msg_probe(&debug))
-		pr_info("UCC%1d at 0x%8llx (irq = %d)\n",
+		pr_debug("UCC%1d at 0x%8llx (irq = %d)\n",
 			ug_info->uf_info.ucc_num + 1,
 			(u64)ug_info->uf_info.regs,
 			ug_info->uf_info.irq);
@@ -3972,7 +3972,7 @@ static int __init ucc_geth_init(void)
 	int i, ret;
 
 	if (netif_msg_drv(&debug))
-		pr_info(DRV_DESC "\n");
+		pr_debug(DRV_DESC "\n");
 	for (i = 0; i < 8; i++)
 		memcpy(&(ugeth_info[i]), &ugeth_primary_info,
 		       sizeof(ugeth_primary_info));

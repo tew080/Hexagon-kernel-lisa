@@ -11,7 +11,7 @@
 
 #include <linux/types.h>	/* u32 */
 #include <linux/list.h>		/* list_head */
-#include <linux/kernel.h>	/* pr_info() */
+#include <linux/kernel.h>	/* pr_debug() */
 #include <linux/compiler.h>
 #include <linux/ratelimit.h>
 #include <linux/ipc_logging.h>
@@ -132,7 +132,7 @@ extern u8 print_limit_option;
 		SPS_IPC(4, sps, msg, ##__VA_ARGS__); \
 		if (sps) { \
 			if (sps->ipc_log4 == NULL) \
-				pr_info("%s: " msg, __func__, ##__VA_ARGS__); \
+				pr_debug("%s: " msg, __func__, ##__VA_ARGS__); \
 		} \
 	} while (0)
 #define SPS_ERR(dev, msg, ...) do {					\
@@ -151,7 +151,7 @@ extern u8 print_limit_option;
 				pr_info_ratelimited( \
 				"%s: " msg, __func__, ##__VA_ARGS__);	\
 			else	\
-				pr_info("%s: " msg, __func__, ##__VA_ARGS__); \
+				pr_debug("%s: " msg, __func__, ##__VA_ARGS__); \
 		}	\
 		SPS_IPC(3, dev, msg, ##__VA_ARGS__); \
 	} while (0)
@@ -162,7 +162,7 @@ extern u8 print_limit_option;
 				pr_info_ratelimited( \
 					"%s: " msg, __func__, ##__VA_ARGS__); \
 			else	\
-				pr_info("%s: " msg, __func__, ##__VA_ARGS__); \
+				pr_debug("%s: " msg, __func__, ##__VA_ARGS__); \
 		} else	\
 			pr_debug("%s: " msg, __func__, ##__VA_ARGS__);	\
 		if (dev) { \
@@ -177,7 +177,7 @@ extern u8 print_limit_option;
 				pr_info_ratelimited( \
 					"%s: " msg, __func__, ##__VA_ARGS__); \
 			else	\
-				pr_info("%s: " msg, __func__, ##__VA_ARGS__); \
+				pr_debug("%s: " msg, __func__, ##__VA_ARGS__); \
 		} else	\
 			pr_debug("%s: " msg, __func__, ##__VA_ARGS__);	\
 		if (dev) { \
@@ -192,7 +192,7 @@ extern u8 print_limit_option;
 				pr_info_ratelimited( \
 					"%s: " msg, __func__, ##__VA_ARGS__); \
 			else	\
-				pr_info("%s: " msg, __func__, ##__VA_ARGS__); \
+				pr_debug("%s: " msg, __func__, ##__VA_ARGS__); \
 		} else	\
 			pr_debug("%s: " msg, __func__, ##__VA_ARGS__);	\
 		if (dev) { \
@@ -207,7 +207,7 @@ extern u8 print_limit_option;
 				pr_info_ratelimited( \
 					"%s: " msg, __func__, ##__VA_ARGS__); \
 			else	\
-				pr_info("%s: " msg, __func__, ##__VA_ARGS__); \
+				pr_debug("%s: " msg, __func__, ##__VA_ARGS__); \
 		} else	\
 			pr_debug("%s: " msg, __func__, ##__VA_ARGS__);	\
 		if (dev) { \
@@ -220,9 +220,9 @@ extern u8 print_limit_option;
 #define SPS_DBG2(dev, msg, args...)             pr_debug(msg, ##args)
 #define SPS_DBG1(dev, msg, args...)             pr_debug(msg, ##args)
 #define SPS_DBG(dev, msg, args...)              pr_debug(msg, ##args)
-#define SPS_INFO(dev, msg, args...)             pr_info(msg, ##args)
+#define SPS_INFO(dev, msg, args...)             pr_debug(msg, ##args)
 #define SPS_ERR(dev, msg, args...)              pr_err(msg, ##args)
-#define SPS_DUMP(msg, args...)                  pr_info(msg, ##args)
+#define SPS_DUMP(msg, args...)                  pr_debug(msg, ##args)
 #endif
 
 /* End point parameters */

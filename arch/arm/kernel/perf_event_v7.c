@@ -835,34 +835,34 @@ static void armv7_pmnc_dump_regs(struct arm_pmu *cpu_pmu)
 	u32 val;
 	unsigned int cnt;
 
-	pr_info("PMNC registers dump:\n");
+	pr_debug("PMNC registers dump:\n");
 
 	asm volatile("mrc p15, 0, %0, c9, c12, 0" : "=r" (val));
-	pr_info("PMNC  =0x%08x\n", val);
+	pr_debug("PMNC  =0x%08x\n", val);
 
 	asm volatile("mrc p15, 0, %0, c9, c12, 1" : "=r" (val));
-	pr_info("CNTENS=0x%08x\n", val);
+	pr_debug("CNTENS=0x%08x\n", val);
 
 	asm volatile("mrc p15, 0, %0, c9, c14, 1" : "=r" (val));
-	pr_info("INTENS=0x%08x\n", val);
+	pr_debug("INTENS=0x%08x\n", val);
 
 	asm volatile("mrc p15, 0, %0, c9, c12, 3" : "=r" (val));
-	pr_info("FLAGS =0x%08x\n", val);
+	pr_debug("FLAGS =0x%08x\n", val);
 
 	asm volatile("mrc p15, 0, %0, c9, c12, 5" : "=r" (val));
-	pr_info("SELECT=0x%08x\n", val);
+	pr_debug("SELECT=0x%08x\n", val);
 
 	asm volatile("mrc p15, 0, %0, c9, c13, 0" : "=r" (val));
-	pr_info("CCNT  =0x%08x\n", val);
+	pr_debug("CCNT  =0x%08x\n", val);
 
 	for (cnt = ARMV7_IDX_COUNTER0;
 			cnt <= ARMV7_IDX_COUNTER_LAST(cpu_pmu); cnt++) {
 		armv7_pmnc_select_counter(cnt);
 		asm volatile("mrc p15, 0, %0, c9, c13, 2" : "=r" (val));
-		pr_info("CNT[%d] count =0x%08x\n",
+		pr_debug("CNT[%d] count =0x%08x\n",
 			ARMV7_IDX_TO_COUNTER(cnt), val);
 		asm volatile("mrc p15, 0, %0, c9, c13, 1" : "=r" (val));
-		pr_info("CNT[%d] evtsel=0x%08x\n",
+		pr_debug("CNT[%d] evtsel=0x%08x\n",
 			ARMV7_IDX_TO_COUNTER(cnt), val);
 	}
 }

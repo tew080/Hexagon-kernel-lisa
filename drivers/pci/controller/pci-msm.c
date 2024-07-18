@@ -332,7 +332,7 @@
 			"INFO:%s: " fmt, __func__, ##arg); \
 	if ((dev) && (dev)->ipc_log)   \
 		ipc_log_string((dev)->ipc_log, "%s: " fmt, __func__, ##arg); \
-	pr_info("%s: " fmt, __func__, ##arg);  \
+	pr_debug("%s: " fmt, __func__, ##arg);  \
 	} while (0)
 
 #define PCIE_ERR(dev, fmt, arg...) do {			 \
@@ -2231,7 +2231,7 @@ static ssize_t config_dword_read_store(struct device *dev,
 
 	pci_read_config_dword(pci_ep_dev, input[1], &val);
 
-	pr_info("PCIe: RC%d: bdf 0x%04x: offset: 0x%04x val: 0x%08x\n",
+	pr_debug("PCIe: RC%d: bdf 0x%04x: offset: 0x%04x val: 0x%08x\n",
 		pcie_dev->rc_idx, input[0], input[1], val);
 
 	return count;
@@ -2270,7 +2270,7 @@ static ssize_t config_dword_write_store(struct device *dev,
 		return -ENODEV;
 	}
 
-	pr_info("PCIe: RC%d: bdf 0x%04x: offset: 0x%04x val: 0x%08x\n",
+	pr_debug("PCIe: RC%d: bdf 0x%04x: offset: 0x%04x val: 0x%08x\n",
 		pcie_dev->rc_idx, input[0], input[1], input[2]);
 
 	pci_write_config_dword(pci_ep_dev, input[1], input[2]);
@@ -2735,7 +2735,7 @@ static ssize_t msm_pcie_debugfs_corr_counter_limit(struct file *file,
 	if (ret)
 		return ret;
 
-	pr_info("PCIe: corr_counter_limit is now %u\n", corr_counter_limit);
+	pr_debug("PCIe: corr_counter_limit is now %u\n", corr_counter_limit);
 
 	return count;
 }
@@ -7425,7 +7425,7 @@ static int __init pcie_init(void)
 	}
 
 	if (i2c_add_driver(&pcie_i2c_ctrl_driver))
-		pr_info("Failed to add i2c ctrl driver: %d\n", ret);
+		pr_debug("Failed to add i2c ctrl driver: %d\n", ret);
 
 	crc8_populate_msb(msm_pcie_crc8_table, MSM_PCIE_CRC8_POLYNOMIAL);
 
@@ -7459,7 +7459,7 @@ static void __exit pcie_exit(void)
 {
 	int i;
 
-	pr_info("PCIe: %s\n", __func__);
+	pr_debug("PCIe: %s\n", __func__);
 
 	i2c_del_driver(&pcie_i2c_ctrl_driver);
 

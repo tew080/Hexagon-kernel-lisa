@@ -3772,7 +3772,7 @@ static void sdebug_q_cmd_complete(struct sdebug_defer *sd_dp)
 	spin_unlock_irqrestore(&sqp->qc_lock, iflags);
 	if (unlikely(aborted)) {
 		if (sdebug_verbose)
-			pr_info("bypassing scsi_done() due to aborted cmd\n");
+			pr_debug("bypassing scsi_done() due to aborted cmd\n");
 		return;
 	}
 	scp->scsi_done(scp); /* callback to mid level */
@@ -3864,7 +3864,7 @@ static struct sdebug_dev_info *find_build_dev_info(struct scsi_device *sdev)
 static int scsi_debug_slave_alloc(struct scsi_device *sdp)
 {
 	if (sdebug_verbose)
-		pr_info("slave_alloc <%u %u %u %llu>\n",
+		pr_debug("slave_alloc <%u %u %u %llu>\n",
 		       sdp->host->host_no, sdp->channel, sdp->id, sdp->lun);
 	return 0;
 }
@@ -3875,7 +3875,7 @@ static int scsi_debug_slave_configure(struct scsi_device *sdp)
 			(struct sdebug_dev_info *)sdp->hostdata;
 
 	if (sdebug_verbose)
-		pr_info("slave_configure <%u %u %u %llu>\n",
+		pr_debug("slave_configure <%u %u %u %llu>\n",
 		       sdp->host->host_no, sdp->channel, sdp->id, sdp->lun);
 	if (sdp->host->max_cmd_len != SDEBUG_MAX_CMD_LEN)
 		sdp->host->max_cmd_len = SDEBUG_MAX_CMD_LEN;
@@ -3897,7 +3897,7 @@ static void scsi_debug_slave_destroy(struct scsi_device *sdp)
 		(struct sdebug_dev_info *)sdp->hostdata;
 
 	if (sdebug_verbose)
-		pr_info("slave_destroy <%u %u %u %llu>\n",
+		pr_debug("slave_destroy <%u %u %u %llu>\n",
 		       sdp->host->host_no, sdp->channel, sdp->id, sdp->lun);
 	if (devip) {
 		/* make this slot available for re-use */
@@ -4849,7 +4849,7 @@ static ssize_t every_nth_store(struct device_driver *ddp, const char *buf,
 	if ((count > 0) && (1 == sscanf(buf, "%d", &nth))) {
 		sdebug_every_nth = nth;
 		if (nth && !sdebug_statistics) {
-			pr_info("every_nth needs statistics=1, set it\n");
+			pr_debug("every_nth needs statistics=1, set it\n");
 			sdebug_statistics = true;
 		}
 		tweak_cmnd_count();
@@ -5383,7 +5383,7 @@ static int __init scsi_debug_init(void)
 		map_storep = vmalloc(array_size(sizeof(long),
 						BITS_TO_LONGS(map_size)));
 
-		pr_info("%lu provisioning blocks\n", map_size);
+		pr_debug("%lu provisioning blocks\n", map_size);
 
 		if (map_storep == NULL) {
 			pr_err("out of mem. (MAP)\n");
@@ -5426,7 +5426,7 @@ static int __init scsi_debug_init(void)
 	}
 
 	if (sdebug_verbose)
-		pr_info("built %d host(s)\n", sdebug_add_host);
+		pr_debug("built %d host(s)\n", sdebug_add_host);
 
 	return 0;
 
@@ -5848,7 +5848,7 @@ static int sdebug_driver_probe(struct device *dev)
 	scsi_host_set_prot(hpnt, hprot);
 
 	if (have_dif_prot || sdebug_dix)
-		pr_info("host protection%s%s%s%s%s%s%s\n",
+		pr_debug("host protection%s%s%s%s%s%s%s\n",
 			(hprot & SHOST_DIF_TYPE1_PROTECTION) ? " DIF1" : "",
 			(hprot & SHOST_DIF_TYPE2_PROTECTION) ? " DIF2" : "",
 			(hprot & SHOST_DIF_TYPE3_PROTECTION) ? " DIF3" : "",

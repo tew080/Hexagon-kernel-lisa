@@ -619,7 +619,7 @@ static int serdes_init_niu_10g_serdes(struct niu *np)
 	}
 
 	if ((sig & mask) != val) {
-		pr_info("NIU Port %u signal bits [%08x] are not [%08x] for 10G...trying 1G\n",
+		pr_debug("NIU Port %u signal bits [%08x] are not [%08x] for 10G...trying 1G\n",
 			np->port, (int)(sig & mask), (int)val);
 
 		/* 10G failed, try initializing at 1G */
@@ -1461,18 +1461,18 @@ static int xcvr_diag_bcm870x(struct niu *np)
 			MII_STAT1000);
 	if (err < 0)
 		return err;
-	pr_info("Port %u PMA_PMD(MII_STAT1000) [%04x]\n", np->port, err);
+	pr_debug("Port %u PMA_PMD(MII_STAT1000) [%04x]\n", np->port, err);
 
 	err = mdio_read(np, np->phy_addr, BCM8704_USER_DEV3_ADDR, 0x20);
 	if (err < 0)
 		return err;
-	pr_info("Port %u USER_DEV3(0x20) [%04x]\n", np->port, err);
+	pr_debug("Port %u USER_DEV3(0x20) [%04x]\n", np->port, err);
 
 	err = mdio_read(np, np->phy_addr, BCM8704_PHYXS_DEV_ADDR,
 			MII_NWAYTEST);
 	if (err < 0)
 		return err;
-	pr_info("Port %u PHYXS(MII_NWAYTEST) [%04x]\n", np->port, err);
+	pr_debug("Port %u PHYXS(MII_NWAYTEST) [%04x]\n", np->port, err);
 #endif
 
 	/* XXX dig this out it might not be so useful XXX */
@@ -1498,10 +1498,10 @@ static int xcvr_diag_bcm870x(struct niu *np)
 
 	if (analog_stat0 != 0x03fc) {
 		if ((analog_stat0 == 0x43bc) && (tx_alarm_status != 0)) {
-			pr_info("Port %u cable not connected or bad cable\n",
+			pr_debug("Port %u cable not connected or bad cable\n",
 				np->port);
 		} else if (analog_stat0 == 0x639c) {
-			pr_info("Port %u optical module is bad or missing\n",
+			pr_debug("Port %u optical module is bad or missing\n",
 				np->port);
 		}
 	}
@@ -1838,7 +1838,7 @@ static int mii_init_common(struct niu *np)
 		return err;
 	bmsr = err;
 
-	pr_info("Port %u after MII init bmcr[%04x] bmsr[%04x]\n",
+	pr_debug("Port %u after MII init bmcr[%04x] bmsr[%04x]\n",
 		np->port, bmcr, bmsr);
 #endif
 
@@ -8562,7 +8562,7 @@ static int phy_record(struct niu_parent *parent, struct phy_probe_info *p,
 			return 0;
 	}
 
-	pr_info("niu%d: Found PHY %08x type %s at phy_port %u\n",
+	pr_debug("niu%d: Found PHY %08x type %s at phy_port %u\n",
 		parent->index, id,
 		type == PHY_TYPE_PMA_PMD ? "PMA/PMD" :
 		type == PHY_TYPE_PCS ? "PCS" : "MII",
@@ -8630,7 +8630,7 @@ static void niu_n2_divide_channels(struct niu_parent *parent)
 		parent->rxchan_per_port[i] = (16 / num_ports);
 		parent->txchan_per_port[i] = (16 / num_ports);
 
-		pr_info("niu%d: Port %u [%u RX chans] [%u TX chans]\n",
+		pr_debug("niu%d: Port %u [%u RX chans] [%u TX chans]\n",
 			parent->index, i,
 			parent->rxchan_per_port[i],
 			parent->txchan_per_port[i]);
@@ -8673,7 +8673,7 @@ static void niu_divide_channels(struct niu_parent *parent,
 			parent->rxchan_per_port[i] = rx_chans_per_1g;
 			parent->txchan_per_port[i] = tx_chans_per_1g;
 		}
-		pr_info("niu%d: Port %u [%u RX chans] [%u TX chans]\n",
+		pr_debug("niu%d: Port %u [%u RX chans] [%u TX chans]\n",
 			parent->index, i,
 			parent->rxchan_per_port[i],
 			parent->txchan_per_port[i]);
@@ -8723,7 +8723,7 @@ static void niu_divide_rdc_groups(struct niu_parent *parent,
 			struct rdc_table *rt = &tp->tables[grp];
 			int slot;
 
-			pr_info("niu%d: Port %d RDC tbl(%d) [ ",
+			pr_debug("niu%d: Port %d RDC tbl(%d) [ ",
 				parent->index, i, tp->first_table_num + grp);
 			for (slot = 0; slot < NIU_RDC_TABLE_SLOTS; slot++) {
 				rt->rxdma_channel[slot] =
@@ -9626,7 +9626,7 @@ static void niu_driver_version(void)
 	static int niu_version_printed;
 
 	if (niu_version_printed++ == 0)
-		pr_info("%s", version);
+		pr_debug("%s", version);
 }
 
 static struct net_device *niu_alloc_and_init(struct device *gen_dev,
@@ -9684,10 +9684,10 @@ static void niu_device_announce(struct niu *np)
 {
 	struct net_device *dev = np->dev;
 
-	pr_info("%s: NIU Ethernet %pM\n", dev->name, dev->dev_addr);
+	pr_debug("%s: NIU Ethernet %pM\n", dev->name, dev->dev_addr);
 
 	if (np->parent->plat_type == PLAT_TYPE_ATCA_CP3220) {
-		pr_info("%s: Port type[%s] mode[%s:%s] XCVR[%s] phy[%s]\n",
+		pr_debug("%s: Port type[%s] mode[%s:%s] XCVR[%s] phy[%s]\n",
 				dev->name,
 				(np->flags & NIU_FLAGS_XMAC ? "XMAC" : "BMAC"),
 				(np->flags & NIU_FLAGS_10G ? "10G" : "1G"),
@@ -9696,7 +9696,7 @@ static void niu_device_announce(struct niu *np)
 				 (np->mac_xcvr == MAC_XCVR_PCS ? "PCS" : "XPCS")),
 				np->vpd.phy_type);
 	} else {
-		pr_info("%s: Port type[%s] mode[%s:%s] XCVR[%s] phy[%s]\n",
+		pr_debug("%s: Port type[%s] mode[%s:%s] XCVR[%s] phy[%s]\n",
 				dev->name,
 				(np->flags & NIU_FLAGS_XMAC ? "XMAC" : "BMAC"),
 				(np->flags & NIU_FLAGS_10G ? "10G" : "1G"),

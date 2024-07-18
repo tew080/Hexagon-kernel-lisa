@@ -557,7 +557,7 @@ static int start_graph_tracing(void)
 	if (!ret) {
 		ret = register_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
 		if (ret)
-			pr_info("ftrace_graph: Couldn't activate tracepoint"
+			pr_debug("ftrace_graph: Couldn't activate tracepoint"
 				" probe to kernel_sched_switch\n");
 	}
 

@@ -354,17 +354,17 @@ err1:
 
 static void print_boot_stats(void)
 {
-	pr_info("KPI: Bootloader start count = %u\n",
+	pr_debug("KPI: Bootloader start count = %u\n",
 		readl_relaxed(&boot_stats->bootloader_start));
-	pr_info("KPI: Bootloader end count = %u\n",
+	pr_debug("KPI: Bootloader end count = %u\n",
 		readl_relaxed(&boot_stats->bootloader_end));
-	pr_info("KPI: Bootloader display count = %u\n",
+	pr_debug("KPI: Bootloader display count = %u\n",
 		readl_relaxed(&boot_stats->bootloader_display));
-	pr_info("KPI: Bootloader load kernel count = %u\n",
+	pr_debug("KPI: Bootloader load kernel count = %u\n",
 		readl_relaxed(&boot_stats->bootloader_load_kernel));
-	pr_info("KPI: Kernel MPM timestamp = %u\n",
+	pr_debug("KPI: Kernel MPM timestamp = %u\n",
 		readl_relaxed(mpm_counter_base));
-	pr_info("KPI: Kernel MPM Clock frequency = %u\n",
+	pr_debug("KPI: Kernel MPM Clock frequency = %u\n",
 		mpm_counter_freq);
 }
 

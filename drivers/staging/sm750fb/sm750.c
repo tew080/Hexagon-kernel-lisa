@@ -321,7 +321,7 @@ static int lynxfb_ops_set_par(struct fb_info *info)
 	line_length = var->xres_virtual * var->bits_per_pixel / 8;
 	line_length = ALIGN(line_length, crtc->line_pad);
 	fix->line_length = line_length;
-	pr_info("fix->line_length = %d\n", fix->line_length);
+	pr_debug("fix->line_length = %d\n", fix->line_length);
 
 	/*
 	 * var->red,green,blue,transp are need to be set by driver
@@ -678,7 +678,7 @@ static int sm750fb_set_drv(struct lynxfb_par *par)
 		crtc->channel = sm750_primary;
 		crtc->oScreen = 0;
 		crtc->vScreen = sm750_dev->pvMem;
-		pr_info("use simul primary mode\n");
+		pr_debug("use simul primary mode\n");
 		break;
 	case sm750_simul_sec:
 		output->paths = sm750_pnc;
@@ -782,7 +782,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
 	crtc->cursor.mmio = sm750_dev->pvReg +
 		0x800f0 + (int)crtc->channel * 0x140;
 
-	pr_info("crtc->cursor.mmio = %p\n", crtc->cursor.mmio);
+	pr_debug("crtc->cursor.mmio = %p\n", crtc->cursor.mmio);
 	crtc->cursor.maxH = crtc->cursor.maxW = 64;
 	crtc->cursor.size = crtc->cursor.maxH * crtc->cursor.maxW * 2 / 8;
 	crtc->cursor.vstart = sm750_dev->pvMem + crtc->cursor.offset;
@@ -813,7 +813,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
 				   pdb[i], cdb[i], NULL, 8);
 
 		if (ret == 1) {
-			pr_info("success! use specified mode:%s in %s\n",
+			pr_debug("success! use specified mode:%s in %s\n",
 				g_fbmode[index],
 				mdb_desc[i]);
 			break;
@@ -836,7 +836,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
 
 	/* some member of info->var had been set by fb_find_mode */
 
-	pr_info("Member of info->var is :\n"
+	pr_debug("Member of info->var is :\n"
 		"xres=%d\n"
 		"yres=%d\n"
 		"xres_virtual=%d\n"
@@ -877,7 +877,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
 	strlcpy(fix->id, fixId[index], sizeof(fix->id));
 
 	fix->smem_start = crtc->oScreen + sm750_dev->vidmem_start;
-	pr_info("fix->smem_start = %lx\n", fix->smem_start);
+	pr_debug("fix->smem_start = %lx\n", fix->smem_start);
 	/*
 	 * according to mmap experiment from user space application,
 	 * fix->mmio_len should not larger than virtual size
@@ -886,13 +886,13 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
 	 * data into the bound over virtual size
 	 */
 	fix->smem_len = crtc->vidmem_size;
-	pr_info("fix->smem_len = %x\n", fix->smem_len);
+	pr_debug("fix->smem_len = %x\n", fix->smem_len);
 	info->screen_size = fix->smem_len;
 	fix->line_length = line_length;
 	fix->mmio_start = sm750_dev->vidreg_start;
-	pr_info("fix->mmio_start = %lx\n", fix->mmio_start);
+	pr_debug("fix->mmio_start = %lx\n", fix->mmio_start);
 	fix->mmio_len = sm750_dev->vidreg_size;
-	pr_info("fix->mmio_len = %x\n", fix->mmio_len);
+	pr_debug("fix->mmio_len = %x\n", fix->mmio_len);
 	switch (var->bits_per_pixel) {
 	case 8:
 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
@@ -1175,7 +1175,7 @@ static int __init lynxfb_setup(char *options)
 		return 0;
 	}
 
-	pr_info("options:%s\n", options);
+	pr_debug("options:%s\n", options);
 
 	len = strlen(options) + 1;
 	g_settings = kzalloc(len, GFP_KERNEL);
@@ -1212,7 +1212,7 @@ static int __init lynxfb_setup(char *options)
 	}
 
 	/* misc g_settings are transport to chip specific routines */
-	pr_info("parameter left for chip specific analysis:%s\n", g_settings);
+	pr_debug("parameter left for chip specific analysis:%s\n", g_settings);
 	return 0;
 }
 

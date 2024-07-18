@@ -1299,7 +1299,7 @@ static u16 sis190_default_phy(struct net_device *dev)
 	if (mii_if->phy_id != phy_default->phy_id) {
 		mii_if->phy_id = phy_default->phy_id;
 		if (netif_msg_probe(tp))
-			pr_info("%s: Using transceiver at address %d as default\n",
+			pr_debug("%s: Using transceiver at address %d as default\n",
 				pci_name(tp->pci_dev), mii_if->phy_id);
 	}
 
@@ -1339,12 +1339,12 @@ static void sis190_init_phy(struct net_device *dev, struct sis190_private *tp,
 				LAN : HOME) : p->type;
 		tp->features |= p->feature;
 		if (netif_msg_probe(tp))
-			pr_info("%s: %s transceiver at address %d\n",
+			pr_debug("%s: %s transceiver at address %d\n",
 				pci_name(tp->pci_dev), p->name, phy_id);
 	} else {
 		phy->type = UNKNOWN;
 		if (netif_msg_probe(tp))
-			pr_info("%s: unknown PHY 0x%x:0x%x transceiver at address %d\n",
+			pr_debug("%s: unknown PHY 0x%x:0x%x transceiver at address %d\n",
 				pci_name(tp->pci_dev),
 				phy->id[0], (phy->id[1] & 0xfff0), phy_id);
 	}
@@ -1411,7 +1411,7 @@ static int sis190_mii_probe(struct net_device *dev)
 
 	if (list_empty(&tp->first_phy)) {
 		if (netif_msg_probe(tp))
-			pr_info("%s: No MII transceivers found!\n",
+			pr_debug("%s: No MII transceivers found!\n",
 				pci_name(tp->pci_dev));
 		rc = -EIO;
 		goto out;
@@ -1580,14 +1580,14 @@ static int sis190_get_mac_addr_from_eeprom(struct pci_dev *pdev,
 	int i;
 
 	if (netif_msg_probe(tp))
-		pr_info("%s: Read MAC address from EEPROM\n", pci_name(pdev));
+		pr_debug("%s: Read MAC address from EEPROM\n", pci_name(pdev));
 
 	/* Check to see if there is a sane EEPROM */
 	sig = (u16) sis190_read_eeprom(ioaddr, EEPROMSignature);
 
 	if ((sig == 0xffff) || (sig == 0x0000)) {
 		if (netif_msg_probe(tp))
-			pr_info("%s: Error EEPROM read %x\n",
+			pr_debug("%s: Error EEPROM read %x\n",
 				pci_name(pdev), sig);
 		return -EIO;
 	}
@@ -1623,7 +1623,7 @@ static int sis190_get_mac_addr_from_apc(struct pci_dev *pdev,
 	unsigned int i;
 
 	if (netif_msg_probe(tp))
-		pr_info("%s: Read MAC address from APC\n", pci_name(pdev));
+		pr_debug("%s: Read MAC address from APC\n", pci_name(pdev));
 
 	for (i = 0; i < ARRAY_SIZE(ids); i++) {
 		isa_bridge = pci_get_device(PCI_VENDOR_ID_SI, ids[i], NULL);
@@ -1633,7 +1633,7 @@ static int sis190_get_mac_addr_from_apc(struct pci_dev *pdev,
 
 	if (!isa_bridge) {
 		if (netif_msg_probe(tp))
-			pr_info("%s: Can not find ISA bridge\n",
+			pr_debug("%s: Can not find ISA bridge\n",
 				pci_name(pdev));
 		return -EIO;
 	}
@@ -1853,7 +1853,7 @@ static int sis190_init_one(struct pci_dev *pdev,
 
 	if (!printed_version) {
 		if (netif_msg_drv(&debug))
-			pr_info(SIS190_DRIVER_NAME " loaded\n");
+			pr_debug(SIS190_DRIVER_NAME " loaded\n");
 		printed_version = 1;
 	}
 

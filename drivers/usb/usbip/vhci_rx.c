@@ -118,7 +118,7 @@ static struct vhci_unlink *dequeue_pending_unlink(struct vhci_device *vdev,
 	spin_lock_irqsave(&vdev->priv_lock, flags);
 
 	list_for_each_entry_safe(unlink, tmp, &vdev->unlink_rx, list) {
-		pr_info("unlink->seqnum %lu\n", unlink->seqnum);
+		pr_debug("unlink->seqnum %lu\n", unlink->seqnum);
 		if (unlink->seqnum == pdu->base.seqnum) {
 			usbip_dbg_vhci_rx("found pending unlink, %lu\n",
 					  unlink->seqnum);
@@ -147,7 +147,7 @@ static void vhci_recv_ret_unlink(struct vhci_device *vdev,
 
 	unlink = dequeue_pending_unlink(vdev, pdu);
 	if (!unlink) {
-		pr_info("cannot find the pending unlink %u\n",
+		pr_debug("cannot find the pending unlink %u\n",
 			pdu->base.seqnum);
 		return;
 	}
@@ -162,14 +162,14 @@ static void vhci_recv_ret_unlink(struct vhci_device *vdev,
 		 * already received the result of its submit result and gave
 		 * back the URB.
 		 */
-		pr_info("the urb (seqnum %d) was already given back\n",
+		pr_debug("the urb (seqnum %d) was already given back\n",
 			pdu->base.seqnum);
 	} else {
 		usbip_dbg_vhci_rx("now giveback urb %d\n", pdu->base.seqnum);
 
 		/* If unlink is successful, status is -ECONNRESET */
 		urb->status = pdu->u.ret_unlink.status;
-		pr_info("urb->status %d\n", urb->status);
+		pr_debug("urb->status %d\n", urb->status);
 
 		spin_lock_irqsave(&vhci->lock, flags);
 		usb_hcd_unlink_urb_from_ep(vhci_hcd_to_hcd(vhci_hcd), urb);
@@ -208,20 +208,20 @@ static void vhci_rx_pdu(struct usbip_device *ud)
 	ret = usbip_recv(ud->tcp_socket, &pdu, sizeof(pdu));
 	if (ret < 0) {
 		if (ret == -ECONNRESET)
-			pr_info("connection reset by peer\n");
+			pr_debug("connection reset by peer\n");
 		else if (ret == -EAGAIN) {
 			/* ignore if connection was idle */
 			if (vhci_priv_tx_empty(vdev))
 				return;
-			pr_info("connection timed out with pending urbs\n");
+			pr_debug("connection timed out with pending urbs\n");
 		} else if (ret != -ERESTARTSYS)
-			pr_info("xmit failed %d\n", ret);
+			pr_debug("xmit failed %d\n", ret);
 
 		usbip_event_add(ud, VDEV_EVENT_ERROR_TCP);
 		return;
 	}
 	if (ret == 0) {
-		pr_info("connection closed");
+		pr_debug("connection closed");
 		usbip_event_add(ud, VDEV_EVENT_DOWN);
 		return;
 	}

@@ -2930,7 +2930,7 @@ static int console_register(struct uart_driver *drv)
 
 #ifdef CONFIG_FASTBOOT_CMD_CTRL_UART
 	if (!is_early_cons_enabled) {
-		pr_info("ignore console register\n");
+		pr_debug("ignore console register\n");
 		return 0;
 	}
 #endif
@@ -2943,7 +2943,7 @@ static void console_unregister(struct uart_driver *drv)
 
 #ifdef CONFIG_FASTBOOT_CMD_CTRL_UART
 	if (!is_early_cons_enabled) {
-		pr_info("ignore console unregister\n");
+		pr_debug("ignore console unregister\n");
 		return;
 	}
 #endif
@@ -3047,7 +3047,7 @@ static void msm_geni_serial_cons_pm(struct uart_port *uport,
 
 #ifdef CONFIG_FASTBOOT_CMD_CTRL_UART
 	if (!is_early_cons_enabled) {
-		pr_info("ignore console pm\n");
+		pr_debug("ignore console pm\n");
 		return;
 	}
 #endif
@@ -3404,7 +3404,7 @@ static int msm_geni_serial_probe(struct platform_device *pdev)
 	  driver prob*/
 	if (!is_early_cons_enabled &&
 		(!strcmp(id->compatible, "qcom,msm-geni-console"))) {
-		pr_info("ignore cons prob\n");
+		pr_debug("ignore cons prob\n");
 		return 0;
 	}
 #endif
@@ -3578,7 +3578,7 @@ static int msm_geni_serial_remove(struct platform_device *pdev)
 	  driver prob*/
 	if (!is_early_cons_enabled &&
 		(!strcmp(id->compatible, "qcom,msm-geni-console"))) {
-		pr_info("ignore cons remove\n");
+		pr_debug("ignore cons remove\n");
 		return 0;
 	}
 #endif
@@ -3637,7 +3637,7 @@ static int msm_geni_serial_runtime_suspend(struct device *dev)
 	  driver prob*/
 	if (!is_early_cons_enabled &&
 		(!strcmp(id->compatible, "qcom,msm-geni-console"))) {
-		pr_info("ignore cons runtime suspend\n");
+		pr_debug("ignore cons runtime suspend\n");
 		return 0;
 	}
 #endif
@@ -3732,7 +3732,7 @@ static int msm_geni_serial_runtime_resume(struct device *dev)
 	  driver prob*/
 	if (!is_early_cons_enabled &&
 		(!strcmp(id->compatible, "qcom,msm-geni-console"))) {
-		pr_info("ignore cons runtime resume\n");
+		pr_debug("ignore cons runtime resume\n");
 		return 0;
 	}
 #endif
@@ -3790,7 +3790,7 @@ static int msm_geni_serial_sys_suspend(struct device *dev)
 	  driver prob*/
 	if (!is_early_cons_enabled &&
 		(!strcmp(id->compatible, "qcom,msm-geni-console"))) {
-		pr_info("ignore cons suspend\n");
+		pr_debug("ignore cons suspend\n");
 		return 0;
 	}
 #endif
@@ -3842,7 +3842,7 @@ static int msm_geni_serial_sys_resume(struct device *dev)
 	  driver prob*/
 	if (!is_early_cons_enabled &&
 		(!strcmp(id->compatible, "qcom,msm-geni-console"))) {
-		pr_info("ignore cons resume\n");
+		pr_debug("ignore cons resume\n");
 		return 0;
 	}
 #endif
@@ -3949,7 +3949,7 @@ static int __init msm_geni_serial_init(void)
 		return ret;
 	}
 
-	pr_info("%s: Driver initialized\n", __func__);
+	pr_debug("%s: Driver initialized\n", __func__);
 
 	return ret;
 }

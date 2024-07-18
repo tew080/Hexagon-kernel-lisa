@@ -1197,7 +1197,7 @@ static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
 
 	pci_dev_put(xhci_pdev);
 
-	pr_info("set USB_INTEL_XUSB2PR old: 0x%04x, new: 0x%04x\n",
+	pr_debug("set USB_INTEL_XUSB2PR old: 0x%04x, new: 0x%04x\n",
 			orig_ports_available, ports_available);
 }
 
@@ -1646,7 +1646,7 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
 
 	value = asus->fan_boost_mode;
 
-	pr_info("Set fan boost mode: %u\n", value);
+	pr_debug("Set fan boost mode: %u\n", value);
 	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_FAN_BOOST_MODE, value,
 				    &retval);
 	if (err) {
@@ -2012,7 +2012,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
 
 	if (!sparse_keymap_report_event(asus->inputdev, code,
 					key_value, autorelease))
-		pr_info("Unknown key %x pressed\n", code);
+		pr_debug("Unknown key %x pressed\n", code);
 }
 
 static void asus_wmi_notify(u32 value, void *context)
@@ -2212,11 +2212,11 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
 
 	/* INIT enable hotkeys on some models */
 	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_INIT, 0, 0, &rv))
-		pr_info("Initialization: %#x\n", rv);
+		pr_debug("Initialization: %#x\n", rv);
 
 	/* We don't know yet what to do with this version... */
 	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_SPEC, 0, 0x9, &rv)) {
-		pr_info("BIOS WMI version: %d.%d\n", rv >> 16, rv & 0xFF);
+		pr_debug("BIOS WMI version: %d.%d\n", rv >> 16, rv & 0xFF);
 		asus->spec = rv;
 	}
 
@@ -2227,7 +2227,7 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
 	 * The significance of others is yet to be found.
 	 */
 	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_SFUN, 0, 0, &rv)) {
-		pr_info("SFUN value: %#x\n", rv);
+		pr_debug("SFUN value: %#x\n", rv);
 		asus->sfun = rv;
 	}
 
@@ -2689,13 +2689,13 @@ EXPORT_SYMBOL_GPL(asus_wmi_unregister_driver);
 
 static int __init asus_wmi_init(void)
 {
-	pr_info("ASUS WMI generic driver loaded\n");
+	pr_debug("ASUS WMI generic driver loaded\n");
 	return 0;
 }
 
 static void __exit asus_wmi_exit(void)
 {
-	pr_info("ASUS WMI generic driver unloaded\n");
+	pr_debug("ASUS WMI generic driver unloaded\n");
 }
 
 module_init(asus_wmi_init);

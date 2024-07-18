@@ -277,7 +277,7 @@ static int create_image(int platform_mode)
 
 	error = dpm_suspend_end(PMSG_FREEZE);
 	if (error) {
-		pr_err("Some devices failed to power down, aborting hibernation\n");
+		pr_debug("Some devices failed to power down, aborting hibernation\n");
 		return error;
 	}
 
@@ -295,7 +295,7 @@ static int create_image(int platform_mode)
 
 	error = syscore_suspend();
 	if (error) {
-		pr_err("Some system devices failed to power down, aborting hibernation\n");
+		pr_debug("Some system devices failed to power down, aborting hibernation\n");
 		goto Enable_irqs;
 	}
 
@@ -310,7 +310,7 @@ static int create_image(int platform_mode)
 	restore_processor_state();
 	trace_suspend_resume(TPS("machine_suspend"), PM_EVENT_HIBERNATE, false);
 	if (error)
-		pr_err("Error %d creating hibernation image\n", error);
+		pr_debug("Error %d creating hibernation image\n", error);
 
 	if (!in_suspend) {
 		events_check_enabled = false;
@@ -443,7 +443,7 @@ static int resume_target_kernel(bool platform_mode)
 
 	error = dpm_suspend_end(PMSG_QUIESCE);
 	if (error) {
-		pr_err("Some devices failed to power down, aborting resume\n");
+		pr_debug("Some devices failed to power down, aborting resume\n");
 		return error;
 	}
 
@@ -634,7 +634,7 @@ static void power_down(void)
 			/* Restore swap signature. */
 			error = swsusp_unmark();
 			if (error)
-				pr_err("Swap will be unusable! Try swapon -a.\n");
+				pr_debug("Swap will be unusable! Try swapon -a.\n");
 
 			return;
 		}
@@ -680,7 +680,7 @@ static int load_image_and_restore(void)
 	if (!error)
 		hibernation_restore(flags & SF_PLATFORM_MODE);
 
-	pr_err("Failed to load hibernation image, recovering.\n");
+	pr_debug("Failed to load hibernation image, recovering.\n");
 	swsusp_free();
 	free_basic_memory_bitmaps();
  Unlock:

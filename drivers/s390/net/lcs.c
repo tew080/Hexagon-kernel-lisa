@@ -1099,7 +1099,7 @@ list_modified:
 			rc = lcs_send_setipm(card, ipm);
 			spin_lock_irqsave(&card->ipm_lock, flags);
 			if (rc) {
-				pr_info("Adding multicast address failed."
+				pr_debug("Adding multicast address failed."
 					" Table possibly full!\n");
 				/* store ipm in failed list -> will be added
 				 * to ipm_list again, so a retry will be done
@@ -1210,7 +1210,7 @@ static void lcs_set_mc_addresses(struct lcs_card *card,
 			continue;	/* Address already in list. */
 		ipm = kzalloc(sizeof(struct lcs_ipm_list), GFP_ATOMIC);
 		if (ipm == NULL) {
-			pr_info("Not enough memory to add"
+			pr_debug("Not enough memory to add"
 				" new multicast entry!\n");
 			break;
 		}
@@ -2181,11 +2181,11 @@ netdev_out:
 		goto out;
 
 	/* Print out supported assists: IPv6 */
-	pr_info("LCS device %s %s IPv6 support\n", card->dev->name,
+	pr_debug("LCS device %s %s IPv6 support\n", card->dev->name,
 		(card->ip_assists_supported & LCS_IPASS_IPV6_SUPPORT) ?
 		"with" : "without");
 	/* Print out supported assist: Multicast */
-	pr_info("LCS device %s %s Multicast support\n", card->dev->name,
+	pr_debug("LCS device %s %s Multicast support\n", card->dev->name,
 		(card->ip_assists_supported & LCS_IPASS_MULTICAST_SUPPORT) ?
 		"with" : "without");
 	return 0;
@@ -2261,10 +2261,10 @@ lcs_recovery(void *ptr)
 	rc = __lcs_shutdown_device(gdev, 1);
 	rc = lcs_new_device(gdev);
 	if (!rc)
-		pr_info("Device %s successfully recovered!\n",
+		pr_debug("Device %s successfully recovered!\n",
 			card->dev->name);
 	else
-		pr_info("Device %s could not be recovered!\n",
+		pr_debug("Device %s could not be recovered!\n",
 			card->dev->name);
 	lcs_clear_thread_running_bit(card, LCS_RECOVERY_THREAD);
 	return 0;
@@ -2417,7 +2417,7 @@ __init lcs_init_module(void)
 {
 	int rc;
 
-	pr_info("Loading %s\n", version);
+	pr_debug("Loading %s\n", version);
 	rc = lcs_register_debug_facility();
 	LCS_DBF_TEXT(0, setup, "lcsinit");
 	if (rc)
@@ -2453,7 +2453,7 @@ out_err:
 static void
 __exit lcs_cleanup_module(void)
 {
-	pr_info("Terminating lcs module.\n");
+	pr_debug("Terminating lcs module.\n");
 	LCS_DBF_TEXT(0, trace, "cleanup");
 	ccwgroup_driver_unregister(&lcs_group_driver);
 	ccw_driver_unregister(&lcs_ccw_driver);

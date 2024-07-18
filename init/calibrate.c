@@ -281,26 +281,26 @@ void calibrate_delay(void)
 	if (per_cpu(cpu_loops_per_jiffy, this_cpu)) {
 		lpj = per_cpu(cpu_loops_per_jiffy, this_cpu);
 		if (!printed)
-			pr_info("Calibrating delay loop (skipped) "
+			pr_debug("Calibrating delay loop (skipped) "
 				"already calibrated this CPU");
 	} else if (preset_lpj) {
 		lpj = preset_lpj;
 		if (!printed)
-			pr_info("Calibrating delay loop (skipped) "
+			pr_debug("Calibrating delay loop (skipped) "
 				"preset value.. ");
 	} else if ((!printed) && lpj_fine) {
 		lpj = lpj_fine;
-		pr_info("Calibrating delay loop (skipped), "
+		pr_debug("Calibrating delay loop (skipped), "
 			"value calculated using timer frequency.. ");
 	} else if ((lpj = calibrate_delay_is_known())) {
 		;
 	} else if ((lpj = calibrate_delay_direct()) != 0) {
 		if (!printed)
-			pr_info("Calibrating delay using timer "
+			pr_debug("Calibrating delay using timer "
 				"specific routine.. ");
 	} else {
 		if (!printed)
-			pr_info("Calibrating delay loop... ");
+			pr_debug("Calibrating delay loop... ");
 		lpj = calibrate_delay_converge();
 	}
 	per_cpu(cpu_loops_per_jiffy, this_cpu) = lpj;

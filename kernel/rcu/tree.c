@@ -3956,7 +3956,7 @@ static void __init kfree_rcu_batch_init(void)
 		krcp->initialized = true;
 	}
 	if (register_shrinker(&kfree_rcu_shrinker))
-		pr_err("Failed to register kfree_rcu() shrinker!\n");
+		pr_debug("Failed to register kfree_rcu() shrinker!\n");
 }
 
 void __init rcu_init(void)

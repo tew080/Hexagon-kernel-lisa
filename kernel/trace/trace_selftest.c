@@ -193,7 +193,7 @@ static int trace_selftest_ops(struct trace_array *tr, int cnt)
 	int ret = -1;
 
 	printk(KERN_CONT "PASSED\n");
-	pr_info("Testing dynamic ftrace ops #%d: ", cnt);
+	pr_debug("Testing dynamic ftrace ops #%d: ", cnt);
 
 	ftrace_enabled = 1;
 	reset_counts();
@@ -333,7 +333,7 @@ static int trace_selftest_startup_dynamic_tracing(struct tracer *trace,
 
 	/* The ftrace test PASSED */
 	printk(KERN_CONT "PASSED\n");
-	pr_info("Testing dynamic ftrace: ");
+	pr_debug("Testing dynamic ftrace: ");
 
 	/* enable tracing, and record the filter function */
 	ftrace_enabled = 1;
@@ -465,7 +465,7 @@ trace_selftest_function_recursion(void)
 
 	/* The previous test PASSED */
 	pr_cont("PASSED\n");
-	pr_info("Testing ftrace recursion: ");
+	pr_debug("Testing ftrace recursion: ");
 
 
 	/* enable tracing, and record the filter function */
@@ -506,7 +506,7 @@ trace_selftest_function_recursion(void)
 	trace_selftest_recursion_cnt = 1;
 
 	pr_cont("PASSED\n");
-	pr_info("Testing ftrace recursion safe: ");
+	pr_debug("Testing ftrace recursion safe: ");
 
 	ret = ftrace_set_filter(&test_recsafe_probe, func_name, len, 1);
 	if (ret) {
@@ -579,7 +579,7 @@ trace_selftest_function_regs(void)
 
 	/* The previous test PASSED */
 	pr_cont("PASSED\n");
-	pr_info("Testing ftrace regs%s: ",
+	pr_debug("Testing ftrace regs%s: ",
 		!supported ? "(no arch support)" : "");
 
 	/* enable tracing, and record the filter function */

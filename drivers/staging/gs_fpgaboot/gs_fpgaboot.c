@@ -99,7 +99,7 @@ static int readmagic_bitstream(u8 *bitdata, int *offset)
 		pr_err("error: corrupted header\n");
 		return -EINVAL;
 	}
-	pr_info("bitstream file magic number Ok\n");
+	pr_debug("bitstream file magic number Ok\n");
 
 	*offset = 13;	/* magic length */
 
@@ -116,11 +116,11 @@ static enum fmt_image get_imageformat(void)
 
 static void gs_print_header(struct fpgaimage *fimage)
 {
-	pr_info("file: %s\n", fimage->filename);
-	pr_info("part: %s\n", fimage->part);
-	pr_info("date: %s\n", fimage->date);
-	pr_info("time: %s\n", fimage->time);
-	pr_info("lendata: %d\n", fimage->lendata);
+	pr_debug("file: %s\n", fimage->filename);
+	pr_debug("part: %s\n", fimage->part);
+	pr_debug("date: %s\n", fimage->date);
+	pr_debug("time: %s\n", fimage->time);
+	pr_debug("lendata: %d\n", fimage->lendata);
 }
 
 static int gs_read_bitstream(struct fpgaimage *fimage)
@@ -167,7 +167,7 @@ static int gs_read_image(struct fpgaimage *fimage)
 
 	switch (img_fmt) {
 	case f_bit:
-		pr_info("image is bitstream format\n");
+		pr_debug("image is bitstream format\n");
 		err = gs_read_bitstream(fimage);
 		if (err)
 			return err;
@@ -186,7 +186,7 @@ static int gs_load_image(struct fpgaimage *fimage, char *fw_file)
 {
 	int err;
 
-	pr_info("load fpgaimage %s\n", fw_file);
+	pr_debug("load fpgaimage %s\n", fw_file);
 
 	err = request_firmware(&fimage->fw_entry, fw_file, &firmware_pdev->dev);
 	if (err != 0) {
@@ -230,12 +230,12 @@ static int gs_download_image(struct fpgaimage *fimage, enum wbus bus_bytes)
 	while (xl_get_init_b() == 0)
 		;
 
-	pr_info("device init done\n");
+	pr_debug("device init done\n");
 
 	for (i = 0; i < size; i += bus_bytes)
 		xl_shift_bytes_out(bus_bytes, bitdata + i);
 
-	pr_info("program done\n");
+	pr_debug("program done\n");
 
 	/* Check INIT_B */
 	if (xl_get_init_b() == 0) {
@@ -255,7 +255,7 @@ static int gs_download_image(struct fpgaimage *fimage, enum wbus bus_bytes)
 		return -EIO;
 	}
 
-	pr_info("download fpgaimage\n");
+	pr_debug("download fpgaimage\n");
 
 	/* Compensate for Special Startup Conditions */
 	xl_shift_cclk(8);
@@ -266,7 +266,7 @@ static int gs_download_image(struct fpgaimage *fimage, enum wbus bus_bytes)
 static int gs_release_image(struct fpgaimage *fimage)
 {
 	release_firmware(fimage->fw_entry);
-	pr_info("release fpgaimage\n");
+	pr_debug("release fpgaimage\n");
 
 	return 0;
 }
@@ -276,11 +276,11 @@ static int gs_release_image(struct fpgaimage *fimage)
  */
 static int gs_set_download_method(struct fpgaimage *fimage)
 {
-	pr_info("set program method\n");
+	pr_debug("set program method\n");
 
 	fimage->dmethod = m_systemmap;
 
-	pr_info("systemmap program method\n");
+	pr_debug("systemmap program method\n");
 
 	return 0;
 }
@@ -348,9 +348,9 @@ static int __init gs_fpgaboot_init(void)
 {
 	int err;
 
-	pr_info("FPGA DOWNLOAD --->\n");
+	pr_debug("FPGA DOWNLOAD --->\n");
 
-	pr_info("FPGA image file name: %s\n", file);
+	pr_debug("FPGA image file name: %s\n", file);
 
 	err = init_driver();
 	if (err) {
@@ -370,7 +370,7 @@ static int __init gs_fpgaboot_init(void)
 		goto errout;
 	}
 
-	pr_info("FPGA DOWNLOAD DONE <---\n");
+	pr_debug("FPGA DOWNLOAD DONE <---\n");
 
 	return 0;
 
@@ -383,7 +383,7 @@ errout:
 static void __exit gs_fpgaboot_exit(void)
 {
 	platform_device_unregister(firmware_pdev);
-	pr_info("FPGA image download module removed\n");
+	pr_debug("FPGA image download module removed\n");
 }
 
 module_init(gs_fpgaboot_init);

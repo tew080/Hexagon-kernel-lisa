@@ -114,7 +114,7 @@ static int wdt977_start(void)
 	outb_p(LOCK_DATA, IO_INDEX_PORT);
 
 	spin_unlock_irqrestore(&spinlock, flags);
-	pr_info("activated\n");
+	pr_debug("activated\n");
 
 	return 0;
 }
@@ -159,7 +159,7 @@ static int wdt977_stop(void)
 	outb_p(LOCK_DATA, IO_INDEX_PORT);
 
 	spin_unlock_irqrestore(&spinlock, flags);
-	pr_info("shutdown\n");
+	pr_debug("shutdown\n");
 
 	return 0;
 }
@@ -440,13 +440,13 @@ static int __init wd977_init(void)
 {
 	int rc;
 
-	pr_info("driver v%s\n", WATCHDOG_VERSION);
+	pr_debug("driver v%s\n", WATCHDOG_VERSION);
 
 	/* Check that the timeout value is within its range;
 	   if not reset to the default */
 	if (wdt977_set_timeout(timeout)) {
 		wdt977_set_timeout(DEFAULT_TIMEOUT);
-		pr_info("timeout value must be 60 < timeout < 15300, using %d\n",
+		pr_debug("timeout value must be 60 < timeout < 15300, using %d\n",
 			DEFAULT_TIMEOUT);
 	}
 
@@ -475,7 +475,7 @@ static int __init wd977_init(void)
 		goto err_out_reboot;
 	}
 
-	pr_info("initialized. timeout=%d sec (nowayout=%d, testmode=%i)\n",
+	pr_debug("initialized. timeout=%d sec (nowayout=%d, testmode=%i)\n",
 		timeout, nowayout, testmode);
 
 	return 0;

@@ -1724,7 +1724,7 @@ static int run_tracer_selftest(struct tracer *type)
 #endif
 
 	/* the test is responsible for initializing and enabling */
-	pr_info("Testing tracer %s: ", type->name);
+	pr_debug("Testing tracer %s: ", type->name);
 	ret = type->selftest(type, tr);
 	/* the test is responsible for resetting too */
 	tr->current_trace = saved_tracer;
@@ -1765,7 +1765,7 @@ static __init int init_trace_selftests(void)
 	if (list_empty(&postponed_selftests))
 		goto out;
 
-	pr_info("Running postponed tracer tests:\n");
+	pr_debug("Running postponed tracer tests:\n");
 
 	tracing_selftest_running = true;
 	list_for_each_entry_safe(p, n, &postponed_selftests, list) {
@@ -1821,12 +1821,12 @@ int __init register_tracer(struct tracer *type)
 	int ret = 0;
 
 	if (!type->name) {
-		pr_info("Tracer must have a name\n");
+		pr_debug("Tracer must have a name\n");
 		return -1;
 	}
 
 	if (strlen(type->name) >= MAX_TRACER_SIZE) {
-		pr_info("Tracer has a name longer than %d\n", MAX_TRACER_SIZE);
+		pr_debug("Tracer has a name longer than %d\n", MAX_TRACER_SIZE);
 		return -1;
 	}
 
@@ -1843,7 +1843,7 @@ int __init register_tracer(struct tracer *type)
 	for (t = trace_types; t; t = t->next) {
 		if (strcmp(type->name, t->name) == 0) {
 			/* already found */
-			pr_info("Tracer %s already registered\n",
+			pr_debug("Tracer %s already registered\n",
 				type->name);
 			ret = -1;
 			goto out;
@@ -2464,7 +2464,7 @@ void trace_buffered_event_enable(void)
 					GFP_KERNEL | __GFP_NORETRY, 0);
 		/* This is just an optimization and can handle failures */
 		if (!page) {
-			pr_err("Failed to allocate event buffer\n");
+			pr_debug("Failed to allocate event buffer\n");
 			break;
 		}
 

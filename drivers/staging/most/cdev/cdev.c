@@ -129,19 +129,19 @@ static int comp_open(struct inode *inode, struct file *filp)
 	     ((filp->f_flags & O_ACCMODE) != O_RDONLY)) ||
 	     ((c->cfg->direction == MOST_CH_TX) &&
 		((filp->f_flags & O_ACCMODE) != O_WRONLY))) {
-		pr_info("WARN: Access flags mismatch\n");
+		pr_debug("WARN: Access flags mismatch\n");
 		return -EACCES;
 	}
 
 	mutex_lock(&c->io_mutex);
 	if (!c->dev) {
-		pr_info("WARN: Device is destroyed\n");
+		pr_debug("WARN: Device is destroyed\n");
 		mutex_unlock(&c->io_mutex);
 		return -ENODEV;
 	}
 
 	if (c->access_ref) {
-		pr_info("WARN: Device is busy\n");
+		pr_debug("WARN: Device is busy\n");
 		mutex_unlock(&c->io_mutex);
 		return -EBUSY;
 	}
@@ -329,7 +329,7 @@ static int comp_disconnect_channel(struct most_interface *iface, int channel_id)
 	struct comp_channel *c;
 
 	if (!iface) {
-		pr_info("Bad interface pointer\n");
+		pr_debug("Bad interface pointer\n");
 		return -EINVAL;
 	}
 
@@ -380,7 +380,7 @@ static int comp_rx_completion(struct mbo *mbo)
 	spin_unlock(&c->unlink);
 #ifdef DEBUG_MESG
 	if (kfifo_is_full(&c->fifo))
-		pr_info("WARN: Fifo is full\n");
+		pr_debug("WARN: Fifo is full\n");
 #endif
 	wake_up_interruptible(&c->wq);
 	return 0;
@@ -398,11 +398,11 @@ static int comp_tx_completion(struct most_interface *iface, int channel_id)
 	struct comp_channel *c;
 
 	if (!iface) {
-		pr_info("Bad interface pointer\n");
+		pr_debug("Bad interface pointer\n");
 		return -EINVAL;
 	}
 	if ((channel_id < 0) || (channel_id >= iface->num_channels)) {
-		pr_info("Channel ID out of range\n");
+		pr_debug("Channel ID out of range\n");
 		return -EINVAL;
 	}
 
@@ -433,7 +433,7 @@ static int comp_probe(struct most_interface *iface, int channel_id,
 	int current_minor;
 
 	if ((!iface) || (!cfg) || (!name)) {
-		pr_info("Probing component with bad arguments");
+		pr_debug("Probing component with bad arguments");
 		return -EINVAL;
 	}
 	c = get_channel(iface, channel_id);
@@ -474,7 +474,7 @@ static int comp_probe(struct most_interface *iface, int channel_id,
 
 	if (IS_ERR(c->dev)) {
 		retval = PTR_ERR(c->dev);
-		pr_info("failed to create new device node %s\n", name);
+		pr_debug("failed to create new device node %s\n", name);
 		goto err_free_kfifo_and_del_list;
 	}
 	kobject_uevent(&c->dev->kobj, KOBJ_ADD);
@@ -506,11 +506,11 @@ static int __init mod_init(void)
 {
 	int err;
 
-	pr_info("init()\n");
+	pr_debug("init()\n");
 
 	comp.class = class_create(THIS_MODULE, "most_cdev");
 	if (IS_ERR(comp.class)) {
-		pr_info("No udev support.\n");
+		pr_debug("No udev support.\n");
 		return PTR_ERR(comp.class);
 	}
 
@@ -544,7 +544,7 @@ static void __exit mod_exit(void)
 {
 	struct comp_channel *c, *tmp;
 
-	pr_info("exit module\n");
+	pr_debug("exit module\n");
 
 	most_deregister_configfs_subsys(&comp.cc);
 	most_deregister_component(&comp.cc);

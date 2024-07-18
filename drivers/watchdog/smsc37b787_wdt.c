@@ -359,7 +359,7 @@ static int wb_smsc_wdt_open(struct inode *inode, struct file *file)
 	/* Reload and activate timer */
 	wb_smsc_wdt_enable();
 
-	pr_info("Watchdog enabled. Timeout set to %d %s\n",
+	pr_debug("Watchdog enabled. Timeout set to %d %s\n",
 		timeout, (unit == UNIT_SECOND) ? "second(s)" : "minute(s)");
 
 	return stream_open(inode, file);
@@ -373,7 +373,7 @@ static int wb_smsc_wdt_release(struct inode *inode, struct file *file)
 
 	if (expect_close == 42) {
 		wb_smsc_wdt_disable();
-		pr_info("Watchdog disabled, sleeping again...\n");
+		pr_debug("Watchdog disabled, sleeping again...\n");
 	} else {
 		pr_crit("Unexpected close, not stopping watchdog!\n");
 		wb_smsc_wdt_reset_timer();
@@ -527,7 +527,7 @@ static int __init wb_smsc_wdt_init(void)
 {
 	int ret;
 
-	pr_info("SMsC 37B787 watchdog component driver "
+	pr_debug("SMsC 37B787 watchdog component driver "
 		VERSION " initialising...\n");
 
 	if (!request_region(IOPORT, IOPORT_SIZE, "SMsC 37B787 watchdog")) {
@@ -557,9 +557,9 @@ static int __init wb_smsc_wdt_init(void)
 	}
 
 	/* output info */
-	pr_info("Timeout set to %d %s\n",
+	pr_debug("Timeout set to %d %s\n",
 		timeout, (unit == UNIT_SECOND) ? "second(s)" : "minute(s)");
-	pr_info("Watchdog initialized and sleeping (nowayout=%d)...\n",
+	pr_debug("Watchdog initialized and sleeping (nowayout=%d)...\n",
 		nowayout);
 out_clean:
 	return ret;
@@ -581,14 +581,14 @@ static void __exit wb_smsc_wdt_exit(void)
 	/* Stop the timer before we leave */
 	if (!nowayout) {
 		wb_smsc_wdt_shutdown();
-		pr_info("Watchdog disabled\n");
+		pr_debug("Watchdog disabled\n");
 	}
 
 	misc_deregister(&wb_smsc_wdt_miscdev);
 	unregister_reboot_notifier(&wb_smsc_wdt_notifier);
 	release_region(IOPORT, IOPORT_SIZE);
 
-	pr_info("SMsC 37B787 watchdog component driver removed\n");
+	pr_debug("SMsC 37B787 watchdog component driver removed\n");
 }
 
 module_init(wb_smsc_wdt_init);

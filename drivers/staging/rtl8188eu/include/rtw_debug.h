@@ -62,25 +62,25 @@ extern u32 GlobalDebugLevel;
 #define DBG_88E_LEVEL(_level, fmt, arg...)				\
 	do {								\
 		if (_level <= GlobalDebugLevel)				\
-			pr_info(DRIVER_PREFIX fmt, ##arg);	\
+			pr_debug(DRIVER_PREFIX fmt, ##arg);	\
 	} while (0)
 
 #define DBG_88E(...)							\
 	do {								\
 		if (_drv_err_ <= GlobalDebugLevel)			\
-			pr_info(DRIVER_PREFIX __VA_ARGS__);		\
+			pr_debug(DRIVER_PREFIX __VA_ARGS__);		\
 	} while (0)
 
 #define MSG_88E(...)							\
 	do {								\
 		if (_drv_err_ <= GlobalDebugLevel)			\
-			pr_info(DRIVER_PREFIX __VA_ARGS__);			\
+			pr_debug(DRIVER_PREFIX __VA_ARGS__);			\
 	} while (0)
 
 #define RT_TRACE(_comp, _level, fmt)					\
 	do {								\
 		if (_level <= GlobalDebugLevel) {			\
-			pr_info("%s [0x%08x,%d]", DRIVER_PREFIX,	\
+			pr_debug("%s [0x%08x,%d]", DRIVER_PREFIX,	\
 				 (unsigned int)_comp, _level);		\
 			pr_info fmt;					\
 		}							\
@@ -91,10 +91,10 @@ extern u32 GlobalDebugLevel;
 		if (_level <= GlobalDebugLevel) {			\
 			int __i;					\
 			u8	*ptr = (u8 *)_hexdata;			\
-			pr_info("%s", DRIVER_PREFIX);			\
-			pr_info(_titlestring);				\
+			pr_debug("%s", DRIVER_PREFIX);			\
+			pr_debug(_titlestring);				\
 			for (__i = 0; __i < (int)_hexdatalen; __i++) {	\
-				pr_info("%02X%s", ptr[__i],		\
+				pr_debug("%02X%s", ptr[__i],		\
 					 (((__i + 1) % 4) == 0) ?	\
 					 "  " : " ");	\
 				if (((__i + 1) % 16) == 0)		\

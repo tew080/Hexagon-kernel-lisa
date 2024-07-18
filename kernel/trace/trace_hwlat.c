@@ -197,7 +197,7 @@ static int get_sample(void)
 			diff = time_to_us(time_sub(t1, last_t2));
 			/* This shouldn't happen */
 			if (diff < 0) {
-				pr_err(BANNER "time running backwards\n");
+				pr_debug(BANNER "time running backwards\n");
 				goto out;
 			}
 			if (diff > outer_sample)
@@ -209,7 +209,7 @@ static int get_sample(void)
 
 		/* Check for possible overflows */
 		if (total < last_total) {
-			pr_err("Time total overflowed\n");
+			pr_debug("Time total overflowed\n");
 			break;
 		}
 		last_total = total;
@@ -219,7 +219,7 @@ static int get_sample(void)
 
 		/* This shouldn't happen */
 		if (diff < 0) {
-			pr_err(BANNER "time running backwards\n");
+			pr_debug(BANNER "time running backwards\n");
 			goto out;
 		}
 
@@ -367,7 +367,7 @@ static int start_kthread(struct trace_array *tr)
 
 	kthread = kthread_create(kthread_fn, NULL, "hwlatd");
 	if (IS_ERR(kthread)) {
-		pr_err(BANNER "could not start sampling thread\n");
+		pr_debug(BANNER "could not start sampling thread\n");
 		return -ENOMEM;
 	}
 
@@ -564,7 +564,7 @@ static void hwlat_tracer_start(struct trace_array *tr)
 
 	err = start_kthread(tr);
 	if (err)
-		pr_err(BANNER "Cannot start hwlat kthread\n");
+		pr_debug(BANNER "Cannot start hwlat kthread\n");
 }
 
 static void hwlat_tracer_stop(struct trace_array *tr)

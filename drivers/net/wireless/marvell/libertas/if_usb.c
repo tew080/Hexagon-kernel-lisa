@@ -102,7 +102,7 @@ static void if_usb_write_bulk_callback(struct urb *urb)
 			lbs_host_to_card_done(priv);
 	} else {
 		/* print the failure status number for debug */
-		pr_info("URB in failure status: %d\n", urb->status);
+		pr_debug("URB in failure status: %d\n", urb->status);
 	}
 }
 
@@ -508,7 +508,7 @@ static void if_usb_receive_fwload(struct urb *urb)
 
 		if (tmp[0] == cpu_to_le32(CMD_TYPE_INDICATION) &&
 		    tmp[1] == cpu_to_le32(MACREG_INT_CODE_FIRMWARE_READY)) {
-			pr_info("Firmware ready event received\n");
+			pr_debug("Firmware ready event received\n");
 			wake_up(&cardp->fw_wq);
 		} else {
 			lbs_deb_usb("Waiting for confirmation; got %x %x\n",
@@ -535,19 +535,19 @@ static void if_usb_receive_fwload(struct urb *urb)
 			    bootcmdresp.magic == cpu_to_le32(CMD_TYPE_DATA) ||
 			    bootcmdresp.magic == cpu_to_le32(CMD_TYPE_INDICATION)) {
 				if (!cardp->bootcmdresp)
-					pr_info("Firmware already seems alive; resetting\n");
+					pr_debug("Firmware already seems alive; resetting\n");
 				cardp->bootcmdresp = -1;
 			} else {
-				pr_info("boot cmd response wrong magic number (0x%x)\n",
+				pr_debug("boot cmd response wrong magic number (0x%x)\n",
 					    le32_to_cpu(bootcmdresp.magic));
 			}
 		} else if ((bootcmdresp.cmd != BOOT_CMD_FW_BY_USB) &&
 			   (bootcmdresp.cmd != BOOT_CMD_UPDATE_FW) &&
 			   (bootcmdresp.cmd != BOOT_CMD_UPDATE_BOOT2)) {
-			pr_info("boot cmd response cmd_tag error (%d)\n",
+			pr_debug("boot cmd response cmd_tag error (%d)\n",
 				bootcmdresp.cmd);
 		} else if (bootcmdresp.result != BOOT_CMD_RESP_OK) {
-			pr_info("boot cmd response result error (%d)\n",
+			pr_debug("boot cmd response result error (%d)\n",
 				bootcmdresp.result);
 		} else {
 			cardp->bootcmdresp = 1;
@@ -901,13 +901,13 @@ restart:
 	usb_kill_urb(cardp->rx_urb);
 
 	if (!cardp->fwdnldover) {
-		pr_info("failed to load fw, resetting device!\n");
+		pr_debug("failed to load fw, resetting device!\n");
 		if (--reset_count >= 0) {
 			if_usb_reset_device(cardp);
 			goto restart;
 		}
 
-		pr_info("FW download failure, time = %d ms\n", i * 100);
+		pr_debug("FW download failure, time = %d ms\n", i * 100);
 		ret = -EIO;
 		goto done;
 	}

@@ -316,9 +316,9 @@ int pmic_glink_write(struct pmic_glink_client *client, void *data,
 		struct pmic_glink_hdr *hdr = data;
 
 		if (client->pgdev->log_filter == hdr->owner)
-			pr_info("Tx data: %*ph\n", len, data);
+			pr_debug("Tx data: %*ph\n", len, data);
 		else if (client->pgdev->log_filter == 65535)
-			pr_info("[%u] Tx data: %*ph\n", hdr->owner, len, data);
+			pr_debug("[%u] Tx data: %*ph\n", hdr->owner, len, data);
 	}
 
 	return rc;
@@ -452,9 +452,9 @@ static void pmic_glink_rx_callback(struct pmic_glink_dev *pgdev,
 
 	if (pgdev->log_enable) {
 		if (pgdev->log_filter == hdr->owner)
-			pr_info("Rx data: %*ph\n", pbuf->len, pbuf->buf);
+			pr_debug("Rx data: %*ph\n", pbuf->len, pbuf->buf);
 		else if (pgdev->log_filter == 65535)
-			pr_info("[%u] Rx data: %*ph\n", hdr->owner, pbuf->len,
+			pr_debug("[%u] Rx data: %*ph\n", hdr->owner, pbuf->len,
 				pbuf->buf);
 	}
 

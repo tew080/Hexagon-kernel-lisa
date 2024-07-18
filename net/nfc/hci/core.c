@@ -250,7 +250,7 @@ void nfc_hci_cmd_received(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
 		nfc_hci_reset_pipes_per_host(hdev, cleared_info->host);
 		break;
 	default:
-		pr_info("Discarded unknown cmd %x to gate %x\n", cmd, gate);
+		pr_debug("Discarded unknown cmd %x to gate %x\n", cmd, gate);
 		break;
 	}
 
@@ -426,7 +426,7 @@ void nfc_hci_event_received(struct nfc_hci_dev *hdev, u8 pipe, u8 event,
 		r = nfc_hci_target_discovered(hdev, gate);
 		break;
 	default:
-		pr_info("Discarded unknown event %x to gate %x\n", event, gate);
+		pr_debug("Discarded unknown event %x to gate %x\n", event, gate);
 		r = -EINVAL;
 		break;
 	}
@@ -525,7 +525,7 @@ static int hci_dev_version(struct nfc_hci_dev *hdev)
 	r = nfc_hci_get_param(hdev, NFC_HCI_ID_MGMT_GATE,
 			      NFC_HCI_ID_MGMT_VERSION_SW, &skb);
 	if (r == -EOPNOTSUPP) {
-		pr_info("Software/Hardware info not available\n");
+		pr_debug("Software/Hardware info not available\n");
 		return 0;
 	}
 	if (r < 0)
@@ -561,17 +561,17 @@ static int hci_dev_version(struct nfc_hci_dev *hdev)
 
 	kfree_skb(skb);
 
-	pr_info("SOFTWARE INFO:\n");
-	pr_info("RomLib         : %d\n", hdev->sw_romlib);
-	pr_info("Patch          : %d\n", hdev->sw_patch);
-	pr_info("FlashLib Major : %d\n", hdev->sw_flashlib_major);
-	pr_info("FlashLib Minor : %d\n", hdev->sw_flashlib_minor);
-	pr_info("HARDWARE INFO:\n");
-	pr_info("Derivative     : %d\n", hdev->hw_derivative);
-	pr_info("HW Version     : %d\n", hdev->hw_version);
-	pr_info("#MPW           : %d\n", hdev->hw_mpw);
-	pr_info("Software       : %d\n", hdev->hw_software);
-	pr_info("BSID Version   : %d\n", hdev->hw_bsid);
+	pr_debug("SOFTWARE INFO:\n");
+	pr_debug("RomLib         : %d\n", hdev->sw_romlib);
+	pr_debug("Patch          : %d\n", hdev->sw_patch);
+	pr_debug("FlashLib Major : %d\n", hdev->sw_flashlib_major);
+	pr_debug("FlashLib Minor : %d\n", hdev->sw_flashlib_minor);
+	pr_debug("HARDWARE INFO:\n");
+	pr_debug("Derivative     : %d\n", hdev->hw_derivative);
+	pr_debug("HW Version     : %d\n", hdev->hw_version);
+	pr_debug("#MPW           : %d\n", hdev->hw_mpw);
+	pr_debug("Software       : %d\n", hdev->hw_software);
+	pr_debug("BSID Version   : %d\n", hdev->hw_bsid);
 
 	return 0;
 }

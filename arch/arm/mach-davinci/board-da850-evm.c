@@ -499,7 +499,7 @@ static int da850_evm_ui_expander_setup(struct i2c_client *client, unsigned gpio,
 		goto exp_setup_keys_fail;
 	}
 
-	pr_info("DA850/OMAP-L138 EVM UI card detected\n");
+	pr_debug("DA850/OMAP-L138 EVM UI card detected\n");
 
 	da850_evm_setup_nor_nand();
 
@@ -1115,12 +1115,12 @@ static int __init da850_evm_config_emac(void)
 	if (rmii_en) {
 		val |= BIT(8);
 		ret = davinci_cfg_reg_list(da850_evm_rmii_pins);
-		pr_info("EMAC: RMII PHY configured, MII PHY will not be"
+		pr_debug("EMAC: RMII PHY configured, MII PHY will not be"
 							" functional\n");
 	} else {
 		val &= ~BIT(8);
 		ret = davinci_cfg_reg_list(da850_evm_mii_pins);
-		pr_info("EMAC: MII PHY configured, RMII PHY will not be"
+		pr_debug("EMAC: MII PHY configured, RMII PHY will not be"
 							" functional\n");
 	}
 

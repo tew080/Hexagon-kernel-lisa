@@ -59,13 +59,13 @@ cxgbit_wait_for_reply(struct cxgbit_device *cdev,
 
 	ret = wait_for_completion_timeout(&wr_waitp->completion, timeout * HZ);
 	if (!ret) {
-		pr_info("%s - Device %s not responding tid %u\n",
+		pr_debug("%s - Device %s not responding tid %u\n",
 			func, pci_name(cdev->lldi.pdev), tid);
 		wr_waitp->ret = -ETIMEDOUT;
 	}
 out:
 	if (wr_waitp->ret)
-		pr_info("%s: FW reply %d tid %u\n",
+		pr_debug("%s: FW reply %d tid %u\n",
 			pci_name(cdev->lldi.pdev), wr_waitp->ret, tid);
 	return wr_waitp->ret;
 }
@@ -768,7 +768,7 @@ static void cxgbit_set_emss(struct cxgbit_sock *csk, u16 opt)
 	if (csk->emss < 128)
 		csk->emss = 128;
 	if (csk->emss & 7)
-		pr_info("Warning: misaligned mtu idx %u mss %u emss=%u\n",
+		pr_debug("Warning: misaligned mtu idx %u mss %u emss=%u\n",
 			TCPOPT_MSS_G(opt), csk->mss, csk->emss);
 	pr_debug("%s mss_idx %u mss %u emss=%u\n", __func__, TCPOPT_MSS_G(opt),
 		 csk->mss, csk->emss);
@@ -887,7 +887,7 @@ static u8 cxgbit_get_iscsi_dcb_priority(struct net_device *ndev, u16 local_port)
 		ret = dcb_getapp(ndev, &iscsi_dcb_app);
 	}
 
-	pr_info("iSCSI priority is set to %u\n", cxgbit_select_priority(ret));
+	pr_debug("iSCSI priority is set to %u\n", cxgbit_select_priority(ret));
 
 	return cxgbit_select_priority(ret);
 }
@@ -1571,7 +1571,7 @@ cxgbit_pass_open_rpl(struct cxgbit_device *cdev, struct sk_buff *skb)
 		 __func__, cnp, stid, rpl->status);
 
 	if (!cnp) {
-		pr_info("%s stid %d lookup failure\n", __func__, stid);
+		pr_debug("%s stid %d lookup failure\n", __func__, stid);
 		goto rel_skb;
 	}
 
@@ -1593,7 +1593,7 @@ cxgbit_close_listsrv_rpl(struct cxgbit_device *cdev, struct sk_buff *skb)
 		 __func__, cnp, stid, rpl->status);
 
 	if (!cnp) {
-		pr_info("%s stid %d lookup failure\n", __func__, stid);
+		pr_debug("%s stid %d lookup failure\n", __func__, stid);
 		goto rel_skb;
 	}
 
@@ -1676,7 +1676,7 @@ static void cxgbit_peer_close(struct cxgbit_sock *csk, struct sk_buff *skb)
 	case CSK_STATE_ABORTING:
 		break;
 	default:
-		pr_info("%s: cpl_peer_close in bad state %d\n",
+		pr_debug("%s: cpl_peer_close in bad state %d\n",
 			__func__, csk->com.state);
 	}
 
@@ -1700,7 +1700,7 @@ static void cxgbit_close_con_rpl(struct cxgbit_sock *csk, struct sk_buff *skb)
 	case CSK_STATE_DEAD:
 		break;
 	default:
-		pr_info("%s: cpl_close_con_rpl in bad state %d\n",
+		pr_debug("%s: cpl_close_con_rpl in bad state %d\n",
 			__func__, csk->com.state);
 	}
 
@@ -1743,7 +1743,7 @@ static void cxgbit_abort_req_rss(struct cxgbit_sock *csk, struct sk_buff *skb)
 	case CSK_STATE_ABORTING:
 		break;
 	default:
-		pr_info("%s: cpl_abort_req_rss in bad state %d\n",
+		pr_debug("%s: cpl_abort_req_rss in bad state %d\n",
 			__func__, csk->com.state);
 		csk->com.state = CSK_STATE_DEAD;
 	}
@@ -1785,7 +1785,7 @@ static void cxgbit_abort_rpl_rss(struct cxgbit_sock *csk, struct sk_buff *skb)
 		cxgbit_put_csk(csk);
 		break;
 	default:
-		pr_info("%s: cpl_abort_rpl_rss in state %d\n",
+		pr_debug("%s: cpl_abort_rpl_rss in state %d\n",
 			__func__, csk->com.state);
 	}
 

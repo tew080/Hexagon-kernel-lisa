@@ -149,7 +149,7 @@ static struct ctl_table preemptirq_long_table[] = {
 static int preemptirq_long_init(void)
 {
 	if (!register_sysctl("preemptirq", preemptirq_long_table)) {
-		pr_err("Fail to register sysctl table\n");
+		pr_debug("Fail to register sysctl table\n");
 		return -EPERM;
 	}
 

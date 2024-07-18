@@ -140,7 +140,7 @@ static void wdt_startup(void)
 
 	/* Start the timer */
 	mod_timer(&timer, jiffies + WDT_INTERVAL);
-	pr_info("Watchdog timer is now enabled\n");
+	pr_debug("Watchdog timer is now enabled\n");
 }
 
 static void wdt_turnoff(void)
@@ -148,7 +148,7 @@ static void wdt_turnoff(void)
 	/* Stop the timer */
 	del_timer_sync(&timer);
 	inb_p(wdt_stop);
-	pr_info("Watchdog timer is now disabled...\n");
+	pr_debug("Watchdog timer is now disabled...\n");
 }
 
 static void wdt_keepalive(void)
@@ -328,7 +328,7 @@ static int __init sbc60xxwdt_init(void)
 
 	if (timeout < 1 || timeout > 3600) { /* arbitrary upper limit */
 		timeout = WATCHDOG_TIMEOUT;
-		pr_info("timeout value must be 1 <= x <= 3600, using %d\n",
+		pr_debug("timeout value must be 1 <= x <= 3600, using %d\n",
 			timeout);
 	}
 
@@ -359,7 +359,7 @@ static int __init sbc60xxwdt_init(void)
 		       wdt_miscdev.minor, rc);
 		goto err_out_reboot;
 	}
-	pr_info("WDT driver for 60XX single board computer initialised. timeout=%d sec (nowayout=%d)\n",
+	pr_debug("WDT driver for 60XX single board computer initialised. timeout=%d sec (nowayout=%d)\n",
 		timeout, nowayout);
 
 	return 0;

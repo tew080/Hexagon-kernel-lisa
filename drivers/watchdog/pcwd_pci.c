@@ -237,23 +237,23 @@ static void pcipcwd_show_card_info(void)
 	/* Get switch settings */
 	option_switches = pcipcwd_get_option_switches();
 
-	pr_info("Found card at port 0x%04x (Firmware: %s) %s temp option\n",
+	pr_debug("Found card at port 0x%04x (Firmware: %s) %s temp option\n",
 		(int) pcipcwd_private.io_addr, fw_ver_str,
 		(pcipcwd_private.supports_temp ? "with" : "without"));
 
-	pr_info("Option switches (0x%02x): Temperature Reset Enable=%s, Power On Delay=%s\n",
+	pr_debug("Option switches (0x%02x): Temperature Reset Enable=%s, Power On Delay=%s\n",
 		option_switches,
 		((option_switches & 0x10) ? "ON" : "OFF"),
 		((option_switches & 0x08) ? "ON" : "OFF"));
 
 	if (pcipcwd_private.boot_status & WDIOF_CARDRESET)
-		pr_info("Previous reset was caused by the Watchdog card\n");
+		pr_debug("Previous reset was caused by the Watchdog card\n");
 
 	if (pcipcwd_private.boot_status & WDIOF_OVERHEAT)
-		pr_info("Card sensed a CPU Overheat\n");
+		pr_debug("Card sensed a CPU Overheat\n");
 
 	if (pcipcwd_private.boot_status == 0)
-		pr_info("No previous trip detected - Cold boot or reset\n");
+		pr_debug("No previous trip detected - Cold boot or reset\n");
 }
 
 static int pcipcwd_start(void)
@@ -361,7 +361,7 @@ static int pcipcwd_clear_status(void)
 	int reset_counter;
 
 	if (debug >= VERBOSE)
-		pr_info("clearing watchdog trip status & LED\n");
+		pr_debug("clearing watchdog trip status & LED\n");
 
 	control_status = inb_p(pcipcwd_private.io_addr + 1);
 
@@ -685,7 +685,7 @@ static int pcipcwd_card_init(struct pci_dev *pdev,
 
 	cards_found++;
 	if (cards_found == 1)
-		pr_info("%s\n", DRIVER_VERSION);
+		pr_debug("%s\n", DRIVER_VERSION);
 
 	if (cards_found > 1) {
 		pr_err("This driver only supports 1 device\n");
@@ -738,7 +738,7 @@ static int pcipcwd_card_init(struct pci_dev *pdev,
 	 * if not reset to the default */
 	if (pcipcwd_set_heartbeat(heartbeat)) {
 		pcipcwd_set_heartbeat(WATCHDOG_HEARTBEAT);
-		pr_info("heartbeat value must be 0<heartbeat<65536, using %d\n",
+		pr_debug("heartbeat value must be 0<heartbeat<65536, using %d\n",
 			WATCHDOG_HEARTBEAT);
 	}
 
@@ -764,7 +764,7 @@ static int pcipcwd_card_init(struct pci_dev *pdev,
 		goto err_out_misc_deregister;
 	}
 
-	pr_info("initialized. heartbeat=%d sec (nowayout=%d)\n",
+	pr_debug("initialized. heartbeat=%d sec (nowayout=%d)\n",
 		heartbeat, nowayout);
 
 	return 0;

@@ -78,7 +78,7 @@ static bool sysrq_on_mask(int mask)
 static int __init sysrq_always_enabled_setup(char *str)
 {
 	sysrq_always_enabled = true;
-	pr_info("sysrq always enabled.\n");
+	pr_debug("sysrq always enabled.\n");
 
 	return 1;
 }
@@ -92,7 +92,7 @@ static void sysrq_handle_loglevel(int key)
 
 	i = key - '0';
 	console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
-	pr_info("Loglevel set to %d\n", i);
+	pr_debug("Loglevel set to %d\n", i);
 	console_loglevel = i;
 }
 static struct sysrq_key_op sysrq_loglevel_op = {
@@ -223,7 +223,7 @@ static void showacpu(void *dummy)
 		return;
 
 	raw_spin_lock_irqsave(&show_lock, flags);
-	pr_info("CPU%d:\n", smp_processor_id());
+	pr_debug("CPU%d:\n", smp_processor_id());
 	show_stack(NULL, NULL);
 	raw_spin_unlock_irqrestore(&show_lock, flags);
 }
@@ -248,7 +248,7 @@ static void sysrq_handle_showallcpus(int key)
 		if (in_irq())
 			regs = get_irq_regs();
 		if (regs) {
-			pr_info("CPU%d:\n", smp_processor_id());
+			pr_debug("CPU%d:\n", smp_processor_id());
 			show_regs(regs);
 		}
 		schedule_work(&sysrq_showallcpus);
@@ -375,7 +375,7 @@ static void moom_callback(struct work_struct *ignored)
 
 	mutex_lock(&oom_lock);
 	if (!out_of_memory(&oc))
-		pr_info("OOM request ignored. No task eligible\n");
+		pr_debug("OOM request ignored. No task eligible\n");
 	mutex_unlock(&oom_lock);
 }
 
@@ -555,15 +555,15 @@ void __handle_sysrq(int key, bool check_mask)
 		 * should not) and is the invoked operation enabled?
 		 */
 		if (!check_mask || sysrq_on_mask(op_p->enable_mask)) {
-			pr_info("%s\n", op_p->action_msg);
+			pr_debug("%s\n", op_p->action_msg);
 			console_loglevel = orig_log_level;
 			op_p->handler(key);
 		} else {
-			pr_info("This sysrq operation is disabled.\n");
+			pr_debug("This sysrq operation is disabled.\n");
 			console_loglevel = orig_log_level;
 		}
 	} else {
-		pr_info("HELP : ");
+		pr_debug("HELP : ");
 		/* Only print the help msg once per handler */
 		for (i = 0; i < ARRAY_SIZE(sysrq_key_table); i++) {
 			if (sysrq_key_table[i]) {

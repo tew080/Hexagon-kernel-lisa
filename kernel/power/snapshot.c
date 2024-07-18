@@ -1977,12 +1977,12 @@ asmlinkage __visible int swsusp_save(void)
 	pr_debug("Need to copy %u pages\n", nr_pages + nr_highmem);
 
 	if (!enough_free_mem(nr_pages, nr_highmem)) {
-		pr_err("Not enough free memory\n");
+		pr_debug("Not enough free memory\n");
 		return -ENOMEM;
 	}
 
 	if (swsusp_alloc(&copy_bm, nr_pages, nr_highmem)) {
-		pr_err("Memory allocation failed\n");
+		pr_debug("Memory allocation failed\n");
 		return -ENOMEM;
 	}
 
@@ -2177,7 +2177,7 @@ static int check_header(struct swsusp_info *info)
 	if (!reason && info->num_physpages != get_num_physpages())
 		reason = "memory size";
 	if (reason) {
-		pr_err("Image mismatch: %s\n", reason);
+		pr_debug("Image mismatch: %s\n", reason);
 		return -EPERM;
 	}
 	return 0;

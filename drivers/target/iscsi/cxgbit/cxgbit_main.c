@@ -67,7 +67,7 @@ static void *cxgbit_uld_add(const struct cxgb4_lld_info *lldi)
 	}
 
 	if (!test_bit(CDEV_DDP_ENABLE, &cdev->flags))
-		pr_info("cdev %s ddp init failed\n",
+		pr_debug("cdev %s ddp init failed\n",
 			pci_name(lldi->pdev));
 
 	if (lldi->fw_vers >= 0x10d2b00)
@@ -80,7 +80,7 @@ static void *cxgbit_uld_add(const struct cxgb4_lld_info *lldi)
 	list_add_tail(&cdev->list, &cdev_list_head);
 	mutex_unlock(&cdev_list_lock);
 
-	pr_info("cdev %s added for iSCSI target transport\n",
+	pr_debug("cdev %s added for iSCSI target transport\n",
 		pci_name(lldi->pdev));
 
 	return cdev;
@@ -139,23 +139,23 @@ static int cxgbit_uld_state_change(void *handle, enum cxgb4_state state)
 	switch (state) {
 	case CXGB4_STATE_UP:
 		set_bit(CDEV_STATE_UP, &cdev->flags);
-		pr_info("cdev %s state UP.\n", pci_name(cdev->lldi.pdev));
+		pr_debug("cdev %s state UP.\n", pci_name(cdev->lldi.pdev));
 		break;
 	case CXGB4_STATE_START_RECOVERY:
 		clear_bit(CDEV_STATE_UP, &cdev->flags);
 		cxgbit_close_conn(cdev);
-		pr_info("cdev %s state RECOVERY.\n", pci_name(cdev->lldi.pdev));
+		pr_debug("cdev %s state RECOVERY.\n", pci_name(cdev->lldi.pdev));
 		break;
 	case CXGB4_STATE_DOWN:
-		pr_info("cdev %s state DOWN.\n", pci_name(cdev->lldi.pdev));
+		pr_debug("cdev %s state DOWN.\n", pci_name(cdev->lldi.pdev));
 		break;
 	case CXGB4_STATE_DETACH:
 		clear_bit(CDEV_STATE_UP, &cdev->flags);
-		pr_info("cdev %s state DETACH.\n", pci_name(cdev->lldi.pdev));
+		pr_debug("cdev %s state DETACH.\n", pci_name(cdev->lldi.pdev));
 		cxgbit_detach_cdev(cdev);
 		break;
 	default:
-		pr_info("cdev %s unknown state %d.\n",
+		pr_debug("cdev %s unknown state %d.\n",
 			pci_name(cdev->lldi.pdev), state);
 		break;
 	}
@@ -168,17 +168,17 @@ cxgbit_process_ddpvld(struct cxgbit_sock *csk, struct cxgbit_lro_pdu_cb *pdu_cb,
 {
 
 	if (ddpvld & (1 << CPL_RX_ISCSI_DDP_STATUS_HCRC_SHIFT)) {
-		pr_info("tid 0x%x, status 0x%x, hcrc bad.\n", csk->tid, ddpvld);
+		pr_debug("tid 0x%x, status 0x%x, hcrc bad.\n", csk->tid, ddpvld);
 		pdu_cb->flags |= PDUCBF_RX_HCRC_ERR;
 	}
 
 	if (ddpvld & (1 << CPL_RX_ISCSI_DDP_STATUS_DCRC_SHIFT)) {
-		pr_info("tid 0x%x, status 0x%x, dcrc bad.\n", csk->tid, ddpvld);
+		pr_debug("tid 0x%x, status 0x%x, dcrc bad.\n", csk->tid, ddpvld);
 		pdu_cb->flags |= PDUCBF_RX_DCRC_ERR;
 	}
 
 	if (ddpvld & (1 << CPL_RX_ISCSI_DDP_STATUS_PAD_SHIFT))
-		pr_info("tid 0x%x, status 0x%x, pad bad.\n", csk->tid, ddpvld);
+		pr_debug("tid 0x%x, status 0x%x, pad bad.\n", csk->tid, ddpvld);
 
 	if ((ddpvld & (1 << CPL_RX_ISCSI_DDP_STATUS_DDP_SHIFT)) &&
 	    (!(pdu_cb->flags & PDUCBF_RX_DATA))) {
@@ -481,7 +481,7 @@ cxgbit_uld_lro_rx_handler(void *hndl, const __be64 *rsp,
 		skb_copy_to_linear_data(skb, &rsp[1], len);
 	} else {
 		if (unlikely(op != *(u8 *)gl->va)) {
-			pr_info("? FL 0x%p,RSS%#llx,FL %#llx,len %u.\n",
+			pr_debug("? FL 0x%p,RSS%#llx,FL %#llx,len %u.\n",
 				gl->va, be64_to_cpu(*rsp),
 				get_unaligned_be64(gl->va),
 				gl->tot_len);
@@ -705,7 +705,7 @@ static int __init cxgbit_init(void)
 	iscsit_register_transport(&cxgbit_transport);
 
 #ifdef CONFIG_CHELSIO_T4_DCB
-	pr_info("%s dcb enabled.\n", DRV_NAME);
+	pr_debug("%s dcb enabled.\n", DRV_NAME);
 	register_dcbevent_notifier(&cxgbit_dcbevent_nb);
 #endif
 	BUILD_BUG_ON(FIELD_SIZEOF(struct sk_buff, cb) <

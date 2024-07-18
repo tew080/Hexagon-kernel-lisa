@@ -168,7 +168,7 @@ free_page:
 	if (!dma_release_from_contiguous(NULL, page, nr_pages))
 		__free_pages(page, pool_size_order);
 out:
-	pr_err("DMA: failed to allocate %zu KiB pool for atomic coherent allocation\n",
+	pr_debug("DMA: failed to allocate %zu KiB pool for atomic coherent allocation\n",
 		atomic_pool_size / 1024);
 	return ERR_PTR(-ENOMEM);
 }

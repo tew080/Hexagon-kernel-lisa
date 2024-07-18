@@ -101,7 +101,7 @@ void subtract_range(struct range *range, int az, u64 start, u64 end)
 				range[i].end = range[j].end;
 				range[i].start = end;
 			} else {
-				pr_err("%s: run out of slot in ranges\n",
+				pr_debug("%s: run out of slot in ranges\n",
 					__func__);
 			}
 			range[j].end = start;

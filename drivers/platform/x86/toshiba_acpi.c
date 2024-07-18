@@ -385,7 +385,7 @@ static int sci_open(struct toshiba_acpi_dev *dev)
 	if (out[0] == TOS_OPEN_CLOSE_OK) {
 		return 1;
 	} else if (out[0] == TOS_ALREADY_OPEN) {
-		pr_info("Toshiba SCI already opened\n");
+		pr_debug("Toshiba SCI already opened\n");
 		return 1;
 	} else if (out[0] == TOS_NOT_SUPPORTED) {
 		/*
@@ -402,7 +402,7 @@ static int sci_open(struct toshiba_acpi_dev *dev)
 		 */
 		return 1;
 	} else if (out[0] == TOS_NOT_PRESENT) {
-		pr_info("Toshiba SCI is not present\n");
+		pr_debug("Toshiba SCI is not present\n");
 	}
 
 	return 0;
@@ -422,9 +422,9 @@ static void sci_close(struct toshiba_acpi_dev *dev)
 	if (out[0] == TOS_OPEN_CLOSE_OK)
 		return;
 	else if (out[0] == TOS_NOT_OPENED)
-		pr_info("Toshiba SCI not opened\n");
+		pr_debug("Toshiba SCI not opened\n");
 	else if (out[0] == TOS_NOT_PRESENT)
-		pr_info("Toshiba SCI is not present\n");
+		pr_debug("Toshiba SCI is not present\n");
 }
 
 static u32 sci_read(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
@@ -2206,7 +2206,7 @@ static ssize_t kbd_function_keys_store(struct device *dev,
 	if (ret)
 		return ret;
 
-	pr_info("Reboot for changes to KBD Function Keys to take effect");
+	pr_debug("Reboot for changes to KBD Function Keys to take effect");
 
 	return count;
 }
@@ -2244,7 +2244,7 @@ static ssize_t panel_power_on_store(struct device *dev,
 	if (ret)
 		return ret;
 
-	pr_info("Reboot for changes to Panel Power ON to take effect");
+	pr_debug("Reboot for changes to Panel Power ON to take effect");
 
 	return count;
 }
@@ -2287,7 +2287,7 @@ static ssize_t usb_three_store(struct device *dev,
 	if (ret)
 		return ret;
 
-	pr_info("Reboot for changes to USB 3 to take effect");
+	pr_debug("Reboot for changes to USB 3 to take effect");
 
 	return count;
 }
@@ -2720,7 +2720,7 @@ static void toshiba_acpi_report_hotkey(struct toshiba_acpi_dev *dev,
 		return;
 
 	if (!sparse_keymap_report_event(dev->hotkey_dev, scancode, 1, true))
-		pr_info("Unknown key %x\n", scancode);
+		pr_debug("Unknown key %x\n", scancode);
 }
 
 static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
@@ -2773,12 +2773,12 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
 	int error;
 
 	if (disable_hotkeys) {
-		pr_info("Hotkeys disabled by module parameter\n");
+		pr_debug("Hotkeys disabled by module parameter\n");
 		return 0;
 	}
 
 	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID)) {
-		pr_info("WMI event detected, hotkeys will not be monitored\n");
+		pr_debug("WMI event detected, hotkeys will not be monitored\n");
 		return 0;
 	}
 
@@ -2804,7 +2804,7 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
 		 dev->kbd_function_keys_supported)
 		keymap = toshiba_acpi_alt_keymap;
 	else
-		pr_info("Unknown event type received %x\n",
+		pr_debug("Unknown event type received %x\n",
 			dev->hotkey_event_type);
 	error = sparse_keymap_setup(dev->hotkey_dev, keymap, NULL);
 	if (error)
@@ -2847,7 +2847,7 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
 
 	error = input_register_device(dev->hotkey_dev);
 	if (error) {
-		pr_info("Unable to register input device\n");
+		pr_debug("Unable to register input device\n");
 		goto err_remove_filter;
 	}
 
@@ -2928,7 +2928,7 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
 
 static void print_supported_features(struct toshiba_acpi_dev *dev)
 {
-	pr_info("Supported laptop features:");
+	pr_debug("Supported laptop features:");
 
 	if (dev->hotkey_dev)
 		pr_cont(" hotkeys");
@@ -3040,7 +3040,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
 	if (toshiba_acpi)
 		return -EBUSY;
 
-	pr_info("Toshiba Laptop ACPI Extras version %s\n",
+	pr_debug("Toshiba Laptop ACPI Extras version %s\n",
 	       TOSHIBA_ACPI_VERSION);
 
 	hci_method = find_hci_method(acpi_dev->handle);
@@ -3080,7 +3080,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
 
 	dev->hotkey_event_type = 0;
 	if (toshiba_acpi_setup_keyboard(dev))
-		pr_info("Unable to activate hotkeys\n");
+		pr_debug("Unable to activate hotkeys\n");
 
 	/* Determine whether or not BIOS supports transflective backlight */
 	ret = get_tr_backlight_status(dev, &dummy);
@@ -3138,7 +3138,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
 			goto iio_error;
 		}
 
-		pr_info("Registering Toshiba accelerometer iio device\n");
+		pr_debug("Registering Toshiba accelerometer iio device\n");
 
 		dev->indio_dev->info = &toshiba_iio_accel_info;
 		dev->indio_dev->name = "Toshiba accelerometer";
@@ -3222,17 +3222,17 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
 	case 0x81: /* Dock events */
 	case 0x82:
 	case 0x83:
-		pr_info("Dock event received %x\n", event);
+		pr_debug("Dock event received %x\n", event);
 		break;
 	case 0x88: /* Thermal events */
-		pr_info("Thermal event received\n");
+		pr_debug("Thermal event received\n");
 		break;
 	case 0x8f: /* LID closed */
 	case 0x90: /* LID is closed and Dock has been ejected */
 		break;
 	case 0x8c: /* SATA power events */
 	case 0x8b:
-		pr_info("SATA power event received %x\n", event);
+		pr_debug("SATA power event received %x\n", event);
 		break;
 	case 0x92: /* Keyboard backlight mode changed */
 		dev->kbd_event_generated = true;
@@ -3252,7 +3252,7 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
 	case 0x94: /* Unknown */
 	case 0x95: /* Unknown */
 	default:
-		pr_info("Unknown event received %x\n", event);
+		pr_debug("Unknown event received %x\n", event);
 		break;
 	}
 
@@ -3272,7 +3272,7 @@ static int toshiba_acpi_suspend(struct device *device)
 
 		result = hci_write(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_DISABLE);
 		if (result != TOS_SUCCESS)
-			pr_info("Unable to disable hotkeys\n");
+			pr_debug("Unable to disable hotkeys\n");
 	}
 
 	return 0;
@@ -3284,7 +3284,7 @@ static int toshiba_acpi_resume(struct device *device)
 
 	if (dev->hotkey_dev) {
 		if (toshiba_acpi_enable_hotkeys(dev))
-			pr_info("Unable to re-enable hotkeys\n");
+			pr_debug("Unable to re-enable hotkeys\n");
 	}
 
 	if (dev->wwan_rfk) {

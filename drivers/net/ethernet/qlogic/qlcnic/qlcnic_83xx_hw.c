@@ -809,18 +809,18 @@ void qlcnic_dump_mbx(struct qlcnic_adapter *adapter,
 		 "Host MBX regs(%d)\n", cmd->req.num);
 	for (i = 0; i < cmd->req.num; i++) {
 		if (i && !(i % 8))
-			pr_info("\n");
-		pr_info("%08x ", cmd->req.arg[i]);
+			pr_debug("\n");
+		pr_debug("%08x ", cmd->req.arg[i]);
 	}
-	pr_info("\n");
+	pr_debug("\n");
 	dev_info(&adapter->pdev->dev,
 		 "FW MBX regs(%d)\n", cmd->rsp.num);
 	for (i = 0; i < cmd->rsp.num; i++) {
 		if (i && !(i % 8))
-			pr_info("\n");
-		pr_info("%08x ", cmd->rsp.arg[i]);
+			pr_debug("\n");
+		pr_debug("%08x ", cmd->rsp.arg[i]);
 	}
-	pr_info("\n");
+	pr_debug("\n");
 }
 
 static void qlcnic_83xx_poll_for_mbx_completion(struct qlcnic_adapter *adapter,

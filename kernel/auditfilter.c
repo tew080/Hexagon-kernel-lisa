@@ -245,7 +245,7 @@ static inline struct audit_entry *audit_to_entry_common(struct audit_rule_data *
 		goto exit_err;
 #ifdef CONFIG_AUDITSYSCALL
 	case AUDIT_FILTER_ENTRY:
-		pr_err("AUDIT_FILTER_ENTRY is deprecated\n");
+		pr_debug("AUDIT_FILTER_ENTRY is deprecated\n");
 		goto exit_err;
 	case AUDIT_FILTER_EXIT:
 	case AUDIT_FILTER_TASK:
@@ -256,7 +256,7 @@ static inline struct audit_entry *audit_to_entry_common(struct audit_rule_data *
 		;
 	}
 	if (unlikely(rule->action == AUDIT_POSSIBLE)) {
-		pr_err("AUDIT_POSSIBLE is deprecated\n");
+		pr_debug("AUDIT_POSSIBLE is deprecated\n");
 		goto exit_err;
 	}
 	if (rule->action != AUDIT_NEVER && rule->action != AUDIT_ALWAYS)

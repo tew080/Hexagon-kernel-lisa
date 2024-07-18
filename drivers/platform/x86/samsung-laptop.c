@@ -404,11 +404,11 @@ static int sabi_command(struct samsung_laptop *samsung, u16 command,
 
 	if (debug) {
 		if (in)
-			pr_info("SABI command:0x%04x "
+			pr_debug("SABI command:0x%04x "
 				"data:{0x%08x, 0x%08x, 0x%04x, 0x%02x}",
 				command, in->d0, in->d1, in->d2, in->d3);
 		else
-			pr_info("SABI command:0x%04x", command);
+			pr_debug("SABI command:0x%04x", command);
 	}
 
 	/* enable memory to be able to write to it */
@@ -455,7 +455,7 @@ static int sabi_command(struct samsung_laptop *samsung, u16 command,
 	}
 
 	if (debug && out) {
-		pr_info("SABI return data:{0x%08x, 0x%08x, 0x%04x, 0x%02x}",
+		pr_debug("SABI return data:{0x%08x, 0x%08x, 0x%04x, 0x%02x}",
 			out->d0, out->d1, out->d2, out->d3);
 	}
 
@@ -551,7 +551,7 @@ static void check_for_stepping_quirk(struct samsung_laptop *samsung)
 
 	if (read_brightness(samsung) != check_level) {
 		samsung->has_stepping_quirk = true;
-		pr_info("enabled workaround for brightness stepping quirk\n");
+		pr_debug("enabled workaround for brightness stepping quirk\n");
 	}
 
 	set_brightness(samsung, orig_level);
@@ -1380,7 +1380,7 @@ static void __init samsung_sabi_diag(struct samsung_laptop *samsung)
 	}
 
 	if (debug && samsung->sdiag[0])
-		pr_info("sdiag: %s", samsung->sdiag);
+		pr_debug("sdiag: %s", samsung->sdiag);
 }
 
 static int __init samsung_sabi_init(struct samsung_laptop *samsung)
@@ -1454,7 +1454,7 @@ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
 	if (samsung->handle_backlight)
 		check_for_stepping_quirk(samsung);
 
-	pr_info("detected SABI interface: %s\n",
+	pr_debug("detected SABI interface: %s\n",
 		samsung->config->test_string);
 
 exit:

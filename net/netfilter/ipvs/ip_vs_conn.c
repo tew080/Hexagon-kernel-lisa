@@ -1411,7 +1411,7 @@ int __init ip_vs_conn_init(void)
 
 	/* Compute size and mask */
 	if (ip_vs_conn_tab_bits < 8 || ip_vs_conn_tab_bits > 20) {
-		pr_info("conn_tab_bits not in [8, 20]. Using default value\n");
+		pr_debug("conn_tab_bits not in [8, 20]. Using default value\n");
 		ip_vs_conn_tab_bits = CONFIG_IP_VS_TAB_BITS;
 	}
 	ip_vs_conn_tab_size = 1 << ip_vs_conn_tab_bits;
@@ -1434,7 +1434,7 @@ int __init ip_vs_conn_init(void)
 		return -ENOMEM;
 	}
 
-	pr_info("Connection hash table configured "
+	pr_debug("Connection hash table configured "
 		"(size=%d, memory=%ldKbytes)\n",
 		ip_vs_conn_tab_size,
 		(long)(ip_vs_conn_tab_size*sizeof(*ip_vs_conn_tab))/1024);

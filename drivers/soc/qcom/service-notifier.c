@@ -205,7 +205,7 @@ static void send_ind_ack(struct work_struct *work)
 	/* Check the response */
 	if (resp.resp.result != QMI_RESULT_SUCCESS_V01)
 		pr_err("QMI request failed 0x%x\n", resp.resp.error);
-	pr_info("Indication ACKed for transid %d, service %s, instance %d!\n",
+	pr_debug("Indication ACKed for transid %d, service %s, instance %d!\n",
 		ind_info->transaction_id, data->service_path,
 		data->instance_id);
 out:
@@ -225,7 +225,7 @@ static void root_service_service_ind_cb(struct qmi_handle *qmi,
 	if (!ind_info)
 		return;
 
-	pr_info("Indication received from %s, state: 0x%x, trans-id: %d\n",
+	pr_debug("Indication received from %s, state: 0x%x, trans-id: %d\n",
 		ind_msg.service_name, ind_msg.curr_state,
 		ind_msg.transaction_id);
 
@@ -325,7 +325,7 @@ static int service_notifier_new_server(struct qmi_handle *qmi,
 	data->s_addr.sq_node = svc->node;
 	data->s_addr.sq_port = svc->port;
 	data->service_connected = true;
-	pr_info("Connection established between QMI handle and %d service\n",
+	pr_debug("Connection established between QMI handle and %d service\n",
 							data->instance_id);
 	queue_work(data->svc_event_wq, &data->new_server);
 	return 0;
@@ -439,7 +439,7 @@ static void service_notifier_del_server(struct qmi_handle *qmi,
 	struct qmi_client_info *data = container_of(qmi,
 					struct qmi_client_info, clnt_handle);
 	data->service_connected = false;
-	pr_info("Connection lost between QMI handle and %d service\n",
+	pr_debug("Connection lost between QMI handle and %d service\n",
 							data->instance_id);
 	queue_work(data->svc_event_wq, &data->del_server);
 }
@@ -645,11 +645,11 @@ int service_notif_pd_restart(const char *service_path, int instance_id)
 		if (tmp->instance_id == instance_id && !strcmp
 				(tmp->service_path, service_path)) {
 			if (tmp->service_connected) {
-				pr_info("Restarting service %s, instance-id %d\n",
+				pr_debug("Restarting service %s, instance-id %d\n",
 						service_path, instance_id);
 				rc = send_pd_restart_req(service_path, tmp);
 			} else
-				pr_info("Service %s is not connected\n",
+				pr_debug("Service %s is not connected\n",
 							service_path);
 		}
 	}

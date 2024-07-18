@@ -119,19 +119,19 @@ static void print_irq_stat(struct msm_watchdog_data *wdog_dd)
 	int cpu;
 	struct qcom_irq_info *info;
 
-	pr_info("(virq:irq_count)- ");
+	pr_debug("(virq:irq_count)- ");
 	for (index = 0; index < NR_TOP_HITTERS; index++) {
 		info = &wdog_dd->irq_counts[index];
 		pr_cont("%u:%u ", info->irq, info->total_count);
 	}
 	pr_cont("\n");
 
-	pr_info("(cpu:irq_count)- ");
+	pr_debug("(cpu:irq_count)- ");
 	for_each_possible_cpu(cpu)
 		pr_cont("%u:%u ", cpu, wdog_dd->tot_irq_count[cpu]);
 	pr_cont("\n");
 
-	pr_info("(ipi:irq_count)- ");
+	pr_debug("(ipi:irq_count)- ");
 	for (index = 0; index < NR_IPI; index++) {
 		info = &wdog_dd->ipi_counts[index];
 		pr_cont("%u:%u ", info->irq, info->total_count);
@@ -429,7 +429,7 @@ static int qcom_wdt_panic_handler(struct notifier_block *this,
 
 	wdog_dd->in_panic = true;
 	if (WDOG_BITE_EARLY_PANIC) {
-		pr_info("Triggering early bite\n");
+		pr_debug("Triggering early bite\n");
 		qcom_wdt_trigger_bite();
 	}
 	if (panic_timeout == 0) {
@@ -503,7 +503,7 @@ static int restart_wdog_handler(struct notifier_block *this,
 		 * Trigger a watchdog bite here and if this fails,
 		 * device will take the usual restart path.
 		 */
-		pr_info("Triggering late bite\n");
+		pr_debug("Triggering late bite\n");
 		qcom_wdt_trigger_bite();
 	}
 	return NOTIFY_DONE;

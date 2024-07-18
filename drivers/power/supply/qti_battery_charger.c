@@ -1692,7 +1692,7 @@ static int battery_psy_set_charge_current(struct battery_chg_dev *bcdev,
 {
 	int rc;
 //	u32 fcc_ua, prev_fcc_ua;
-	pr_info("set thermal-level: %d num_thermal_levels: %d \n", val, bcdev->num_thermal_levels);
+	pr_debug("set thermal-level: %d num_thermal_levels: %d \n", val, bcdev->num_thermal_levels);
 
 	if (!bcdev->num_thermal_levels)
 		return 0;
@@ -2152,7 +2152,7 @@ static int wireless_fw_update(struct battery_chg_dev *bcdev, bool force)
 		rc = 0;
 	}
 
-	pr_info("Wireless FW update done\n");
+	pr_debug("Wireless FW update done\n");
 
 release_fw:
 	bcdev->wls_fw_crc = 0;
@@ -2194,7 +2194,7 @@ static ssize_t wireless_register_store(struct class *c,
 	char kbuf[50];
 	int rc;
 
-	pr_info("wireless_register_store: buf is %s\n", buf);
+	pr_debug("wireless_register_store: buf is %s\n", buf);
 
 	len = min(count, sizeof(kbuf) - 1);
 	memcpy(kbuf, buf, len);
@@ -4481,7 +4481,7 @@ static void usbpd_request_vdm_cmd(struct battery_chg_dev *bcdev, enum uvdm_state
 		break;
 	default:
 		prop_id = XM_PROP_VDM_CMD_CHARGER_VERSION;
-		pr_info("cmd:%d is not support\n", cmd);
+		pr_debug("cmd:%d is not support\n", cmd);
 		break;
 	}
 
@@ -4571,7 +4571,7 @@ static ssize_t request_vdm_cmd_show(struct class *c,
 		return snprintf(buf, PAGE_SIZE, "%d,%s", cmd, str_buf);
 	  	break;
 	  default:
-		pr_info("feedbak cmd:%d is not support\n", cmd);
+		pr_debug("feedbak cmd:%d is not support\n", cmd);
 		break;
 	}
 

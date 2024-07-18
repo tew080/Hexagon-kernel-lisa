@@ -305,7 +305,7 @@ static enum qman_cb_dqrr_result special_dqrr(struct qman_portal *portal,
 			goto skip;
 		}
 	} else {
-		pr_info("Received final (%dth) frame\n", loop_counter);
+		pr_debug("Received final (%dth) frame\n", loop_counter);
 		wake_up(&queue);
 	}
 skip:
@@ -537,7 +537,7 @@ static int send_first_frame(void *ignore)
 		*p ^= special_handler->tx_mixer;
 		lfsr = do_lfsr(lfsr);
 	}
-	pr_info("Sending first frame\n");
+	pr_debug("Sending first frame\n");
 	err = qman_enqueue(&special_handler->tx, &fd);
 	if (err) {
 		pr_crit("qman_enqueue() failed");
@@ -560,11 +560,11 @@ int qman_test_stash(void)
 	int err;
 
 	if (cpumask_weight(cpu_online_mask) < 2) {
-		pr_info("%s(): skip - only 1 CPU\n", __func__);
+		pr_debug("%s(): skip - only 1 CPU\n", __func__);
 		return 0;
 	}
 
-	pr_info("%s(): Starting\n", __func__);
+	pr_debug("%s(): Starting\n", __func__);
 
 	hp_cpu_list_length = 0;
 	loop_counter = 0;
@@ -582,13 +582,13 @@ int qman_test_stash(void)
 		goto failed;
 
 	/* Init phase 1 */
-	pr_info("Creating %d handlers per cpu...\n", HP_PER_CPU);
+	pr_debug("Creating %d handlers per cpu...\n", HP_PER_CPU);
 	if (on_all_cpus(create_per_cpu_handlers)) {
 		err = -EIO;
 		pr_crit("on_each_cpu() failed");
 		goto failed;
 	}
-	pr_info("Number of cpus: %d, total of %d handlers\n",
+	pr_debug("Number of cpus: %d, total of %d handlers\n",
 		hp_cpu_list_length, hp_cpu_list_length * HP_PER_CPU);
 
 	err = init_phase2();
@@ -618,7 +618,7 @@ int qman_test_stash(void)
 		goto failed;
 	}
 	kmem_cache_destroy(hp_handler_slab);
-	pr_info("%s(): Finished\n", __func__);
+	pr_debug("%s(): Finished\n", __func__);
 
 	return 0;
 failed:

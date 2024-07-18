@@ -630,33 +630,33 @@ static int __init acerhdf_check_hardware(void)
 		return -EINVAL;
 	}
 
-	pr_info("Acer Aspire One Fan driver, v.%s\n", DRV_VER);
+	pr_debug("Acer Aspire One Fan driver, v.%s\n", DRV_VER);
 
 	if (list_supported) {
-		pr_info("List of supported Manufacturer/Model/BIOS:\n");
-		pr_info("---------------------------------------------------\n");
+		pr_debug("List of supported Manufacturer/Model/BIOS:\n");
+		pr_debug("---------------------------------------------------\n");
 		for (bt = bios_tbl; bt->vendor[0]; bt++) {
-			pr_info("%-13s | %-17s | %-10s\n", bt->vendor,
+			pr_debug("%-13s | %-17s | %-10s\n", bt->vendor,
 				bt->product, bt->version);
 		}
-		pr_info("---------------------------------------------------\n");
+		pr_debug("---------------------------------------------------\n");
 		return -ECANCELED;
 	}
 
 	if (force_bios[0]) {
 		version = force_bios;
-		pr_info("forcing BIOS version: %s\n", version);
+		pr_debug("forcing BIOS version: %s\n", version);
 		kernelmode = 0;
 	}
 
 	if (force_product[0]) {
 		product = force_product;
-		pr_info("forcing BIOS product: %s\n", product);
+		pr_debug("forcing BIOS product: %s\n", product);
 		kernelmode = 0;
 	}
 
 	if (verbose)
-		pr_info("BIOS info: %s %s, product: %s\n",
+		pr_debug("BIOS info: %s %s, product: %s\n",
 			vendor, version, product);
 
 	/* search BIOS version and vendor in BIOS settings table */

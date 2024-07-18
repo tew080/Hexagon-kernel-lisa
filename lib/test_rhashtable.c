@@ -128,7 +128,7 @@ static int insert_retry(struct rhashtable *ht, struct test_obj *obj,
 	} while (err == -EBUSY);
 
 	if (enomem_retries)
-		pr_info(" %u insertions retried after -ENOMEM\n",
+		pr_debug(" %u insertions retried after -ENOMEM\n",
 			enomem_retries);
 
 	return err ? : retries;
@@ -183,7 +183,7 @@ static void test_bucket_stats(struct rhashtable *ht, unsigned int entries)
 
 	while ((pos = rhashtable_walk_next(&hti))) {
 		if (PTR_ERR(pos) == -EAGAIN) {
-			pr_info("Info: encountered resize\n");
+			pr_debug("Info: encountered resize\n");
 			chain_len++;
 			continue;
 		} else if (IS_ERR(pos)) {
@@ -198,7 +198,7 @@ static void test_bucket_stats(struct rhashtable *ht, unsigned int entries)
 	rhashtable_walk_stop(&hti);
 	rhashtable_walk_exit(&hti);
 
-	pr_info("  Traversal complete: counted=%u, nelems=%u, entries=%d, table-jumps=%u\n",
+	pr_debug("  Traversal complete: counted=%u, nelems=%u, entries=%d, table-jumps=%u\n",
 		total, atomic_read(&ht->nelems), entries, chain_len);
 
 	if (total != atomic_read(&ht->nelems) || total != entries)
@@ -217,7 +217,7 @@ static s64 __init test_rhashtable(struct rhashtable *ht, struct test_obj *array,
 	 * Insertion Test:
 	 * Insert entries into table with all keys even numbers
 	 */
-	pr_info("  Adding %d keys\n", entries);
+	pr_debug("  Adding %d keys\n", entries);
 	start = ktime_get_ns();
 	for (i = 0; i < entries; i++) {
 		struct test_obj *obj = &array[i];
@@ -231,7 +231,7 @@ static s64 __init test_rhashtable(struct rhashtable *ht, struct test_obj *array,
 	}
 
 	if (insert_retries)
-		pr_info("  %u insertions retried due to memory pressure\n",
+		pr_debug("  %u insertions retried due to memory pressure\n",
 			insert_retries);
 
 	test_bucket_stats(ht, entries);
@@ -241,7 +241,7 @@ static s64 __init test_rhashtable(struct rhashtable *ht, struct test_obj *array,
 
 	test_bucket_stats(ht, entries);
 
-	pr_info("  Deleting %d keys\n", entries);
+	pr_debug("  Deleting %d keys\n", entries);
 	for (i = 0; i < entries; i++) {
 		struct test_obj_val key = {
 			.id = i * 2,
@@ -258,7 +258,7 @@ static s64 __init test_rhashtable(struct rhashtable *ht, struct test_obj *array,
 	}
 
 	end = ktime_get_ns();
-	pr_info("  Duration of test: %lld ns\n", end - start);
+	pr_debug("  Duration of test: %lld ns\n", end - start);
 
 	return end - start;
 }
@@ -306,7 +306,7 @@ static int __init test_rhltable(unsigned int entries)
 	if (err)
 		ret = err;
 
-	pr_info("test %d add/delete pairs into rhlist\n", entries);
+	pr_debug("test %d add/delete pairs into rhlist\n", entries);
 	for (i = 0; i < entries; i++) {
 		struct rhlist_head *h, *pos;
 		struct test_obj_rhl *obj;
@@ -366,7 +366,7 @@ static int __init test_rhltable(unsigned int entries)
 			set_bit(i, obj_in_table);
 	}
 
-	pr_info("test %d random rhlist add/delete operations\n", entries);
+	pr_debug("test %d random rhlist add/delete operations\n", entries);
 	for (j = 0; j < entries; j++) {
 		u32 i = prandom_u32_max(entries);
 		u32 prand = prandom_u32();
@@ -471,7 +471,7 @@ static int __init test_rhashtable_max(struct test_obj *array,
 	if (err == -E2BIG) {
 		err = 0;
 	} else {
-		pr_info("insert element %u should have failed with %d, got %d\n",
+		pr_debug("insert element %u should have failed with %d, got %d\n",
 				ht.max_elems, -E2BIG, err);
 		if (err == 0)
 			err = -1;
@@ -580,7 +580,7 @@ static int __init test_insert_duplicates_run(void)
 {
 	struct test_obj_rhl rhl_test_objects[3] = {};
 
-	pr_info("test inserting duplicates\n");
+	pr_debug("test inserting duplicates\n");
 
 	/* two different values that map to same bucket */
 	rhl_test_objects[0].value.id = 1;
@@ -653,7 +653,7 @@ static int threadfunc(void *data)
 		}
 	}
 	if (insert_retries)
-		pr_info("  thread[%d]: %u insertions retried due to memory pressure\n",
+		pr_debug("  thread[%d]: %u insertions retried due to memory pressure\n",
 			tdata->id, insert_retries);
 
 	err = thread_lookup_test(tdata);
@@ -715,13 +715,13 @@ static int __init test_rht_init(void)
 	if (!objs)
 		return -ENOMEM;
 
-	pr_info("Running rhashtable test nelem=%d, max_size=%d, shrinking=%d\n",
+	pr_debug("Running rhashtable test nelem=%d, max_size=%d, shrinking=%d\n",
 		size, max_size, shrinking);
 
 	for (i = 0; i < runs; i++) {
 		s64 time;
 
-		pr_info("Test %02d:\n", i);
+		pr_debug("Test %02d:\n", i);
 		memset(objs, 0, test_rht_params.max_size * sizeof(struct test_obj));
 
 		err = rhashtable_init(&ht, &test_rht_params);
@@ -742,20 +742,20 @@ static int __init test_rht_init(void)
 		total_time += time;
 	}
 
-	pr_info("test if its possible to exceed max_size %d: %s\n",
+	pr_debug("test if its possible to exceed max_size %d: %s\n",
 			test_rht_params.max_size, test_rhashtable_max(objs, entries) == 0 ?
 			"no, ok" : "YES, failed");
 	vfree(objs);
 
 	do_div(total_time, runs);
-	pr_info("Average test time: %llu\n", total_time);
+	pr_debug("Average test time: %llu\n", total_time);
 
 	test_insert_duplicates_run();
 
 	if (!tcount)
 		return 0;
 
-	pr_info("Testing concurrent rhashtable access from %d threads\n",
+	pr_debug("Testing concurrent rhashtable access from %d threads\n",
 	        tcount);
 	atomic_set(&startup_count, tcount);
 	tdata = vzalloc(array_size(tcount, sizeof(struct thread_data)));
@@ -813,7 +813,7 @@ static int __init test_rht_init(void)
 	 * to run for 2 minutes or more,  use a smaller number instead.
 	 */
 	err = test_rhltable(entries / 16);
-	pr_info("Started %d threads, %d failed, rhltable test returns %d\n",
+	pr_debug("Started %d threads, %d failed, rhltable test returns %d\n",
 	        started_threads, failed_threads, err);
 	return 0;
 }
