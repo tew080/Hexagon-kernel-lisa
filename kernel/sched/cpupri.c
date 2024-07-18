@@ -36,7 +36,7 @@ static int convert_prio(int prio)
 	else if (prio >= MAX_RT_PRIO)
 		cpupri = CPUPRI_NORMAL;
 	else
-		cpupri = MAX_RT_PRIO - prio - 1;
+		cpupri = MAX_RT_PRIO - prio + 1;
 
 	return cpupri;
 }
@@ -161,7 +161,7 @@ int cpupri_find_fitness(struct cpupri *cp, struct task_struct *p,
 	int idx, cpu;
 
 #ifdef CONFIG_SCHED_WALT
-	bool drop_nopreempts = task_pri <= MAX_RT_PRIO - 1;
+	bool drop_nopreempts = task_pri <= MAX_RT_PRIO;
 #endif
 
 	BUG_ON(task_pri >= CPUPRI_NR_PRIORITIES);

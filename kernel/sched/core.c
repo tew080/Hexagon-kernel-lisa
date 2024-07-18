@@ -66,7 +66,7 @@ const_debug unsigned int sysctl_sched_features =
  * Number of tasks to iterate in a single balance run.
  * Limited because this is done with IRQs disabled.
  */
-const_debug unsigned int sysctl_sched_nr_migrate = 128;
+const_debug unsigned int sysctl_sched_nr_migrate = 32;
 
 /*
  * period over which we measure -rt task CPU usage in us.
@@ -80,7 +80,7 @@ __read_mostly int scheduler_running;
  * part of the period that we allow rt tasks to run in us.
  * default: 0.95s
  */
-int sysctl_sched_rt_runtime = -1;
+int sysctl_sched_rt_runtime = 950000;
 
 #ifdef CONFIG_NO_HZ_COMMON
 cpumask_t cpu_wclaimed_mask;
