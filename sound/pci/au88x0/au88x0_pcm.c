@@ -219,7 +219,7 @@ snd_vortex_pcm_hw_params(struct snd_pcm_substream *substream,
 		return err;
 	}
 	/*
-	   pr_info( "Vortex: periods %d, period_bytes %d, channels = %d\n", params_periods(hw_params),
+	   pr_debug( "Vortex: periods %d, period_bytes %d, channels = %d\n", params_periods(hw_params),
 	   params_period_bytes(hw_params), params_channels(hw_params));
 	 */
 	spin_lock_irq(&chip->lock);

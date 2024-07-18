@@ -352,7 +352,7 @@ static int test_parman_check_array(struct test_parman *test_parman,
 		return -EINVAL;
 	}
 
-	pr_info("Priority array check successful\n");
+	pr_debug("Priority array check successful\n");
 
 	return 0;
 }

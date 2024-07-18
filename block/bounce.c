@@ -60,7 +60,7 @@ static __init int init_emergency_pool(void)
 
 	ret = mempool_init_page_pool(&page_pool, POOL_SIZE, 0);
 	BUG_ON(ret);
-	pr_info("pool size: %d pages\n", POOL_SIZE);
+	pr_debug("pool size: %d pages\n", POOL_SIZE);
 
 	init_bounce_bioset();
 	return 0;
@@ -118,7 +118,7 @@ int init_emergency_isa_pool(void)
 			   mempool_free_pages, (void *) 0);
 	BUG_ON(ret);
 
-	pr_info("isa pool size: %d pages\n", ISA_POOL_SIZE);
+	pr_debug("isa pool size: %d pages\n", ISA_POOL_SIZE);
 	init_bounce_bioset();
 	mutex_unlock(&isa_mutex);
 	return 0;

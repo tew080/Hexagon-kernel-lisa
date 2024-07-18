@@ -47,7 +47,7 @@ MPI mpi_read_raw_data(const void *xbuffer, size_t nbytes)
 
 	nbits = nbytes * 8;
 	if (nbits > MAX_EXTERN_MPI_BITS) {
-		pr_info("MPI: mpi too large (%u bits)\n", nbits);
+		pr_debug("MPI: mpi too large (%u bits)\n", nbits);
 		return NULL;
 	}
 	if (nbytes > 0)
@@ -89,13 +89,13 @@ MPI mpi_read_from_buffer(const void *xbuffer, unsigned *ret_nread)
 	nbits = buffer[0] << 8 | buffer[1];
 
 	if (nbits > MAX_EXTERN_MPI_BITS) {
-		pr_info("MPI: mpi too large (%u bits)\n", nbits);
+		pr_debug("MPI: mpi too large (%u bits)\n", nbits);
 		return ERR_PTR(-EINVAL);
 	}
 
 	nbytes = DIV_ROUND_UP(nbits, 8);
 	if (nbytes + 2 > *ret_nread) {
-		pr_info("MPI: mpi larger than buffer nbytes=%u ret_nread=%u\n",
+		pr_debug("MPI: mpi larger than buffer nbytes=%u ret_nread=%u\n",
 				nbytes, *ret_nread);
 		return ERR_PTR(-EINVAL);
 	}
@@ -369,7 +369,7 @@ MPI mpi_read_raw_from_sgl(struct scatterlist *sgl, unsigned int nbytes)
 	nbits = nbytes * 8;
 	if (nbits > MAX_EXTERN_MPI_BITS) {
 		sg_miter_stop(&miter);
-		pr_info("MPI: mpi too large (%u bits)\n", nbits);
+		pr_debug("MPI: mpi too large (%u bits)\n", nbits);
 		return NULL;
 	}
 

@@ -1290,7 +1290,7 @@ static void __init debug_objects_selftest(void)
 	if (check_results(&obj, ODEBUG_STATE_NONE, ++fixups, ++warnings))
 		goto out;
 #endif
-	pr_info("selftest passed\n");
+	pr_debug("selftest passed\n");
 
 out:
 	debug_objects_fixups = oldfixups;

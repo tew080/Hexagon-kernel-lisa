@@ -145,7 +145,7 @@ const char *cam_get_module_name(unsigned int module_id);
  */
 #define CAM_ERR(__module, fmt, args...)                                        \
 	({                                                                     \
-		pr_info("CAM_ERR: %s: %s: %d " fmt "\n",                       \
+		pr_debug("CAM_ERR: %s: %s: %d " fmt "\n",                       \
 			cam_get_module_name(__module), __func__,               \
 			__LINE__, ##args);                                     \
 		cam_debug_trace(CAM_TYPE_ERR, __module, __func__, __LINE__,    \
@@ -162,7 +162,7 @@ const char *cam_get_module_name(unsigned int module_id);
  */
 #define CAM_WARN(__module, fmt, args...)                                       \
 	({                                                                     \
-		pr_info("CAM_WARN: %s: %s: %d " fmt "\n",                      \
+		pr_debug("CAM_WARN: %s: %s: %d " fmt "\n",                      \
 			cam_get_module_name(__module), __func__,               \
 			__LINE__, ##args);                                     \
 		cam_debug_trace(CAM_TYPE_ERR, __module, __func__, __LINE__,    \
@@ -179,7 +179,7 @@ const char *cam_get_module_name(unsigned int module_id);
  */
 #define CAM_INFO(__module, fmt, args...)                                       \
 	({                                                                     \
-		pr_info("CAM_INFO: %s: %s: %d " fmt "\n",                      \
+		pr_debug("CAM_INFO: %s: %s: %d " fmt "\n",                      \
 			cam_get_module_name(__module), __func__,               \
 			__LINE__, ##args);                                     \
 		cam_debug_trace(CAM_TYPE_INFO, __module, __func__, __LINE__,   \
@@ -259,7 +259,7 @@ const char *cam_get_module_name(unsigned int module_id);
 			(interval * HZ),                                       \
 			burst);                                                \
 		if (__ratelimit(&_rs))                                         \
-			pr_info(                                               \
+			pr_debug(                                               \
 				"CAM_WARN: %s: %s: %d " fmt "\n",              \
 				cam_get_module_name(__module), __func__,       \
 				__LINE__, ##args);                             \
@@ -283,7 +283,7 @@ const char *cam_get_module_name(unsigned int module_id);
 			(interval * HZ),                                       \
 			burst);                                                \
 		if (__ratelimit(&_rs))                                         \
-			pr_info(                                               \
+			pr_debug(                                               \
 				"CAM_INFO: %s: %s: %d " fmt "\n",              \
 				cam_get_module_name(__module), __func__,       \
 				__LINE__, ##args);                             \
@@ -307,7 +307,7 @@ const char *cam_get_module_name(unsigned int module_id);
 			(interval * HZ),                                      \
 			burst);                                               \
 		if (__ratelimit(&_rs))                                        \
-			pr_info(                                              \
+			pr_debug(                                              \
 				"CAM_ERR: %s: %s: %d " fmt "\n",              \
 				cam_get_module_name(__module), __func__,      \
 				__LINE__, ##args);                            \

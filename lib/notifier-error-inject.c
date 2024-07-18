@@ -39,7 +39,7 @@ static int notifier_err_inject_callback(struct notifier_block *nb,
 		}
 	}
 	if (err)
-		pr_info("Injecting error (%d) to %s\n", err, action->name);
+		pr_debug("Injecting error (%d) to %s\n", err, action->name);
 
 	return notifier_from_errno(err);
 }

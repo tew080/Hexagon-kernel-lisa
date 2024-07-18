@@ -8254,7 +8254,7 @@ static int msm_int_wsa_init(struct snd_soc_pcm_runtime *rtd)
 								component);
 			wsa_active_devs++;
 		} else {
-			pr_info("%s: wsa-codec.1 component is NULL\n", __func__);
+			pr_debug("%s: wsa-codec.1 component is NULL\n", __func__);
 		}
 	}
 

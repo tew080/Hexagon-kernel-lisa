@@ -18,10 +18,10 @@
 #define REPORT_FAILURES_IN_FN() \
 	do {	\
 		if (failures)	\
-			pr_info("%s failed %d out of %d times\n",	\
+			pr_debug("%s failed %d out of %d times\n",	\
 				__func__, failures, num_tests);		\
 		else		\
-			pr_info("all %d tests in %s passed\n",		\
+			pr_debug("all %d tests in %s passed\n",		\
 				num_tests, __func__);			\
 	} while (0)
 
@@ -381,9 +381,9 @@ static int __init test_meminit_init(void)
 	num_tests += test_rcu_persistent(&failures);
 
 	if (failures == 0)
-		pr_info("all %d tests passed!\n", num_tests);
+		pr_debug("all %d tests passed!\n", num_tests);
 	else
-		pr_info("failures: %d out of %d\n", failures, num_tests);
+		pr_debug("failures: %d out of %d\n", failures, num_tests);
 
 	return failures ? -EINVAL : 0;
 }

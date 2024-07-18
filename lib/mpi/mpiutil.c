@@ -117,7 +117,7 @@ void mpi_free(MPI a)
 		mpi_free_limb_space(a->d);
 
 	if (a->flags & ~7)
-		pr_info("invalid flag value in mpi\n");
+		pr_debug("invalid flag value in mpi\n");
 	kfree(a);
 }
 EXPORT_SYMBOL_GPL(mpi_free);

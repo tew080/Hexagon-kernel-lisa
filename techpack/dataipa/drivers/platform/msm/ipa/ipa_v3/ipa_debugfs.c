@@ -462,7 +462,7 @@ static ssize_t ipa3_set_clk_index(struct file *file, const char __user *buf,
 		pr_err("Not support this vote (%d)\n", option);
 		return -EFAULT;
 	}
-	pr_info("Make sure some client connected before scaling the BW\n");
+	pr_debug("Make sure some client connected before scaling the BW\n");
 	ipa3_ctx->enable_clock_scaling = 1;
 	if (ipa3_set_clock_plan_from_pm(bw_idx)) {
 		IPAERR("Failed to vote for bus BW (%u)\n", bw_idx);
@@ -1123,9 +1123,9 @@ static ssize_t ipa3_read_proc_ctx(struct file *file, char __user *ubuf,
 	mutex_lock(&ipa3_ctx->lock);
 
 	if (ipa3_ctx->hdr_proc_ctx_tbl_lcl)
-		pr_info("Table resides on local memory\n");
+		pr_debug("Table resides on local memory\n");
 	else
-		pr_info("Table resides on system(ddr) memory\n");
+		pr_debug("Table resides on system(ddr) memory\n");
 
 	list_for_each_entry(entry, &tbl->head_proc_ctx_entry_list, link) {
 		ofst_words = (entry->offset_entry->offset +

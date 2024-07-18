@@ -6767,7 +6767,7 @@ static int ipa3_post_init(const struct ipa3_plat_drv_res *resource_p,
 
 	ipa_ut_module_init();
 
-	pr_info("IPA driver initialization was successful.\n");
+	pr_debug("IPA driver initialization was successful.\n");
 
 	return 0;
 
@@ -6942,7 +6942,7 @@ static void ipa3_load_ipa_fw(struct work_struct *work)
 	mutex_lock(&ipa3_ctx->fw_load_data.lock);
 	ipa3_ctx->fw_load_data.state = IPA_FW_LOAD_STATE_LOADED;
 	mutex_unlock(&ipa3_ctx->fw_load_data.lock);
-	pr_info("IPA FW loaded successfully\n");
+	pr_debug("IPA FW loaded successfully\n");
 
 	result = ipa3_post_init(&ipa3_res, ipa3_ctx->cdev.dev);
 	if (result) {
@@ -7100,7 +7100,7 @@ static ssize_t ipa3_write(struct file *file, const char __user *buf,
 				dbg_buff);
 			return count;
 		}
-		pr_info("IPA is loading with %sMHI configuration\n",
+		pr_debug("IPA is loading with %sMHI configuration\n",
 			ipa3_ctx->ipa_config_is_mhi ? "" : "non ");
 	}
 

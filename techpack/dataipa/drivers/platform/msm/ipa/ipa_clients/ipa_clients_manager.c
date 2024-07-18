@@ -12,7 +12,7 @@
 
 static int __init ipa_clients_manager_init(void)
 {
-	pr_info("IPA clients manager init\n");
+	pr_debug("IPA clients manager init\n");
 
 	ipa3_usb_init();
 

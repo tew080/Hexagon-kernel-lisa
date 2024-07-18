@@ -113,11 +113,11 @@ static void debug_print_rmap(const struct cpu_rmap *rmap, const char *prefix)
 	unsigned index;
 	unsigned int cpu;
 
-	pr_info("cpu_rmap %p, %s:\n", rmap, prefix);
+	pr_debug("cpu_rmap %p, %s:\n", rmap, prefix);
 
 	for_each_possible_cpu(cpu) {
 		index = rmap->near[cpu].index;
-		pr_info("cpu %d -> obj %u (distance %u)\n",
+		pr_debug("cpu %d -> obj %u (distance %u)\n",
 			cpu, index, rmap->near[cpu].dist);
 	}
 }

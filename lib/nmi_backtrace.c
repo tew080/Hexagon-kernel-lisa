@@ -62,7 +62,7 @@ void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
 		nmi_cpu_backtrace(NULL);
 
 	if (!cpumask_empty(to_cpumask(backtrace_mask))) {
-		pr_info("Sending NMI from CPU %d to CPUs %*pbl:\n",
+		pr_debug("Sending NMI from CPU %d to CPUs %*pbl:\n",
 			this_cpu, nr_cpumask_bits, to_cpumask(backtrace_mask));
 		raise(to_cpumask(backtrace_mask));
 	}

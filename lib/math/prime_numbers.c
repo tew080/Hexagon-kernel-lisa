@@ -253,7 +253,7 @@ static void dump_primes(void)
 
 	if (buf)
 		bitmap_print_to_pagebuf(true, buf, p->primes, p->sz);
-	pr_info("primes.{last=%lu, .sz=%lu, .primes[]=...x%lx} = %s",
+	pr_debug("primes.{last=%lu, .sz=%lu, .primes[]=...x%lx} = %s",
 		p->last, p->sz, p->primes[BITS_TO_LONGS(p->sz) - 1], buf);
 
 	rcu_read_unlock();
@@ -289,7 +289,7 @@ static int selftest(unsigned long max)
 		last = x;
 	}
 
-	pr_info("selftest(%lu) passed, last prime was %lu", x, last);
+	pr_debug("selftest(%lu) passed, last prime was %lu", x, last);
 	return 0;
 
 err:

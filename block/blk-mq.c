@@ -3123,7 +3123,7 @@ static int blk_mq_alloc_rq_maps(struct blk_mq_tag_set *set)
 	}
 
 	if (depth != set->queue_depth)
-		pr_info("blk-mq: reduced tag depth (%u -> %u)\n",
+		pr_debug("blk-mq: reduced tag depth (%u -> %u)\n",
 						depth, set->queue_depth);
 
 	return 0;
@@ -3192,7 +3192,7 @@ int blk_mq_alloc_tag_set(struct blk_mq_tag_set *set)
 		return -EINVAL;
 
 	if (set->queue_depth > BLK_MQ_MAX_DEPTH) {
-		pr_info("blk-mq: reduced tag depth to %u\n",
+		pr_debug("blk-mq: reduced tag depth to %u\n",
 			BLK_MQ_MAX_DEPTH);
 		set->queue_depth = BLK_MQ_MAX_DEPTH;
 	}

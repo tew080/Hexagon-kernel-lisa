@@ -394,7 +394,7 @@ static int __init test_string_helpers_init(void)
 {
 	unsigned int i;
 
-	pr_info("Running tests...\n");
+	pr_debug("Running tests...\n");
 	for (i = 0; i < UNESCAPE_ANY + 1; i++)
 		test_string_unescape("unescape", i, false);
 	test_string_unescape("unescape inplace",

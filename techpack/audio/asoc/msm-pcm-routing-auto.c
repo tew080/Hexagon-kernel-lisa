@@ -1319,7 +1319,7 @@ static int msm_pcm_routing_get_app_type_idx(int app_type)
 		if (app_type_cfg[idx].app_type == app_type)
 			return idx;
 	}
-	pr_info("%s: App type not available, fallback to default\n", __func__);
+	pr_debug("%s: App type not available, fallback to default\n", __func__);
 	return 0;
 }
 
@@ -1503,11 +1503,11 @@ int msm_pcm_routing_set_channel_mixer_cfg(
 			params->override_out_ch_map;
 	if (channel_mixer_v2[fe_id][type].input_channel != num_ch_input_map && channel_mixer_v2[fe_id][type].override_in_ch_map) {
 			channel_mixer_v2[fe_id][type].override_in_ch_map =false;
-			pr_info("%s: mismatched with num_ch_input_map %d override_in_ch_map set to false \n", __func__,num_ch_input_map);
+			pr_debug("%s: mismatched with num_ch_input_map %d override_in_ch_map set to false \n", __func__,num_ch_input_map);
 	}
 	if (channel_mixer_v2[fe_id][type].output_channel != num_ch_out_map && channel_mixer_v2[fe_id][type].override_out_ch_map) {
 			channel_mixer_v2[fe_id][type].override_out_ch_map =false;
-			pr_info("%s: mismatched with num_ch_out_map %d override_out_ch_map set to false \n", __func__,num_ch_out_map);
+			pr_debug("%s: mismatched with num_ch_out_map %d override_out_ch_map set to false \n", __func__,num_ch_out_map);
 	}
 	return 0;
 }
@@ -32946,7 +32946,7 @@ static int msm_routing_put_device_pp_params_mixer(struct snd_kcontrol *kcontrol,
 					idx, latency);
 			break;
 		default:
-			pr_info("%s, device pp param %d not supported\n",
+			pr_debug("%s, device pp param %d not supported\n",
 				__func__, pp_id);
 			break;
 		}

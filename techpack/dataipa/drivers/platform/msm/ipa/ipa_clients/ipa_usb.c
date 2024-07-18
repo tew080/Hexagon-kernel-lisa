@@ -55,7 +55,7 @@
 
 #define IPA_USB_INFO(fmt, args...) \
 	do { \
-		pr_info(IPA_USB_DRV_NAME " %s:%d " fmt, \
+		pr_debug(IPA_USB_DRV_NAME " %s:%d " fmt, \
 			__func__, __LINE__, ## args); \
 		IPA_IPC_LOGGING(ipa3_get_ipc_logbuf(), \
 			IPA_USB_DRV_NAME " %s:%d " fmt, ## args); \
@@ -2558,7 +2558,7 @@ int ipa3_usb_init(void)
 	struct ipa3_usb_pm_context *pm_ctx;
 	struct ipa_usb_data funcs;
 
-	pr_info("ipa_usb driver init\n");
+	pr_debug("ipa_usb driver init\n");
 
 	ipa3_usb_ctx = kzalloc(sizeof(struct ipa3_usb_context), GFP_KERNEL);
 	if (ipa3_usb_ctx == NULL) {
@@ -2613,7 +2613,7 @@ int ipa3_usb_init(void)
 		pr_err("failed to register ipa_usb APIs\n");
 	}
 
-	pr_info("exit: IPA_USB init success!\n");
+	pr_debug("exit: IPA_USB init success!\n");
 
 	return 0;
 

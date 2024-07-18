@@ -208,7 +208,7 @@ static __init int string_selftest_init(void)
 	if (subtest)
 		goto fail;
 
-	pr_info("String selftests succeeded\n");
+	pr_debug("String selftests succeeded\n");
 	return 0;
 fail:
 	pr_crit("String selftest failure %d.%08x\n", test, subtest);

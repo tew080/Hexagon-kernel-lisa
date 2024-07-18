@@ -138,7 +138,7 @@ static inline const struct raid6_recov_calls *raid6_choose_recov(void)
 		raid6_2data_recov = best->data2;
 		raid6_datap_recov = best->datap;
 
-		pr_info("raid6: using %s recovery algorithm\n", best->name);
+		pr_debug("raid6: using %s recovery algorithm\n", best->name);
 	} else
 		pr_err("raid6: Yikes! No recovery algorithm found!\n");
 
@@ -180,7 +180,7 @@ static inline const struct raid6_calls *raid6_choose_gen(
 				bestgenperf = perf;
 				best = *algo;
 			}
-			pr_info("raid6: %-8s gen() %5ld MB/s\n", (*algo)->name,
+			pr_debug("raid6: %-8s gen() %5ld MB/s\n", (*algo)->name,
 			       (perf*HZ) >> (20-16+RAID6_TIME_JIFFIES_LG2));
 
 			if (!(*algo)->xor_syndrome)
@@ -203,17 +203,17 @@ static inline const struct raid6_calls *raid6_choose_gen(
 			if (best == *algo)
 				bestxorperf = perf;
 
-			pr_info("raid6: %-8s xor() %5ld MB/s\n", (*algo)->name,
+			pr_debug("raid6: %-8s xor() %5ld MB/s\n", (*algo)->name,
 				(perf*HZ) >> (20-16+RAID6_TIME_JIFFIES_LG2+1));
 		}
 	}
 
 	if (best) {
-		pr_info("raid6: using algorithm %s gen() %ld MB/s\n",
+		pr_debug("raid6: using algorithm %s gen() %ld MB/s\n",
 		       best->name,
 		       (bestgenperf*HZ) >> (20-16+RAID6_TIME_JIFFIES_LG2));
 		if (best->xor_syndrome)
-			pr_info("raid6: .... xor() %ld MB/s, rmw enabled\n",
+			pr_debug("raid6: .... xor() %ld MB/s, rmw enabled\n",
 			       (bestxorperf*HZ) >> (20-16+RAID6_TIME_JIFFIES_LG2+1));
 		raid6_call = *best;
 	} else

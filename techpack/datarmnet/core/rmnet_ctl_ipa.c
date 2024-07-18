@@ -57,14 +57,14 @@ static void rmnet_ctl_probe(void *user_data)
 	ctl_ipa_dev.dev.xmit = rmnet_ctl_send_ipa;
 	rmnet_ctl_endpoint_setdev(&ctl_ipa_dev.dev);
 
-	pr_info("rmnet_ctl driver probed\n");
+	pr_debug("rmnet_ctl driver probed\n");
 }
 
 static void rmnet_ctl_remove(void *user_data)
 {
 	rmnet_ctl_endpoint_setdev(NULL);
 
-	pr_info("rmnet_ctl driver removed\n");
+	pr_debug("rmnet_ctl driver removed\n");
 }
 
 static void rmnet_ctl_ipa_ready(void *user_data)

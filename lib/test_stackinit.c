@@ -140,7 +140,7 @@ static noinline __init int test_ ## name (void)			\
 		sum += (check_buf[i] == 0xFF);			\
 								\
 	if (sum == 0) {						\
-		pr_info(#name " ok\n");				\
+		pr_debug(#name " ok\n");				\
 		return 0;					\
 	} else {						\
 		pr_warn(#name " %sFAIL (uninit bytes: %d)\n",	\
@@ -374,7 +374,7 @@ static int __init test_stackinit_init(void)
 	failures += test_user();
 
 	if (failures == 0)
-		pr_info("all tests passed!\n");
+		pr_debug("all tests passed!\n");
 	else
 		pr_err("failures: %u\n", failures);
 

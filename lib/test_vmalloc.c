@@ -517,7 +517,7 @@ static void do_concurrent_test(void)
 			if (!((run_test_mask & (1 << i)) >> i))
 				continue;
 
-			pr_info(
+			pr_debug(
 				"Summary: %s passed: %d failed: %d repeat: %d loops: %d avg: %llu usec\n",
 				test_case_array[i].test_name,
 				per_cpu_test_data[cpu][i].test_passed,
@@ -526,7 +526,7 @@ static void do_concurrent_test(void)
 				per_cpu_test_data[cpu][i].time);
 		}
 
-		pr_info("All test took CPU%d=%lu cycles\n",
+		pr_debug("All test took CPU%d=%lu cycles\n",
 			cpu, t->stop - t->start);
 	}
 }

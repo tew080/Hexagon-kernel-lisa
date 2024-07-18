@@ -67,7 +67,7 @@
 
 #define IPAWANINFO(fmt, args...) \
 	do { \
-		pr_info(DEV_NAME " %s:%d " fmt, __func__,\
+		pr_debug(DEV_NAME " %s:%d " fmt, __func__,\
 				__LINE__, ## args); \
 		IPA_IPC_LOGGING(ipa3_get_ipc_logbuf(), \
 				DEV_NAME " %s:%d " fmt, ## args); \

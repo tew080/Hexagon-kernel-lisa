@@ -2472,19 +2472,19 @@ static int get_ipa_rmnet_dts_configuration(struct platform_device *pdev,
 	ipa_rmnet_drv_res->ipa_rmnet_ssr =
 			of_property_read_bool(pdev->dev.of_node,
 			"qcom,rmnet-ipa-ssr");
-	pr_info("IPA SSR support = %s\n",
+	pr_debug("IPA SSR support = %s\n",
 		ipa_rmnet_drv_res->ipa_rmnet_ssr ? "True" : "False");
 
 	ipa_rmnet_drv_res->ipa_advertise_sg_support =
 		of_property_read_bool(pdev->dev.of_node,
 		"qcom,ipa-advertise-sg-support");
-	pr_info("IPA SG support = %s\n",
+	pr_debug("IPA SG support = %s\n",
 		ipa_rmnet_drv_res->ipa_advertise_sg_support ? "True" : "False");
 
 	ipa_rmnet_drv_res->ipa_napi_enable =
 		of_property_read_bool(pdev->dev.of_node,
 			"qcom,ipa-napi-enable");
-	pr_info("IPA Napi Enable = %s\n",
+	pr_debug("IPA Napi Enable = %s\n",
 		ipa_rmnet_drv_res->ipa_napi_enable ? "True" : "False");
 
 	/* Get IPA WAN RX desc fifo size */
@@ -2492,7 +2492,7 @@ static int get_ipa_rmnet_dts_configuration(struct platform_device *pdev,
 			"qcom,wan-rx-desc-size",
 			&ipa_rmnet_drv_res->wan_rx_desc_size);
 	if (result)
-		pr_info("using default for wan-rx-desc-size = %u\n",
+		pr_debug("using default for wan-rx-desc-size = %u\n",
 				ipa_rmnet_drv_res->wan_rx_desc_size);
 	else
 		IPAWANDBG(": found ipa_drv_res->wan-rx-desc-size = %u\n",
@@ -2589,7 +2589,7 @@ static int ipa3_wwan_probe(struct platform_device *pdev)
 	struct net_device *dev;
 	int wan_cons_ep;
 
-	pr_info("rmnet_ipa3 started initialization\n");
+	pr_debug("rmnet_ipa3 started initialization\n");
 
 	if (!ipa3_is_ready()) {
 		IPAWANDBG("IPA driver not ready, registering callback\n");

@@ -714,7 +714,7 @@ static int debug_boot_weak_hash __ro_after_init;
 static int __init debug_boot_weak_hash_enable(char *str)
 {
 	debug_boot_weak_hash = 1;
-	pr_info("debug_boot_weak_hash enabled\n");
+	pr_debug("debug_boot_weak_hash enabled\n");
 	return 0;
 }
 early_param("debug_boot_weak_hash", debug_boot_weak_hash_enable);

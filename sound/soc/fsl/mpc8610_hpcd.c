@@ -420,7 +420,7 @@ static int __init mpc8610_hpcd_init(void)
 	struct device_node *guts_np;
 	struct resource res;
 
-	pr_info("Freescale MPC8610 HPCD ALSA SoC machine driver\n");
+	pr_debug("Freescale MPC8610 HPCD ALSA SoC machine driver\n");
 
 	/* Get the physical address of the global utilities registers */
 	guts_np = of_find_compatible_node(NULL, NULL, "fsl,mpc8610-guts");

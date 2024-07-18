@@ -1139,7 +1139,7 @@ static int rt5668_div_sel(struct rt5668_priv *rt5668,
 	}
 
 	for (i = 0; i < size - 1; i++) {
-		pr_info("div[%d]=%d\n", i, div[i]);
+		pr_debug("div[%d]=%d\n", i, div[i]);
 		if (target * div[i] == rt5668->sysclk)
 			return i;
 		if (target * div[i + 1] > rt5668->sysclk) {

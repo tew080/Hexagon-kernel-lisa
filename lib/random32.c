@@ -285,7 +285,7 @@ static int __init prandom_state_selftest(void)
 	if (error)
 		pr_warn("prandom: seed boundary self test failed\n");
 	else
-		pr_info("prandom: seed boundary self test passed\n");
+		pr_debug("prandom: seed boundary self test passed\n");
 
 	for (i = 0; i < ARRAY_SIZE(test2); i++) {
 		struct rnd_state state;
@@ -306,7 +306,7 @@ static int __init prandom_state_selftest(void)
 	if (errors)
 		pr_warn("prandom: %d/%d self tests failed\n", errors, runs);
 	else
-		pr_info("prandom: %d self tests passed\n", runs);
+		pr_debug("prandom: %d self tests passed\n", runs);
 	return 0;
 }
 core_initcall(prandom_state_selftest);

@@ -2223,11 +2223,11 @@ void xa_dump_node(const struct xa_node *node)
 void xa_dump_index(unsigned long index, unsigned int shift)
 {
 	if (!shift)
-		pr_info("%lu: ", index);
+		pr_debug("%lu: ", index);
 	else if (shift >= BITS_PER_LONG)
-		pr_info("0-%lu: ", ~0UL);
+		pr_debug("0-%lu: ", ~0UL);
 	else
-		pr_info("%lu-%lu: ", index, index | ((1UL << shift) - 1));
+		pr_debug("%lu-%lu: ", index, index | ((1UL << shift) - 1));
 }
 
 void xa_dump_entry(const void *entry, unsigned long index, unsigned long shift)
@@ -2268,7 +2268,7 @@ void xa_dump(const struct xarray *xa)
 	void *entry = xa->xa_head;
 	unsigned int shift = 0;
 
-	pr_info("xarray: %px head %px flags %x marks %d %d %d\n", xa, entry,
+	pr_debug("xarray: %px head %px flags %x marks %d %d %d\n", xa, entry,
 			xa->xa_flags, xa_marked(xa, XA_MARK_0),
 			xa_marked(xa, XA_MARK_1), xa_marked(xa, XA_MARK_2));
 	if (xa_is_node(entry))

@@ -1040,7 +1040,7 @@ static void rt1305_calibrate(struct rt1305_priv *rt1305)
 	regmap_read(rt1305->regmap, RT1305_DAC_OFFSET_7, &valmsb);
 	regmap_read(rt1305->regmap, RT1305_DAC_OFFSET_8, &vallsb);
 	offsetr = valmsb << 16 | vallsb;
-	pr_info("DC offsetl=0x%x, offsetr=0x%x\n", offsetl, offsetr);
+	pr_debug("DC offsetl=0x%x, offsetr=0x%x\n", offsetl, offsetr);
 
 	/* R0 calibration */
 	regmap_write(rt1305->regmap, RT1305_PR_BASE + 0x5d, 0x9542);
@@ -1063,7 +1063,7 @@ static void rt1305_calibrate(struct rt1305_priv *rt1305)
 	r0ohm = (rhl*10) / 33554432;
 
 	pr_debug("Left_rhl = 0x%x rh=0x%x rl=0x%x\n", rhl, rh, rl);
-	pr_info("Left channel %d.%dohm\n", (r0ohm/10), (r0ohm%10));
+	pr_debug("Left channel %d.%dohm\n", (r0ohm/10), (r0ohm%10));
 
 	r0l = 562949953421312ULL;
 	if (rhl != 0)
@@ -1080,7 +1080,7 @@ static void rt1305_calibrate(struct rt1305_priv *rt1305)
 	r0ohm = (rhl*10) / 33554432;
 
 	pr_debug("Right_rhl = 0x%x rh=0x%x rl=0x%x\n", rhl, rh, rl);
-	pr_info("Right channel %d.%dohm\n", (r0ohm/10), (r0ohm%10));
+	pr_debug("Right channel %d.%dohm\n", (r0ohm/10), (r0ohm%10));
 
 	r0r = 562949953421312ULL;
 	if (rhl != 0)

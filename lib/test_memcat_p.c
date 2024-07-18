@@ -86,7 +86,7 @@ static int __init test_memcat_p_init(void)
 		}
 
 	err = 0;
-	pr_info("test passed\n");
+	pr_debug("test passed\n");
 
 err_free_out:
 	kfree(out);

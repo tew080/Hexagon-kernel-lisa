@@ -34,7 +34,7 @@ static int __init test_sort_init(void)
 			goto exit;
 		}
 	err = 0;
-	pr_info("test passed\n");
+	pr_debug("test passed\n");
 exit:
 	kfree(a);
 	return err;

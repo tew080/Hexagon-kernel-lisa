@@ -161,31 +161,31 @@ static void ipa_ut_show_suite_exec_summary(const struct ipa_ut_suite *suite)
 
 	ipa_assert_on(!suite);
 
-	pr_info("\n\n");
-	pr_info("\t  Suite '%s' summary\n", suite->meta_data->name);
-	pr_info("===========================\n");
-	pr_info("Successful tests\n");
-	pr_info("----------------\n");
+	pr_debug("\n\n");
+	pr_debug("\t  Suite '%s' summary\n", suite->meta_data->name);
+	pr_debug("===========================\n");
+	pr_debug("Successful tests\n");
+	pr_debug("----------------\n");
 	for (i = 0 ; i < suite->tests_cnt ; i++) {
 		if (suite->tests[i].res != IPA_UT_TEST_RES_SUCCESS)
 			continue;
-		pr_info("\t%s\n", suite->tests[i].name);
+		pr_debug("\t%s\n", suite->tests[i].name);
 	}
-	pr_info("\nFailed tests\n");
-	pr_info("------------\n");
+	pr_debug("\nFailed tests\n");
+	pr_debug("------------\n");
 	for (i = 0 ; i < suite->tests_cnt ; i++) {
 		if (suite->tests[i].res != IPA_UT_TEST_RES_FAIL)
 			continue;
-		pr_info("\t%s\n", suite->tests[i].name);
+		pr_debug("\t%s\n", suite->tests[i].name);
 	}
-	pr_info("\nSkipped tests\n");
-	pr_info("-------------\n");
+	pr_debug("\nSkipped tests\n");
+	pr_debug("-------------\n");
 	for (i = 0 ; i < suite->tests_cnt ; i++) {
 		if (suite->tests[i].res != IPA_UT_TEST_RES_SKIP)
 			continue;
-		pr_info("\t%s\n", suite->tests[i].name);
+		pr_debug("\t%s\n", suite->tests[i].name);
 	}
-	pr_info("\n");
+	pr_debug("\n");
 }
 
 /**
@@ -240,7 +240,7 @@ static void ipa_ut_dbgfs_meta_test_write_work_func(struct work_struct *work)
 	}
 
 	if (!suite->tests_cnt || !suite->tests) {
-		pr_info("No tests for suite '%s'\n", suite->meta_data->name);
+		pr_debug("No tests for suite '%s'\n", suite->meta_data->name);
 		goto free_mem;
 	}
 
@@ -249,7 +249,7 @@ static void ipa_ut_dbgfs_meta_test_write_work_func(struct work_struct *work)
 	IPA_ACTIVE_CLIENTS_INC_SPECIAL("IPA_UT");
 
 	if (suite->meta_data->setup) {
-		pr_info("*** Suite '%s': Run setup ***\n",
+		pr_debug("*** Suite '%s': Run setup ***\n",
 			suite->meta_data->name);
 		rc = suite->meta_data->setup(&suite->meta_data->priv);
 		if (rc) {
@@ -259,18 +259,18 @@ static void ipa_ut_dbgfs_meta_test_write_work_func(struct work_struct *work)
 			goto release_clock;
 		}
 	} else {
-		pr_info("*** Suite '%s': No Setup ***\n",
+		pr_debug("*** Suite '%s': No Setup ***\n",
 			suite->meta_data->name);
 	}
 
-	pr_info("*** Suite '%s': Run %s tests ***\n\n",
+	pr_debug("*** Suite '%s': Run %s tests ***\n\n",
 		suite->meta_data->name,
 		meta_type == IPA_UT_META_TEST_REGRESSION ? "regression" : "all"
 		);
 	for (i = 0 ; i < suite->tests_cnt ; i++) {
 		if (meta_type == IPA_UT_META_TEST_REGRESSION &&
 			!suite->tests[i].run_in_regression) {
-			pr_info(
+			pr_debug(
 				"*** Test '%s': Skip - Not in regression ***\n\n"
 				, suite->tests[i].name);
 			suite->tests[i].res = IPA_UT_TEST_RES_SKIP;
@@ -278,14 +278,14 @@ static void ipa_ut_dbgfs_meta_test_write_work_func(struct work_struct *work)
 		}
 		if (suite->tests[i].min_ipa_hw_ver > ipa_ver ||
 			suite->tests[i].max_ipa_hw_ver < ipa_ver) {
-			pr_info(
+			pr_debug(
 				"*** Test '%s': Skip - IPA VER mismatch ***\n\n"
 				, suite->tests[i].name);
 			suite->tests[i].res = IPA_UT_TEST_RES_SKIP;
 			continue;
 		}
 		if (!suite->tests[i].run) {
-			pr_info(
+			pr_debug(
 				"*** Test '%s': Skip - No Run function ***\n\n"
 				, suite->tests[i].name);
 			suite->tests[i].res = IPA_UT_TEST_RES_SKIP;
@@ -294,7 +294,7 @@ static void ipa_ut_dbgfs_meta_test_write_work_func(struct work_struct *work)
 
 		_IPA_UT_TEST_LOG_BUF_NAME[0] = '\0';
 		_IPA_UT_TEST_FAIL_REPORT_IDX = 0;
-		pr_info("*** Test '%s': Running... ***\n",
+		pr_debug("*** Test '%s': Running... ***\n",
 			suite->tests[i].name);
 		rc = suite->tests[i].run(suite->meta_data->priv);
 		if (rc) {
@@ -305,17 +305,17 @@ static void ipa_ut_dbgfs_meta_test_write_work_func(struct work_struct *work)
 			suite->tests[i].res = IPA_UT_TEST_RES_SUCCESS;
 		}
 
-		pr_info(">>>>>>**** TEST '%s': %s ****<<<<<<\n",
+		pr_debug(">>>>>>**** TEST '%s': %s ****<<<<<<\n",
 			suite->tests[i].name, tst_fail ? "FAIL" : "SUCCESS");
 
 		if (tst_fail)
 			ipa_ut_dump_fail_report_stack();
 
-		pr_info("\n");
+		pr_debug("\n");
 	}
 
 	if (suite->meta_data->teardown) {
-		pr_info("*** Suite '%s': Run Teardown ***\n",
+		pr_debug("*** Suite '%s': Run Teardown ***\n",
 			suite->meta_data->name);
 		rc = suite->meta_data->teardown(suite->meta_data->priv);
 		if (rc) {
@@ -325,7 +325,7 @@ static void ipa_ut_dbgfs_meta_test_write_work_func(struct work_struct *work)
 			goto release_clock;
 		}
 	} else {
-		pr_info("*** Suite '%s': No Teardown ***\n",
+		pr_debug("*** Suite '%s': No Teardown ***\n",
 			suite->meta_data->name);
 	}
 
@@ -573,11 +573,11 @@ static void ipa_ut_dbgfs_test_write_work_func(struct work_struct *work)
 		tst_fail = true;
 	IPA_UT_DBG("*** Test %s - ***\n", tst_fail ? "FAIL" : "SUCCESS");
 	if (tst_fail) {
-		pr_info("=================>>>>>>>>>>>\n");
+		pr_debug("=================>>>>>>>>>>>\n");
 		ipa_ut_print_log_buf(_IPA_UT_TEST_LOG_BUF_NAME);
-		pr_info("**** TEST %s FAILED ****\n", test->name);
+		pr_debug("**** TEST %s FAILED ****\n", test->name);
 		ipa_ut_dump_fail_report_stack();
-		pr_info("<<<<<<<<<<<=================\n");
+		pr_debug("<<<<<<<<<<<=================\n");
 	}
 
 	if (suite->meta_data->teardown) {

@@ -440,7 +440,7 @@ skip_detect:
 	snd_emu8000_dma_chan(emu, 0, EMU8000_RAM_CLOSE);
 	snd_emu8000_dma_chan(emu, 1, EMU8000_RAM_CLOSE);
 
-	pr_info("EMU8000 [0x%lx]: %d KiB on-board DRAM detected\n",
+	pr_debug("EMU8000 [0x%lx]: %d KiB on-board DRAM detected\n",
 		    emu->port1, size/1024);
 
 	emu->mem_size = size;

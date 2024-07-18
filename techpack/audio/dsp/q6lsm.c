@@ -1987,7 +1987,7 @@ static int q6lsm_snd_cal_alloc(struct lsm_client *client,
 	}
 
 	if (!cal_block_found) {
-		pr_info("%s: cal not found for stage_idx %d\n", __func__, stage_idx);
+		pr_debug("%s: cal not found for stage_idx %d\n", __func__, stage_idx);
 		goto exit;
 	}
 
@@ -3122,7 +3122,7 @@ int __init q6lsm_init(void)
 					       &lsm_common.panic_on_timeout)))
 			lsm_common.panic_on_timeout = false;
 		else
-			pr_info("%s: panic_on_timeout debugfs flag is created\n", __func__);
+			pr_debug("%s: panic_on_timeout debugfs flag is created\n", __func__);
 	}
 #endif
 	return 0;

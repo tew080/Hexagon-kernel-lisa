@@ -1363,7 +1363,7 @@ static void dfc_svc_init(struct work_struct *work)
 
 	rtnl_unlock();
 
-	pr_info("Connection established with the DFC Service\n");
+	pr_debug("Connection established with the DFC Service\n");
 }
 
 static int dfc_svc_arrive(struct qmi_handle *qmi, struct qmi_service *svc)

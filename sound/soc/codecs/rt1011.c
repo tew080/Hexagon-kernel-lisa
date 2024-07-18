@@ -1139,7 +1139,7 @@ static int rt1011_bq_drc_coeff_get(struct snd_kcontrol *kcontrol,
 	else
 		return -EINVAL;
 
-	pr_info("%s, id.name=%s, mode_idx=%d\n", __func__,
+	pr_debug("%s, id.name=%s, mode_idx=%d\n", __func__,
 		ucontrol->id.name, mode_idx);
 	bq_drc_info = rt1011->bq_drc_params[mode_idx];
 
@@ -1183,7 +1183,7 @@ static int rt1011_bq_drc_coeff_put(struct snd_kcontrol *kcontrol,
 	memset(bq_drc_info, 0,
 		sizeof(struct rt1011_bq_drc_params) * RT1011_BQ_DRC_NUM);
 
-	pr_info("%s, id.name=%s, mode_idx=%d\n", __func__,
+	pr_debug("%s, id.name=%s, mode_idx=%d\n", __func__,
 		ucontrol->id.name, mode_idx);
 	for (i = 0; i < RT1011_BQ_DRC_NUM; i++) {
 		bq_drc_info[i].reg = params[i].reg;

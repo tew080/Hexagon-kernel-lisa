@@ -42,7 +42,7 @@
 
 #define IPA_UC_OFFLOAD_INFO(fmt, args...) \
 	do { \
-		pr_info(OFFLOAD_DRV_NAME " %s:%d " fmt, \
+		pr_debug(OFFLOAD_DRV_NAME " %s:%d " fmt, \
 			__func__, __LINE__, ## args); \
 		IPA_IPC_LOGGING(ipa3_get_ipc_logbuf(), \
 			OFFLOAD_DRV_NAME " %s:%d " fmt, ## args); \

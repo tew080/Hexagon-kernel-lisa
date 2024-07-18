@@ -158,7 +158,7 @@ static int __init test_bitfields(void)
 	u16_encode_bits(0, 0x60000);
 #endif
 
-	pr_info("tests passed\n");
+	pr_debug("tests passed\n");
 
 	return 0;
 }

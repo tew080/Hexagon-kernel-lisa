@@ -238,7 +238,7 @@ static int __init test_hexdump_init(void)
 		test_hexdump_overflow_set(i, true);
 
 	if (failed_tests == 0)
-		pr_info("all %u tests passed\n", total_tests);
+		pr_debug("all %u tests passed\n", total_tests);
 	else
 		pr_err("failed %u out of %u tests\n", failed_tests, total_tests);
 

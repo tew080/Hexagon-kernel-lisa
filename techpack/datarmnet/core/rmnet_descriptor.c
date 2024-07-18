@@ -101,7 +101,7 @@ void *rmnet_frag_pull(struct rmnet_frag_descriptor *frag_desc,
 	struct rmnet_fragment *frag, *tmp;
 
 	if (size >= frag_desc->len) {
-		pr_info("%s(): Pulling %u bytes from %u byte pkt. Dropping\n",
+		pr_debug("%s(): Pulling %u bytes from %u byte pkt. Dropping\n",
 			__func__, size, frag_desc->len);
 		rmnet_recycle_frag_descriptor(frag_desc, port);
 		return NULL;
@@ -145,7 +145,7 @@ void *rmnet_frag_trim(struct rmnet_frag_descriptor *frag_desc,
 	unsigned int eat;
 
 	if (!size) {
-		pr_info("%s(): Trimming %u byte pkt to 0. Dropping\n",
+		pr_debug("%s(): Trimming %u byte pkt to 0. Dropping\n",
 			__func__, frag_desc->len);
 		rmnet_recycle_frag_descriptor(frag_desc, port);
 		return NULL;

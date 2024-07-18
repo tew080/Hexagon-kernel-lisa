@@ -557,24 +557,24 @@ out:
 
 void qpic_dump_lcdc_reg(struct qpic_display_data *qpic_display)
 {
-	pr_info("%s\n", __func__);
-	pr_info("QPIC_REG_QPIC_LCDC_CTRL = %x\n",
+	pr_debug("%s\n", __func__);
+	pr_debug("QPIC_REG_QPIC_LCDC_CTRL = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_CTRL));
-	pr_info("QPIC_REG_QPIC_LCDC_CMD_DATA_CYCLE_CNT = %x\n",
+	pr_debug("QPIC_REG_QPIC_LCDC_CMD_DATA_CYCLE_CNT = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_CMD_DATA_CYCLE_CNT));
-	pr_info("QPIC_REG_QPIC_LCDC_CFG0 = %x\n",
+	pr_debug("QPIC_REG_QPIC_LCDC_CFG0 = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_CFG0));
-	pr_info("QPIC_REG_QPIC_LCDC_CFG1 = %x\n",
+	pr_debug("QPIC_REG_QPIC_LCDC_CFG1 = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_CFG1));
-	pr_info("QPIC_REG_QPIC_LCDC_CFG2 = %x\n",
+	pr_debug("QPIC_REG_QPIC_LCDC_CFG2 = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_CFG2));
-	pr_info("QPIC_REG_QPIC_LCDC_IRQ_EN = %x\n",
+	pr_debug("QPIC_REG_QPIC_LCDC_IRQ_EN = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_IRQ_EN));
-	pr_info("QPIC_REG_QPIC_LCDC_IRQ_STTS = %x\n",
+	pr_debug("QPIC_REG_QPIC_LCDC_IRQ_STTS = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_IRQ_STTS));
-	pr_info("QPIC_REG_QPIC_LCDC_STTS = %x\n",
+	pr_debug("QPIC_REG_QPIC_LCDC_STTS = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_STTS));
-	pr_info("QPIC_REG_QPIC_LCDC_FIFO_SOF = %x\n",
+	pr_debug("QPIC_REG_QPIC_LCDC_FIFO_SOF = %x\n",
 		QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_FIFO_SOF));
 }
 
@@ -595,7 +595,7 @@ int qpic_display_init(struct qpic_display_data *qpic_display)
 
 	qpic_lcdc_reset(qpic_display);
 
-	pr_info("%s QPIC version=%x\n", __func__,
+	pr_debug("%s QPIC version=%x\n", __func__,
 			QPIC_INP(qpic_display, QPIC_REG_LCDC_VERSION));
 	data = QPIC_INP(qpic_display, QPIC_REG_QPIC_LCDC_CTRL);
 	/* clear vsync wait , bam mode = 0*/
@@ -831,7 +831,7 @@ int qpic_display_on(struct qpic_display_data *qpic_display)
 	qpic_display_clk_ctrl(qpic_display, true);
 
 	if (qpic_display->is_qpic_on) {
-		pr_info("qpic already enabled\n");
+		pr_debug("qpic already enabled\n");
 		return rc;
 	}
 
@@ -848,7 +848,7 @@ int qpic_display_on(struct qpic_display_data *qpic_display)
 		}
 		qpic_display->is_panel_on = true;
 	} else {
-		pr_info("panel on function is not specified or panel already on\n");
+		pr_debug("panel on function is not specified or panel already on\n");
 		return 0;
 	}
 
@@ -923,7 +923,7 @@ static void qpic_display_fb_mark_dirty(struct drm_framebuffer *fb, struct drm_re
 	struct qpic_display_data *qpic_display = fb->dev->dev_private;
 
 	if (!qpic_display->is_qpic_on || !qpic_display->is_panel_on) {
-		pr_info("%s: qpic or panel is not enabled\n", __func__);
+		pr_debug("%s: qpic or panel is not enabled\n", __func__);
 		return;
 	}
 
@@ -1064,17 +1064,17 @@ static int qpic_get_panel_config(struct platform_device *pdev,
 
 	panel_name = of_get_property(np, "panel-name", NULL);
 	if (panel_name)
-		pr_info("%s: panel name = %s\n", __func__, panel_name);
+		pr_debug("%s: panel name = %s\n", __func__, panel_name);
 	else
-		pr_info("panel name not specified\n");
+		pr_debug("panel name not specified\n");
 
 	/* select panel according to panel name */
 	if (panel_name && !strcmp(panel_name, "ili_qvga")) {
-		pr_info("%s: select ili qvga lcdc panel\n");
+		pr_debug("%s: select ili qvga lcdc panel\n");
 		get_ili_qvga_panel_config(qpic_display);
 	} else {
 		/* select default panel */
-		pr_info("%s: select default panel\n");
+		pr_debug("%s: select default panel\n");
 		get_ili_qvga_panel_config(qpic_display);
 	}
 
@@ -1186,7 +1186,7 @@ int qpic_display_alloc_cmd_buf(struct qpic_display_data *qpic_display)
 		pr_err("%s cmd buf allocation failed\n", __func__);
 		return -ENOMEM;
 	}
-	pr_info("%s cmd_buf virt=%x phys=%x\n", __func__,
+	pr_debug("%s cmd_buf virt=%x phys=%x\n", __func__,
 		(int) qpic_display->cmd_buf_virt,
 		qpic_display->cmd_buf_phys);
 
@@ -1213,7 +1213,7 @@ int qpic_display_get_resource(struct qpic_display_data *qpic_display)
 		return -ENOMEM;
 	}
 	qpic_display->qpic_phys = res->start;
-	pr_info("MDSS QPIC HW Base phy_Address=0x%x virt=0x%x\n",
+	pr_debug("MDSS QPIC HW Base phy_Address=0x%x virt=0x%x\n",
 		(int) res->start,
 		(int) qpic_display->qpic_base);
 

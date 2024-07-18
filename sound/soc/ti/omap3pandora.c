@@ -227,7 +227,7 @@ static int __init omap3pandora_soc_init(void)
 	if (!machine_is_omap3_pandora())
 		return -ENODEV;
 
-	pr_info("OMAP3 Pandora SoC init\n");
+	pr_debug("OMAP3 Pandora SoC init\n");
 
 	ret = gpio_request(OMAP3_PANDORA_DAC_POWER_GPIO, "dac_power");
 	if (ret) {

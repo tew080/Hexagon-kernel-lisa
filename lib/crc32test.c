@@ -694,12 +694,12 @@ static int __init crc32c_test(void)
 
 	local_irq_restore(flags);
 
-	pr_info("crc32c: CRC_LE_BITS = %d\n", CRC_LE_BITS);
+	pr_debug("crc32c: CRC_LE_BITS = %d\n", CRC_LE_BITS);
 
 	if (errors)
 		pr_warn("crc32c: %d self tests failed\n", errors);
 	else {
-		pr_info("crc32c: self tests passed, processed %d bytes in %lld nsec\n",
+		pr_debug("crc32c: self tests passed, processed %d bytes in %lld nsec\n",
 			bytes, nsec);
 	}
 
@@ -736,7 +736,7 @@ static int __init crc32c_combine_test(void)
 	if (errors)
 		pr_warn("crc32c_combine: %d/%d self tests failed\n", errors, runs);
 	else
-		pr_info("crc32c_combine: %d self tests passed\n", runs);
+		pr_debug("crc32c_combine: %d self tests passed\n", runs);
 
 	return 0;
 }
@@ -781,13 +781,13 @@ static int __init crc32_test(void)
 
 	local_irq_restore(flags);
 
-	pr_info("crc32: CRC_LE_BITS = %d, CRC_BE BITS = %d\n",
+	pr_debug("crc32: CRC_LE_BITS = %d, CRC_BE BITS = %d\n",
 		 CRC_LE_BITS, CRC_BE_BITS);
 
 	if (errors)
 		pr_warn("crc32: %d self tests failed\n", errors);
 	else {
-		pr_info("crc32: self tests passed, processed %d bytes in %lld nsec\n",
+		pr_debug("crc32: self tests passed, processed %d bytes in %lld nsec\n",
 			bytes, nsec);
 	}
 
@@ -824,7 +824,7 @@ static int __init crc32_combine_test(void)
 	if (errors)
 		pr_warn("crc32_combine: %d/%d self tests failed\n", errors, runs);
 	else
-		pr_info("crc32_combine: %d self tests passed\n", runs);
+		pr_debug("crc32_combine: %d self tests passed\n", runs);
 
 	return 0;
 }

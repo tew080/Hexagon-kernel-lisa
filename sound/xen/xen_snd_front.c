@@ -379,13 +379,13 @@ static int __init xen_drv_init(void)
 		return -ENODEV;
 	}
 
-	pr_info("Initialising Xen " XENSND_DRIVER_NAME " frontend driver\n");
+	pr_debug("Initialising Xen " XENSND_DRIVER_NAME " frontend driver\n");
 	return xenbus_register_frontend(&xen_driver);
 }
 
 static void __exit xen_drv_fini(void)
 {
-	pr_info("Unregistering Xen " XENSND_DRIVER_NAME " frontend driver\n");
+	pr_debug("Unregistering Xen " XENSND_DRIVER_NAME " frontend driver\n");
 	xenbus_unregister_driver(&xen_driver);
 }
 

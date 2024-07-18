@@ -146,7 +146,7 @@ static u8 swrm_get_device_id(struct swr_mstr_ctrl *swrm, u8 devnum)
 	}
 
 	if (i == (swrm->num_dev + 1)) {
-		pr_info("%s: could not find the slave\n", __func__);
+		pr_debug("%s: could not find the slave\n", __func__);
 		i = devnum;
 	}
 

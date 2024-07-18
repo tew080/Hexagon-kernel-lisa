@@ -52,7 +52,7 @@ static void *ipa_ecm_logbuf;
 
 #define ECM_IPA_INFO(fmt, args...) \
 	do { \
-		pr_info(DRIVER_NAME "@%s@%d@ctx:%s: "\
+		pr_debug(DRIVER_NAME "@%s@%d@ctx:%s: "\
 			fmt, __func__, __LINE__, current->comm, ## args);\
 		if (ipa_ecm_logbuf) { \
 			IPA_ECM_IPC_LOGGING(ipa_ecm_logbuf, \
@@ -1469,7 +1469,7 @@ static const char *ecm_ipa_state_string(enum ecm_ipa_state state)
 static int __init ecm_ipa_init_module(void)
 {
 	ECM_IPA_LOG_ENTRY();
-	pr_info("ecm driver init\n");
+	pr_debug("ecm driver init\n");
 	ipa_ecm_logbuf = ipc_log_context_create(IPA_ECM_IPC_LOG_PAGES,
 			"ipa_ecm", 0);
 	if (ipa_ecm_logbuf == NULL)

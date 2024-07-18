@@ -42,7 +42,7 @@
 
 #define IPA_UT_INFO(fmt, args...) \
 	do { \
-		pr_info(IPA_UT_DRV_NAME " %s:%d " fmt, \
+		pr_debug(IPA_UT_DRV_NAME " %s:%d " fmt, \
 			__func__, __LINE__, ## args); \
 		IPA_IPC_LOGGING(ipa3_get_ipc_logbuf(), \
 			IPA_UT_DRV_NAME " %s:%d " fmt, ## args); \

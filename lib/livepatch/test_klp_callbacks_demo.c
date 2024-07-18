@@ -21,10 +21,10 @@ static const char *const module_state[] = {
 static void callback_info(const char *callback, struct klp_object *obj)
 {
 	if (obj->mod)
-		pr_info("%s: %s -> %s\n", callback, obj->mod->name,
+		pr_debug("%s: %s -> %s\n", callback, obj->mod->name,
 			module_state[obj->mod->state]);
 	else
-		pr_info("%s: vmlinux\n", callback);
+		pr_debug("%s: vmlinux\n", callback);
 }
 
 /* Executed on object patching (ie, patch enablement) */
@@ -54,7 +54,7 @@ static void post_unpatch_callback(struct klp_object *obj)
 
 static void patched_work_func(struct work_struct *work)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 }
 
 static struct klp_func no_funcs[] = {

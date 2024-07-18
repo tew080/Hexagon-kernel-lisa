@@ -688,7 +688,7 @@ static int s3c2412_i2s_resume(struct snd_soc_dai *dai)
 {
 	struct s3c_i2sv2_info *i2s = to_info(dai);
 
-	pr_info("dai_active %d, IISMOD %08x, IISCON %08x\n",
+	pr_debug("dai_active %d, IISMOD %08x, IISCON %08x\n",
 		dai->active, i2s->suspend_iismod, i2s->suspend_iiscon);
 
 	if (dai->active) {

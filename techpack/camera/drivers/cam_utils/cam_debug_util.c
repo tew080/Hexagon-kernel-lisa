@@ -265,7 +265,7 @@ void cam_debug_log(unsigned int module_id, const char *func, const int line,
 		vsnprintf(str_buffer, STR_BUFFER_MAX_LENGTH, fmt, args);
 
 		if ((debug_type == 0) || (debug_type == 2)) {
-			pr_info("CAM_DBG: %s: %s: %d: %s\n",
+			pr_debug("CAM_DBG: %s: %s: %d: %s\n",
 				cam_get_module_name(module_id),
 				func, line, str_buffer);
 		}

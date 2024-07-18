@@ -396,7 +396,7 @@ static int __init alsa_sound_init(void)
 		return -ENOMEM;
 	}
 #ifndef MODULE
-	pr_info("Advanced Linux Sound Architecture Driver Initialized.\n");
+	pr_debug("Advanced Linux Sound Architecture Driver Initialized.\n");
 #endif
 	return 0;
 }

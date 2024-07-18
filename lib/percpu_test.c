@@ -27,7 +27,7 @@ static int __init percpu_test_init(void)
 	long l = 0;
 	unsigned long ul = 0;
 
-	pr_info("percpu test start\n");
+	pr_debug("percpu test start\n");
 
 	preempt_disable();
 
@@ -123,7 +123,7 @@ static int __init percpu_test_init(void)
 
 	preempt_enable();
 
-	pr_info("percpu test done\n");
+	pr_debug("percpu test done\n");
 	return -EAGAIN;  /* Fail will directly unload the module */
 }
 

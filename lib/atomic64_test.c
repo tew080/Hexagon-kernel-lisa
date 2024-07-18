@@ -251,7 +251,7 @@ static __init int test_atomics_init(void)
 	test_atomic64();
 
 #ifdef CONFIG_X86
-	pr_info("passed for %s platform %s CX8 and %s SSE\n",
+	pr_debug("passed for %s platform %s CX8 and %s SSE\n",
 #ifdef CONFIG_X86_64
 		"x86-64",
 #elif defined(CONFIG_X86_CMPXCHG64)
@@ -262,7 +262,7 @@ static __init int test_atomics_init(void)
 	       boot_cpu_has(X86_FEATURE_CX8) ? "with" : "without",
 	       boot_cpu_has(X86_FEATURE_XMM) ? "with" : "without");
 #else
-	pr_info("passed\n");
+	pr_debug("passed\n");
 #endif
 
 	return 0;
