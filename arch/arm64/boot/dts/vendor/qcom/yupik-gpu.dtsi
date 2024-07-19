@@ -195,7 +195,7 @@
 
 				qcom,gpu-pwrlevel3 {
 					reg = <3>;
-					qcom,gpu-freq = <190000000>;
+					qcom,gpu-freq = <180000000>;
 					qcom,level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
 					qcom,bus-freq-ddr7 = <2>;
 					qcom,bus-min-ddr7 = <1>;
