@@ -382,7 +382,7 @@
 		compatible = "shared-dma-pool";
 		alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
 		reusable;
-		alignment = <0x0 0x400000>;
+		alignment = <0x0 0x800000>;
 		size = <0x0 0xC00000>;
 	};
 
@@ -484,7 +484,7 @@
 		compatible = "shared-dma-pool";
 		alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
 		reusable;
-		alignment = <0x0 0x400000>;
+		alignment = <0x0 0x800000>;
 		size = <0x0 0x1000000>;
 	};
 
