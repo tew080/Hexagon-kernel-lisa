@@ -6007,9 +6007,9 @@ out_put_task:
 }
 
 char sched_lib_name[LIB_PATH_LENGTH] =
-{ "com.miHoYo.,com.activision.,libunity.so,libil2cpp.so,libmain.so"
+{ "com.miHoYo.,com.activision.,UnityMain,libunity.so,libil2cpp.so,libfb.so"
 };
-unsigned int sched_lib_mask_force = 255;
+unsigned int sched_lib_mask_force = 240;
 bool is_sched_lib_based_app(pid_t pid)
 {
 	const char *name = NULL;
