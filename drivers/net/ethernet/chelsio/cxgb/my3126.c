@@ -16,7 +16,7 @@ static int my3126_reset(struct cphy *cphy, int wait)
 
 static int my3126_interrupt_enable(struct cphy *cphy)
 {
-	queue_delayed_work(system_power_efficient_wq,&cphy->phy_update, HZ/30);
+	schedule_delayed_work(&cphy->phy_update, HZ/30);
 	t1_tpi_read(cphy->adapter, A_ELMER0_GPO, &cphy->elmer_gpo);
 	return 0;
 }

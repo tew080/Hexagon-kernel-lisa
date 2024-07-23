@@ -1586,7 +1586,7 @@ void iwl_mvm_channel_switch_noa_notif(struct iwl_mvm *mvm,
 
 		IWL_DEBUG_INFO(mvm, "Channel Switch Started Notification\n");
 
-		queue_delayed_work(system_power_efficient_wq,&mvm->cs_tx_unblock_dwork,
+		schedule_delayed_work(&mvm->cs_tx_unblock_dwork,
 				      msecs_to_jiffies(IWL_MVM_CS_UNBLOCK_TX_TIMEOUT *
 						       csa_vif->bss_conf.beacon_int));
 

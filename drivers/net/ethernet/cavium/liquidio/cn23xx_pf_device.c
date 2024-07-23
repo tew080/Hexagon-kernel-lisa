@@ -700,7 +700,7 @@ static void cn23xx_pf_mbox_thread(struct work_struct *work)
 			}
 		}
 
-		queue_delayed_work(system_power_efficient_wq,&wk->work, msecs_to_jiffies(10));
+		schedule_delayed_work(&wk->work, msecs_to_jiffies(10));
 	} else {
 		octeon_mbox_process_message(mbox);
 	}
@@ -756,7 +756,7 @@ static int cn23xx_setup_pf_mbox(struct octeon_device *oct)
 	}
 
 	if (oct->rev_id < OCTEON_CN23XX_REV_1_1)
-		queue_delayed_work(system_power_efficient_wq,&oct->mbox[0]->mbox_poll_wk.work,
+		schedule_delayed_work(&oct->mbox[0]->mbox_poll_wk.work,
 				      msecs_to_jiffies(0));
 
 	return 0;
@@ -997,7 +997,7 @@ static void cn23xx_handle_pf_mbox_intr(struct octeon_device *oct)
 			       oct->mbox[0]->mbox_int_reg);
 			if (octeon_mbox_read(oct->mbox[q_no])) {
 				work = &oct->mbox[q_no]->mbox_poll_wk.work;
-				queue_delayed_work(system_power_efficient_wq,work,
+				schedule_delayed_work(work,
 						      msecs_to_jiffies(0));
 			}
 		}

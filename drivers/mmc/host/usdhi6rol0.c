@@ -1070,7 +1070,7 @@ static int usdhi6_rq_start(struct usdhi6_host *host)
 	usdhi6_wait_for_resp(host);
 
 	host->wait = USDHI6_WAIT_FOR_CMD;
-	queue_delayed_work(system_power_efficient_wq,&host->timeout_work, host->timeout);
+	schedule_delayed_work(&host->timeout_work, host->timeout);
 
 	/* SEC bit is required to enable block counting by the core */
 	usdhi6_write(host, USDHI6_SD_STOP,
@@ -1524,7 +1524,7 @@ static irqreturn_t usdhi6_sd_bh(int irq, void *dev_id)
 	}
 
 	if (io_wait) {
-		queue_delayed_work(system_power_efficient_wq,&host->timeout_work, host->timeout);
+		schedule_delayed_work(&host->timeout_work, host->timeout);
 		/* Wait for more data or ACCESS_END */
 		if (!host->dma_active)
 			usdhi6_wait_for_brwe(host, mrq->data->flags & MMC_DATA_READ);
@@ -1541,7 +1541,7 @@ static irqreturn_t usdhi6_sd_bh(int irq, void *dev_id)
 					/* Sending STOP */
 					usdhi6_wait_for_resp(host);
 
-					queue_delayed_work(system_power_efficient_wq,&host->timeout_work,
+					schedule_delayed_work(&host->timeout_work,
 							      host->timeout);
 
 					return IRQ_HANDLED;

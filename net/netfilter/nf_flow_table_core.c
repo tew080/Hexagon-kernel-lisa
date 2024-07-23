@@ -341,7 +341,7 @@ static void nf_flow_offload_work_gc(struct work_struct *work)
 
 	flow_table = container_of(work, struct nf_flowtable, gc_work.work);
 	nf_flow_table_iterate(flow_table, nf_flow_offload_gc_step, flow_table);
-	queue_delayed_work(system_power_efficient_wq, &flow_table->gc_work, HZ);
+	schedule_delayed_work( &flow_table->gc_work, HZ);
 }
 
 static int nf_flow_nat_port_tcp(struct sk_buff *skb, unsigned int thoff,
@@ -471,7 +471,7 @@ int nf_flow_table_init(struct nf_flowtable *flowtable)
 	if (err < 0)
 		return err;
 
-	queue_delayed_work(system_power_efficient_wq,
+	schedule_delayed_work(
 			   &flowtable->gc_work, HZ);
 
 	mutex_lock(&flowtable_lock);

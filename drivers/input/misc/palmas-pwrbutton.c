@@ -77,7 +77,7 @@ static void palmas_power_button_work(struct work_struct *work)
 		input_sync(input_dev);
 	} else {
 		/* The button is still depressed, keep checking. */
-		queue_delayed_work(system_power_efficient_wq,&pwron->input_work,
+		schedule_delayed_work(&pwron->input_work,
 				msecs_to_jiffies(PALMAS_PWR_KEY_Q_TIME_MS));
 	}
 }

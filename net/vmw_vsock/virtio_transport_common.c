@@ -826,7 +826,7 @@ static bool virtio_transport_close(struct vsock_sock *vsk)
 	INIT_DELAYED_WORK(&vsk->close_work,
 			  virtio_transport_close_timeout);
 	vsk->close_work_scheduled = true;
-	queue_delayed_work(system_power_efficient_wq,&vsk->close_work, VSOCK_CLOSE_TIMEOUT);
+	schedule_delayed_work(&vsk->close_work, VSOCK_CLOSE_TIMEOUT);
 	return false;
 }
 

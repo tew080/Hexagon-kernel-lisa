@@ -1160,7 +1160,7 @@ static void iwl_mvm_uapsd_agg_disconnect(struct iwl_mvm *mvm,
 	mvm->tcm.data[mvmvif->id].uapsd_nonagg_detect.detected = true;
 	IWL_INFO(mvm,
 		 "detected AP should do aggregation but isn't, likely due to U-APSD\n");
-	queue_delayed_work(system_power_efficient_wq,&mvmvif->uapsd_nonagg_detected_wk, 15 * HZ);
+	schedule_delayed_work(&mvmvif->uapsd_nonagg_detected_wk, 15 * HZ);
 }
 
 static void iwl_mvm_check_uapsd_agg_expected_tpt(struct iwl_mvm *mvm,
@@ -1355,7 +1355,7 @@ void iwl_mvm_recalc_tcm(struct iwl_mvm *mvm)
 		smp_mb();
 		mvm->tcm.ts = ts;
 		if (work_delay)
-			queue_delayed_work(system_power_efficient_wq,&mvm->tcm.work, work_delay);
+			schedule_delayed_work(&mvm->tcm.work, work_delay);
 	}
 	spin_unlock(&mvm->tcm.lock);
 
@@ -1408,9 +1408,9 @@ void iwl_mvm_resume_tcm(struct iwl_mvm *mvm)
 	 * re-evaluation to cover the case of no traffic.
 	 */
 	if (mvm->tcm.result.global_load > IWL_MVM_TRAFFIC_LOW)
-		queue_delayed_work(system_power_efficient_wq,&mvm->tcm.work, MVM_TCM_PERIOD);
+		schedule_delayed_work(&mvm->tcm.work, MVM_TCM_PERIOD);
 	else if (low_latency)
-		queue_delayed_work(system_power_efficient_wq,&mvm->tcm.work, MVM_LL_PERIOD);
+		schedule_delayed_work(&mvm->tcm.work, MVM_LL_PERIOD);
 
 	spin_unlock_bh(&mvm->tcm.lock);
 }

@@ -826,7 +826,7 @@ static inline void l2cap_set_timer(struct l2cap_chan *chan,
 	if (!cancel_delayed_work(work))
 		l2cap_chan_hold(chan);
 
-	queue_delayed_work(system_power_efficient_wq,work, timeout);
+	schedule_delayed_work(work, timeout);
 }
 
 static inline bool l2cap_clear_timer(struct l2cap_chan *chan,

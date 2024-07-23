@@ -97,7 +97,7 @@ static void scif_qp_setup_handler(struct work_struct *work)
 			dev_err(&scifdev->sdev->dev,
 				"scif_qp_response err %d\n", err);
 	} else {
-		queue_delayed_work(system_power_efficient_wq,&scifdev->qp_dwork,
+		schedule_delayed_work(&scifdev->qp_dwork,
 				      msecs_to_jiffies(1000));
 	}
 }
@@ -178,7 +178,7 @@ static int scif_probe(struct scif_hw_dev *sdev)
 		iowrite8(scifdev->db, &bp->h2c_scif_db);
 		writeq(scifdev->qp_dma_addr, &bp->scif_card_dma_addr);
 	}
-	queue_delayed_work(system_power_efficient_wq,&scifdev->qp_dwork,
+	schedule_delayed_work(&scifdev->qp_dwork,
 			      msecs_to_jiffies(1000));
 	return rc;
 free_qp:

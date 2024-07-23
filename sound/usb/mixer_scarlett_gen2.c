@@ -742,7 +742,7 @@ static int scarlett2_usb_set_config(
 		return err;
 
 	/* Schedule the change to be written to NVRAM */
-	queue_delayed_work(system_power_efficient_wq,&private->work, msecs_to_jiffies(2000));
+	schedule_delayed_work(&private->work, msecs_to_jiffies(2000));
 
 	return 0;
 }

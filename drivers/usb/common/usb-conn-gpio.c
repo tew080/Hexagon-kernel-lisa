@@ -112,7 +112,7 @@ static void usb_conn_detect_cable(struct work_struct *work)
 static void usb_conn_queue_dwork(struct usb_conn_info *info,
 				 unsigned long delay)
 {
-	queue_delayed_work(system_power_efficient_wq, &info->dw_det, delay);
+	schedule_delayed_work( &info->dw_det, delay);
 }
 
 static irqreturn_t usb_conn_isr(int irq, void *dev_id)

@@ -853,7 +853,7 @@ void rfkill_resume_polling(struct rfkill *rfkill)
 	if (rfkill->suspended)
 		return;
 
-	queue_delayed_work(system_power_efficient_wq,
+	schedule_delayed_work(
 			   &rfkill->poll_work, 0);
 }
 EXPORT_SYMBOL(rfkill_resume_polling);
@@ -885,7 +885,7 @@ static int rfkill_resume(struct device *dev)
 	}
 
 	if (rfkill->ops->poll && !rfkill->polling_paused)
-		queue_delayed_work(system_power_efficient_wq,
+		schedule_delayed_work(
 				   &rfkill->poll_work, 0);
 
 	return 0;
@@ -973,7 +973,7 @@ static void rfkill_poll(struct work_struct *work)
 	 */
 	rfkill->ops->poll(rfkill, rfkill->data);
 
-	queue_delayed_work(system_power_efficient_wq,
+	schedule_delayed_work(
 		&rfkill->poll_work,
 		round_jiffies_relative(POLL_INTERVAL));
 }
@@ -1041,7 +1041,7 @@ int __must_check rfkill_register(struct rfkill *rfkill)
 	INIT_WORK(&rfkill->sync_work, rfkill_sync_work);
 
 	if (rfkill->ops->poll)
-		queue_delayed_work(system_power_efficient_wq,
+		schedule_delayed_work(
 			&rfkill->poll_work,
 			round_jiffies_relative(POLL_INTERVAL));
 

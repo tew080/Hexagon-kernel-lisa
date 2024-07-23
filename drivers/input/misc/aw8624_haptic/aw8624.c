@@ -551,7 +551,7 @@ static int aw8624_ram_init(struct aw8624 *aw8624)
 #ifdef AWINIC_RAM_UPDATE_DELAY
 	int ram_timer_val = 10000;
 	INIT_DELAYED_WORK(&aw8624->ram_work, aw8624_ram_work_routine);
-	//queue_delayed_work(system_power_efficient_wq,&aw8624->ram_work,
+	//schedule_delayed_work(&aw8624->ram_work,
 	//msecs_to_jiffies(ram_timer_val));
 	queue_delayed_work(aw8624->work_queue, &aw8624->ram_work,
 			   msecs_to_jiffies(ram_timer_val));

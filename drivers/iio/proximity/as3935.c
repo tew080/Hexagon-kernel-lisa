@@ -283,7 +283,7 @@ static irqreturn_t as3935_interrupt_handler(int irq, void *private)
 	 * estimated distance to recalculated.
 	 */
 
-	queue_delayed_work(system_power_efficient_wq,&st->work, msecs_to_jiffies(3));
+	schedule_delayed_work(&st->work, msecs_to_jiffies(3));
 
 	return IRQ_HANDLED;
 }

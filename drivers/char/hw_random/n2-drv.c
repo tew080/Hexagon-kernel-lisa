@@ -439,7 +439,7 @@ static int n2rng_data_read(struct hwrng *rng, u32 *data)
 			dev_err(&np->op->dev, "RNG error, retesting\n");
 			np->flags &= ~N2RNG_FLAG_READY;
 			if (!(np->flags & N2RNG_FLAG_SHUTDOWN))
-				queue_delayed_work(system_power_efficient_wq,&np->work, 0);
+				schedule_delayed_work(&np->work, 0);
 			len = 0;
 		}
 	}
@@ -681,7 +681,7 @@ static void n2rng_work(struct work_struct *work)
 	if (--retries == 0)
 		dev_err(&np->op->dev, "Self-test retries failed, RNG not ready\n");
 	else if (err && !(np->flags & N2RNG_FLAG_SHUTDOWN))
-		queue_delayed_work(system_power_efficient_wq,&np->work, HZ * 2);
+		schedule_delayed_work(&np->work, HZ * 2);
 }
 
 static void n2rng_driver_version(void)
@@ -774,7 +774,7 @@ static int n2rng_probe(struct platform_device *op)
 
 	platform_set_drvdata(op, np);
 
-	queue_delayed_work(system_power_efficient_wq,&np->work, 0);
+	schedule_delayed_work(&np->work, 0);
 
 	return 0;
 

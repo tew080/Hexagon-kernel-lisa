@@ -145,7 +145,7 @@ void charlcd_poke(struct charlcd *lcd)
 	if (!priv->bl_tempo && !(priv->flags & LCD_FLAG_L))
 		lcd->ops->backlight(lcd, 1);
 	priv->bl_tempo = true;
-	queue_delayed_work(system_power_efficient_wq,&priv->bl_work, LCD_BL_TEMPO_PERIOD * HZ);
+	schedule_delayed_work(&priv->bl_work, LCD_BL_TEMPO_PERIOD * HZ);
 	mutex_unlock(&priv->bl_tempo_lock);
 }
 EXPORT_SYMBOL_GPL(charlcd_poke);

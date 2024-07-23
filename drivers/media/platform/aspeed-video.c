@@ -540,7 +540,7 @@ static void aspeed_video_irq_res_change(struct aspeed_video *video, ulong delay)
 	aspeed_video_off(video);
 	aspeed_video_bufs_done(video, VB2_BUF_STATE_ERROR);
 
-	queue_delayed_work(system_power_efficient_wq,&video->res_work, delay);
+	schedule_delayed_work(&video->res_work, delay);
 }
 
 static irqreturn_t aspeed_video_irq(int irq, void *arg)

@@ -1036,7 +1036,7 @@ static void ll_temac_recv(struct net_device *ndev)
 	 * enough buffers are available again.
 	 */
 	if (ll_temac_recv_buffers_available(lp) < lp->coalesce_count_rx)
-		queue_delayed_work(system_power_efficient_wq,&lp->restart_work, HZ / 1000);
+		schedule_delayed_work(&lp->restart_work, HZ / 1000);
 
 	/* Allocate new buffers for those buffer descriptors that were
 	 * passed to network stack.  Note that GFP_ATOMIC allocations

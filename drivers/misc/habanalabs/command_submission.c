@@ -223,7 +223,7 @@ static void cs_do_release(struct kref *ref)
 
 			if ((next) && (!next->tdr_active)) {
 				next->tdr_active = true;
-				queue_delayed_work(system_power_efficient_wq,&next->work_tdr,
+				schedule_delayed_work(&next->work_tdr,
 							hdev->timeout_jiffies);
 			}
 

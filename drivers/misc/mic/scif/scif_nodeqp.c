@@ -733,7 +733,7 @@ scif_exit(struct scif_dev *scifdev, struct scifmsg *unused)
 		scif_disconnect_node(scifdev->node, false);
 	else
 		scif_stop(scifdev);
-	queue_delayed_work(system_power_efficient_wq,&scifdev->qp_dwork,
+	schedule_delayed_work(&scifdev->qp_dwork,
 			      msecs_to_jiffies(1000));
 }
 
@@ -859,7 +859,7 @@ void scif_poll_qp_state(struct work_struct *work)
 				qp->qp_state);
 			goto timeout;
 		}
-		queue_delayed_work(system_power_efficient_wq,&peerdev->p2p_dwork,
+		schedule_delayed_work(&peerdev->p2p_dwork,
 				      msecs_to_jiffies(SCIF_NODE_QP_TIMEOUT));
 		return;
 	}
@@ -922,7 +922,7 @@ scif_node_add_ack(struct scif_dev *scifdev, struct scifmsg *msg)
 
 	scif_peer_register_device(peerdev);
 
-	queue_delayed_work(system_power_efficient_wq,&peerdev->p2p_dwork, 0);
+	schedule_delayed_work(&peerdev->p2p_dwork, 0);
 	return;
 local_error:
 	scif_cleanup_scifdev(peerdev);

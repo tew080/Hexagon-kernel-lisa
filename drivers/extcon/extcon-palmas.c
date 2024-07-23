@@ -138,7 +138,7 @@ static irqreturn_t palmas_gpio_id_irq_handler(int irq, void *_palmas_usb)
 {
 	struct palmas_usb *palmas_usb = _palmas_usb;
 
-	queue_delayed_work(system_power_efficient_wq, &palmas_usb->wq_detectid,
+	schedule_delayed_work( &palmas_usb->wq_detectid,
 			   palmas_usb->sw_debounce_jiffies);
 
 	return IRQ_HANDLED;

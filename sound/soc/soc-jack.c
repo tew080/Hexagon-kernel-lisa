@@ -279,7 +279,7 @@ static irqreturn_t gpio_handler(int irq, void *data)
 	if (device_may_wakeup(dev))
 		pm_wakeup_event(dev, gpio->debounce_time + 50);
 
-	queue_delayed_work(system_power_efficient_wq, &gpio->work,
+	schedule_delayed_work( &gpio->work,
 			      msecs_to_jiffies(gpio->debounce_time));
 
 	return IRQ_HANDLED;
@@ -308,7 +308,7 @@ static int snd_soc_jack_pm_notifier(struct notifier_block *nb,
 		 * Use workqueue so we do not have to care about running
 		 * concurrently with work triggered by the interrupt handler.
 		 */
-		queue_delayed_work(system_power_efficient_wq, &gpio->work, 0);
+		schedule_delayed_work( &gpio->work, 0);
 		break;
 	}
 
@@ -432,7 +432,7 @@ got_gpio:
 		gpiod_export(gpios[i].desc, false);
 
 		/* Update initial jack status */
-		queue_delayed_work(system_power_efficient_wq,&gpios[i].work,
+		schedule_delayed_work(&gpios[i].work,
 				      msecs_to_jiffies(gpios[i].debounce_time));
 	}
 

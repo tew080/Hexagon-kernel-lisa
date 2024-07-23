@@ -70,7 +70,7 @@ int fsl8250_handle_irq(struct uart_port *port)
 		}
 
 		delay = msecs_to_jiffies(up->overrun_backoff_time_ms);
-		queue_delayed_work(system_power_efficient_wq,&up->overrun_backoff, delay);
+		schedule_delayed_work(&up->overrun_backoff, delay);
 	}
 
 	serial8250_modem_status(up);

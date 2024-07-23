@@ -192,7 +192,7 @@ static void gta02_charger_worker(struct work_struct *work)
 static void gta02_pmu_event_callback(struct pcf50633 *pcf, int irq)
 {
 	if (irq == PCF50633_IRQ_USBINS) {
-		queue_delayed_work(system_power_efficient_wq,&gta02_charger_work,
+		schedule_delayed_work(&gta02_charger_work,
 				      GTA02_CHARGER_CONFIGURE_TIMEOUT);
 
 		return;
@@ -211,7 +211,7 @@ static void gta02_udc_vbus_draw(unsigned int ma)
 
 	gta02_usb_vbus_draw = ma;
 
-	queue_delayed_work(system_power_efficient_wq,&gta02_charger_work,
+	schedule_delayed_work(&gta02_charger_work,
 			      GTA02_CHARGER_CONFIGURE_TIMEOUT);
 }
 #else /* !CONFIG_CHARGER_PCF50633 */

@@ -305,7 +305,7 @@ static irqreturn_t cpcap_phy_irq_thread(int irq, void *data)
 	if (!atomic_read(&ddata->active))
 		return IRQ_NONE;
 
-	queue_delayed_work(system_power_efficient_wq,&ddata->detect_work, msecs_to_jiffies(1));
+	schedule_delayed_work(&ddata->detect_work, msecs_to_jiffies(1));
 
 	return IRQ_HANDLED;
 }
@@ -653,7 +653,7 @@ static int cpcap_usb_phy_probe(struct platform_device *pdev)
 
 	usb_add_phy_dev(&ddata->phy);
 	atomic_set(&ddata->active, 1);
-	queue_delayed_work(system_power_efficient_wq,&ddata->detect_work, msecs_to_jiffies(1));
+	schedule_delayed_work(&ddata->detect_work, msecs_to_jiffies(1));
 
 	return 0;
 

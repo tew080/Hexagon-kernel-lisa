@@ -657,7 +657,7 @@ static void hda_jackpoll_work(struct work_struct *work)
 	if (!codec->jackpoll_interval)
 		return;
 
-	queue_delayed_work(system_power_efficient_wq,&codec->jackpoll_work,
+	schedule_delayed_work(&codec->jackpoll_work,
 			      codec->jackpoll_interval);
 }
 
@@ -2977,7 +2977,7 @@ static int hda_codec_force_resume(struct device *dev)
 	/* schedule jackpoll work for jack detection update */
 	if (codec->jackpoll_interval ||
 	    (pm_runtime_suspended(dev) && hda_codec_need_resume(codec)))
-		queue_delayed_work(system_power_efficient_wq,&codec->jackpoll_work,
+		schedule_delayed_work(&codec->jackpoll_work,
 				      codec->jackpoll_interval);
 	return ret;
 }

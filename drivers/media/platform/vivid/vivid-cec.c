@@ -169,7 +169,7 @@ static void vivid_cec_xfer_try_worker(struct work_struct *work)
 		dev->cec_xfer_start_jiffies = jiffies;
 		dev->cec_xfer_time_jiffies = usecs_to_jiffies(cw->usecs);
 		spin_unlock(&dev->cec_slock);
-		queue_delayed_work(system_power_efficient_wq,&cw->work, dev->cec_xfer_time_jiffies);
+		schedule_delayed_work(&cw->work, dev->cec_xfer_time_jiffies);
 	}
 }
 
@@ -218,7 +218,7 @@ static int vivid_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
 			dev->cec_xfer_time_jiffies - jiffies;
 	}
 	spin_unlock(&dev->cec_slock);
-	queue_delayed_work(system_power_efficient_wq,&cw->work, delta_jiffies < 0 ? 0 : delta_jiffies);
+	schedule_delayed_work(&cw->work, delta_jiffies < 0 ? 0 : delta_jiffies);
 	return 0;
 }
 

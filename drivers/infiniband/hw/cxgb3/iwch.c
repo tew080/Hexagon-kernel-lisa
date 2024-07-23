@@ -240,7 +240,7 @@ static void iwch_event_handler(struct t3cdev *tdev, u32 evt, u32 port_id)
 		/*
 		 * delay is between 1000-2023 usecs.
 		 */
-		queue_delayed_work(system_power_efficient_wq,&rnicp->db_drop_task,
+		schedule_delayed_work(&rnicp->db_drop_task,
 			usecs_to_jiffies(delay));
 		break;
 		}

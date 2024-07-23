@@ -883,7 +883,7 @@ static void afu_handle_errstate(struct work_struct *work)
 		return;
 
 	if (afu_guest->handle_err)
-		queue_delayed_work(system_power_efficient_wq,&afu_guest->work_err,
+		schedule_delayed_work(&afu_guest->work_err,
 				      msecs_to_jiffies(3000));
 }
 
@@ -991,7 +991,7 @@ int cxl_guest_init_afu(struct cxl *adapter, int slice, struct device_node *afu_n
 	afu->guest->parent = afu;
 	afu->guest->handle_err = true;
 	INIT_DELAYED_WORK(&afu->guest->work_err, afu_handle_errstate);
-	queue_delayed_work(system_power_efficient_wq,&afu->guest->work_err, msecs_to_jiffies(1000));
+	schedule_delayed_work(&afu->guest->work_err, msecs_to_jiffies(1000));
 
 	if ((rc = cxl_pci_vphb_add(afu)))
 		dev_info(&afu->dev, "Can't register vPHB\n");

@@ -209,7 +209,7 @@ static inline void nf_conntrack_ecache_delayed_work(struct net *net)
 {
 #ifdef CONFIG_NF_CONNTRACK_EVENTS
 	if (!delayed_work_pending(&net->ct.ecache_dwork)) {
-		queue_delayed_work(system_power_efficient_wq,&net->ct.ecache_dwork, HZ);
+		schedule_delayed_work(&net->ct.ecache_dwork, HZ);
 		net->ct.ecache_dwork_pending = true;
 	}
 #endif

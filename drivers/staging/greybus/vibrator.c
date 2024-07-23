@@ -59,7 +59,7 @@ static int turn_on(struct gb_vibrator_device *vib, u16 timeout_ms)
 		return ret;
 	}
 
-	queue_delayed_work(system_power_efficient_wq,&vib->delayed_work, msecs_to_jiffies(timeout_ms));
+	schedule_delayed_work(&vib->delayed_work, msecs_to_jiffies(timeout_ms));
 
 	return 0;
 }

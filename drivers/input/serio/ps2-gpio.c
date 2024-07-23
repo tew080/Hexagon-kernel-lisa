@@ -87,7 +87,7 @@ static int __ps2_gpio_write(struct serio *serio, unsigned char val)
 	drvdata->mode = PS2_MODE_TX;
 	drvdata->tx_byte = val;
 
-	queue_delayed_work(system_power_efficient_wq,&drvdata->tx_work, usecs_to_jiffies(200));
+	schedule_delayed_work(&drvdata->tx_work, usecs_to_jiffies(200));
 
 	return 0;
 }

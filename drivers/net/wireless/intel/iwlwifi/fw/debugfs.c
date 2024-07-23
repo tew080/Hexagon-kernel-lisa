@@ -210,7 +210,7 @@ static void iwl_fw_timestamp_marker_wk(struct work_struct *work)
 
 	ret = iwl_fw_send_timestamp_marker_cmd(fwrt);
 	if (!ret && delay)
-		queue_delayed_work(system_power_efficient_wq,&fwrt->timestamp.wk,
+		schedule_delayed_work(&fwrt->timestamp.wk,
 				      round_jiffies_relative(delay));
 	else
 		IWL_INFO(fwrt,
@@ -228,7 +228,7 @@ void iwl_fw_trigger_timestamp(struct iwl_fw_runtime *fwrt, u32 delay)
 
 	fwrt->timestamp.delay = msecs_to_jiffies(delay * 1000);
 
-	queue_delayed_work(system_power_efficient_wq,&fwrt->timestamp.wk,
+	schedule_delayed_work(&fwrt->timestamp.wk,
 			      round_jiffies_relative(fwrt->timestamp.delay));
 }
 

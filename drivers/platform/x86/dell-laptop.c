@@ -703,7 +703,7 @@ static bool dell_laptop_i8042_filter(unsigned char data, unsigned char str,
 	} else if (unlikely(extended)) {
 		switch (data) {
 		case 0x8:
-			queue_delayed_work(system_power_efficient_wq,&dell_rfkill_work,
+			schedule_delayed_work(&dell_rfkill_work,
 					      round_jiffies_relative(HZ / 4));
 			break;
 		}
@@ -719,7 +719,7 @@ static int (*dell_rbtn_notifier_unregister_func)(struct notifier_block *);
 static int dell_laptop_rbtn_notifier_call(struct notifier_block *nb,
 					  unsigned long action, void *data)
 {
-	queue_delayed_work(system_power_efficient_wq,&dell_rfkill_work, 0);
+	schedule_delayed_work(&dell_rfkill_work, 0);
 	return NOTIFY_OK;
 }
 

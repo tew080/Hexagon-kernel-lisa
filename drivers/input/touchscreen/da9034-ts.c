@@ -188,7 +188,7 @@ static void da9034_event_handler(struct da9034_touch *touch, int event)
 	case STATE_STOP:
 		if (event == EVENT_PEN_DOWN) {
 			report_pen_down(touch);
-			queue_delayed_work(system_power_efficient_wq,&touch->tsi_work,
+			schedule_delayed_work(&touch->tsi_work,
 				msecs_to_jiffies(touch->interval_ms));
 			touch->state = STATE_WAIT;
 		}

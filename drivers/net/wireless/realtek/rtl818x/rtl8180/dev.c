@@ -1317,7 +1317,7 @@ resched:
 	 * schedule next beacon
 	 * TODO: use hardware support for beacon timing
 	 */
-	queue_delayed_work(system_power_efficient_wq,&vif_priv->beacon_work,
+	schedule_delayed_work(&vif_priv->beacon_work,
 			usecs_to_jiffies(1024 * vif->bss_conf.beacon_int));
 }
 

@@ -1362,7 +1362,7 @@ static irqreturn_t goodix_ts_threadirq_func(int irq, void *data)
 
 	if (atomic_read(&ts_esd->esd_on)) {
 		cancel_delayed_work_sync(&ts_esd->esd_work);
-		queue_delayed_work(system_power_efficient_wq, &ts_esd->esd_work, 2 * HZ);
+		schedule_delayed_work( &ts_esd->esd_work, 2 * HZ);
 	}
 
 #ifdef CONFIG_PM
@@ -1741,7 +1741,7 @@ static void goodix_ts_esd_work(struct work_struct *work)
 		/* 	hw_ops->reset(cd, GOODIX_NORMAL_RESET_DELAY_MS); */
 	}
 	if (atomic_read(&ts_esd->esd_on))
-		queue_delayed_work(system_power_efficient_wq, &ts_esd->esd_work, 2 * HZ);
+		schedule_delayed_work( &ts_esd->esd_work, 2 * HZ);
 }
 
 /**

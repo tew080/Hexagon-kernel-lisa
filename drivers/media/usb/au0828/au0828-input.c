@@ -222,7 +222,7 @@ static void au0828_rc_work(struct work_struct *work)
 	if (rc < 0)
 		pr_info("Error while getting RC scancode\n");
 
-	queue_delayed_work(system_power_efficient_wq,&ir->work, msecs_to_jiffies(ir->polling));
+	schedule_delayed_work(&ir->work, msecs_to_jiffies(ir->polling));
 }
 
 static int au0828_rc_start(struct rc_dev *rc)
@@ -234,7 +234,7 @@ static int au0828_rc_start(struct rc_dev *rc)
 	/* Enable IR */
 	au8522_rc_set(ir, 0xe0, 1 << 4);
 
-	queue_delayed_work(system_power_efficient_wq,&ir->work, msecs_to_jiffies(ir->polling));
+	schedule_delayed_work(&ir->work, msecs_to_jiffies(ir->polling));
 
 	return 0;
 }
@@ -392,7 +392,7 @@ int au0828_rc_resume(struct au0828_dev *dev)
 	/* Enable IR */
 	au8522_rc_set(ir, 0xe0, 1 << 4);
 
-	queue_delayed_work(system_power_efficient_wq,&ir->work, msecs_to_jiffies(ir->polling));
+	schedule_delayed_work(&ir->work, msecs_to_jiffies(ir->polling));
 
 	return 0;
 }

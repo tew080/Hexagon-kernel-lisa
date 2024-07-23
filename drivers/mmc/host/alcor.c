@@ -302,7 +302,7 @@ static void alcor_send_cmd(struct alcor_sdmmc_host *host,
 		else
 			timeout = 10000;
 
-		queue_delayed_work(system_power_efficient_wq,&host->timeout_work,
+		schedule_delayed_work(&host->timeout_work,
 				      msecs_to_jiffies(timeout));
 	}
 

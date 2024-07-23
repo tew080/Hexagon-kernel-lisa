@@ -485,7 +485,7 @@ static void mei_connect_timeout(struct mei_cl *cl)
  */
 void mei_schedule_stall_timer(struct mei_device *dev)
 {
-	queue_delayed_work(system_power_efficient_wq,&dev->timer_work, MEI_STALL_TIMER_FREQ);
+	schedule_delayed_work(&dev->timer_work, MEI_STALL_TIMER_FREQ);
 }
 
 /**

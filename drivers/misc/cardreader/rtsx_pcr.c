@@ -1045,7 +1045,7 @@ static irqreturn_t rtsx_pci_isr(int irq, void *dev_id)
 	}
 
 	if ((pcr->card_inserted || pcr->card_removed) && !(int_reg & SD_OC_INT))
-		queue_delayed_work(system_power_efficient_wq,&pcr->carddet_work,
+		schedule_delayed_work(&pcr->carddet_work,
 				msecs_to_jiffies(200));
 
 	spin_unlock(&pcr->lock);
@@ -1532,7 +1532,7 @@ static int rtsx_pci_probe(struct pci_dev *pcidev,
 	if (ret < 0)
 		goto free_slots;
 
-	queue_delayed_work(system_power_efficient_wq,&pcr->idle_work, msecs_to_jiffies(200));
+	schedule_delayed_work(&pcr->idle_work, msecs_to_jiffies(200));
 
 	return 0;
 
@@ -1660,7 +1660,7 @@ static int rtsx_pci_resume(struct pci_dev *pcidev)
 	if (ret)
 		goto out;
 
-	queue_delayed_work(system_power_efficient_wq,&pcr->idle_work, msecs_to_jiffies(200));
+	schedule_delayed_work(&pcr->idle_work, msecs_to_jiffies(200));
 
 out:
 	mutex_unlock(&pcr->pcr_mutex);

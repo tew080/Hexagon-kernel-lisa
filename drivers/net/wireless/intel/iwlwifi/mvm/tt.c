@@ -87,7 +87,7 @@ void iwl_mvm_enter_ctkill(struct iwl_mvm *mvm)
 	 * again (or disable testing).
 	 */
 	if (!mvm->temperature_test)
-		queue_delayed_work(system_power_efficient_wq,&tt->ct_kill_exit,
+		schedule_delayed_work(&tt->ct_kill_exit,
 				      round_jiffies_relative(duration * HZ));
 }
 
@@ -315,7 +315,7 @@ static void check_exit_ctkill(struct work_struct *work)
 
 reschedule:
 	mutex_unlock(&mvm->mutex);
-	queue_delayed_work(system_power_efficient_wq,&mvm->thermal_throttle.ct_kill_exit,
+	schedule_delayed_work(&mvm->thermal_throttle.ct_kill_exit,
 			      round_jiffies(duration * HZ));
 }
 

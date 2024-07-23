@@ -8104,7 +8104,7 @@ restart_ih:
 	if (queue_dp)
 		schedule_work(&rdev->dp_work);
 	if (queue_hotplug)
-		queue_delayed_work(system_power_efficient_wq,&rdev->hotplug_work, 0);
+		schedule_delayed_work(&rdev->hotplug_work, 0);
 	if (queue_reset) {
 		rdev->needs_reset = true;
 		wake_up_all(&rdev->fence_queue);

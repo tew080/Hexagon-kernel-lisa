@@ -890,7 +890,7 @@ static void ipw_led_link_on(struct ipw_priv *priv)
 
 		/* If we aren't associated, schedule turning the LED off */
 		if (!(priv->status & STATUS_ASSOCIATED))
-			queue_delayed_work(system_power_efficient_wq,&priv->led_link_off,
+			schedule_delayed_work(&priv->led_link_off,
 					      LD_TIME_LINK_ON);
 	}
 
@@ -934,7 +934,7 @@ static void ipw_led_link_off(struct ipw_priv *priv)
 		 * turning the LED on (blink while unassociated) */
 		if (!(priv->status & STATUS_RF_KILL_MASK) &&
 		    !(priv->status & STATUS_ASSOCIATED))
-			queue_delayed_work(system_power_efficient_wq,&priv->led_link_on,
+			schedule_delayed_work(&priv->led_link_on,
 					      LD_TIME_LINK_OFF);
 
 	}
@@ -975,11 +975,11 @@ static void __ipw_led_activity_on(struct ipw_priv *priv)
 		priv->status |= STATUS_LED_ACT_ON;
 
 		cancel_delayed_work(&priv->led_act_off);
-		queue_delayed_work(system_power_efficient_wq,&priv->led_act_off, LD_TIME_ACT_ON);
+		schedule_delayed_work(&priv->led_act_off, LD_TIME_ACT_ON);
 	} else {
 		/* Reschedule LED off for full time period */
 		cancel_delayed_work(&priv->led_act_off);
-		queue_delayed_work(system_power_efficient_wq,&priv->led_act_off, LD_TIME_ACT_ON);
+		schedule_delayed_work(&priv->led_act_off, LD_TIME_ACT_ON);
 	}
 }
 
@@ -1793,7 +1793,7 @@ static int ipw_radio_kill_sw(struct ipw_priv *priv, int disable_radio)
 					  "disabled by HW switch\n");
 			/* Make sure the RF_KILL check timer is running */
 			cancel_delayed_work(&priv->rf_kill);
-			queue_delayed_work(system_power_efficient_wq,&priv->rf_kill,
+			schedule_delayed_work(&priv->rf_kill,
 					      round_jiffies_relative(2 * HZ));
 		} else
 			schedule_work(&priv->up);
@@ -2046,7 +2046,7 @@ static void ipw_irq_tasklet(unsigned long data)
 		cancel_delayed_work(&priv->request_passive_scan);
 		cancel_delayed_work(&priv->scan_event);
 		schedule_work(&priv->link_down);
-		queue_delayed_work(system_power_efficient_wq,&priv->rf_kill, 2 * HZ);
+		schedule_delayed_work(&priv->rf_kill, 2 * HZ);
 		handled |= IPW_INTA_BIT_RF_KILL_DONE;
 	}
 
@@ -2363,7 +2363,7 @@ static void ipw_scan_check(void *data)
 			       "after (%dms).\n",
 			       jiffies_to_msecs(IPW_SCAN_CHECK_WATCHDOG));
 		ipw_abort_scan(priv);
-		queue_delayed_work(system_power_efficient_wq,&priv->scan_check, HZ);
+		schedule_delayed_work(&priv->scan_check, HZ);
 	}
 }
 
@@ -4361,7 +4361,7 @@ static void ipw_gather_stats(struct ipw_priv *priv)
 
 	priv->quality = quality;
 
-	queue_delayed_work(system_power_efficient_wq,&priv->gather_stats, IPW_STATS_INTERVAL);
+	schedule_delayed_work(&priv->gather_stats, IPW_STATS_INTERVAL);
 }
 
 static void ipw_bg_gather_stats(struct work_struct *work)
@@ -4425,7 +4425,7 @@ static void ipw_handle_missed_beacon(struct ipw_priv *priv,
 		if (!(priv->status & STATUS_ROAMING)) {
 			priv->status |= STATUS_ROAMING;
 			if (!(priv->status & STATUS_SCANNING))
-				queue_delayed_work(system_power_efficient_wq,&priv->request_scan, 0);
+				schedule_delayed_work(&priv->request_scan, 0);
 		}
 		return;
 	}
@@ -4460,7 +4460,7 @@ static void handle_scan_event(struct ipw_priv *priv)
 {
 	/* Only userspace-requested scan completion events go out immediately */
 	if (!priv->user_requested_scan) {
-		queue_delayed_work(system_power_efficient_wq,&priv->scan_event,
+		schedule_delayed_work(&priv->scan_event,
 				      round_jiffies_relative(msecs_to_jiffies(4000)));
 	} else {
 		priv->user_requested_scan = 0;
@@ -4506,7 +4506,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 
 						IPW_DEBUG_ASSOC
 						    ("queueing adhoc check\n");
-						queue_delayed_work(system_power_efficient_wq,
+						schedule_delayed_work(
 							&priv->adhoc_check,
 							le16_to_cpu(priv->
 							assoc_request.
@@ -4770,7 +4770,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 #ifdef CONFIG_IPW2200_MONITOR
 			if (priv->ieee->iw_mode == IW_MODE_MONITOR) {
 				priv->status |= STATUS_SCAN_FORCED;
-				queue_delayed_work(system_power_efficient_wq,&priv->request_scan, 0);
+				schedule_delayed_work(&priv->request_scan, 0);
 				break;
 			}
 			priv->status &= ~STATUS_SCAN_FORCED;
@@ -4778,7 +4778,7 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 
 			/* Do queued direct scans first */
 			if (priv->status & STATUS_DIRECT_SCAN_PENDING)
-				queue_delayed_work(system_power_efficient_wq,&priv->request_direct_scan, 0);
+				schedule_delayed_work(&priv->request_direct_scan, 0);
 
 			if (!(priv->status & (STATUS_ASSOCIATED |
 					      STATUS_ASSOCIATING |
@@ -4796,10 +4796,10 @@ static void ipw_rx_notification(struct ipw_priv *priv,
 					/* Don't schedule if we aborted the scan */
 					priv->status &= ~STATUS_ROAMING;
 			} else if (priv->status & STATUS_SCAN_PENDING)
-				queue_delayed_work(system_power_efficient_wq,&priv->request_scan, 0);
+				schedule_delayed_work(&priv->request_scan, 0);
 			else if (priv->config & CFG_BACKGROUND_SCAN
 				 && priv->status & STATUS_ASSOCIATED)
-				queue_delayed_work(system_power_efficient_wq,&priv->request_scan,
+				schedule_delayed_work(&priv->request_scan,
 						      round_jiffies_relative(HZ));
 
 			/* Send an empty event to user space.
@@ -6031,7 +6031,7 @@ static void ipw_adhoc_check(void *data)
 		return;
 	}
 
-	queue_delayed_work(system_power_efficient_wq,&priv->adhoc_check,
+	schedule_delayed_work(&priv->adhoc_check,
 			      le16_to_cpu(priv->assoc_request.beacon_interval));
 }
 
@@ -6420,7 +6420,7 @@ send_request:
 	} else
 		priv->status &= ~STATUS_SCAN_PENDING;
 
-	queue_delayed_work(system_power_efficient_wq,&priv->scan_check, IPW_SCAN_CHECK_WATCHDOG);
+	schedule_delayed_work(&priv->scan_check, IPW_SCAN_CHECK_WATCHDOG);
 done:
 	mutex_unlock(&priv->mutex);
 	return err;
@@ -7615,10 +7615,10 @@ static int ipw_associate(void *data)
 
 		if (!(priv->status & STATUS_SCANNING)) {
 			if (!(priv->config & CFG_SPEED_SCAN))
-				queue_delayed_work(system_power_efficient_wq,&priv->request_scan,
+				schedule_delayed_work(&priv->request_scan,
 						      SCAN_INTERVAL);
 			else
-				queue_delayed_work(system_power_efficient_wq,&priv->request_scan, 0);
+				schedule_delayed_work(&priv->request_scan, 0);
 		}
 
 		return 0;
@@ -9469,7 +9469,7 @@ static int ipw_wx_set_scan(struct net_device *dev,
 
 	IPW_DEBUG_WX("Start scan\n");
 
-	queue_delayed_work(system_power_efficient_wq,work, 0);
+	schedule_delayed_work(work, 0);
 
 	return 0;
 }
@@ -10556,7 +10556,7 @@ static void ipw_rf_kill(void *adapter)
 
 	if (rf_kill_active(priv)) {
 		IPW_DEBUG_RF_KILL("RF Kill active, rescheduling GPIO check\n");
-		queue_delayed_work(system_power_efficient_wq,&priv->rf_kill, 2 * HZ);
+		schedule_delayed_work(&priv->rf_kill, 2 * HZ);
 		goto exit_unlock;
 	}
 
@@ -10605,7 +10605,7 @@ static void ipw_link_up(struct ipw_priv *priv)
 	notify_wx_assoc_event(priv);
 
 	if (priv->config & CFG_BACKGROUND_SCAN)
-		queue_delayed_work(system_power_efficient_wq,&priv->request_scan, HZ);
+		schedule_delayed_work(&priv->request_scan, HZ);
 }
 
 static void ipw_bg_link_up(struct work_struct *work)
@@ -10634,7 +10634,7 @@ static void ipw_link_down(struct ipw_priv *priv)
 
 	if (!(priv->status & STATUS_EXIT_PENDING)) {
 		/* Queue up another scan... */
-		queue_delayed_work(system_power_efficient_wq,&priv->request_scan, 0);
+		schedule_delayed_work(&priv->request_scan, 0);
 	} else
 		cancel_delayed_work(&priv->scan_event);
 }
@@ -11210,7 +11210,7 @@ static int ipw_up(struct ipw_priv *priv)
 			IPW_WARNING("Radio Frequency Kill Switch is On:\n"
 				    "Kill switch must be turned off for "
 				    "wireless networking to work.\n");
-			queue_delayed_work(system_power_efficient_wq,&priv->rf_kill, 2 * HZ);
+			schedule_delayed_work(&priv->rf_kill, 2 * HZ);
 			return 0;
 		}
 
@@ -11220,7 +11220,7 @@ static int ipw_up(struct ipw_priv *priv)
 
 			/* If configure to try and auto-associate, kick
 			 * off a scan. */
-			queue_delayed_work(system_power_efficient_wq,&priv->request_scan, 0);
+			schedule_delayed_work(&priv->request_scan, 0);
 
 			return 0;
 		}

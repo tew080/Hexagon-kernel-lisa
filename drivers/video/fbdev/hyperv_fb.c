@@ -369,7 +369,7 @@ static void synthvid_recv_sub(struct hv_device *hdev)
 
 		par->update = msg->feature_chg.is_dirt_needed;
 		if (par->update)
-			queue_delayed_work(system_power_efficient_wq,&par->dwork, HVFB_UPDATE_DELAY);
+			schedule_delayed_work(&par->dwork, HVFB_UPDATE_DELAY);
 	}
 }
 
@@ -527,7 +527,7 @@ static void hvfb_update_work(struct work_struct *w)
 		synthvid_update(info);
 
 	if (par->update)
-		queue_delayed_work(system_power_efficient_wq,&par->dwork, HVFB_UPDATE_DELAY);
+		schedule_delayed_work(&par->dwork, HVFB_UPDATE_DELAY);
 }
 
 static int hvfb_on_panic(struct notifier_block *nb,

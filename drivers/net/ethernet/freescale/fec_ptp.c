@@ -529,7 +529,7 @@ static void fec_time_keep(struct work_struct *work)
 	}
 	mutex_unlock(&fep->ptp_clk_mutex);
 
-	queue_delayed_work(system_power_efficient_wq,&fep->time_keep, HZ);
+	schedule_delayed_work(&fep->time_keep, HZ);
 }
 
 /* This function checks the pps event and reloads the timer compare counter. */
@@ -627,7 +627,7 @@ void fec_ptp_init(struct platform_device *pdev, int irq_idx)
 		dev_err(&pdev->dev, "ptp_clock_register failed\n");
 	}
 
-	queue_delayed_work(system_power_efficient_wq,&fep->time_keep, HZ);
+	schedule_delayed_work(&fep->time_keep, HZ);
 }
 
 void fec_ptp_stop(struct platform_device *pdev)

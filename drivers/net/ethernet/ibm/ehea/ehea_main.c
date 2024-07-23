@@ -372,7 +372,7 @@ static void ehea_update_stats(struct work_struct *work)
 out_herr:
 	free_page((unsigned long)cb2);
 resched:
-	queue_delayed_work(system_power_efficient_wq,&port->stats_work,
+	schedule_delayed_work(&port->stats_work,
 			      round_jiffies_relative(msecs_to_jiffies(1000)));
 }
 
@@ -2416,7 +2416,7 @@ static int ehea_open(struct net_device *dev)
 	}
 
 	mutex_unlock(&port->port_lock);
-	queue_delayed_work(system_power_efficient_wq,&port->stats_work,
+	schedule_delayed_work(&port->stats_work,
 			      round_jiffies_relative(msecs_to_jiffies(1000)));
 
 	return ret;

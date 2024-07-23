@@ -1059,7 +1059,7 @@ void bolero_tx_macro_mute_hs(void)
 	reg_val = snd_soc_component_read32(component, reg);
 	dev_info(component->dev, "%s: the reg(%#x) value after mute is: %#x \n",
 			__func__, reg, reg_val);
-	queue_delayed_work(system_power_efficient_wq,&g_tx_priv->tx_hs_unmute_dwork,
+	schedule_delayed_work(&g_tx_priv->tx_hs_unmute_dwork,
 			msecs_to_jiffies(tx_unmute_delay_plugout));
 	return;
 }
@@ -1154,12 +1154,12 @@ static int tx_macro_enable_dec(struct snd_soc_dapm_widget *w,
 				unmute_delay = tx_dmic_unmute_delay;
 		}
 		/* schedule work queue to Remove Mute */
-		queue_delayed_work(system_power_efficient_wq, 
+		schedule_delayed_work( 
 				   &tx_priv->tx_mute_dwork[decimator].dwork,
 				   msecs_to_jiffies(unmute_delay));
 		if (tx_priv->tx_hpf_work[decimator].hpf_cut_off_freq !=
 							CF_MIN_3DB_150HZ)
-			queue_delayed_work(system_power_efficient_wq, 
+			schedule_delayed_work( 
 				&tx_priv->tx_hpf_work[decimator].dwork,
 				msecs_to_jiffies(hpf_delay));
 		snd_soc_component_update_bits(component,

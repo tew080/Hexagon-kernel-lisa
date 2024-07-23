@@ -407,7 +407,7 @@ static void dm9000_set_io(struct board_info *db, int byte_width)
 static void dm9000_schedule_poll(struct board_info *db)
 {
 	if (db->type == TYPE_DM9000E)
-		queue_delayed_work(system_power_efficient_wq,&db->phy_poll, HZ * 2);
+		schedule_delayed_work(&db->phy_poll, HZ * 2);
 }
 
 static int dm9000_ioctl(struct net_device *dev, struct ifreq *req, int cmd)
@@ -1228,7 +1228,7 @@ static irqreturn_t dm9000_interrupt(int irq, void *dev_id)
 	if (db->type != TYPE_DM9000E) {
 		if (int_status & ISR_LNKCHNG) {
 			/* fire a link-change request */
-			queue_delayed_work(system_power_efficient_wq,&db->phy_poll, 1);
+			schedule_delayed_work(&db->phy_poll, 1);
 		}
 	}
 
@@ -1329,7 +1329,7 @@ dm9000_open(struct net_device *dev)
 	netif_start_queue(dev);
 
 	/* Poll initial link status */
-	queue_delayed_work(system_power_efficient_wq,&db->phy_poll, 1);
+	schedule_delayed_work(&db->phy_poll, 1);
 
 	return 0;
 }

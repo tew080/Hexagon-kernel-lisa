@@ -56,7 +56,7 @@ static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
 {
 	struct gpio_extcon_data *data = dev_id;
 
-	queue_delayed_work(system_power_efficient_wq, &data->work,
+	schedule_delayed_work( &data->work,
 			      data->debounce_jiffies);
 	return IRQ_HANDLED;
 }
@@ -147,7 +147,7 @@ static int gpio_extcon_resume(struct device *dev)
 
 	data = dev_get_drvdata(dev);
 	if (data->check_on_resume)
-		queue_delayed_work(system_power_efficient_wq,
+		schedule_delayed_work(
 			&data->work, data->debounce_jiffies);
 
 	return 0;

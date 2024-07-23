@@ -2486,7 +2486,7 @@ netxen_schedule_work(struct netxen_adapter *adapter,
 		work_func_t func, int delay)
 {
 	INIT_DELAYED_WORK(&adapter->fw_work, func);
-	queue_delayed_work(system_power_efficient_wq,&adapter->fw_work, delay);
+	schedule_delayed_work(&adapter->fw_work, delay);
 }
 
 static void

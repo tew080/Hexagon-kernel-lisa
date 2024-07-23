@@ -270,7 +270,7 @@ static void tas5720_fault_check_work(struct work_struct *work)
 
 out:
 	/* Schedule the next fault check at the specified interval */
-	queue_delayed_work(system_power_efficient_wq,&tas5720->fault_check_work,
+	schedule_delayed_work(&tas5720->fault_check_work,
 			      msecs_to_jiffies(TAS5720_FAULT_CHECK_INTERVAL));
 }
 
@@ -388,7 +388,7 @@ static int tas5720_dac_event(struct snd_soc_dapm_widget *w,
 
 		/* Turn on TAS5720 periodic fault checking/handling */
 		tas5720->last_fault = 0;
-		queue_delayed_work(system_power_efficient_wq,&tas5720->fault_check_work,
+		schedule_delayed_work(&tas5720->fault_check_work,
 				msecs_to_jiffies(TAS5720_FAULT_CHECK_INTERVAL));
 	} else if (event & SND_SOC_DAPM_PRE_PMD) {
 		/* Disable TAS5720 periodic fault checking/handling */

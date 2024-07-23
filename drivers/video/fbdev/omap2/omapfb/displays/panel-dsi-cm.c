@@ -227,7 +227,7 @@ static int dsicm_set_update_window(struct panel_drv_data *ddata,
 static void dsicm_queue_ulps_work(struct panel_drv_data *ddata)
 {
 	if (ddata->ulps_timeout > 0)
-		queue_delayed_work(system_power_efficient_wq,&ddata->ulps_work,
+		schedule_delayed_work(&ddata->ulps_work,
 				msecs_to_jiffies(ddata->ulps_timeout));
 }
 
@@ -887,7 +887,7 @@ static int dsicm_update(struct omap_dss_device *dssdev,
 		goto err;
 
 	if (ddata->te_enabled && gpio_is_valid(ddata->ext_te_gpio)) {
-		queue_delayed_work(system_power_efficient_wq,&ddata->te_timeout_work,
+		schedule_delayed_work(&ddata->te_timeout_work,
 				msecs_to_jiffies(250));
 		atomic_set(&ddata->do_update, 1);
 	} else {

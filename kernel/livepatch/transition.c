@@ -436,7 +436,7 @@ void klp_try_complete_transition(void)
 		 * later and/or wait for other methods like kernel exit
 		 * switching.
 		 */
-		queue_delayed_work(system_power_efficient_wq,&klp_transition_work,
+		schedule_delayed_work(&klp_transition_work,
 				      round_jiffies_relative(HZ));
 		return;
 	}

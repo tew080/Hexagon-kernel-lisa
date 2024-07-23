@@ -41,7 +41,7 @@ static void sirfsoc_pwrc_report_event(struct work_struct *work)
 		container_of(work, struct sirfsoc_pwrc_drvdata, work.work);
 
 	if (sirfsoc_pwrc_is_on_key_down(pwrcdrv)) {
-		queue_delayed_work(system_power_efficient_wq,&pwrcdrv->work,
+		schedule_delayed_work(&pwrcdrv->work,
 			msecs_to_jiffies(PWRC_KEY_DETECT_UP_TIME));
 	} else {
 		input_event(pwrcdrv->input, EV_KEY, KEY_POWER, 0);
@@ -61,7 +61,7 @@ static irqreturn_t sirfsoc_pwrc_isr(int irq, void *dev_id)
 
 	input_event(pwrcdrv->input, EV_KEY, KEY_POWER, 1);
 	input_sync(pwrcdrv->input);
-	queue_delayed_work(system_power_efficient_wq,&pwrcdrv->work,
+	schedule_delayed_work(&pwrcdrv->work,
 			      msecs_to_jiffies(PWRC_KEY_DETECT_UP_TIME));
 
 	return IRQ_HANDLED;

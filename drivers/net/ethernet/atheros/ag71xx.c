@@ -650,7 +650,7 @@ static int ag71xx_tx_packets(struct ag71xx *ag, bool flush)
 		if (!flush && !ag71xx_desc_empty(desc)) {
 			if (ag->dcfg->tx_hang_workaround &&
 			    ag71xx_check_dma_stuck(ag)) {
-				queue_delayed_work(system_power_efficient_wq,&ag->restart_work,
+				schedule_delayed_work(&ag->restart_work,
 						      HZ / 2);
 				dma_stuck = true;
 			}
@@ -1414,7 +1414,7 @@ static void ag71xx_tx_timeout(struct net_device *ndev)
 
 	netif_err(ag, tx_err, ndev, "tx timeout\n");
 
-	queue_delayed_work(system_power_efficient_wq,&ag->restart_work, 1);
+	schedule_delayed_work(&ag->restart_work, 1);
 }
 
 static void ag71xx_restart_work_func(struct work_struct *work)

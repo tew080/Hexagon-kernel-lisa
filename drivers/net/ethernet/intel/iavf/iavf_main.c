@@ -1986,7 +1986,7 @@ static void iavf_watchdog_task(struct work_struct *work)
 		goto watchdog_done;
 	}
 
-	queue_delayed_work(system_power_efficient_wq,&adapter->client_task, msecs_to_jiffies(5));
+	schedule_delayed_work(&adapter->client_task, msecs_to_jiffies(5));
 watchdog_done:
 	if (adapter->state == __IAVF_RUNNING ||
 	    adapter->state == __IAVF_COMM_FAILED)

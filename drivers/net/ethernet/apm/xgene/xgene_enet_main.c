@@ -1012,7 +1012,7 @@ static int xgene_enet_open(struct net_device *ndev)
 	if (ndev->phydev) {
 		phy_start(ndev->phydev);
 	} else {
-		queue_delayed_work(system_power_efficient_wq,&pdata->link_work, PHY_POLL_LINK_OFF);
+		schedule_delayed_work(&pdata->link_work, PHY_POLL_LINK_OFF);
 		netif_carrier_off(ndev);
 	}
 

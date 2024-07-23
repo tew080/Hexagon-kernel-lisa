@@ -384,7 +384,7 @@ static int qcom_ethqos_add_ipaddr(struct ip_params *ip_info,
 
 	if (!net->ipv4.devconf_dflt) {
 		ETHQOSERR("ipv4.devconf_dflt is null, schedule wq\n");
-		queue_delayed_work(system_power_efficient_wq,&pethqos->ipv4_addr_assign_wq,
+		schedule_delayed_work(&pethqos->ipv4_addr_assign_wq,
 				      msecs_to_jiffies(1000));
 		return res;
 	}
@@ -429,7 +429,7 @@ static int qcom_ethqos_add_ipv6addr(struct ip_params *ip_info,
 
 	if (!net->ipv6.devconf_dflt) {
 		ETHQOSERR("ipv6.devconf_dflt is null, schedule wq\n");
-		queue_delayed_work(system_power_efficient_wq,&pethqos->ipv6_addr_assign_wq,
+		schedule_delayed_work(&pethqos->ipv6_addr_assign_wq,
 				      msecs_to_jiffies(1000));
 		return ret;
 	}
@@ -1337,7 +1337,7 @@ static int ethqos_set_early_eth_param(struct stmmac_priv *priv,
 	if (pparams.is_valid_ipv4_addr) {
 		INIT_DELAYED_WORK(&ethqos->ipv4_addr_assign_wq,
 				  ethqos_is_ipv4_NW_stack_ready);
-		queue_delayed_work(system_power_efficient_wq,&ethqos->ipv4_addr_assign_wq, 0);
+		schedule_delayed_work(&ethqos->ipv4_addr_assign_wq, 0);
 	}
 
 #ifdef CONFIG_IPV6
@@ -1346,7 +1346,7 @@ static int ethqos_set_early_eth_param(struct stmmac_priv *priv,
 				  ethqos_is_ipv6_NW_stack_ready);
 		ret = qcom_ethqos_add_ipv6addr(&pparams, priv->dev);
 		if (ret)
-			queue_delayed_work(system_power_efficient_wq,&ethqos->ipv6_addr_assign_wq,
+			schedule_delayed_work(&ethqos->ipv6_addr_assign_wq,
 					      msecs_to_jiffies(1000));
 	}
 #endif

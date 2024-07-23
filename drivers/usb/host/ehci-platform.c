@@ -204,7 +204,7 @@ static void quirk_poll_timer(struct timer_list *t)
 		 * reconnection. So, this uses delayed work with 5 ms delay
 		 * to avoid misdetection.
 		 */
-		queue_delayed_work(system_power_efficient_wq,&priv->poll_work, msecs_to_jiffies(5));
+		schedule_delayed_work(&priv->poll_work, msecs_to_jiffies(5));
 	}
 
 	mod_timer(&priv->poll_timer, jiffies + HZ);

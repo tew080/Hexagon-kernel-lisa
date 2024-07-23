@@ -201,7 +201,7 @@ static bool display_send_page_flip(struct drm_simple_display_pipe *pipe,
 		struct xen_drm_front_drm_info *drm_info = pipeline->drm_info;
 		int ret;
 
-		queue_delayed_work(system_power_efficient_wq,&pipeline->pflip_to_worker,
+		schedule_delayed_work(&pipeline->pflip_to_worker,
 				      msecs_to_jiffies(FRAME_DONE_TO_MS));
 
 		ret = xen_drm_front_page_flip(drm_info->front_info,

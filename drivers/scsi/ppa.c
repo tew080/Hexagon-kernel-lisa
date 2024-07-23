@@ -620,7 +620,7 @@ static void ppa_interrupt(struct work_struct *work)
 		return;
 	}
 	if (ppa_engine(dev, cmd)) {
-		queue_delayed_work(system_power_efficient_wq,&dev->ppa_tq, 1);
+		schedule_delayed_work(&dev->ppa_tq, 1);
 		return;
 	}
 	/* Command must of completed hence it is safe to let go... */
@@ -803,7 +803,7 @@ static int ppa_queuecommand_lck(struct scsi_cmnd *cmd,
 	cmd->result = DID_ERROR << 16;	/* default return code */
 	cmd->SCp.phase = 0;	/* bus free */
 
-	queue_delayed_work(system_power_efficient_wq,&dev->ppa_tq, 0);
+	schedule_delayed_work(&dev->ppa_tq, 0);
 
 	ppa_pb_claim(dev);
 

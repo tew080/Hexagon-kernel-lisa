@@ -313,7 +313,7 @@ static int __init charlcd_probe(struct platform_device *pdev)
 	 * it is VERY slow and would slow down the boot of the system.
 	 */
 	INIT_DELAYED_WORK(&lcd->init_work, charlcd_init_work);
-	queue_delayed_work(system_power_efficient_wq,&lcd->init_work, 0);
+	schedule_delayed_work(&lcd->init_work, 0);
 
 	dev_info(&pdev->dev, "initialized ARM character LCD at %08x\n",
 		lcd->phybase);

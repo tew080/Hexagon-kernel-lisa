@@ -2360,7 +2360,7 @@ static void tegra_sor_hdmi_scdc_work(struct work_struct *work)
 		tegra_sor_hdmi_scdc_enable(sor);
 	}
 
-	queue_delayed_work(system_power_efficient_wq,&sor->scdc, msecs_to_jiffies(5000));
+	schedule_delayed_work(&sor->scdc, msecs_to_jiffies(5000));
 }
 
 static void tegra_sor_hdmi_scdc_start(struct tegra_sor *sor)
@@ -2371,7 +2371,7 @@ static void tegra_sor_hdmi_scdc_start(struct tegra_sor *sor)
 	mode = &sor->output.encoder.crtc->state->adjusted_mode;
 
 	if (mode->clock >= 340000 && scdc->supported) {
-		queue_delayed_work(system_power_efficient_wq,&sor->scdc, msecs_to_jiffies(5000));
+		schedule_delayed_work(&sor->scdc, msecs_to_jiffies(5000));
 		tegra_sor_hdmi_scdc_enable(sor);
 		sor->scdc_enabled = true;
 	}

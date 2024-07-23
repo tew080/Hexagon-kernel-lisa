@@ -464,7 +464,7 @@ static void nsim_dev_trap_report_work(struct work_struct *work)
 	}
 	mutex_unlock(&nsim_dev->port_list_lock);
 
-	queue_delayed_work(system_power_efficient_wq,&nsim_dev->trap_data->trap_report_dw,
+	schedule_delayed_work(&nsim_dev->trap_data->trap_report_dw,
 			      msecs_to_jiffies(NSIM_TRAP_REPORT_INTERVAL_MS));
 }
 
@@ -501,7 +501,7 @@ static int nsim_dev_traps_init(struct devlink *devlink)
 
 	INIT_DELAYED_WORK(&nsim_dev->trap_data->trap_report_dw,
 			  nsim_dev_trap_report_work);
-	queue_delayed_work(system_power_efficient_wq,&nsim_dev->trap_data->trap_report_dw,
+	schedule_delayed_work(&nsim_dev->trap_data->trap_report_dw,
 			      msecs_to_jiffies(NSIM_TRAP_REPORT_INTERVAL_MS));
 
 	return 0;

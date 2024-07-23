@@ -25,7 +25,7 @@ static void busymod_work_func(struct work_struct *work)
 static int test_klp_callbacks_busy_init(void)
 {
 	pr_debug("%s\n", __func__);
-	queue_delayed_work(system_power_efficient_wq,&work,
+	schedule_delayed_work(&work,
 		msecs_to_jiffies(1000 * 0));
 	return 0;
 }

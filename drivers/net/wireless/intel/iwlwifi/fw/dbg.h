@@ -340,7 +340,7 @@ static inline void iwl_fw_resume_timestamp(struct iwl_fw_runtime *fwrt)
 	if (!fwrt->timestamp.delay)
 		return;
 
-	queue_delayed_work(system_power_efficient_wq,&fwrt->timestamp.wk,
+	schedule_delayed_work(&fwrt->timestamp.wk,
 			      round_jiffies_relative(fwrt->timestamp.delay));
 }
 

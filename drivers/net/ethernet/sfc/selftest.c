@@ -775,7 +775,7 @@ void efx_selftest_async_start(struct efx_nic *efx)
 
 	efx_for_each_channel(channel, efx)
 		efx_nic_event_test_start(channel);
-	queue_delayed_work(system_power_efficient_wq,&efx->selftest_work, IRQ_TIMEOUT);
+	schedule_delayed_work(&efx->selftest_work, IRQ_TIMEOUT);
 }
 
 void efx_selftest_async_cancel(struct efx_nic *efx)

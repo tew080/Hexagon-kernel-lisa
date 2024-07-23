@@ -6321,7 +6321,7 @@ static void devlink_port_type_warn_schedule(struct devlink_port *devlink_port)
 	/* Schedule a work to WARN in case driver does not set port
 	 * type within timeout.
 	 */
-	queue_delayed_work(system_power_efficient_wq,&devlink_port->type_warn_dw,
+	schedule_delayed_work(&devlink_port->type_warn_dw,
 			      DEVLINK_PORT_TYPE_WARN_TIMEOUT);
 }
 

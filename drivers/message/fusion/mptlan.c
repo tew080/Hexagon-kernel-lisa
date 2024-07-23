@@ -802,9 +802,9 @@ mpt_lan_wake_post_buckets_task(struct net_device *dev, int priority)
 	
 	if (test_and_set_bit(0, &priv->post_buckets_active) == 0) {
 		if (priority) {
-			queue_delayed_work(system_power_efficient_wq,&priv->post_buckets_task, 0);
+			schedule_delayed_work(&priv->post_buckets_task, 0);
 		} else {
-			queue_delayed_work(system_power_efficient_wq,&priv->post_buckets_task, 1);
+			schedule_delayed_work(&priv->post_buckets_task, 1);
 			dioprintk((KERN_INFO MYNAM ": post_buckets queued on "
 				   "timer.\n"));
 		}

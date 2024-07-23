@@ -762,7 +762,7 @@ static int edid_write_vga_segment(struct v4l2_subdev *sd)
 	}
 
 	/* enable hotplug after 200 ms */
-	queue_delayed_work(system_power_efficient_wq,&state->delayed_work_enable_hotplug, HZ / 5);
+	schedule_delayed_work(&state->delayed_work_enable_hotplug, HZ / 5);
 
 	return 0;
 }
@@ -840,7 +840,7 @@ static int edid_write_hdmi_segment(struct v4l2_subdev *sd, u8 port)
 	cec_s_phys_addr(state->cec_adap, pa, false);
 
 	/* enable hotplug after 200 ms */
-	queue_delayed_work(system_power_efficient_wq,&state->delayed_work_enable_hotplug, HZ / 5);
+	schedule_delayed_work(&state->delayed_work_enable_hotplug, HZ / 5);
 
 	return 0;
 }

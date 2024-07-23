@@ -59,7 +59,7 @@
 
 static inline void schedule_mac_stats_update(struct adapter *ap, int secs)
 {
-	queue_delayed_work(system_power_efficient_wq,&ap->stats_update_task, secs * HZ);
+	schedule_delayed_work(&ap->stats_update_task, secs * HZ);
 }
 
 static inline void cancel_mac_stats_update(struct adapter *ap)

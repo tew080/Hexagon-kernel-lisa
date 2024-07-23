@@ -479,7 +479,7 @@ static void cn23xx_handle_vf_mbox_intr(struct octeon_ioq_vector *ioq_vector)
 		mbox_int_val = readq(oct->mbox[0]->mbox_int_reg);
 		writeq(mbox_int_val, oct->mbox[0]->mbox_int_reg);
 		if (octeon_mbox_read(oct->mbox[0]))
-			queue_delayed_work(system_power_efficient_wq,&oct->mbox[0]->mbox_poll_wk.work,
+			schedule_delayed_work(&oct->mbox[0]->mbox_poll_wk.work,
 					      msecs_to_jiffies(0));
 	}
 }

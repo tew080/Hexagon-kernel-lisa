@@ -279,7 +279,7 @@ static void xadc_zynq_unmask_worker(struct work_struct *work)
 
 	/* if still pending some alarm re-trigger the timer */
 	if (xadc->zynq_masked_alarm) {
-		queue_delayed_work(system_power_efficient_wq,&xadc->zynq_unmask_work,
+		schedule_delayed_work(&xadc->zynq_unmask_work,
 				msecs_to_jiffies(XADC_ZYNQ_UNMASK_TIMEOUT));
 	}
 
@@ -321,7 +321,7 @@ static irqreturn_t xadc_zynq_interrupt_handler(int irq, void *devid)
 				xadc_zynq_transform_alarm(status));
 
 		/* unmask the required interrupts in timer. */
-		queue_delayed_work(system_power_efficient_wq,&xadc->zynq_unmask_work,
+		schedule_delayed_work(&xadc->zynq_unmask_work,
 				msecs_to_jiffies(XADC_ZYNQ_UNMASK_TIMEOUT));
 	}
 	spin_unlock(&xadc->lock);

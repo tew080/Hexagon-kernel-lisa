@@ -341,7 +341,7 @@ static int tsl2563_get_adc(struct tsl2563_chip *chip)
 	chip->data1 = tsl2563_normalize_adc(adc1, chip->gainlevel->gaintime);
 
 	if (!chip->int_enabled)
-		queue_delayed_work(system_power_efficient_wq,&chip->poweroff_work, 5 * HZ);
+		schedule_delayed_work(&chip->poweroff_work, 5 * HZ);
 
 	ret = 0;
 out:
@@ -658,7 +658,7 @@ static int tsl2563_write_interrupt_config(struct iio_dev *indio_dev,
 						chip->intr);
 		chip->int_enabled = false;
 		/* now the interrupt is not enabled, we can go to sleep */
-		queue_delayed_work(system_power_efficient_wq,&chip->poweroff_work, 5 * HZ);
+		schedule_delayed_work(&chip->poweroff_work, 5 * HZ);
 	}
 out:
 	mutex_unlock(&chip->lock);
@@ -780,7 +780,7 @@ static int tsl2563_probe(struct i2c_client *client,
 	INIT_DELAYED_WORK(&chip->poweroff_work, tsl2563_poweroff_work);
 
 	/* The interrupt cannot yet be enabled so this is fine without lock */
-	queue_delayed_work(system_power_efficient_wq,&chip->poweroff_work, 5 * HZ);
+	schedule_delayed_work(&chip->poweroff_work, 5 * HZ);
 
 	err = iio_device_register(indio_dev);
 	if (err) {

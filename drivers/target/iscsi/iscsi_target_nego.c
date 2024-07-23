@@ -419,7 +419,7 @@ static void iscsi_target_sk_data_ready(struct sock *sk)
 		return;
 	}
 
-	rc = queue_delayed_work(system_power_efficient_wq,&conn->login_work, 0);
+	rc = schedule_delayed_work(&conn->login_work, 0);
 	if (!rc) {
 		pr_debug("iscsi_target_sk_data_ready, schedule_delayed_work"
 			 " got false\n");
@@ -586,7 +586,7 @@ static void iscsi_target_do_login_rx(struct work_struct *work)
 	 * remaining iscsi connection resources from iscsi_np process context.
 	 */
 	if (iscsi_target_sk_check_flag(conn, LOGIN_FLAGS_INITIAL_PDU)) {
-		queue_delayed_work(system_power_efficient_wq,&conn->login_work, msecs_to_jiffies(10));
+		schedule_delayed_work(&conn->login_work, msecs_to_jiffies(10));
 		return;
 	}
 
@@ -709,7 +709,7 @@ static void iscsi_target_sk_state_change(struct sock *sk)
 		orig_state_change(sk);
 
 		if (!state)
-			queue_delayed_work(system_power_efficient_wq,&conn->login_work, 0);
+			schedule_delayed_work(&conn->login_work, 0);
 		return;
 	}
 	write_unlock_bh(&sk->sk_callback_lock);

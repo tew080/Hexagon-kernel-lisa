@@ -421,7 +421,7 @@ int ssp_queue_ssp_refresh_task(struct ssp_data *data, unsigned int delay)
 {
 	cancel_delayed_work_sync(&data->work_refresh);
 
-	return queue_delayed_work(system_power_efficient_wq,
+	return schedule_delayed_work(
 				  &data->work_refresh,
 				  msecs_to_jiffies(delay));
 }

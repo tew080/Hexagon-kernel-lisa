@@ -147,7 +147,7 @@ void snd_ak4114_reinit(struct ak4114 *chip)
 	mutex_unlock(&chip->reinit_mutex);
 	/* bring up statistics / event queing */
 	if (atomic_dec_and_test(&chip->wq_processing))
-		queue_delayed_work(system_power_efficient_wq,&chip->work, HZ / 10);
+		schedule_delayed_work(&chip->work, HZ / 10);
 }
 EXPORT_SYMBOL(snd_ak4114_reinit);
 
@@ -489,7 +489,7 @@ int snd_ak4114_build(struct ak4114 *ak4114,
 	}
 	snd_ak4114_proc_init(ak4114);
 	/* trigger workq */
-	queue_delayed_work(system_power_efficient_wq,&ak4114->work, HZ / 10);
+	schedule_delayed_work(&ak4114->work, HZ / 10);
 	return 0;
 }
 EXPORT_SYMBOL(snd_ak4114_build);
@@ -605,7 +605,7 @@ static void ak4114_stats(struct work_struct *work)
 	if (atomic_inc_return(&chip->wq_processing) == 1)
 		snd_ak4114_check_rate_and_errors(chip, chip->check_flags);
 	if (atomic_dec_and_test(&chip->wq_processing))
-		queue_delayed_work(system_power_efficient_wq,&chip->work, HZ / 10);
+		schedule_delayed_work(&chip->work, HZ / 10);
 }
 
 #ifdef CONFIG_PM

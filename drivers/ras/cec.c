@@ -553,7 +553,7 @@ void __init cec_init(void)
 	}
 
 	INIT_DELAYED_WORK(&cec_work, cec_work_fn);
-	queue_delayed_work(system_power_efficient_wq,&cec_work, CEC_DECAY_DEFAULT_INTERVAL);
+	schedule_delayed_work(&cec_work, CEC_DECAY_DEFAULT_INTERVAL);
 
 	pr_info("Correctable Errors collector initialized.\n");
 }

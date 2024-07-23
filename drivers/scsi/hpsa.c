@@ -8859,13 +8859,13 @@ reinit_after_soft_reset:
 	/* Monitor the controller for firmware lockups */
 	h->heartbeat_sample_interval = HEARTBEAT_SAMPLE_INTERVAL;
 	INIT_DELAYED_WORK(&h->monitor_ctlr_work, hpsa_monitor_ctlr_worker);
-	queue_delayed_work(system_power_efficient_wq,&h->monitor_ctlr_work,
+	schedule_delayed_work(&h->monitor_ctlr_work,
 				h->heartbeat_sample_interval);
 	INIT_DELAYED_WORK(&h->rescan_ctlr_work, hpsa_rescan_ctlr_worker);
 	queue_delayed_work(h->rescan_ctlr_wq, &h->rescan_ctlr_work,
 				h->heartbeat_sample_interval);
 	INIT_DELAYED_WORK(&h->event_monitor_work, hpsa_event_monitor_worker);
-	queue_delayed_work(system_power_efficient_wq,&h->event_monitor_work,
+	schedule_delayed_work(&h->event_monitor_work,
 				HPSA_EVENT_MONITOR_INTERVAL);
 	return 0;
 

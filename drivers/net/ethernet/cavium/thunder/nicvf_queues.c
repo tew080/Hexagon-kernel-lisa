@@ -454,7 +454,7 @@ void nicvf_rbdr_work(struct work_struct *work)
 
 	nicvf_refill_rbdr(nic, GFP_KERNEL);
 	if (nic->rb_alloc_fail)
-		queue_delayed_work(system_power_efficient_wq,&nic->rbdr_work, msecs_to_jiffies(10));
+		schedule_delayed_work(&nic->rbdr_work, msecs_to_jiffies(10));
 	else
 		nic->rb_work_scheduled = false;
 }
@@ -467,7 +467,7 @@ void nicvf_rbdr_task(unsigned long data)
 	nicvf_refill_rbdr(nic, GFP_ATOMIC);
 	if (nic->rb_alloc_fail) {
 		nic->rb_work_scheduled = true;
-		queue_delayed_work(system_power_efficient_wq,&nic->rbdr_work, msecs_to_jiffies(10));
+		schedule_delayed_work(&nic->rbdr_work, msecs_to_jiffies(10));
 	}
 }
 

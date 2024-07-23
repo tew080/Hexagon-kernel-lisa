@@ -100,7 +100,7 @@ static void amdgpu_display_flip_work_func(struct work_struct *__work)
 	    (DRM_SCANOUTPOS_VALID | DRM_SCANOUTPOS_IN_VBLANK) &&
 	    (int)(work->target_vblank -
 		  amdgpu_get_vblank_counter_kms(adev->ddev, amdgpu_crtc->crtc_id)) > 0) {
-		queue_delayed_work(system_power_efficient_wq,&work->flip_work, usecs_to_jiffies(1000));
+		schedule_delayed_work(&work->flip_work, usecs_to_jiffies(1000));
 		return;
 	}
 

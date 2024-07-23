@@ -789,7 +789,7 @@ static void emu1010_firmware_work(struct work_struct *work)
  next:
 	emu->emu1010.last_reg = reg;
 	if (!emu->card->shutdown)
-		queue_delayed_work(system_power_efficient_wq,&emu->emu1010.firmware_work,
+		schedule_delayed_work(&emu->emu1010.firmware_work,
 				      msecs_to_jiffies(1000));
 }
 

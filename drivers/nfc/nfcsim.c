@@ -231,7 +231,7 @@ static int nfcsim_send(struct nfc_digital_dev *ddev, struct sk_buff *skb,
 		get_random_bytes(&delay, 1);
 		delay = 3 + (delay & 0x07);
 
-		queue_delayed_work(system_power_efficient_wq,&dev->send_work, msecs_to_jiffies(delay));
+		schedule_delayed_work(&dev->send_work, msecs_to_jiffies(delay));
 	}
 
 	return 0;

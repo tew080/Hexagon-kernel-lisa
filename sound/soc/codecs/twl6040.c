@@ -314,7 +314,7 @@ static irqreturn_t twl6040_audio_handler(int irq, void *data)
 	struct snd_soc_component *component = data;
 	struct twl6040_data *priv = snd_soc_component_get_drvdata(component);
 
-	queue_delayed_work(system_power_efficient_wq,
+	schedule_delayed_work(
 			   &priv->hs_jack.work, msecs_to_jiffies(200));
 
 	return IRQ_HANDLED;

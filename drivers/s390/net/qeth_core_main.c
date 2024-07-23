@@ -3164,7 +3164,7 @@ static void qeth_queue_input_buffer(struct qeth_card *card, int index)
 			if (i == card->qdio.in_buf_pool.buf_count) {
 				QETH_CARD_TEXT(card, 2, "qsarbw");
 				card->reclaim_index = index;
-				queue_delayed_work(system_power_efficient_wq,
+				schedule_delayed_work(
 					&card->buffer_reclaim_work,
 					QETH_RECLAIM_WORK_TIME);
 			}

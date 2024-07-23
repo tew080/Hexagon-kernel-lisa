@@ -302,7 +302,7 @@ static int soc_compr_free(struct snd_compr_stream *cstream)
 						  SND_SOC_DAPM_STREAM_STOP);
 		} else {
 			rtd->pop_wait = 1;
-			queue_delayed_work(system_power_efficient_wq,
+			schedule_delayed_work(
 					   &rtd->delayed_work,
 					   msecs_to_jiffies(rtd->pmdown_time));
 		}

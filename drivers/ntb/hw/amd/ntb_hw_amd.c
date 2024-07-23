@@ -520,7 +520,7 @@ static void amd_handle_event(struct amd_ntb_dev *ndev, int vec)
 		/* link down first */
 		ntb_link_event(&ndev->ntb);
 		/* polling peer status */
-		queue_delayed_work(system_power_efficient_wq,&ndev->hb_timer, AMD_LINK_HB_TIMEOUT);
+		schedule_delayed_work(&ndev->hb_timer, AMD_LINK_HB_TIMEOUT);
 
 		break;
 	case AMD_PEER_D3_EVENT:
@@ -543,7 +543,7 @@ static void amd_handle_event(struct amd_ntb_dev *ndev, int vec)
 		amd_ack_smu(ndev, AMD_PEER_D0_EVENT);
 
 		/* start a timer to poll link status */
-		queue_delayed_work(system_power_efficient_wq,&ndev->hb_timer,
+		schedule_delayed_work(&ndev->hb_timer,
 				      AMD_LINK_HB_TIMEOUT);
 		break;
 	default:
@@ -872,7 +872,7 @@ static void amd_link_hb(struct work_struct *work)
 		ntb_link_event(&ndev->ntb);
 
 	if (!amd_link_is_up(ndev))
-		queue_delayed_work(system_power_efficient_wq,&ndev->hb_timer, AMD_LINK_HB_TIMEOUT);
+		schedule_delayed_work(&ndev->hb_timer, AMD_LINK_HB_TIMEOUT);
 }
 
 static int amd_init_isr(struct amd_ntb_dev *ndev)
@@ -926,7 +926,7 @@ static int amd_init_ntb(struct amd_ntb_dev *ndev)
 		}
 
 		INIT_DELAYED_WORK(&ndev->hb_timer, amd_link_hb);
-		queue_delayed_work(system_power_efficient_wq,&ndev->hb_timer, AMD_LINK_HB_TIMEOUT);
+		schedule_delayed_work(&ndev->hb_timer, AMD_LINK_HB_TIMEOUT);
 
 		break;
 	default:

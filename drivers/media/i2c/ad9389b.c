@@ -830,7 +830,7 @@ static void ad9389b_edid_handler(struct work_struct *work)
 			v4l2_dbg(1, debug, sd, "%s: edid read failed\n", __func__);
 			ad9389b_s_power(sd, false);
 			ad9389b_s_power(sd, true);
-			queue_delayed_work(system_power_efficient_wq,&state->edid_handler, EDID_DELAY);
+			schedule_delayed_work(&state->edid_handler, EDID_DELAY);
 			return;
 		}
 	}
@@ -919,7 +919,7 @@ static void ad9389b_update_monitor_present_status(struct v4l2_subdev *sd)
 		ad9389b_setup(sd);
 		ad9389b_notify_monitor_detect(sd);
 		state->edid.read_retries = EDID_MAX_RETRIES;
-		queue_delayed_work(system_power_efficient_wq,&state->edid_handler, EDID_DELAY);
+		schedule_delayed_work(&state->edid_handler, EDID_DELAY);
 	} else if (!(status & MASK_AD9389B_HPD_DETECT)) {
 		v4l2_dbg(1, debug, sd, "%s: hotplug not detected\n", __func__);
 		state->have_monitor = false;
@@ -1050,7 +1050,7 @@ static bool ad9389b_check_edid_status(struct v4l2_subdev *sd)
 		ad9389b_wr(sd, 0xc9, 0xf);
 		ad9389b_wr(sd, 0xc4, state->edid.segments);
 		state->edid.read_retries = EDID_MAX_RETRIES;
-		queue_delayed_work(system_power_efficient_wq,&state->edid_handler, EDID_DELAY);
+		schedule_delayed_work(&state->edid_handler, EDID_DELAY);
 		return false;
 	}
 

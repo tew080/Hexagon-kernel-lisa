@@ -68,7 +68,7 @@ static void get_values_poll(struct work_struct *work)
 	 * We can't run faster than the sticky shift (100ms) since we get
 	 * flipping in the sticky bits that are cleared.
 	 */
-	queue_delayed_work(system_power_efficient_wq,&data->get_values_poll_work, 2 * HZ);
+	schedule_delayed_work(&data->get_values_poll_work, 2 * HZ);
 }
 
 static int rpi_read(struct device *dev, enum hwmon_sensor_types type,
@@ -123,7 +123,7 @@ static int rpi_hwmon_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, data);
 
 	if (!PTR_ERR_OR_ZERO(data->hwmon_dev))
-		queue_delayed_work(system_power_efficient_wq,&data->get_values_poll_work, 2 * HZ);
+		schedule_delayed_work(&data->get_values_poll_work, 2 * HZ);
 
 	return PTR_ERR_OR_ZERO(data->hwmon_dev);
 }

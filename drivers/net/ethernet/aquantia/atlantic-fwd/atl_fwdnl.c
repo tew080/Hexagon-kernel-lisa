@@ -850,7 +850,7 @@ static void atlfwd_nl_tx_head_poll(struct work_struct *work)
 	}
 
 	if (!poll_finished && likely(atlfwd_nl_tx_clean_threshold_msec != 0))
-		queue_delayed_work(system_power_efficient_wq,
+		schedule_delayed_work(
 			nic->fwdnl.tx_cleanup_wq,
 			msecs_to_jiffies(atlfwd_nl_tx_clean_threshold_msec));
 }
@@ -998,7 +998,7 @@ static int atlfwd_nl_transmit_skb_ring(struct atl_fwd_ring *ring,
 	ring_desc->tail = desc_idx;
 
 	if (likely(atlfwd_nl_tx_clean_threshold_msec != 0))
-		queue_delayed_work(system_power_efficient_wq,
+		schedule_delayed_work(
 			nic->fwdnl.tx_cleanup_wq,
 			msecs_to_jiffies(atlfwd_nl_tx_clean_threshold_msec));
 

@@ -272,7 +272,7 @@ static void qlt_queue_unknown_atio(scsi_qla_host_t *vha,
 	list_add_tail(&u->cmd_list, &vha->unknown_atio_list);
 	spin_unlock_irqrestore(&vha->cmd_list_lock, flags);
 
-	queue_delayed_work(system_power_efficient_wq,&vha->unknown_atio_work, 1);
+	schedule_delayed_work(&vha->unknown_atio_work, 1);
 
 out:
 	return;
@@ -317,7 +317,7 @@ static void qlt_try_to_dequeue_unknown_atios(struct scsi_qla_host *vha,
 			    "Reschedule u %p, vha %p, host %p\n", u, vha, host);
 			if (!queued) {
 				queued = 1;
-				queue_delayed_work(system_power_efficient_wq,&vha->unknown_atio_work,
+				schedule_delayed_work(&vha->unknown_atio_work,
 				    1);
 			}
 			continue;

@@ -320,7 +320,7 @@ static void saa6588_work(struct work_struct *work)
 	struct saa6588 *s = container_of(work, struct saa6588, work.work);
 
 	saa6588_i2c_poll(s);
-	queue_delayed_work(system_power_efficient_wq,&s->work, msecs_to_jiffies(20));
+	schedule_delayed_work(&s->work, msecs_to_jiffies(20));
 }
 
 static void saa6588_configure(struct saa6588 *s)
@@ -480,7 +480,7 @@ static int saa6588_probe(struct i2c_client *client,
 
 	/* start polling via eventd */
 	INIT_DELAYED_WORK(&s->work, saa6588_work);
-	queue_delayed_work(system_power_efficient_wq,&s->work, 0);
+	schedule_delayed_work(&s->work, 0);
 	return 0;
 }
 

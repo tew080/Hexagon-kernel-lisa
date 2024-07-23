@@ -1071,7 +1071,7 @@ static void kvaser_usb_leaf_rx_error(const struct kvaser_usb *dev,
 	 */
 	if (new_state < CAN_STATE_BUS_OFF &&
 	    (es->rxerr || es->txerr || new_state == CAN_STATE_ERROR_PASSIVE))
-		queue_delayed_work(system_power_efficient_wq,&leaf->chip_state_req_work,
+		schedule_delayed_work(&leaf->chip_state_req_work,
 				      msecs_to_jiffies(500));
 
 	skb = alloc_can_err_skb(priv->netdev, &cf);

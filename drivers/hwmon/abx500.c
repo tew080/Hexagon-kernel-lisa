@@ -35,7 +35,7 @@
 static inline void schedule_monitor(struct abx500_temp *data)
 {
 	data->work_active = true;
-	queue_delayed_work(system_power_efficient_wq,&data->work, DEFAULT_MONITOR_DELAY);
+	schedule_delayed_work(&data->work, DEFAULT_MONITOR_DELAY);
 }
 
 static void threshold_updated(struct abx500_temp *data)

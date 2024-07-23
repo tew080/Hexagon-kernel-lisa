@@ -1147,7 +1147,7 @@ static void cp2112_gpio_poll_callback(struct work_struct *work)
 
 exit:
 	if (dev->gpio_poll)
-		queue_delayed_work(system_power_efficient_wq,&dev->gpio_poll_worker, 10);
+		schedule_delayed_work(&dev->gpio_poll_worker, 10);
 }
 
 
@@ -1158,7 +1158,7 @@ static unsigned int cp2112_gpio_irq_startup(struct irq_data *d)
 
 	if (!dev->gpio_poll) {
 		dev->gpio_poll = true;
-		queue_delayed_work(system_power_efficient_wq,&dev->gpio_poll_worker, 0);
+		schedule_delayed_work(&dev->gpio_poll_worker, 0);
 	}
 
 	cp2112_gpio_irq_unmask(d);

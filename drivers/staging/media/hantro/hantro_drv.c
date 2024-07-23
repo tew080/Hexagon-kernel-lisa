@@ -169,7 +169,7 @@ void hantro_finish_run(struct hantro_ctx *ctx)
 				   &ctx->ctrl_handler);
 
 	/* Kick the watchdog. */
-	queue_delayed_work(system_power_efficient_wq,&ctx->dev->watchdog_work,
+	schedule_delayed_work(&ctx->dev->watchdog_work,
 			      msecs_to_jiffies(2000));
 }
 

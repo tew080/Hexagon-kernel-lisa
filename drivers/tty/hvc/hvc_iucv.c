@@ -372,7 +372,7 @@ static int hvc_iucv_queue(struct hvc_iucv_private *priv, const char *buf,
 	priv->sndbuf_len += len;
 
 	if (priv->iucv_state == IUCV_CONNECTED)
-		queue_delayed_work(system_power_efficient_wq,&priv->sndbuf_work, QUEUE_SNDBUF_DELAY);
+		schedule_delayed_work(&priv->sndbuf_work, QUEUE_SNDBUF_DELAY);
 
 	return len;
 }
@@ -864,7 +864,7 @@ static	int hvc_iucv_path_pending(struct iucv_path *path, u8 *ipvmid,
 	memcpy(priv->info_path + 8, ipuser + 8, 8);
 
 	/* flush buffered output data... */
-	queue_delayed_work(system_power_efficient_wq,&priv->sndbuf_work, 5);
+	schedule_delayed_work(&priv->sndbuf_work, 5);
 
 out_path_handled:
 	spin_unlock(&priv->lock);

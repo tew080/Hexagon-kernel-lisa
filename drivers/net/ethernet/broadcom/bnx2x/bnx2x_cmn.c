@@ -5123,5 +5123,5 @@ void bnx2x_schedule_sp_rtnl(struct bnx2x *bp, enum sp_rtnl_flag flag,
 	smp_mb__after_atomic();
 	DP((BNX2X_MSG_SP | verbose), "Scheduling sp_rtnl task [Flag: %d]\n",
 	   flag);
-	queue_delayed_work(system_power_efficient_wq,&bp->sp_rtnl_task, 0);
+	schedule_delayed_work(&bp->sp_rtnl_task, 0);
 }

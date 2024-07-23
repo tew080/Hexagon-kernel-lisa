@@ -77,7 +77,7 @@ static irqreturn_t qcom_usb_irq_handler(int irq, void *dev_id)
 {
 	struct qcom_usb_extcon_info *info = dev_id;
 
-	queue_delayed_work(system_power_efficient_wq, &info->wq_detcable,
+	schedule_delayed_work( &info->wq_detcable,
 			   info->debounce_jiffies);
 
 	return IRQ_HANDLED;

@@ -85,7 +85,7 @@ static int tas6424_dac_event(struct snd_soc_dapm_widget *w,
 		tas6424->last_fault1 = 0;
 		tas6424->last_fault2 = 0;
 		tas6424->last_warn = 0;
-		queue_delayed_work(system_power_efficient_wq,&tas6424->fault_check_work,
+		schedule_delayed_work(&tas6424->fault_check_work,
 				      msecs_to_jiffies(TAS6424_FAULT_CHECK_INTERVAL));
 	} else if (event & SND_SOC_DAPM_PRE_PMD) {
 		/* Disable TAS6424 periodic fault checking/handling */
@@ -583,7 +583,7 @@ check_warn_reg:
 
 out:
 	/* Schedule the next fault check at the specified interval */
-	queue_delayed_work(system_power_efficient_wq,&tas6424->fault_check_work,
+	schedule_delayed_work(&tas6424->fault_check_work,
 			      msecs_to_jiffies(TAS6424_FAULT_CHECK_INTERVAL));
 }
 

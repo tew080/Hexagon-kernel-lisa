@@ -238,7 +238,7 @@ bool rtl92e_set_rf_state(struct net_device *dev,
 		if (StateToSet == eRfOn) {
 
 			if (bConnectBySSID && priv->blinked_ingpio) {
-				queue_delayed_work(system_power_efficient_wq,
+				schedule_delayed_work(
 					 &ieee->associate_procedure_wq, 0);
 				priv->blinked_ingpio = false;
 			}
@@ -454,7 +454,7 @@ static int _rtl92e_handle_beacon(struct net_device *dev,
 
 	_rtl92e_qos_handle_probe_response(priv, 1, network);
 
-	queue_delayed_work(system_power_efficient_wq,&priv->update_beacon_wq, 0);
+	schedule_delayed_work(&priv->update_beacon_wq, 0);
 	return 0;
 
 }
@@ -1485,7 +1485,7 @@ static void _rtl92e_watchdog_wq_cb(void *data)
 
 			if (!(ieee->rtllib_ap_sec_type(ieee) &
 			     (SEC_ALG_CCMP | SEC_ALG_TKIP)))
-				queue_delayed_work(system_power_efficient_wq,
+				schedule_delayed_work(
 					&ieee->associate_procedure_wq, 0);
 
 			priv->check_roaming_cnt = 0;
@@ -1522,7 +1522,7 @@ static void _rtl92e_watchdog_timer_cb(struct timer_list *t)
 {
 	struct r8192_priv *priv = from_timer(priv, t, watch_dog_timer);
 
-	queue_delayed_work(system_power_efficient_wq,&priv->watch_dog_wq, 0);
+	schedule_delayed_work(&priv->watch_dog_wq, 0);
 	mod_timer(&priv->watch_dog_timer, jiffies +
 		  msecs_to_jiffies(RTLLIB_WATCH_DOG_TIME));
 }
@@ -2634,7 +2634,7 @@ void rtl92e_check_rfctrl_gpio_timer(struct timer_list *t)
 
 	priv->polling_timer_on = 1;
 
-	queue_delayed_work(system_power_efficient_wq,&priv->gpio_change_rf_wq, 0);
+	schedule_delayed_work(&priv->gpio_change_rf_wq, 0);
 
 	mod_timer(&priv->gpio_polling_timer, jiffies +
 		  msecs_to_jiffies(RTLLIB_WATCH_DOG_TIME));

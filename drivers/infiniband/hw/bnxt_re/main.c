@@ -1353,7 +1353,7 @@ static void bnxt_re_worker(struct work_struct *work)
 						worker.work);
 
 	bnxt_re_setup_qos(rdev);
-	queue_delayed_work(system_power_efficient_wq,&rdev->worker, msecs_to_jiffies(30000));
+	schedule_delayed_work(&rdev->worker, msecs_to_jiffies(30000));
 }
 
 static int bnxt_re_ib_reg(struct bnxt_re_dev *rdev)
@@ -1479,7 +1479,7 @@ static int bnxt_re_ib_reg(struct bnxt_re_dev *rdev)
 
 		INIT_DELAYED_WORK(&rdev->worker, bnxt_re_worker);
 		set_bit(BNXT_RE_FLAG_QOS_WORK_REG, &rdev->flags);
-		queue_delayed_work(system_power_efficient_wq,&rdev->worker, msecs_to_jiffies(30000));
+		schedule_delayed_work(&rdev->worker, msecs_to_jiffies(30000));
 	}
 
 	rtnl_unlock();

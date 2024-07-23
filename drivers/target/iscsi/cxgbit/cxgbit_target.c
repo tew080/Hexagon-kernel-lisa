@@ -818,7 +818,7 @@ cxgbit_put_login_tx(struct iscsi_conn *conn, struct iscsi_login *login,
 		return -1;
 
 	if ((!login->login_complete) && (!login->login_failed))
-		queue_delayed_work(system_power_efficient_wq,&conn->login_work, 0);
+		schedule_delayed_work(&conn->login_work, 0);
 
 	return 0;
 }

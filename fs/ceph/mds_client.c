@@ -4059,7 +4059,7 @@ static void schedule_delayed(struct ceph_mds_client *mdsc, unsigned long delay)
 	/* 5 secs default delay */
 	if (!delay || (delay > max_delay))
 		delay = max_delay;
-	queue_delayed_work(system_power_efficient_wq,&mdsc->delayed_work,
+	schedule_delayed_work(&mdsc->delayed_work,
 			      round_jiffies_relative(delay));
 }
 

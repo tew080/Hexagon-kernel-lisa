@@ -3149,7 +3149,7 @@ static int msm_vidc_deinit_core(struct msm_vidc_inst *inst)
 		 * will have a burst of back to back video playback sessions
 		 * e.g. thumbnail generation.
 		 */
-		queue_delayed_work(system_power_efficient_wq,&core->fw_unload_work,
+		schedule_delayed_work(&core->fw_unload_work,
 			msecs_to_jiffies(core->state == VIDC_CORE_INIT_DONE ?
 			core->resources.msm_vidc_firmware_unload_delay : 0));
 

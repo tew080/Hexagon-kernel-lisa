@@ -679,7 +679,7 @@ try_later:
 	if (gc)
 		nft_trans_gc_queue_async_done(gc);
 done:
-	queue_delayed_work(system_power_efficient_wq, &priv->gc_work,
+	schedule_delayed_work( &priv->gc_work,
 			   nft_set_gc_interval(set));
 }
 
@@ -701,7 +701,7 @@ static int nft_rbtree_init(const struct nft_set *set,
 
 	INIT_DEFERRABLE_WORK(&priv->gc_work, nft_rbtree_gc);
 	if (set->flags & NFT_SET_TIMEOUT)
-		queue_delayed_work(system_power_efficient_wq, &priv->gc_work,
+		schedule_delayed_work( &priv->gc_work,
 				   nft_set_gc_interval(set));
 
 	return 0;

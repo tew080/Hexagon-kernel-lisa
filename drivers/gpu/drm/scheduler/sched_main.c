@@ -194,7 +194,7 @@ static void drm_sched_start_timeout(struct drm_gpu_scheduler *sched)
 {
 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
 	    !list_empty(&sched->ring_mirror_list))
-		queue_delayed_work(system_power_efficient_wq,&sched->work_tdr, sched->timeout);
+		schedule_delayed_work(&sched->work_tdr, sched->timeout);
 }
 
 /**

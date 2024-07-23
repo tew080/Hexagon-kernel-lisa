@@ -56,14 +56,14 @@ static void wm831x_poll_on(struct work_struct *work)
 	}
 
 	if (poll)
-		queue_delayed_work(system_power_efficient_wq,&wm831x_on->work, 100);
+		schedule_delayed_work(&wm831x_on->work, 100);
 }
 
 static irqreturn_t wm831x_on_irq(int irq, void *data)
 {
 	struct wm831x_on *wm831x_on = data;
 
-	queue_delayed_work(system_power_efficient_wq,&wm831x_on->work, 0);
+	schedule_delayed_work(&wm831x_on->work, 0);
 
 	return IRQ_HANDLED;
 }

@@ -1057,7 +1057,7 @@ static int qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 		if (((pon_rt_sts & QPNP_PON_KPDPWR_RESIN_N_SET) == QPNP_PON_KPDPWR_RESIN_N_SET) && (pon->collect_d_in_progress == false) &&
 			(cfg->key_code == KEY_POWER || cfg->key_code == KEY_VOLUMEDOWN)) {
 			pon->collect_d_in_progress = true;
-			queue_delayed_work(system_power_efficient_wq,&pon->collect_d_work,
+			schedule_delayed_work(&pon->collect_d_work,
 							msecs_to_jiffies(comb_reset_time - QPNP_PON_KPDPWR_RESIN_RESET_TIME));
 		} else if ((pon->collect_d_in_progress == true) && ((pon_rt_sts & QPNP_PON_KPDPWR_RESIN_N_SET) != QPNP_PON_KPDPWR_RESIN_N_SET) &&
 			(cfg->key_code == KEY_POWER || cfg->key_code == KEY_VOLUMEDOWN)) {
@@ -1331,7 +1331,7 @@ static void bark_work_func(struct work_struct *work)
 			return;
 
 		/* Re-arm the work */
-		queue_delayed_work(system_power_efficient_wq,&pon->bark_work, QPNP_KEY_STATUS_DELAY);
+		schedule_delayed_work(&pon->bark_work, QPNP_KEY_STATUS_DELAY);
 	}
 }
 
@@ -1361,7 +1361,7 @@ static irqreturn_t qpnp_resin_bark_irq(int irq, void *_pon)
 	input_sync(pon->pon_input);
 
 	/* Schedule work to check the bark status for key-release */
-	queue_delayed_work(system_power_efficient_wq,&pon->bark_work, QPNP_KEY_STATUS_DELAY);
+	schedule_delayed_work(&pon->bark_work, QPNP_KEY_STATUS_DELAY);
 
 	return IRQ_HANDLED;
 }

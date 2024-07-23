@@ -93,7 +93,7 @@ static int usbd_connect_notify(struct notifier_block *self,
 
 	udc->conn_type = event;
 
-	queue_delayed_work(system_power_efficient_wq,&udc->drd_work, 0);
+	schedule_delayed_work(&udc->drd_work, 0);
 
 	return NOTIFY_OK;
 }

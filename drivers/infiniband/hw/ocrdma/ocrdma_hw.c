@@ -3185,7 +3185,7 @@ void ocrdma_eqd_set_task(struct work_struct *work)
 
 	if (num)
 		ocrdma_modify_eqd(dev, &dev->eq_tbl[0], num);
-	queue_delayed_work(system_power_efficient_wq,&dev->eqd_work, msecs_to_jiffies(1000));
+	schedule_delayed_work(&dev->eqd_work, msecs_to_jiffies(1000));
 }
 
 int ocrdma_init_hw(struct ocrdma_dev *dev)

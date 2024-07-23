@@ -45,7 +45,7 @@ static void pcap_ts_read_xy(void *data, u16 res[2])
 		if (res[0] > PRESSURE_MIN && res[0] < PRESSURE_MAX)
 			pcap_ts->pressure = res[0];
 		pcap_ts->read_state = PCAP_ADC_TS_M_XY;
-		queue_delayed_work(system_power_efficient_wq,&pcap_ts->work, 0);
+		schedule_delayed_work(&pcap_ts->work, 0);
 		break;
 	case PCAP_ADC_TS_M_XY:
 		pcap_ts->y = res[0];
@@ -57,7 +57,7 @@ static void pcap_ts_read_xy(void *data, u16 res[2])
 			input_report_key(pcap_ts->input, BTN_TOUCH, 0);
 
 			pcap_ts->read_state = PCAP_ADC_TS_M_STANDBY;
-			queue_delayed_work(system_power_efficient_wq,&pcap_ts->work, 0);
+			schedule_delayed_work(&pcap_ts->work, 0);
 		} else {
 			/* pen is touching the screen */
 			input_report_abs(pcap_ts->input, ABS_X, pcap_ts->x);
@@ -68,7 +68,7 @@ static void pcap_ts_read_xy(void *data, u16 res[2])
 
 			/* switch back to pressure read mode */
 			pcap_ts->read_state = PCAP_ADC_TS_M_PRESSURE;
-			queue_delayed_work(system_power_efficient_wq,&pcap_ts->work,
+			schedule_delayed_work(&pcap_ts->work,
 					msecs_to_jiffies(SAMPLE_DELAY));
 		}
 		input_sync(pcap_ts->input);
@@ -106,7 +106,7 @@ static irqreturn_t pcap_ts_event_touch(int pirq, void *data)
 
 	if (pcap_ts->read_state == PCAP_ADC_TS_M_STANDBY) {
 		pcap_ts->read_state = PCAP_ADC_TS_M_PRESSURE;
-		queue_delayed_work(system_power_efficient_wq,&pcap_ts->work, 0);
+		schedule_delayed_work(&pcap_ts->work, 0);
 	}
 	return IRQ_HANDLED;
 }
@@ -116,7 +116,7 @@ static int pcap_ts_open(struct input_dev *dev)
 	struct pcap_ts *pcap_ts = input_get_drvdata(dev);
 
 	pcap_ts->read_state = PCAP_ADC_TS_M_STANDBY;
-	queue_delayed_work(system_power_efficient_wq,&pcap_ts->work, 0);
+	schedule_delayed_work(&pcap_ts->work, 0);
 
 	return 0;
 }

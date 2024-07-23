@@ -5243,7 +5243,7 @@ static void beiscsi_eqd_update_work(struct work_struct *work)
 		/* completion of this is ignored */
 		beiscsi_modify_eq_delay(phba, set_eqd, num);
 
-	queue_delayed_work(system_power_efficient_wq,&phba->eqd_update,
+	schedule_delayed_work(&phba->eqd_update,
 			      msecs_to_jiffies(BEISCSI_EQD_UPDATE_INTERVAL));
 }
 
@@ -5360,7 +5360,7 @@ static int beiscsi_enable_port(struct beiscsi_hba *phba)
 		      "BM_%d : port online: 0x%lx\n", phba->state);
 
 	/* start hw_check timer and eqd_update work */
-	queue_delayed_work(system_power_efficient_wq,&phba->eqd_update,
+	schedule_delayed_work(&phba->eqd_update,
 			      msecs_to_jiffies(BEISCSI_EQD_UPDATE_INTERVAL));
 
 	/**
@@ -5707,7 +5707,7 @@ static int beiscsi_dev_probe(struct pci_dev *pcidev,
 	}
 
 	beiscsi_iface_create_default(phba);
-	queue_delayed_work(system_power_efficient_wq,&phba->eqd_update,
+	schedule_delayed_work(&phba->eqd_update,
 			      msecs_to_jiffies(BEISCSI_EQD_UPDATE_INTERVAL));
 
 	INIT_WORK(&phba->sess_work, beiscsi_sess_work);

@@ -322,7 +322,7 @@ static void fc_disc_error(struct fc_disc *disc, struct fc_frame *fp)
 					delay /= 4;
 			}
 			disc->retry_count++;
-			queue_delayed_work(system_power_efficient_wq,&disc->disc_work, delay);
+			schedule_delayed_work(&disc->disc_work, delay);
 		} else
 			fc_disc_done(disc, DISC_EV_FAILED);
 	} else if (PTR_ERR(fp) == -FC_EX_CLOSED) {

@@ -203,7 +203,7 @@ static void ssi_gdd_complete(struct hsi_controller *ssi, unsigned int lch)
 		spin_unlock(&omap_port->lock);
 
 		list_add_tail(&msg->link, &omap_port->errqueue);
-		queue_delayed_work(system_power_efficient_wq,&omap_port->errqueue_work, 0);
+		schedule_delayed_work(&omap_port->errqueue_work, 0);
 		return;
 	}
 	spin_lock(&omap_port->lock);

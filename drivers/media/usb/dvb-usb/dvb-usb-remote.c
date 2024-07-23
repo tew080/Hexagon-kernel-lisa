@@ -184,7 +184,7 @@ static void legacy_dvb_usb_read_remote_control(struct work_struct *work)
 */
 
 schedule:
-	queue_delayed_work(system_power_efficient_wq,&d->rc_query_work,msecs_to_jiffies(d->props.rc.legacy.rc_interval));
+	schedule_delayed_work(&d->rc_query_work,msecs_to_jiffies(d->props.rc.legacy.rc_interval));
 }
 
 static int legacy_dvb_usb_remote_init(struct dvb_usb_device *d)
@@ -230,7 +230,7 @@ static int legacy_dvb_usb_remote_init(struct dvb_usb_device *d)
 	INIT_DELAYED_WORK(&d->rc_query_work, legacy_dvb_usb_read_remote_control);
 
 	info("schedule remote query interval to %d msecs.", rc_interval);
-	queue_delayed_work(system_power_efficient_wq,&d->rc_query_work,
+	schedule_delayed_work(&d->rc_query_work,
 			      msecs_to_jiffies(rc_interval));
 
 	d->state |= DVB_USB_STATE_REMOTE;
@@ -262,7 +262,7 @@ static void dvb_usb_read_remote_control(struct work_struct *work)
 	if (err)
 		err("error %d while querying for an remote control event.", err);
 
-	queue_delayed_work(system_power_efficient_wq,&d->rc_query_work,
+	schedule_delayed_work(&d->rc_query_work,
 			      msecs_to_jiffies(d->props.rc.core.rc_interval));
 }
 
@@ -304,7 +304,7 @@ static int rc_core_dvb_usb_remote_init(struct dvb_usb_device *d)
 	rc_interval = d->props.rc.core.rc_interval;
 
 	info("schedule remote query interval to %d msecs.", rc_interval);
-	queue_delayed_work(system_power_efficient_wq,&d->rc_query_work,
+	schedule_delayed_work(&d->rc_query_work,
 			      msecs_to_jiffies(rc_interval));
 
 	return 0;

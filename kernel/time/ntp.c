@@ -525,7 +525,7 @@ static void sched_sync_hw_clock(struct timespec64 now,
 		next.tv_nsec -= NSEC_PER_SEC;
 	}
 
-	queue_delayed_work(system_power_efficient_wq, &sync_work,
+	schedule_delayed_work( &sync_work,
 			   timespec64_to_jiffies(&next));
 }
 
@@ -629,7 +629,7 @@ void ntp_notify_cmos_timer(void)
 
 	if (IS_ENABLED(CONFIG_GENERIC_CMOS_UPDATE) ||
 	    IS_ENABLED(CONFIG_RTC_SYSTOHC))
-		queue_delayed_work(system_power_efficient_wq, &sync_work, 0);
+		schedule_delayed_work( &sync_work, 0);
 }
 
 /*

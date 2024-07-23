@@ -354,7 +354,7 @@ static inline void pqi_schedule_rescan_worker_with_delay(
 	if (pqi_ctrl_in_ofa(ctrl_info))
 		return;
 
-	queue_delayed_work(system_power_efficient_wq,&ctrl_info->rescan_work, delay);
+	schedule_delayed_work(&ctrl_info->rescan_work, delay);
 }
 
 static inline void pqi_schedule_rescan_worker(struct pqi_ctrl_info *ctrl_info)
@@ -872,14 +872,14 @@ static void pqi_update_time_worker(struct work_struct *work)
 		dev_warn(&ctrl_info->pci_dev->dev,
 			"error updating time on controller\n");
 
-	queue_delayed_work(system_power_efficient_wq,&ctrl_info->update_time_work,
+	schedule_delayed_work(&ctrl_info->update_time_work,
 		PQI_UPDATE_TIME_WORK_INTERVAL);
 }
 
 static inline void pqi_schedule_update_time_worker(
 	struct pqi_ctrl_info *ctrl_info)
 {
-	queue_delayed_work(system_power_efficient_wq,&ctrl_info->update_time_work, 0);
+	schedule_delayed_work(&ctrl_info->update_time_work, 0);
 }
 
 static inline void pqi_cancel_update_time_worker(

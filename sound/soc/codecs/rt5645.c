@@ -3084,7 +3084,7 @@ static int rt5645_set_bias_level(struct snd_soc_component *component,
 			snd_soc_component_write(component, RT5645_DEPOP_M2, 0x1140);
 			msleep(40);
 			if (rt5645->en_button_func)
-				queue_delayed_work(system_power_efficient_wq,
+				schedule_delayed_work(
 					&rt5645->jack_detect_work,
 					msecs_to_jiffies(0));
 		}
@@ -3377,7 +3377,7 @@ static irqreturn_t rt5645_irq(int irq, void *data)
 {
 	struct rt5645_priv *rt5645 = data;
 
-	queue_delayed_work(system_power_efficient_wq,
+	schedule_delayed_work(
 			   &rt5645->jack_detect_work, msecs_to_jiffies(250));
 
 	return IRQ_HANDLED;
@@ -3387,7 +3387,7 @@ static void rt5645_btn_check_callback(struct timer_list *t)
 {
 	struct rt5645_priv *rt5645 = from_timer(rt5645, t, btn_check_timer);
 
-	queue_delayed_work(system_power_efficient_wq,
+	schedule_delayed_work(
 		   &rt5645->jack_detect_work, msecs_to_jiffies(5));
 }
 

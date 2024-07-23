@@ -2721,7 +2721,7 @@ static int sysc_probe(struct platform_device *pdev)
 	if (ddata->cfg.quirks & (SYSC_QUIRK_NO_IDLE |
 				 SYSC_QUIRK_NO_IDLE_ON_INIT |
 				 SYSC_QUIRK_NO_RESET_ON_INIT)) {
-		queue_delayed_work(system_power_efficient_wq,&ddata->idle_work, 3000);
+		schedule_delayed_work(&ddata->idle_work, 3000);
 	} else {
 		pm_runtime_put(&pdev->dev);
 	}

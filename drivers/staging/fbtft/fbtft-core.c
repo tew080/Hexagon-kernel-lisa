@@ -327,7 +327,7 @@ static void fbtft_mkdirty(struct fb_info *info, int y, int height)
 	spin_unlock(&par->dirty_lock);
 
 	/* Schedule deferred_io to update display (no-op if already on queue)*/
-	queue_delayed_work(system_power_efficient_wq,&info->deferred_work, fbdefio->delay);
+	schedule_delayed_work(&info->deferred_work, fbdefio->delay);
 }
 
 static void fbtft_deferred_io(struct fb_info *info, struct list_head *pagelist)

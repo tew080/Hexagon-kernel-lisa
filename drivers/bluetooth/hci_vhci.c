@@ -324,7 +324,7 @@ static int vhci_open(struct inode *inode, struct file *file)
 	file->private_data = data;
 	nonseekable_open(inode, file);
 
-	queue_delayed_work(system_power_efficient_wq,&data->open_timeout, msecs_to_jiffies(1000));
+	schedule_delayed_work(&data->open_timeout, msecs_to_jiffies(1000));
 
 	return 0;
 }

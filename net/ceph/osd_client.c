@@ -3360,7 +3360,7 @@ static void handle_timeout(struct work_struct *work)
 	}
 
 	up_write(&osdc->lock);
-	queue_delayed_work(system_power_efficient_wq,&osdc->timeout_work,
+	schedule_delayed_work(&osdc->timeout_work,
 			      osdc->client->options->osd_keepalive_timeout);
 }
 
@@ -3384,7 +3384,7 @@ static void handle_osds_timeout(struct work_struct *work)
 	}
 
 	up_write(&osdc->lock);
-	queue_delayed_work(system_power_efficient_wq,&osdc->osds_timeout_work,
+	schedule_delayed_work(&osdc->osds_timeout_work,
 			      round_jiffies_relative(delay));
 }
 
@@ -5188,9 +5188,9 @@ int ceph_osdc_init(struct ceph_osd_client *osdc, struct ceph_client *client)
 	if (!osdc->completion_wq)
 		goto out_notify_wq;
 
-	queue_delayed_work(system_power_efficient_wq,&osdc->timeout_work,
+	schedule_delayed_work(&osdc->timeout_work,
 			      osdc->client->options->osd_keepalive_timeout);
-	queue_delayed_work(system_power_efficient_wq,&osdc->osds_timeout_work,
+	schedule_delayed_work(&osdc->osds_timeout_work,
 	    round_jiffies_relative(osdc->client->options->osd_idle_ttl));
 
 	return 0;

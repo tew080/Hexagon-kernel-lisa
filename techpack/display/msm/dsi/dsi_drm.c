@@ -339,7 +339,7 @@ int dsi_bridge_interface_enable(int timeout)
 		dsi_bridge_pre_enable(&gbridge->base);
 
 		if (timeout > 0)
-			queue_delayed_work(system_power_efficient_wq,&prim_panel_work, msecs_to_jiffies(timeout));
+			schedule_delayed_work(&prim_panel_work, msecs_to_jiffies(timeout));
 		else
 			__pm_relax(prim_panel_wakelock);
 
@@ -357,7 +357,7 @@ int dsi_bridge_interface_enable(int timeout)
 		dsi_bridge_pre_enable(&gsec_bridge->base);
 
 		if (timeout > 0)
-			queue_delayed_work(system_power_efficient_wq,&sec_panel_work, msecs_to_jiffies(timeout));
+			schedule_delayed_work(&sec_panel_work, msecs_to_jiffies(timeout));
 		else
 			__pm_relax(sec_panel_wakelock);
 

@@ -358,7 +358,7 @@ int hl_hw_queue_schedule_cs(struct hl_cs *cs)
 			(list_first_entry(&hdev->hw_queues_mirror_list,
 					struct hl_cs, mirror_node) == cs)) {
 		cs->tdr_active = true;
-		queue_delayed_work(system_power_efficient_wq,&cs->work_tdr, hdev->timeout_jiffies);
+		schedule_delayed_work(&cs->work_tdr, hdev->timeout_jiffies);
 		spin_unlock(&hdev->hw_queues_mirror_lock);
 	} else {
 		spin_unlock(&hdev->hw_queues_mirror_lock);

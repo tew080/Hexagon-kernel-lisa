@@ -594,7 +594,7 @@ static void i5100_refresh_scrubbing(struct work_struct *work)
 			pci_read_config_dword(priv->mc, I5100_MC, &dw);
 		}
 
-		queue_delayed_work(system_power_efficient_wq,&(priv->i5100_scrubbing),
+		schedule_delayed_work(&(priv->i5100_scrubbing),
 				      I5100_SCRUB_REFRESH_RATE);
 	}
 }
@@ -610,7 +610,7 @@ static int i5100_set_scrub_rate(struct mem_ctl_info *mci, u32 bandwidth)
 	if (bandwidth) {
 		priv->scrub_enable = 1;
 		dw |= I5100_MC_SCRBEN_MASK;
-		queue_delayed_work(system_power_efficient_wq,&(priv->i5100_scrubbing),
+		schedule_delayed_work(&(priv->i5100_scrubbing),
 				      I5100_SCRUB_REFRESH_RATE);
 	} else {
 		priv->scrub_enable = 0;
@@ -1098,7 +1098,7 @@ static int i5100_init_one(struct pci_dev *pdev, const struct pci_device_id *id)
 	pci_read_config_dword(pdev, I5100_MC, &dw);
 	if (i5100_mc_scrben(dw)) {
 		priv->scrub_enable = 1;
-		queue_delayed_work(system_power_efficient_wq,&(priv->i5100_scrubbing),
+		schedule_delayed_work(&(priv->i5100_scrubbing),
 				      I5100_SCRUB_REFRESH_RATE);
 	}
 

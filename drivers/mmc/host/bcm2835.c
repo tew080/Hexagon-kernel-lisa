@@ -642,7 +642,7 @@ bool bcm2835_send_command(struct bcm2835_host *host, struct mmc_command *cmd)
 		timeout = DIV_ROUND_UP(cmd->busy_timeout, 1000) * HZ + HZ;
 	else
 		timeout = 10 * HZ;
-	queue_delayed_work(system_power_efficient_wq,&host->timeout_work, timeout);
+	schedule_delayed_work(&host->timeout_work, timeout);
 
 	host->cmd = cmd;
 

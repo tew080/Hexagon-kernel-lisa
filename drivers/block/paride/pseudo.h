@@ -63,9 +63,9 @@ static void ps_set_intr(void (*continuation)(void),
 	if (!ps_tq_active) {
 		ps_tq_active = 1;
 		if (!ps_nice)
-			queue_delayed_work(system_power_efficient_wq,&ps_tq, 0);
+			schedule_delayed_work(&ps_tq, 0);
 		else
-			queue_delayed_work(system_power_efficient_wq,&ps_tq, ps_nice-1);
+			schedule_delayed_work(&ps_tq, ps_nice-1);
 	}
 	spin_unlock_irqrestore(&ps_spinlock,flags);
 }
@@ -92,9 +92,9 @@ static void ps_tq_int(struct work_struct *work)
 	}
 	ps_tq_active = 1;
 	if (!ps_nice)
-		queue_delayed_work(system_power_efficient_wq,&ps_tq, 0);
+		schedule_delayed_work(&ps_tq, 0);
 	else
-		queue_delayed_work(system_power_efficient_wq,&ps_tq, ps_nice-1);
+		schedule_delayed_work(&ps_tq, ps_nice-1);
 	spin_unlock_irqrestore(&ps_spinlock,flags);
 }
 
