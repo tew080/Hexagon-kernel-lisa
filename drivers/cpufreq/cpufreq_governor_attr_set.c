@@ -7,7 +7,11 @@
  */
 
 #include "cpufreq_governor.h"
-#include <linux/sched/cpufreq.h>
+
+static inline struct gov_attr_set *to_gov_attr_set(struct kobject *kobj)
+{
+	return container_of(kobj, struct gov_attr_set, kobj);
+}
 
 static inline struct governor_attr *to_gov_attr(struct attribute *attr)
 {
