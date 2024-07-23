@@ -153,14 +153,6 @@ module_param_call(stop_on_user_error, binder_set_stop_on_user_error,
 		if (binder_stop_on_user_error) \
 			binder_stop_on_user_error = 2; \
 	} while (0)
-#else
-static inline void binder_debug(uint32_t mask, const char *fmt, ...) {}
-static inline void binder_user_error(const char *fmt, ...)
-{
-	if (binder_stop_on_user_error)
-		binder_stop_on_user_error = 2;
-}
-#endif
 
 #else
 static inline void binder_debug(uint32_t mask, const char *fmt, ...)
