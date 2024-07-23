@@ -15,20 +15,6 @@
 #include <linux/sched/sysctl.h>
 #include <trace/hooks/sched.h>
 
-#define NL_RATIO 75
-#define HISPEED_LOAD_CPU_LP_MASK 85
-#define HISPEED_LOAD_CPU_PERF_MASK 85
-#define HISPEED_LOAD_CPU_PRIME_MASK 90
-#define UP_RATE_LIMIT_US_CPU_LP_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 20000
-#define UP_RATE_LIMIT_US_CPU_PERF_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 10000
-#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 5000
-#define DEFAULT_CPU0_RTG_BOOST_FREQ 1516000
-#define DEFAULT_CPU4_RTG_BOOST_FREQ 1516000
-#define DEFAULT_CPU7_RTG_BOOST_FREQ 1516000
-
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
 	unsigned int		up_rate_limit_us;
