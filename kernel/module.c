@@ -1432,7 +1432,6 @@ static int verify_namespace_is_imported(const struct load_info *info,
 	return 0;
 }
 
-#ifndef CONFIG_MACH_XIAOMI
 static bool inherit_taint(struct module *mod, struct module *owner)
 {
 	if (!owner || !test_bit(TAINT_PROPRIETARY_MODULE, &owner->taints))
@@ -1451,7 +1450,6 @@ static bool inherit_taint(struct module *mod, struct module *owner)
 	}
 	return true;
 }
-#endif
 
 /* Resolve a symbol for this module.  I.e. if we find one, record usage. */
 static const struct kernel_symbol *resolve_symbol(struct module *mod,
@@ -1477,7 +1475,6 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
 	if (!sym)
 		goto unlock;
 
-#ifndef CONFIG_MACH_XIAOMI
 	if (license == GPL_ONLY)
 		mod->using_gplonly_symbols = true;
 
@@ -1485,7 +1482,6 @@ static const struct kernel_symbol *resolve_symbol(struct module *mod,
 		sym = NULL;
 		goto getname;
 	}
-#endif
 
 	if (!check_version(info, name, mod, crc)) {
 		sym = ERR_PTR(-EINVAL);
