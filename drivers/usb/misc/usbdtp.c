@@ -2,7 +2,10 @@
  * USB Driver for DTP
  *
  * Copyright (C) 2020 xiaomi, Inc.
+<<<<<<< HEAD
  * Copyright (C) 2021 XiaoMi, Inc.
+=======
+>>>>>>> bdcdd7a0496130 (drivers: usb: Import xiaomi changes)
  * Author: Deng yong jian <dengyongjian@xiaomi.com>
  *
  * This software is licensed under the terms of the GNU General Public
@@ -727,7 +730,11 @@ static int usb_probe(struct usb_interface *interface, const struct usb_device_id
 
 	if (set_devicet_status(drv, e_ready) != e_ready) {
 		log_err("binding gadget device failed\n");
+<<<<<<< HEAD
 		drv->disconnected = -1;
+=======
+		drv->disconnected = 1;
+>>>>>>> bdcdd7a0496130 (drivers: usb: Import xiaomi changes)
 	} else
 		log_dbg("binding gadget device successful\n");
 
@@ -759,7 +766,11 @@ static void usb_disconnect(struct usb_interface *intf)
 	log_dbg( "disconnect\n");
 
 	down_write(&drv->io_rwsem);
+<<<<<<< HEAD
 	drv->disconnected = -1;
+=======
+	drv->disconnected = 1;
+>>>>>>> bdcdd7a0496130 (drivers: usb: Import xiaomi changes)
 	up_write(&drv->io_rwsem);
 	usb_kill_anchored_urbs(&drv->submitted);
 	misc_deregister(&usb_device);

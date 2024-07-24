@@ -525,7 +525,7 @@ static int fsa4480_probe(struct i2c_client *i2c,
 		(struct rw_semaphore)__RWSEM_INITIALIZER
 		((fsa_priv->fsa4480_notifier).rwsem);
 	fsa_priv->fsa4480_notifier.head = NULL;
-	
+
 	return 0;
 
 err_supply:
