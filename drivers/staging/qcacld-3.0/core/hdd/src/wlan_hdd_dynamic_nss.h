@@ -1,9 +1,6 @@
 /*
  * Copyright (c) 2014, 2017 The Linux Foundation. All rights reserved.
-<<<<<<< HEAD:drivers/staging/qcacld-3.0/core/hdd/src/wlan_hdd_dynamic_nss.h
  * Copyright (C) 2021 XiaoMi, Inc.
-=======
->>>>>>> f8ffa2cbf3f10a (qcacld-3.0: import xiaomi changes):core/hdd/src/wlan_hdd_dynamic_nss.h
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
