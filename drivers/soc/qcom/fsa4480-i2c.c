@@ -526,6 +526,18 @@ static int fsa4480_probe(struct i2c_client *i2c,
 		((fsa_priv->fsa4480_notifier).rwsem);
 	fsa_priv->fsa4480_notifier.head = NULL;
 
+	regmap_read(fsa_priv->regmap, ET7480_ID, &reg_val);
+	if (reg_val == DIO4480_ID_VALUE) {
+		fsa_priv->dio4480 = true;
+		pr_debug("%s audio switch use dio4480 reg_val is %x", __func__, reg_val);
+	} else {
+		fsa_priv->dio4480 = false;
+		pr_debug("%s audio switch use et7480 reg_val is %x", __func__, reg_val);
+	}
+#ifdef CONFIG_MMHARDWARE_OTHER_DETECTION
+	register_otherkobj_under_mmsysfs(MM_HW_AS, "audioswitch");
+#endif
+
 	return 0;
 
 err_supply:
