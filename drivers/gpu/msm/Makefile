@@ -2,7 +2,7 @@
 ccflags-y += -I$(src)
 
 
-ccflags-y += -Ofast
+ccflags-y +=  -O3 -ffast-math
 obj-$(CONFIG_QCOM_KGSL) += msm_kgsl.o
 
 msm_kgsl-y = \

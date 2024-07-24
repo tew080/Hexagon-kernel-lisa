@@ -70,7 +70,7 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
                -Werror-implicit-function-declaration \
                -Wno-format-security \
                -std=gnu89
-VDSO_CFLAGS  += -Ofast
+VDSO_CFLAGS  += -O3 -ffast-math
 VDSO_CFLAGS  += -mcpu=cortex-a78 -mtune=cortex-a78 \
                    -mfpu=neon-fp-armv8  \
                    -funroll-loops -ftree-vectorize \
