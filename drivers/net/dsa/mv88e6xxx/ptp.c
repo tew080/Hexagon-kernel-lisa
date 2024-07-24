@@ -193,7 +193,7 @@ static void mv88e6352_tai_event_work(struct work_struct *ugly)
 
 	ptp_clock_event(chip->ptp_clock, &ev);
 out:
-	schedule_delayed_work(&chip->tai_event_work, TAI_EVENT_WORK_INTERVAL);
+	queue_delayed_work(system_power_efficient_wq,&chip->tai_event_work, TAI_EVENT_WORK_INTERVAL);
 }
 
 static int mv88e6xxx_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
@@ -300,7 +300,7 @@ static int mv88e6352_ptp_enable_extts(struct mv88e6xxx_chip *chip,
 		if (err)
 			goto out;
 
-		schedule_delayed_work(&chip->tai_event_work,
+		queue_delayed_work(system_power_efficient_wq,&chip->tai_event_work,
 				      TAI_EVENT_WORK_INTERVAL);
 
 		err = mv88e6352_config_eventcap(chip, PTP_CLOCK_EXTTS, rising);
@@ -441,7 +441,7 @@ static void mv88e6xxx_ptp_overflow_check(struct work_struct *work)
 
 	mv88e6xxx_ptp_gettime(&chip->ptp_clock_info, &ts);
 
-	schedule_delayed_work(&chip->overflow_work,
+	queue_delayed_work(system_power_efficient_wq,&chip->overflow_work,
 			      MV88E6XXX_TAI_OVERFLOW_PERIOD);
 }
 
@@ -495,7 +495,7 @@ int mv88e6xxx_ptp_setup(struct mv88e6xxx_chip *chip)
 	if (IS_ERR(chip->ptp_clock))
 		return PTR_ERR(chip->ptp_clock);
 
-	schedule_delayed_work(&chip->overflow_work,
+	queue_delayed_work(system_power_efficient_wq,&chip->overflow_work,
 			      MV88E6XXX_TAI_OVERFLOW_PERIOD);
 
 	return 0;

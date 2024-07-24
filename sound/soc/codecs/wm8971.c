@@ -577,7 +577,7 @@ static int wm8971_set_bias_level(struct snd_soc_component *component,
 			snd_soc_component_cache_sync(component);
 			/* charge output caps - set vmid to 5k for quick power up */
 			snd_soc_component_write(component, WM8971_PWR1, pwr_reg | 0x01c0);
-			schedule_delayed_work(
+			queue_delayed_work(system_power_efficient_wq,
 				&wm8971->charge_work, msecs_to_jiffies(1000));
 		} else {
 			/* mute dac and set vmid to 500k, enable VREF */

@@ -2510,7 +2510,7 @@ static void kvm_gen_kvmclock_update(struct kvm_vcpu *v)
 	struct kvm *kvm = v->kvm;
 
 	kvm_make_request(KVM_REQ_CLOCK_UPDATE, v);
-	schedule_delayed_work(&kvm->arch.kvmclock_update_work,
+	queue_delayed_work(system_power_efficient_wq,&kvm->arch.kvmclock_update_work,
 					KVMCLOCK_UPDATE_DELAY);
 }
 
@@ -2526,8 +2526,8 @@ static void kvmclock_sync_fn(struct work_struct *work)
 	if (!kvmclock_periodic_sync)
 		return;
 
-	schedule_delayed_work(&kvm->arch.kvmclock_update_work, 0);
-	schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+	queue_delayed_work(system_power_efficient_wq,&kvm->arch.kvmclock_update_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&kvm->arch.kvmclock_sync_work,
 					KVMCLOCK_SYNC_PERIOD);
 }
 
@@ -9284,7 +9284,7 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
 	if (!kvmclock_periodic_sync)
 		return;
 
-	schedule_delayed_work(&kvm->arch.kvmclock_sync_work,
+	queue_delayed_work(system_power_efficient_wq,&kvm->arch.kvmclock_sync_work,
 					KVMCLOCK_SYNC_PERIOD);
 }
 

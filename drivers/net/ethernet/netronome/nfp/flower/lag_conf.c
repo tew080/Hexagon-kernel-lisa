@@ -292,7 +292,7 @@ static void nfp_fl_lag_do_work(struct work_struct *work)
 			} else {
 				nfp_flower_cmsg_warn(priv->app,
 						     "group delete failed\n");
-				schedule_delayed_work(&lag->work,
+				queue_delayed_work(system_power_efficient_wq,&lag->work,
 						      NFP_FL_LAG_DELAY);
 				continue;
 			}
@@ -309,7 +309,7 @@ static void nfp_fl_lag_do_work(struct work_struct *work)
 		acti_netdevs = kmalloc_array(entry->slave_cnt,
 					     sizeof(*acti_netdevs), GFP_KERNEL);
 		if (!acti_netdevs) {
-			schedule_delayed_work(&lag->work,
+			queue_delayed_work(system_power_efficient_wq,&lag->work,
 					      NFP_FL_LAG_DELAY);
 			continue;
 		}
@@ -366,7 +366,7 @@ static void nfp_fl_lag_do_work(struct work_struct *work)
 		} else {
 			nfp_flower_cmsg_warn(priv->app,
 					     "group offload failed\n");
-			schedule_delayed_work(&lag->work, NFP_FL_LAG_DELAY);
+			queue_delayed_work(system_power_efficient_wq,&lag->work, NFP_FL_LAG_DELAY);
 		}
 
 		kfree(acti_netdevs);
@@ -464,7 +464,7 @@ bool nfp_flower_lag_unprocessed_msg(struct nfp_app *app, struct sk_buff *skb)
 					     "mem err in group reset msg\n");
 		mutex_unlock(&priv->nfp_lag.lock);
 
-		schedule_delayed_work(&priv->nfp_lag.work, 0);
+		queue_delayed_work(system_power_efficient_wq,&priv->nfp_lag.work, 0);
 	}
 
 	return store_skb;
@@ -476,7 +476,7 @@ nfp_fl_lag_schedule_group_remove(struct nfp_fl_lag *lag,
 {
 	group->to_remove = true;
 
-	schedule_delayed_work(&lag->work, NFP_FL_LAG_DELAY);
+	queue_delayed_work(system_power_efficient_wq,&lag->work, NFP_FL_LAG_DELAY);
 }
 
 static void
@@ -504,7 +504,7 @@ nfp_fl_lag_schedule_group_delete(struct nfp_fl_lag *lag,
 	group->to_destroy = true;
 	mutex_unlock(&lag->lock);
 
-	schedule_delayed_work(&lag->work, NFP_FL_LAG_DELAY);
+	queue_delayed_work(system_power_efficient_wq,&lag->work, NFP_FL_LAG_DELAY);
 }
 
 static int
@@ -585,7 +585,7 @@ nfp_fl_lag_changeupper_event(struct nfp_fl_lag *lag,
 	group->to_remove = false;
 	mutex_unlock(&lag->lock);
 
-	schedule_delayed_work(&lag->work, NFP_FL_LAG_DELAY);
+	queue_delayed_work(system_power_efficient_wq,&lag->work, NFP_FL_LAG_DELAY);
 	return 0;
 }
 
@@ -630,7 +630,7 @@ nfp_fl_lag_changels_event(struct nfp_fl_lag *lag, struct net_device *netdev,
 	*flags |= NFP_PORT_LAG_CHANGED;
 	mutex_unlock(&lag->lock);
 
-	schedule_delayed_work(&lag->work, NFP_FL_LAG_DELAY);
+	queue_delayed_work(system_power_efficient_wq,&lag->work, NFP_FL_LAG_DELAY);
 }
 
 int nfp_flower_lag_netdev_event(struct nfp_flower_priv *priv,

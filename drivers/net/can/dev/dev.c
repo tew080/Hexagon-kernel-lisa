@@ -628,7 +628,7 @@ void can_bus_off(struct net_device *dev)
 	netif_carrier_off(dev);
 
 	if (priv->restart_ms)
-		schedule_delayed_work(&priv->restart_work,
+		queue_delayed_work(system_power_efficient_wq,&priv->restart_work,
 				      msecs_to_jiffies(priv->restart_ms));
 }
 EXPORT_SYMBOL_GPL(can_bus_off);

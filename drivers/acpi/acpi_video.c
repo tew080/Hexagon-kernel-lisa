@@ -1657,7 +1657,7 @@ static void brightness_switch_event(struct acpi_video_device *video_device,
 		return;
 
 	video_device->switch_brightness_event = event;
-	schedule_delayed_work(&video_device->switch_brightness_work, HZ / 10);
+	queue_delayed_work(system_power_efficient_wq,&video_device->switch_brightness_work, HZ / 10);
 }
 
 static void acpi_video_device_notify(acpi_handle handle, u32 event, void *data)

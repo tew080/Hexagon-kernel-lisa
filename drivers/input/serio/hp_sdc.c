@@ -953,7 +953,7 @@ static int __init hp_sdc_init_hppa(struct parisc_device *d)
 	/* after successful initialization give SDC some time to settle
 	 * and then load the hp_sdc_mlc upper layer driver */
 	if (!ret)
-		schedule_delayed_work(&moduleloader_work,
+		queue_delayed_work(system_power_efficient_wq,&moduleloader_work,
 			msecs_to_jiffies(2000));
 
 	return ret;

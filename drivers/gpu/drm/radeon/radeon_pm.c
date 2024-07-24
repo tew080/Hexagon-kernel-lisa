@@ -1249,7 +1249,7 @@ static void radeon_pm_resume_old(struct radeon_device *rdev)
 	if (rdev->pm.pm_method == PM_METHOD_DYNPM
 	    && rdev->pm.dynpm_state == DYNPM_STATE_SUSPENDED) {
 		rdev->pm.dynpm_state = DYNPM_STATE_ACTIVE;
-		schedule_delayed_work(&rdev->pm.dynpm_idle_work,
+		queue_delayed_work(system_power_efficient_wq,&rdev->pm.dynpm_idle_work,
 				      msecs_to_jiffies(RADEON_IDLE_LOOP_MS));
 	}
 	mutex_unlock(&rdev->pm.mutex);
@@ -1691,11 +1691,11 @@ static void radeon_pm_compute_clocks_old(struct radeon_device *rdev)
 					radeon_pm_get_dynpm_state(rdev);
 					radeon_pm_set_clocks(rdev);
 
-					schedule_delayed_work(&rdev->pm.dynpm_idle_work,
+					queue_delayed_work(system_power_efficient_wq,&rdev->pm.dynpm_idle_work,
 							      msecs_to_jiffies(RADEON_IDLE_LOOP_MS));
 				} else if (rdev->pm.dynpm_state == DYNPM_STATE_PAUSED) {
 					rdev->pm.dynpm_state = DYNPM_STATE_ACTIVE;
-					schedule_delayed_work(&rdev->pm.dynpm_idle_work,
+					queue_delayed_work(system_power_efficient_wq,&rdev->pm.dynpm_idle_work,
 							      msecs_to_jiffies(RADEON_IDLE_LOOP_MS));
 					DRM_DEBUG_DRIVER("radeon: dynamic power management activated\n");
 				}
@@ -1857,7 +1857,7 @@ static void radeon_dynpm_idle_work_handler(struct work_struct *work)
 			radeon_pm_set_clocks(rdev);
 		}
 
-		schedule_delayed_work(&rdev->pm.dynpm_idle_work,
+		queue_delayed_work(system_power_efficient_wq,&rdev->pm.dynpm_idle_work,
 				      msecs_to_jiffies(RADEON_IDLE_LOOP_MS));
 	}
 	mutex_unlock(&rdev->pm.mutex);

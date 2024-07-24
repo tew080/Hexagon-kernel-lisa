@@ -1695,7 +1695,7 @@ static void acer_rfkill_update(struct work_struct *ignored)
 			rfkill_set_sw_state(threeg_rfkill, !state);
 	}
 
-	schedule_delayed_work(&acer_rfkill_work, round_jiffies_relative(HZ));
+	queue_delayed_work(system_power_efficient_wq,&acer_rfkill_work, round_jiffies_relative(HZ));
 }
 
 static int acer_rfkill_set(void *data, bool blocked)
@@ -1782,7 +1782,7 @@ static int acer_rfkill_init(struct device *dev)
 
 	if ((ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID)) &&
 	    has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
-		schedule_delayed_work(&acer_rfkill_work,
+		queue_delayed_work(system_power_efficient_wq,&acer_rfkill_work,
 			round_jiffies_relative(HZ));
 
 	return 0;

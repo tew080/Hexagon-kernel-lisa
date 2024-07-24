@@ -1355,7 +1355,7 @@ static void device_uncache_fw_images_work(struct work_struct *work)
  */
 static void device_uncache_fw_images_delay(unsigned long delay)
 {
-	schedule_delayed_work( &fw_cache.work,
+	queue_delayed_work(system_power_efficient_wq, &fw_cache.work,
 			   msecs_to_jiffies(delay));
 }
 

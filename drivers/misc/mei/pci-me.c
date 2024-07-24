@@ -385,7 +385,7 @@ static int mei_me_pci_resume(struct device *device)
 	}
 
 	/* Start timer if stopped in suspend */
-	schedule_delayed_work(&dev->timer_work, HZ);
+	queue_delayed_work(system_power_efficient_wq,&dev->timer_work, HZ);
 
 	return 0;
 }

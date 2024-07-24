@@ -547,7 +547,7 @@ void chan_interrupt(struct line *line, int irq)
 
 	do {
 		if (!tty_buffer_request_room(port, 1)) {
-			schedule_delayed_work(&line->task, 1);
+			queue_delayed_work(system_power_efficient_wq,&line->task, 1);
 			goto out;
 		}
 		err = chan->ops->read(chan->fd, &c, chan->data);

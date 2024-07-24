@@ -342,7 +342,7 @@ static struct ocrdma_dev *ocrdma_add(struct be_dev_info *dev_info)
 	ocrdma_add_port_stats(dev);
 	/* Interrupt Moderation */
 	INIT_DELAYED_WORK(&dev->eqd_work, ocrdma_eqd_set_task);
-	schedule_delayed_work(&dev->eqd_work, msecs_to_jiffies(1000));
+	queue_delayed_work(system_power_efficient_wq,&dev->eqd_work, msecs_to_jiffies(1000));
 
 	pr_info("%s %s: %s \"%s\" port %d\n",
 		dev_name(&dev->nic_info.pdev->dev), hca_name(dev),

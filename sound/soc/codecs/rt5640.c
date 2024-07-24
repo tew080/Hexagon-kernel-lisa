@@ -2185,7 +2185,7 @@ static void rt5640_start_button_press_work(struct snd_soc_component *component)
 	rt5640->pressed = false;
 	rt5640->press_reported = false;
 	rt5640_clear_micbias1_ovcd(component);
-	schedule_delayed_work(&rt5640->bp_work, msecs_to_jiffies(BP_POLL_TIME));
+	queue_delayed_work(system_power_efficient_wq,&rt5640->bp_work, msecs_to_jiffies(BP_POLL_TIME));
 }
 
 static void rt5640_button_press_work(struct work_struct *work)
@@ -2216,7 +2216,7 @@ static void rt5640_button_press_work(struct work_struct *work)
 	 */
 	rt5640->poll_count++;
 	if (rt5640->poll_count < (JACK_UNPLUG_TIME / BP_POLL_TIME)) {
-		schedule_delayed_work(&rt5640->bp_work,
+		queue_delayed_work(system_power_efficient_wq,&rt5640->bp_work,
 				      msecs_to_jiffies(BP_POLL_TIME));
 		return;
 	}
@@ -2238,7 +2238,7 @@ static void rt5640_button_press_work(struct work_struct *work)
 		return; /* Stop polling */
 	}
 
-	schedule_delayed_work(&rt5640->bp_work, msecs_to_jiffies(BP_POLL_TIME));
+	queue_delayed_work(system_power_efficient_wq,&rt5640->bp_work, msecs_to_jiffies(BP_POLL_TIME));
 }
 
 static int rt5640_detect_headset(struct snd_soc_component *component)

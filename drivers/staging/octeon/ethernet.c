@@ -119,7 +119,7 @@ static void cvm_oct_rx_refill_worker(struct work_struct *work)
 	cvm_oct_rx_refill_pool(num_packet_buffers / 2);
 
 	if (!atomic_read(&cvm_oct_poll_queue_stopping))
-		schedule_delayed_work(&cvm_oct_rx_refill_work, HZ);
+		queue_delayed_work(system_power_efficient_wq,&cvm_oct_rx_refill_work, HZ);
 }
 
 static void cvm_oct_periodic_worker(struct work_struct *work)
@@ -135,7 +135,7 @@ static void cvm_oct_periodic_worker(struct work_struct *work)
 						(cvm_oct_device[priv->port]);
 
 	if (!atomic_read(&cvm_oct_poll_queue_stopping))
-		schedule_delayed_work(&priv->port_periodic_work, HZ);
+		queue_delayed_work(system_power_efficient_wq,&priv->port_periodic_work, HZ);
 }
 
 static void cvm_oct_configure_common_hw(void)
@@ -914,7 +914,7 @@ static int cvm_oct_probe(struct platform_device *pdev)
 				fau -=
 				    cvmx_pko_get_num_queues(priv->port) *
 				    sizeof(u32);
-				schedule_delayed_work(&priv->port_periodic_work,
+				queue_delayed_work(system_power_efficient_wq,&priv->port_periodic_work,
 						      HZ);
 			}
 		}
@@ -928,7 +928,7 @@ static int cvm_oct_probe(struct platform_device *pdev)
 	 */
 	cvm_oct_tx_poll_interval = 150 * (octeon_get_clock_rate() / 1000000);
 
-	schedule_delayed_work(&cvm_oct_rx_refill_work, HZ);
+	queue_delayed_work(system_power_efficient_wq,&cvm_oct_rx_refill_work, HZ);
 
 	return 0;
 }

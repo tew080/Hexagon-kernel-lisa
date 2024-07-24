@@ -666,7 +666,7 @@ static ssize_t tfa98xx_dbgfs_dsp_state_set(struct file *file,
 	}
 	else if (!strncmp(buf, mon_start_cmd, sizeof(mon_start_cmd) - 1)) {
 		pr_debug("[0x%x] Manual start of monitor thread...\n", tfa98xx->i2c->addr);
-		schedule_delayed_work(
+		queue_delayed_work(system_power_efficient_wq,
 			&tfa98xx->monitor_work, HZ);
 	}
 	else if (!strncmp(buf, mon_stop_cmd, sizeof(mon_stop_cmd) - 1)) {
@@ -2251,7 +2251,7 @@ static void tfa98xx_tapdet_check_update(struct tfa98xx *tfa98xx)
 		/* interrupt not available, setup polling mode */
 		tfa98xx->tapdet_poll = true;
 		if (enable)
-			schedule_delayed_work(
+			queue_delayed_work(system_power_efficient_wq,
 				&tfa98xx->tapdet_work, HZ / 10);
 		else
 			cancel_delayed_work_sync(&tfa98xx->tapdet_work);
@@ -2495,7 +2495,7 @@ static void tfa98xx_tapdet_work(struct work_struct *work)
 	if (tfa_irq_get(tfa98xx->tfa, tfa9912_irq_sttapdet))
 		tfa98xx_tapdet(tfa98xx);
 
-	schedule_delayed_work( &tfa98xx->tapdet_work, HZ / 10);
+	queue_delayed_work(system_power_efficient_wq, &tfa98xx->tapdet_work, HZ / 10);
 }
 static void tfa98xx_nmode_update_work(struct work_struct *work)
 {
@@ -2509,7 +2509,7 @@ static void tfa98xx_nmode_update_work(struct work_struct *work)
 	mutex_lock(&tfa98xx->dsp_lock);
 	tfa_adapt_noisemode(tfa98xx->tfa);
 	mutex_unlock(&tfa98xx->dsp_lock);
-	schedule_delayed_work( &tfa98xx->nmodeupdate_work,5 * HZ);
+	queue_delayed_work(system_power_efficient_wq, &tfa98xx->nmodeupdate_work,5 * HZ);
 #endif
 }
 static void tfa98xx_monitor(struct work_struct *work)
@@ -2530,13 +2530,13 @@ static void tfa98xx_monitor(struct work_struct *work)
 		if (error == Tfa98xx_Error_DSP_not_running) {
 			if (tfa98xx->dsp_init == TFA98XX_DSP_INIT_DONE) {
 				tfa98xx->dsp_init = TFA98XX_DSP_INIT_RECOVER;
-				schedule_delayed_work( &tfa98xx->init_work, 0);
+				queue_delayed_work(system_power_efficient_wq, &tfa98xx->init_work, 0);
 			}
 		}
 	}
 
 	/* reschedule */
-	schedule_delayed_work( &tfa98xx->monitor_work, 5 * HZ);
+	queue_delayed_work(system_power_efficient_wq, &tfa98xx->monitor_work, 5 * HZ);
 #endif
 }
 
@@ -2601,7 +2601,7 @@ static void tfa98xx_dsp_init(struct tfa98xx *tfa98xx)
 	}
 	if (reschedule) {
 		/* reschedule this init work for later */
-		schedule_delayed_work(
+		queue_delayed_work(system_power_efficient_wq,
 			&tfa98xx->init_work,
 			msecs_to_jiffies(5));
 		tfa98xx->init_count++;
@@ -2638,7 +2638,7 @@ static void tfa98xx_dsp_init(struct tfa98xx *tfa98xx)
 				 * needed.
 				 */
 				if (tfa98xx->tfa->tfa_family == 1)
-					schedule_delayed_work(
+					queue_delayed_work(system_power_efficient_wq,
 						&tfa98xx->monitor_work,
 						1 * HZ);
 				mutex_unlock(&tfa98xx->dsp_lock);
@@ -3057,7 +3057,7 @@ static int tfa98xx_mute(struct snd_soc_dai *dai, int mute, int stream)
 #if 0
 		/* Start DSP with async mode.*/
 		if (tfa98xx->dsp_init != TFA98XX_DSP_INIT_PENDING)
-			schedule_delayed_work(
+			queue_delayed_work(system_power_efficient_wq,
 			                   &tfa98xx->init_work, 0);
 #else
 		/* Start DSP with sync mode.*/
@@ -3066,7 +3066,7 @@ static int tfa98xx_mute(struct snd_soc_dai *dai, int mute, int stream)
 			tfa98xx_dsp_init(tfa98xx);
 #endif
 	     if(tfa98xx->flags & TFA98XX_FLAG_ADAPT_NOISE_MODE)
-		 	schedule_delayed_work(
+		 	queue_delayed_work(system_power_efficient_wq,
 						&tfa98xx->nmodeupdate_work,
 						0);
 	}
@@ -3264,7 +3264,7 @@ static void tfa98xx_irq_tfa2(struct tfa98xx *tfa98xx)
 	else
 		tfa_irq_mask(tfa98xx->tfa);
 
-	schedule_delayed_work( &tfa98xx->interrupt_work, 0);
+	queue_delayed_work(system_power_efficient_wq, &tfa98xx->interrupt_work, 0);
 }
 
 

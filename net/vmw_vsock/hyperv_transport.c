@@ -506,7 +506,7 @@ static bool hvs_close_lock_held(struct vsock_sock *vsk)
 	sock_hold(sk);
 	INIT_DELAYED_WORK(&vsk->close_work, hvs_close_timeout);
 	vsk->close_work_scheduled = true;
-	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
+	queue_delayed_work(system_power_efficient_wq,&vsk->close_work, HVS_CLOSE_TIMEOUT);
 	return false;
 }
 

@@ -1174,7 +1174,7 @@ __power_supply_register(struct device *parent,
 	atomic_inc(&psy->use_cnt);
 	psy->initialized = true;
 
-	schedule_delayed_work(
+	queue_delayed_work(system_power_efficient_wq,
 			   &psy->deferred_register_work,
 			   POWER_SUPPLY_DEFERRED_REGISTER_TIME);
 

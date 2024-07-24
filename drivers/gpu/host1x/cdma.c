@@ -285,7 +285,7 @@ static void cdma_start_timer_locked(struct host1x_cdma *cdma,
 	cdma->timeout.syncpt_val = job->syncpt_end;
 	cdma->timeout.start_ktime = ktime_get();
 
-	schedule_delayed_work(&cdma->timeout.wq,
+	queue_delayed_work(system_power_efficient_wq,&cdma->timeout.wq,
 			      msecs_to_jiffies(job->timeout));
 }
 

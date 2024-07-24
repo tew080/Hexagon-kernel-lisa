@@ -44,7 +44,7 @@ static void da9055_onkey_query(struct da9055_onkey *onkey)
 	 * Hence the deassertion of the pin is simulated through work queue.
 	 */
 	if (key_stat)
-		schedule_delayed_work(&onkey->work, msecs_to_jiffies(10));
+		queue_delayed_work(system_power_efficient_wq,&onkey->work, msecs_to_jiffies(10));
 
 }
 

@@ -633,7 +633,7 @@ out:
 		usleep_range(10000, 12000);
 
 		if (!host->eject)
-			schedule_delayed_work(&host->poll_card, 100);
+			queue_delayed_work(system_power_efficient_wq,&host->poll_card, 100);
 	}
 
 	dev_dbg(ms_dev(host), "%s: return = %d\n", __func__, err);
@@ -750,7 +750,7 @@ poll_again:
 	pm_runtime_put_sync(ms_dev(host));
 
 	if (!host->eject && host->power_mode == MEMSTICK_POWER_ON)
-		schedule_delayed_work(&host->poll_card, 100);
+		queue_delayed_work(system_power_efficient_wq,&host->poll_card, 100);
 }
 
 static int rtsx_usb_ms_drv_probe(struct platform_device *pdev)

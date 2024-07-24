@@ -150,7 +150,7 @@ static int ab8500_temp_irq_handler(int irq, struct abx500_temp *data)
 	dev_warn(&data->pdev->dev, "Power off in %d s\n",
 		 DEFAULT_POWER_OFF_DELAY / HZ);
 
-	schedule_delayed_work(&ab8500_data->power_off_work,
+	queue_delayed_work(system_power_efficient_wq,&ab8500_data->power_off_work,
 		DEFAULT_POWER_OFF_DELAY);
 	return 0;
 }

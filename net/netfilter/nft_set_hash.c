@@ -368,7 +368,7 @@ try_later:
 		nft_trans_gc_queue_async_done(gc);
 
 done:
-	schedule_delayed_work( &priv->gc_work,
+	queue_delayed_work(system_power_efficient_wq, &priv->gc_work,
 			   nft_set_gc_interval(set));
 }
 
@@ -382,7 +382,7 @@ static void nft_rhash_gc_init(const struct nft_set *set)
 {
 	struct nft_rhash *priv = nft_set_priv(set);
 
-	schedule_delayed_work( &priv->gc_work,
+	queue_delayed_work(system_power_efficient_wq, &priv->gc_work,
 			   nft_set_gc_interval(set));
 }
 

@@ -336,7 +336,7 @@ static int bxt_schedule_dsp_D0i3(struct sst_dsp *ctx)
 
 		dev_dbg(ctx->dev, "%s: Schedule D0i3\n", __func__);
 
-		schedule_delayed_work(&d0i3->work,
+		queue_delayed_work(system_power_efficient_wq,&d0i3->work,
 				msecs_to_jiffies(BXT_D0I3_DELAY));
 	}
 

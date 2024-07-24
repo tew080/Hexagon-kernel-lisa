@@ -371,7 +371,7 @@ static void set_freq_to_low_job(struct work_struct *work)
 
 	mutex_unlock(&hdev->fpriv_list_lock);
 
-	schedule_delayed_work(&hdev->work_freq,
+	queue_delayed_work(system_power_efficient_wq,&hdev->work_freq,
 			usecs_to_jiffies(HL_PLL_LOW_JOB_FREQ_USEC));
 }
 
@@ -392,7 +392,7 @@ static void hl_device_heartbeat(struct work_struct *work)
 	return;
 
 reschedule:
-	schedule_delayed_work(&hdev->work_heartbeat,
+	queue_delayed_work(system_power_efficient_wq,&hdev->work_heartbeat,
 			usecs_to_jiffies(HL_HEARTBEAT_PER_USEC));
 }
 
@@ -428,12 +428,12 @@ static int device_late_init(struct hl_device *hdev)
 		hdev->asic_funcs->set_pll_profile(hdev, PLL_LAST);
 
 	INIT_DELAYED_WORK(&hdev->work_freq, set_freq_to_low_job);
-	schedule_delayed_work(&hdev->work_freq,
+	queue_delayed_work(system_power_efficient_wq,&hdev->work_freq,
 	usecs_to_jiffies(HL_PLL_LOW_JOB_FREQ_USEC));
 
 	if (hdev->heartbeat) {
 		INIT_DELAYED_WORK(&hdev->work_heartbeat, hl_device_heartbeat);
-		schedule_delayed_work(&hdev->work_heartbeat,
+		queue_delayed_work(system_power_efficient_wq,&hdev->work_heartbeat,
 				usecs_to_jiffies(HL_HEARTBEAT_PER_USEC));
 	}
 

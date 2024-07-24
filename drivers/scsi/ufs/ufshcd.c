@@ -7211,7 +7211,7 @@ out:
 #if defined(CONFIG_SCSI_SKHPB)
 	if (hba->skhpb_state == SKHPB_PRESENT)
 		hba->skhpb_state = SKHPB_RESET;
-	schedule_delayed_work(&hba->skhpb_init_work,
+	queue_delayed_work(system_power_efficient_wq,&hba->skhpb_init_work,
 						  msecs_to_jiffies(10));
 #endif
 		err = SUCCESS;
@@ -8427,7 +8427,7 @@ reinit:
 
 #if defined(CONFIG_SCSI_SKHPB)
 	if (hba->dev_info.wmanufacturerid == UFS_VENDOR_SKHYNIX)
-		schedule_delayed_work(&hba->skhpb_init_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&hba->skhpb_init_work, 0);
 #endif
 	/* Enable Auto-Hibernate if configured */
 	ufshcd_auto_hibern8_enable(hba);
@@ -9688,7 +9688,7 @@ enable_gating:
 #endif
 out:
 	if (hba->dev_info.b_rpm_dev_flush_capable) {
-		schedule_delayed_work(&hba->rpm_dev_flush_recheck_work,
+		queue_delayed_work(system_power_efficient_wq,&hba->rpm_dev_flush_recheck_work,
 			msecs_to_jiffies(RPM_DEV_FLUSH_RECHECK_WORK_DELAY_MS));
 	}
 

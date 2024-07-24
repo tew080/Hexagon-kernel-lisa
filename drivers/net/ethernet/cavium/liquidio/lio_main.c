@@ -1857,7 +1857,7 @@ static int liquidio_open(struct net_device *netdev)
 	/* start periodical statistics fetch */
 	INIT_DELAYED_WORK(&lio->stats_wk.work, lio_fetch_stats);
 	lio->stats_wk.ctxptr = lio;
-	schedule_delayed_work(&lio->stats_wk.work, msecs_to_jiffies
+	queue_delayed_work(system_power_efficient_wq,&lio->stats_wk.work, msecs_to_jiffies
 					(LIQUIDIO_NDEV_STATS_POLL_TIME_MS));
 
 	dev_info(&oct->pci_dev->dev, "%s interface is opened\n",
@@ -4001,7 +4001,7 @@ static void nic_starter(struct work_struct *work)
 	 * state.
 	 */
 	if (atomic_read(&oct->status) != OCT_DEV_CORE_OK) {
-		schedule_delayed_work(&oct->nic_poll_work.work,
+		queue_delayed_work(system_power_efficient_wq,&oct->nic_poll_work.work,
 				      LIQUIDIO_STARTER_POLL_INTERVAL_MS);
 		return;
 	}
@@ -4166,7 +4166,7 @@ static int octeon_device_init(struct octeon_device *octeon_dev)
 				    octeon_recv_vf_drv_notice, octeon_dev);
 	INIT_DELAYED_WORK(&octeon_dev->nic_poll_work.work, nic_starter);
 	octeon_dev->nic_poll_work.ctxptr = (void *)octeon_dev;
-	schedule_delayed_work(&octeon_dev->nic_poll_work.work,
+	queue_delayed_work(system_power_efficient_wq,&octeon_dev->nic_poll_work.work,
 			      LIQUIDIO_STARTER_POLL_INTERVAL_MS);
 
 	atomic_set(&octeon_dev->status, OCT_DEV_DISPATCH_INIT_DONE);

@@ -152,7 +152,7 @@ static void alloc_work_func(struct work_struct *work)
 	list_add(&d->list, &dummy_list);
 	mutex_unlock(&dummy_list_mutex);
 
-	schedule_delayed_work(&alloc_dwork,
+	queue_delayed_work(system_power_efficient_wq,&alloc_dwork,
 		msecs_to_jiffies(1000 * ALLOC_PERIOD));
 }
 
@@ -184,15 +184,15 @@ static void cleanup_work_func(struct work_struct *work)
 	}
 	mutex_unlock(&dummy_list_mutex);
 
-	schedule_delayed_work(&cleanup_dwork,
+	queue_delayed_work(system_power_efficient_wq,&cleanup_dwork,
 		msecs_to_jiffies(1000 * CLEANUP_PERIOD));
 }
 
 static int livepatch_shadow_mod_init(void)
 {
-	schedule_delayed_work(&alloc_dwork,
+	queue_delayed_work(system_power_efficient_wq,&alloc_dwork,
 		msecs_to_jiffies(1000 * ALLOC_PERIOD));
-	schedule_delayed_work(&cleanup_dwork,
+	queue_delayed_work(system_power_efficient_wq,&cleanup_dwork,
 		msecs_to_jiffies(1000 * CLEANUP_PERIOD));
 
 	return 0;

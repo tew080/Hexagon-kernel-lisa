@@ -4588,7 +4588,7 @@ static int iwl_mvm_pre_channel_switch(struct ieee80211_hw *hw,
 			if (!chsw->count ||
 			    chsw->count * vif->bss_conf.beacon_int >
 			    IWL_MAX_CSA_BLOCK_TX)
-				schedule_delayed_work(&mvmvif->csa_work,
+				queue_delayed_work(system_power_efficient_wq,&mvmvif->csa_work,
 						      msecs_to_jiffies(IWL_MAX_CSA_BLOCK_TX));
 		}
 

@@ -696,10 +696,10 @@ static void schedule_reset(struct ipw2100_priv *priv)
 		netif_stop_queue(priv->net_dev);
 		priv->status |= STATUS_RESET_PENDING;
 		if (priv->reset_backoff)
-			schedule_delayed_work(&priv->reset_work,
+			queue_delayed_work(system_power_efficient_wq,&priv->reset_work,
 					      priv->reset_backoff * HZ);
 		else
-			schedule_delayed_work(&priv->reset_work, 0);
+			queue_delayed_work(system_power_efficient_wq,&priv->reset_work, 0);
 
 		if (priv->reset_backoff < MAX_RESET_BACKOFF)
 			priv->reset_backoff++;
@@ -1463,7 +1463,7 @@ static int ipw2100_enable_adapter(struct ipw2100_priv *priv)
 
 	if (priv->stop_hang_check) {
 		priv->stop_hang_check = 0;
-		schedule_delayed_work(&priv->hang_check, HZ / 2);
+		queue_delayed_work(system_power_efficient_wq,&priv->hang_check, HZ / 2);
 	}
 
       fail_up:
@@ -1794,7 +1794,7 @@ static int ipw2100_up(struct ipw2100_priv *priv, int deferred)
 
 		if (priv->stop_rf_kill) {
 			priv->stop_rf_kill = 0;
-			schedule_delayed_work(&priv->rf_kill,
+			queue_delayed_work(system_power_efficient_wq,&priv->rf_kill,
 					      round_jiffies_relative(HZ));
 		}
 
@@ -2067,7 +2067,7 @@ static void isr_indicate_associated(struct ipw2100_priv *priv, u32 status)
 	priv->status |= STATUS_ASSOCIATING;
 	priv->connect_start = ktime_get_boottime_seconds();
 
-	schedule_delayed_work(&priv->wx_event_work, HZ / 10);
+	queue_delayed_work(system_power_efficient_wq,&priv->wx_event_work, HZ / 10);
 }
 
 static int ipw2100_set_essid(struct ipw2100_priv *priv, char *essid,
@@ -2143,9 +2143,9 @@ static void isr_indicate_association_lost(struct ipw2100_priv *priv, u32 status)
 		return;
 
 	if (priv->status & STATUS_SECURITY_UPDATED)
-		schedule_delayed_work(&priv->security_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&priv->security_work, 0);
 
-	schedule_delayed_work(&priv->wx_event_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&priv->wx_event_work, 0);
 }
 
 static void isr_indicate_rf_kill(struct ipw2100_priv *priv, u32 status)
@@ -2182,7 +2182,7 @@ static void isr_scan_complete(struct ipw2100_priv *priv, u32 status)
 
 	/* Only userspace-requested scan completion events go out immediately */
 	if (!priv->user_requested_scan) {
-		schedule_delayed_work(&priv->scan_event,
+		queue_delayed_work(system_power_efficient_wq,&priv->scan_event,
 				      round_jiffies_relative(msecs_to_jiffies(4000)));
 	} else {
 		priv->user_requested_scan = 0;
@@ -5970,7 +5970,7 @@ static void ipw2100_hang_check(struct work_struct *work)
 	priv->last_rtc = rtc;
 
 	if (!priv->stop_hang_check)
-		schedule_delayed_work(&priv->hang_check, HZ / 2);
+		queue_delayed_work(system_power_efficient_wq,&priv->hang_check, HZ / 2);
 
 	spin_unlock_irqrestore(&priv->low_lock, flags);
 }
@@ -5986,7 +5986,7 @@ static void ipw2100_rf_kill(struct work_struct *work)
 	if (rf_kill_active(priv)) {
 		IPW_DEBUG_RF_KILL("RF Kill active, rescheduling GPIO check\n");
 		if (!priv->stop_rf_kill)
-			schedule_delayed_work(&priv->rf_kill,
+			queue_delayed_work(system_power_efficient_wq,&priv->rf_kill,
 					      round_jiffies_relative(HZ));
 		goto exit_unlock;
 	}

@@ -1894,7 +1894,7 @@ __ieee80211_sta_handle_tspec_ac_params(struct ieee80211_sub_if_data *sdata)
 					  ac);
 			tx_tspec->action = TX_TSPEC_ACTION_NONE;
 			ret = true;
-			schedule_delayed_work(&ifmgd->tx_tspec_wk,
+			queue_delayed_work(system_power_efficient_wq,&ifmgd->tx_tspec_wk,
 				tx_tspec->time_slice_start + HZ - now + 1);
 			break;
 		case TX_TSPEC_ACTION_NONE:
@@ -2442,7 +2442,7 @@ static void ieee80211_sta_tx_wmm_ac_notify(struct ieee80211_sub_if_data *sdata,
 
 		if (tx_tspec->downgraded) {
 			tx_tspec->action = TX_TSPEC_ACTION_STOP_DOWNGRADE;
-			schedule_delayed_work(&ifmgd->tx_tspec_wk, 0);
+			queue_delayed_work(system_power_efficient_wq,&ifmgd->tx_tspec_wk, 0);
 		}
 	}
 
@@ -2454,7 +2454,7 @@ static void ieee80211_sta_tx_wmm_ac_notify(struct ieee80211_sub_if_data *sdata,
 	if (tx_tspec->consumed_tx_time >= tx_tspec->admitted_time) {
 		tx_tspec->downgraded = true;
 		tx_tspec->action = TX_TSPEC_ACTION_DOWNGRADE;
-		schedule_delayed_work(&ifmgd->tx_tspec_wk, 0);
+		queue_delayed_work(system_power_efficient_wq,&ifmgd->tx_tspec_wk, 0);
 	}
 }
 

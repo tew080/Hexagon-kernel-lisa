@@ -44,7 +44,7 @@ static void force_tx_housekeeping(struct net_device *ndev)
 	struct atl_nic *nic = netdev_priv(ndev);
 
 	/* Schedule for ASAP execution */
-	schedule_delayed_work(nic->fwdnl.tx_cleanup_wq, 0);
+	queue_delayed_work(system_power_efficient_wq,nic->fwdnl.tx_cleanup_wq, 0);
 }
 
 static void force_rx_polling(struct net_device *ndev)

@@ -123,7 +123,7 @@ static void pmf_handle_notify_irq(void *data)
 {
 	struct gpio_notification *notif = data;
 
-	schedule_delayed_work(&notif->work, 0);
+	queue_delayed_work(system_power_efficient_wq,&notif->work, 0);
 }
 
 static int pmf_set_notify(struct gpio_runtime *rt,

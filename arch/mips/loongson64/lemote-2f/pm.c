@@ -125,7 +125,7 @@ int wakeup_loongson(void)
 						yeeloong_lid_update_task);
 					initialized = 1;
 				}
-				schedule_delayed_work(&lid_task, 1);
+				queue_delayed_work(system_power_efficient_wq,&lid_task, 1);
 				return 1;
 			}
 		}

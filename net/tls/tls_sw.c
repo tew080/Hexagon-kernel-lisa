@@ -488,7 +488,7 @@ static void tls_encrypt_done(struct crypto_async_request *req, int err)
 
 	/* Schedule the transmission */
 	if (!test_and_set_bit(BIT_TX_SCHEDULED, &ctx->tx_bitmask))
-		schedule_delayed_work(&ctx->tx_work.work, 1);
+		queue_delayed_work(system_power_efficient_wq,&ctx->tx_work.work, 1);
 }
 
 static int tls_do_encryption(struct sock *sk,
@@ -2280,7 +2280,7 @@ static void tx_work_handler(struct work_struct *work)
 		 * and cancel the work on their way out of the lock section.
 		 * Schedule a long delay just in case.
 		 */
-		schedule_delayed_work(&ctx->tx_work.work, msecs_to_jiffies(10));
+		queue_delayed_work(system_power_efficient_wq,&ctx->tx_work.work, msecs_to_jiffies(10));
 	}
 }
 
@@ -2291,7 +2291,7 @@ void tls_sw_write_space(struct sock *sk, struct tls_context *ctx)
 	/* Schedule the transmission if tx list is ready */
 	if (is_tx_ready(tx_ctx) &&
 	    !test_and_set_bit(BIT_TX_SCHEDULED, &tx_ctx->tx_bitmask))
-		schedule_delayed_work(&tx_ctx->tx_work.work, 0);
+		queue_delayed_work(system_power_efficient_wq,&tx_ctx->tx_work.work, 0);
 }
 
 void tls_sw_strparser_arm(struct sock *sk, struct tls_context *tls_ctx)

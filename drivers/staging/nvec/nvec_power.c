@@ -366,7 +366,7 @@ static void nvec_power_poll(struct work_struct *work)
 	buf[1] = bat_iter[counter++];
 	nvec_write_async(power->nvec, buf, 2);
 
-	schedule_delayed_work(to_delayed_work(work), msecs_to_jiffies(5000));
+	queue_delayed_work(system_power_efficient_wq,to_delayed_work(work), msecs_to_jiffies(5000));
 };
 
 static int nvec_power_probe(struct platform_device *pdev)
@@ -394,7 +394,7 @@ static int nvec_power_probe(struct platform_device *pdev)
 		power->notifier.notifier_call = nvec_power_notifier;
 
 		INIT_DELAYED_WORK(&power->poller, nvec_power_poll);
-		schedule_delayed_work(&power->poller, msecs_to_jiffies(5000));
+		queue_delayed_work(system_power_efficient_wq,&power->poller, msecs_to_jiffies(5000));
 		break;
 	case BAT:
 		psy = &nvec_bat_psy;

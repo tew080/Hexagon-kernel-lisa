@@ -2666,13 +2666,13 @@ void dm_fsync_work_callback(struct work_struct *work)
 		}
 		if (bDoubleTimeInterval) {
 			cancel_delayed_work_sync(&priv->fsync_work);
-			schedule_delayed_work(&priv->fsync_work,
+			queue_delayed_work(system_power_efficient_wq,&priv->fsync_work,
 					      msecs_to_jiffies(priv
 					      ->ieee80211->fsync_time_interval *
 					      priv->ieee80211->fsync_multiple_timeinterval));
 		} else {
 			cancel_delayed_work_sync(&priv->fsync_work);
-			schedule_delayed_work(&priv->fsync_work,
+			queue_delayed_work(system_power_efficient_wq,&priv->fsync_work,
 					      msecs_to_jiffies(priv
 					      ->ieee80211->fsync_time_interval));
 		}
@@ -2745,7 +2745,7 @@ static void dm_StartSWFsync(struct net_device *dev)
 			priv->rate_record += priv->stats.received_rate_histogram[1][rateIndex];
 	}
 	cancel_delayed_work_sync(&priv->fsync_work);
-	schedule_delayed_work(&priv->fsync_work,
+	queue_delayed_work(system_power_efficient_wq,&priv->fsync_work,
 			      msecs_to_jiffies(priv->ieee80211->fsync_time_interval));
 
 	write_nic_dword(dev, rOFDM0_RxDetector2, 0x465c12cd);

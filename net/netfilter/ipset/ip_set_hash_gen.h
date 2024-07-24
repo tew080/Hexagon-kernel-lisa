@@ -601,7 +601,7 @@ mtype_gc(struct work_struct *work)
 		mtype_ahash_destroy(set, t, false);
 	}
 
-	schedule_delayed_work( &gc->dwork, next_run);
+	queue_delayed_work(system_power_efficient_wq, &gc->dwork, next_run);
 
 }
 
@@ -609,7 +609,7 @@ static void
 mtype_gc_init(struct htable_gc *gc)
 {
 	INIT_DEFERRABLE_WORK(&gc->dwork, mtype_gc);
-	schedule_delayed_work( &gc->dwork, HZ);
+	queue_delayed_work(system_power_efficient_wq, &gc->dwork, HZ);
 }
 
 static void

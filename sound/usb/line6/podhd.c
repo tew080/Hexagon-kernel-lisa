@@ -304,7 +304,7 @@ static int podhd_init(struct usb_line6 *line6,
 	}
 
 	/* init device and delay registering */
-	schedule_delayed_work(&line6->startup_work,
+	queue_delayed_work(system_power_efficient_wq,&line6->startup_work,
 			      msecs_to_jiffies(PODHD_STARTUP_DELAY));
 	return 0;
 }

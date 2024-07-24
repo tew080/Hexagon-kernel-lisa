@@ -70,7 +70,7 @@ static int omap3_rom_rng_get_random(void *buf, unsigned int count)
 
 	ptr = virt_to_phys(buf);
 	r = omap3_rom_rng_call(ptr, count, RNG_GEN_HW);
-	schedule_delayed_work(&idle_work, msecs_to_jiffies(500));
+	queue_delayed_work(system_power_efficient_wq,&idle_work, msecs_to_jiffies(500));
 	if (r != 0)
 		return -EINVAL;
 	return 0;

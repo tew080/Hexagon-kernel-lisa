@@ -167,7 +167,7 @@ static DECLARE_DELAYED_WORK(bios_check_work, check_corruption);
 static void check_corruption(struct work_struct *dummy)
 {
 	check_for_bios_corruption();
-	schedule_delayed_work(&bios_check_work,
+	queue_delayed_work(system_power_efficient_wq,&bios_check_work,
 		round_jiffies_relative(corruption_check_period*HZ));
 }
 
@@ -179,7 +179,7 @@ static int start_periodic_check_for_corruption(void)
 	pr_info("Scanning for low memory corruption every %d seconds\n", corruption_check_period);
 
 	/* First time we run the checks right away */
-	schedule_delayed_work(&bios_check_work, 0);
+	queue_delayed_work(system_power_efficient_wq,&bios_check_work, 0);
 
 	return 0;
 }

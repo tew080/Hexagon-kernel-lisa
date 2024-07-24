@@ -371,7 +371,7 @@ static void em28xx_ir_work(struct work_struct *work)
 		em28xx_i2c_ir_handle_key(ir);
 	else /* internal device */
 		em28xx_ir_handle_key(ir);
-	schedule_delayed_work(&ir->work, msecs_to_jiffies(ir->polling));
+	queue_delayed_work(system_power_efficient_wq,&ir->work, msecs_to_jiffies(ir->polling));
 }
 
 static int em28xx_ir_start(struct rc_dev *rc)
@@ -379,7 +379,7 @@ static int em28xx_ir_start(struct rc_dev *rc)
 	struct em28xx_IR *ir = rc->priv;
 
 	INIT_DELAYED_WORK(&ir->work, em28xx_ir_work);
-	schedule_delayed_work(&ir->work, 0);
+	queue_delayed_work(system_power_efficient_wq,&ir->work, 0);
 
 	return 0;
 }
@@ -578,7 +578,7 @@ static void em28xx_query_buttons(struct work_struct *work)
 		dev->button_polling_last_values[i] = regval;
 	}
 	/* Schedule next poll */
-	schedule_delayed_work(&dev->buttons_query_work,
+	queue_delayed_work(system_power_efficient_wq,&dev->buttons_query_work,
 			      msecs_to_jiffies(dev->button_polling_interval));
 }
 
@@ -675,7 +675,7 @@ next_button:
 	if (dev->num_button_polling_addresses) {
 		memset(dev->button_polling_last_values, 0,
 		       EM28XX_NUM_BUTTON_ADDRESSES_MAX);
-		schedule_delayed_work(&dev->buttons_query_work,
+		queue_delayed_work(system_power_efficient_wq,&dev->buttons_query_work,
 				      msecs_to_jiffies(dev->button_polling_interval));
 	}
 }
@@ -908,9 +908,9 @@ static int em28xx_ir_resume(struct em28xx *dev)
 	 * ir_raw_event_register()
 	 */
 	if (ir)
-		schedule_delayed_work(&ir->work, msecs_to_jiffies(ir->polling));
+		queue_delayed_work(system_power_efficient_wq,&ir->work, msecs_to_jiffies(ir->polling));
 	if (dev->num_button_polling_addresses)
-		schedule_delayed_work(&dev->buttons_query_work,
+		queue_delayed_work(system_power_efficient_wq,&dev->buttons_query_work,
 				      msecs_to_jiffies(dev->button_polling_interval));
 	return 0;
 }

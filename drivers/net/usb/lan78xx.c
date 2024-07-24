@@ -3117,7 +3117,7 @@ lan78xx_start_xmit(struct sk_buff *skb, struct net_device *net)
 	struct sk_buff *skb2 = NULL;
 
 	if (test_bit(EVENT_DEV_ASLEEP, &dev->flags))
-		schedule_delayed_work( &dev->wq, 0);
+		queue_delayed_work(system_power_efficient_wq, &dev->wq, 0);
 
 	if (skb) {
 		skb_tx_timestamp(skb);

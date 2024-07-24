@@ -127,7 +127,7 @@ nfp_flower_install_rate_limiter(struct nfp_app *app, struct net_device *netdev,
 	repr_priv->qos_table.netdev_port_id = netdev_port_id;
 	fl_priv->qos_rate_limiters++;
 	if (fl_priv->qos_rate_limiters == 1)
-		schedule_delayed_work(&fl_priv->qos_stats_work,
+		queue_delayed_work(system_power_efficient_wq,&fl_priv->qos_stats_work,
 				      NFP_FL_QOS_UPDATE);
 
 	return 0;
@@ -283,7 +283,7 @@ static void update_stats_cache(struct work_struct *work)
 			       qos_stats_work);
 
 	nfp_flower_stats_rlim_request_all(fl_priv);
-	schedule_delayed_work(&fl_priv->qos_stats_work, NFP_FL_QOS_UPDATE);
+	queue_delayed_work(system_power_efficient_wq,&fl_priv->qos_stats_work, NFP_FL_QOS_UPDATE);
 }
 
 static int

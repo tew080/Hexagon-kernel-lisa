@@ -3958,7 +3958,7 @@ static void dsi_update_screen_dispc(struct platform_device *dsidev)
 
 	dsi_perf_mark_start(dsidev);
 
-	r = schedule_delayed_work(&dsi->framedone_timeout_work,
+	r = queue_delayed_work(system_power_efficient_wq,&dsi->framedone_timeout_work,
 		msecs_to_jiffies(250));
 	BUG_ON(r == 0);
 

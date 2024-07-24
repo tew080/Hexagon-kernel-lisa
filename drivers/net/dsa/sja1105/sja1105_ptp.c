@@ -344,7 +344,7 @@ static void sja1105_ptp_overflow_check(struct work_struct *work)
 
 	sja1105_ptp_gettime(&priv->ptp_caps, &ts);
 
-	schedule_delayed_work(&priv->refresh_work, SJA1105_REFRESH_INTERVAL);
+	queue_delayed_work(system_power_efficient_wq,&priv->refresh_work, SJA1105_REFRESH_INTERVAL);
 }
 
 static const struct ptp_clock_info sja1105_ptp_caps = {
@@ -376,7 +376,7 @@ int sja1105_ptp_clock_register(struct sja1105_private *priv)
 		return PTR_ERR(priv->clock);
 
 	INIT_DELAYED_WORK(&priv->refresh_work, sja1105_ptp_overflow_check);
-	schedule_delayed_work(&priv->refresh_work, SJA1105_REFRESH_INTERVAL);
+	queue_delayed_work(system_power_efficient_wq,&priv->refresh_work, SJA1105_REFRESH_INTERVAL);
 
 	return sja1105_ptp_reset(priv);
 }

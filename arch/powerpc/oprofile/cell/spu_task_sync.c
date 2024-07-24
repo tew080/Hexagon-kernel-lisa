@@ -127,7 +127,7 @@ static void wq_sync_spu_buff(struct work_struct *work)
 
 	/* only reschedule if profiling is not done */
 	if (spu_prof_running)
-		schedule_delayed_work(&spu_work, DEFAULT_TIMER_EXPIRE);
+		queue_delayed_work(system_power_efficient_wq,&spu_work, DEFAULT_TIMER_EXPIRE);
 }
 
 /* Container for caching information about an active SPU task. */

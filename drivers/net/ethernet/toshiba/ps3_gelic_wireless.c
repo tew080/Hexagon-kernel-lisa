@@ -2190,7 +2190,7 @@ static void gelic_wl_assoc_worker(struct work_struct *work)
 	ret = gelic_wl_start_scan(wl, 0, essid, essid_len);
 	if (ret == -ERESTARTSYS) {
 		pr_debug("%s: scan start failed association\n", __func__);
-		schedule_delayed_work(&wl->assoc_work, HZ/10); /*FIXME*/
+		queue_delayed_work(system_power_efficient_wq,&wl->assoc_work, HZ/10); /*FIXME*/
 		goto out;
 	} else if (ret) {
 		pr_debug("%s: scan prerequisite failed\n", __func__);
@@ -2424,7 +2424,7 @@ static int gelic_wl_try_associate(struct net_device *netdev)
 	}
 
 do_associate:
-	ret = schedule_delayed_work(&wl->assoc_work, 0);
+	ret = queue_delayed_work(system_power_efficient_wq,&wl->assoc_work, 0);
 	pr_debug("%s: start association work %d\n", __func__, ret);
 	return ret;
 }

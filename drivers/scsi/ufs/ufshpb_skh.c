@@ -588,7 +588,7 @@ static void skhpb_map_req_compl_fn(struct request *req, blk_status_t error)
 			list_add_tail(&map_req->list_map_req, &hpb->lh_map_req_retry);
 			spin_unlock(&hpb->map_list_lock);
 
-			schedule_delayed_work(&hpb->skhpb_map_req_retry_work,
+			queue_delayed_work(system_power_efficient_wq,&hpb->skhpb_map_req_retry_work,
 								  msecs_to_jiffies(5000));
 			return;
 		}
@@ -660,7 +660,7 @@ static void skhpb_map_inactive_req_compl_fn(
 				list_add_tail(&map_req->list_map_req, &hpb->lh_map_req_retry);
 				spin_unlock(&hpb->map_list_lock);
 
-				schedule_delayed_work(&hpb->skhpb_map_req_retry_work,
+				queue_delayed_work(system_power_efficient_wq,&hpb->skhpb_map_req_retry_work,
 									  msecs_to_jiffies(5000));
 				return;
 			}
@@ -842,7 +842,7 @@ static int skhpb_map_req_issue(
 		list_add_tail(&map_req->list_map_req, &hpb->lh_map_req_retry);
 		spin_unlock_bh(&hpb->map_list_lock);
 
-		schedule_delayed_work(&hpb->skhpb_map_req_retry_work, msecs_to_jiffies(10));
+		queue_delayed_work(system_power_efficient_wq,&hpb->skhpb_map_req_retry_work, msecs_to_jiffies(10));
 
 		return 0;
 	}
@@ -2417,7 +2417,7 @@ done:
 			struct skhpb_lu *hpb = hba->skhpb_lup[lun];
 
 			if (hpb)
-				schedule_delayed_work(&hpb->skhpb_pinned_work, 0);
+				queue_delayed_work(system_power_efficient_wq,&hpb->skhpb_pinned_work, 0);
 		}
 	}
 
@@ -2463,7 +2463,7 @@ static void skhpb_map_loading_trigger(struct skhpb_lu *hpb,
 	}
 work_out:
 	if (do_work_handler)
-		schedule_delayed_work(&hpb->skhpb_pinned_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&hpb->skhpb_pinned_work, 0);
 }
 
 static void skhpb_purge_active_block(struct skhpb_lu *hpb)
@@ -2644,7 +2644,7 @@ void skhpb_resume(struct ufs_hba *hba) {
 			continue;
 		spin_lock_bh(&hpb->map_list_lock);
 		if (!list_empty(&hpb->lh_map_req_retry))
-			schedule_delayed_work(&hpb->skhpb_map_req_retry_work, msecs_to_jiffies(1000));
+			queue_delayed_work(system_power_efficient_wq,&hpb->skhpb_map_req_retry_work, msecs_to_jiffies(1000));
 		spin_unlock_bh(&hpb->map_list_lock);
 	}
 }
@@ -2703,7 +2703,7 @@ void skhpb_init_handler(struct work_struct *work)
 	async_scan = shost->async_scan;
 	spin_unlock_irq(shost->host_lock);
 	if (async_scan) {
-		schedule_delayed_work(dwork, msecs_to_jiffies(100));
+		queue_delayed_work(system_power_efficient_wq,dwork, msecs_to_jiffies(100));
 		return;
 	}
 

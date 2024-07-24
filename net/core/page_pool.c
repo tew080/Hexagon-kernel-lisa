@@ -400,7 +400,7 @@ static void page_pool_release_retry(struct work_struct *wq)
 	}
 
 	/* Still not ready to be disconnected, retry later */
-	schedule_delayed_work(&pool->release_dw, DEFER_TIME);
+	queue_delayed_work(system_power_efficient_wq,&pool->release_dw, DEFER_TIME);
 }
 
 void page_pool_use_xdp_mem(struct page_pool *pool, void (*disconnect)(void *))
@@ -424,6 +424,6 @@ void page_pool_destroy(struct page_pool *pool)
 	pool->defer_warn  = jiffies + DEFER_WARN_INTERVAL;
 
 	INIT_DELAYED_WORK(&pool->release_dw, page_pool_release_retry);
-	schedule_delayed_work(&pool->release_dw, DEFER_TIME);
+	queue_delayed_work(system_power_efficient_wq,&pool->release_dw, DEFER_TIME);
 }
 EXPORT_SYMBOL(page_pool_destroy);

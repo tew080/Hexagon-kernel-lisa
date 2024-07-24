@@ -126,7 +126,7 @@ static void digicolor_rx_poll(struct work_struct *work)
 		/* force RX interrupt */
 		writeb_relaxed(UA_INT_RX, dp->port.membase + UA_INTFLAG_SET);
 
-	schedule_delayed_work(&dp->rx_poll_work, msecs_to_jiffies(100));
+	queue_delayed_work(system_power_efficient_wq,&dp->rx_poll_work, msecs_to_jiffies(100));
 }
 
 static void digicolor_uart_rx(struct uart_port *port)
@@ -271,7 +271,7 @@ static int digicolor_uart_startup(struct uart_port *port)
 	writeb_relaxed(UA_INT_TX | UA_INT_RX,
 		       port->membase + UA_INT_ENABLE);
 
-	schedule_delayed_work(&dp->rx_poll_work, msecs_to_jiffies(100));
+	queue_delayed_work(system_power_efficient_wq,&dp->rx_poll_work, msecs_to_jiffies(100));
 
 	return 0;
 }

@@ -461,5 +461,5 @@ static void wq_sync_buffer(struct work_struct *work)
 
 	/* don't re-add the work if we're shutting down */
 	if (work_enabled)
-		schedule_delayed_work(&b->work, DEFAULT_TIMER_EXPIRE);
+		queue_delayed_work(system_power_efficient_wq,&b->work, DEFAULT_TIMER_EXPIRE);
 }

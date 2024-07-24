@@ -89,7 +89,7 @@ static void rt5514_spi_copy_work(struct work_struct *work)
 	runtime = rt5514_dsp->substream->runtime;
 	period_bytes = snd_pcm_lib_period_bytes(rt5514_dsp->substream);
 	if (!period_bytes) {
-		schedule_delayed_work(&rt5514_dsp->copy_work, 5);
+		queue_delayed_work(system_power_efficient_wq,&rt5514_dsp->copy_work, 5);
 		goto done;
 	}
 
@@ -111,7 +111,7 @@ static void rt5514_spi_copy_work(struct work_struct *work)
 				(cur_wp - rt5514_dsp->buf_base);
 
 		if (remain_data < period_bytes) {
-			schedule_delayed_work(&rt5514_dsp->copy_work, 5);
+			queue_delayed_work(system_power_efficient_wq,&rt5514_dsp->copy_work, 5);
 			goto done;
 		}
 	}
@@ -146,7 +146,7 @@ static void rt5514_spi_copy_work(struct work_struct *work)
 
 	snd_pcm_period_elapsed(rt5514_dsp->substream);
 
-	schedule_delayed_work(&rt5514_dsp->copy_work, 5);
+	queue_delayed_work(system_power_efficient_wq,&rt5514_dsp->copy_work, 5);
 
 done:
 	mutex_unlock(&rt5514_dsp->dma_lock);
@@ -188,7 +188,7 @@ static void rt5514_schedule_copy(struct rt5514_dsp *rt5514_dsp)
 
 	if (rt5514_dsp->buf_base && rt5514_dsp->buf_limit &&
 		rt5514_dsp->buf_rp && rt5514_dsp->buf_size)
-		schedule_delayed_work(&rt5514_dsp->copy_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&rt5514_dsp->copy_work, 0);
 }
 
 static irqreturn_t rt5514_spi_irq(int irq, void *data)

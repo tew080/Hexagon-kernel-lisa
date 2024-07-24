@@ -1506,7 +1506,7 @@ void lio_fetch_stats(struct work_struct *work)
 lio_fetch_stats_exit:
 	time_in_jiffies = msecs_to_jiffies(LIQUIDIO_NDEV_STATS_POLL_TIME_MS);
 	if (ifstate_check(lio, LIO_IFSTATE_RUNNING))
-		schedule_delayed_work(&lio->stats_wk.work, time_in_jiffies);
+		queue_delayed_work(system_power_efficient_wq,&lio->stats_wk.work, time_in_jiffies);
 
 	return;
 }

@@ -2400,7 +2400,7 @@ static void blkfront_gather_backend_features(struct blkfront_info *info)
 
 	if (info->feature_persistent) {
 		mutex_lock(&blkfront_mutex);
-		schedule_delayed_work(&blkfront_work, HZ * 10);
+		queue_delayed_work(system_power_efficient_wq,&blkfront_work, HZ * 10);
 		mutex_unlock(&blkfront_mutex);
 	}
 }
@@ -2783,7 +2783,7 @@ static void blkfront_delay_work(struct work_struct *work)
 	}
 
 	if (need_schedule_work)
-		schedule_delayed_work(&blkfront_work, HZ * 10);
+		queue_delayed_work(system_power_efficient_wq,&blkfront_work, HZ * 10);
 
 	mutex_unlock(&blkfront_mutex);
 }

@@ -384,7 +384,7 @@ static int toneport_setup(struct usb_line6_toneport *toneport)
 	if (toneport_has_led(toneport))
 		toneport_update_led(toneport);
 
-	schedule_delayed_work(&toneport->line6.startup_work,
+	queue_delayed_work(system_power_efficient_wq,&toneport->line6.startup_work,
 			      msecs_to_jiffies(TONEPORT_PCM_DELAY * 1000));
 	return 0;
 }

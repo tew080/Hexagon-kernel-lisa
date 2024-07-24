@@ -504,7 +504,7 @@ static void xgene_enet_link_state(struct work_struct *work)
 		xgene_pcs_reset(pdata);
 	}
 
-	schedule_delayed_work(&pdata->link_work, poll_interval);
+	queue_delayed_work(system_power_efficient_wq,&pdata->link_work, poll_interval);
 }
 
 const struct xgene_mac_ops xgene_xgmac_ops = {

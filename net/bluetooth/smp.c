@@ -626,7 +626,7 @@ static void smp_send_cmd(struct l2cap_conn *conn, u8 code, u16 len, void *data)
 	smp = chan->data;
 
 	cancel_delayed_work_sync(&smp->security_timer);
-	schedule_delayed_work(
+	queue_delayed_work(system_power_efficient_wq,
 			&smp->security_timer, SMP_TIMEOUT);
 }
 

@@ -89,7 +89,7 @@ static void variax_startup(struct usb_line6 *line6)
 	switch (variax->startup_progress) {
 	case VARIAX_STARTUP_VERSIONREQ:
 		/* repeat request until getting the response */
-		schedule_delayed_work(&line6->startup_work,
+		queue_delayed_work(system_power_efficient_wq,&line6->startup_work,
 				      msecs_to_jiffies(VARIAX_STARTUP_DELAY1));
 		/* request firmware version: */
 		line6_version_request_async(line6);
@@ -98,7 +98,7 @@ static void variax_startup(struct usb_line6 *line6)
 		/* activate device: */
 		variax_activate_async(variax, 1);
 		variax->startup_progress = VARIAX_STARTUP_SETUP;
-		schedule_delayed_work(&line6->startup_work,
+		queue_delayed_work(system_power_efficient_wq,&line6->startup_work,
 				      msecs_to_jiffies(VARIAX_STARTUP_DELAY4));
 		break;
 	case VARIAX_STARTUP_SETUP:
@@ -128,7 +128,7 @@ static void line6_variax_process_message(struct usb_line6 *line6)
 				break;
 			variax->startup_progress = VARIAX_STARTUP_ACTIVATE;
 			cancel_delayed_work(&line6->startup_work);
-			schedule_delayed_work(&line6->startup_work,
+			queue_delayed_work(system_power_efficient_wq,&line6->startup_work,
 					      msecs_to_jiffies(VARIAX_STARTUP_DELAY3));
 		} else if (memcmp(buf + 1, variax_init_done + 1,
 				  sizeof(variax_init_done) - 1) == 0) {
@@ -136,7 +136,7 @@ static void line6_variax_process_message(struct usb_line6 *line6)
 			if (variax->startup_progress >= VARIAX_STARTUP_SETUP)
 				break;
 			cancel_delayed_work(&line6->startup_work);
-			schedule_delayed_work(&line6->startup_work, 0);
+			queue_delayed_work(system_power_efficient_wq,&line6->startup_work, 0);
 		}
 		break;
 	}
@@ -172,7 +172,7 @@ static int variax_init(struct usb_line6 *line6,
 		return -ENOMEM;
 
 	/* initiate startup procedure: */
-	schedule_delayed_work(&line6->startup_work,
+	queue_delayed_work(system_power_efficient_wq,&line6->startup_work,
 			      msecs_to_jiffies(VARIAX_STARTUP_DELAY1));
 	return 0;
 }

@@ -564,7 +564,7 @@ static int call_crda(const char *alpha2)
 	if (ret)
 		return ret;
 
-	schedule_delayed_work(
+	queue_delayed_work(system_power_efficient_wq,
 			   &crda_timeout, msecs_to_jiffies(3142));
 	return 0;
 }
