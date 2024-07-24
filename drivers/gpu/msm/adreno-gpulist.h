@@ -130,7 +130,7 @@ static const struct adreno_a6xx_core adreno_gpu_core_a642l = {
 		.features = ADRENO_RPMH | ADRENO_GPMU | ADRENO_APRIV |
 				ADRENO_IOCOHERENT | ADRENO_CONTENT_PROTECTION |
 				ADRENO_PREEMPTION | ADRENO_IFPC | ADRENO_BCL |
-				ADRENO_ACD | ADRENO_LM,
+				ADRENO_ACD,
 		.gpudev = &adreno_a6xx_gmu_gpudev,
 		.perfcounters = &adreno_a6xx_perfcounters,
 		.gmem_size = SZ_512K,
