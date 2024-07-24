@@ -4194,7 +4194,9 @@ static void dwc3_gadget_interrupt(struct dwc3 *dwc,
 	case DWC3_DEVICE_EVENT_EOPF:
 		/* It changed to be suspend event for version 2.30a and above */
 		if (dwc->revision >= DWC3_REVISION_230A) {
-			dbg_event(0xFF, "GAD SUS", 0);
+//#ifndef CONFIG_CLOSE_PRINT_K9E
+			//dbg_event(0xFF, "GAD SUS", 0);
+//#endif
 			dwc->dbg_gadget_events.suspend++;
 			/*
 			 * Ignore suspend event until the gadget enters into
@@ -4313,6 +4315,29 @@ void dwc3_bh_work(struct work_struct *w)
 	pm_runtime_get_sync(dwc->dev);
 	dwc3_thread_interrupt(dwc->irq, dwc->ev_buf);
 	pm_runtime_put(dwc->dev);
+}
+
+void dwc3_check_cmd_work(struct work_struct *w)
+{
+	struct dwc3 *dwc = container_of(w, struct dwc3, check_cmd_work);
+	unsigned int timeout = 200;
+
+	do{
+		msleep(5);
+	} while (--timeout && (dwc->gs_cmd_status == 1));
+
+	if(!timeout){
+		dwc3_notify_event(dwc, DWC3_USB_RESTART_EVENT, 0);
+	}else{
+		dev_dbg(dwc->dev,
+				"GET STATUS cmd done under: %dms\n",(200 - timeout)*5);
+	}
+
+}
+
+void dwc3_check_cmd(struct dwc3 *dwc){
+
+	schedule_work(&dwc->check_cmd_work);
 }
 
 static irqreturn_t dwc3_thread_interrupt(int irq, void *_evt)
