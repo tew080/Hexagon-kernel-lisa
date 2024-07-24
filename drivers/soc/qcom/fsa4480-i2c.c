@@ -44,7 +44,6 @@ struct fsa4480_priv {
 	struct mutex notification_lock;
 	u32 use_powersupply;
 	int switch_control;
-	bool dio4480;
 };
 
 struct fsa4480_reg_val {
@@ -128,8 +127,8 @@ static int fsa4480_usbc_event_changed_ucsi(struct fsa4480_priv *fsa_priv,
 	if (!dev)
 		return -EINVAL;
 
-	dev_dbg(dev, "%s: USB change event received, audio switch %d, supply mode %d, usbc mode %ld, expected %d\n",
-			__func__, fsa_priv->dio4480, acc, fsa_priv->usbc_mode.counter,
+	dev_dbg(dev, "%s: USB change event received, supply mode %d, usbc mode %ld, expected %d\n",
+			__func__, acc, fsa_priv->usbc_mode.counter,
 			TYPEC_ACCESSORY_AUDIO);
 
 	switch (acc) {
@@ -447,7 +446,6 @@ static int fsa4480_probe(struct i2c_client *i2c,
 	struct fsa4480_priv *fsa_priv;
 	u32 use_powersupply = 0;
 	int rc = 0;
-	int reg_val = 0;
 
 	fsa_priv = devm_kzalloc(&i2c->dev, sizeof(*fsa_priv),
 				GFP_KERNEL);
