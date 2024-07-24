@@ -173,7 +173,6 @@
 #include "wlan_hdd_dynamic_nss.h"
 #endif
 
-
 #define g_mode_rates_size (12)
 #define a_mode_rates_size (8)
 #define DRIVER_DISCONNECT_REASON_INDEX \
