@@ -4,11 +4,11 @@
 
 # Check if this driver needs be built for current target
 ifeq ($(call is-board-platform,msmnile),true)
-AUDIO_SELECT  := CONFIG_SND_SOC_SM8150=m
+AUDIO_SELECT  := CONFIG_SND_SOC_SM8150=y
 endif
 
 ifeq ($(call is-board-platform,$(MSMSTEPPE)),true)
-AUDIO_SELECT  := CONFIG_SND_SOC_SM6150=m
+AUDIO_SELECT  := CONFIG_SND_SOC_SM6150=y
 endif
 
 AUDIO_CHIPSET := audio

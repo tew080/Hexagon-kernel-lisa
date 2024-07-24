@@ -246,9 +246,6 @@ DTC ?= $(objtree)/scripts/dtc/dtc
 # Silence warnings
 DTC_FLAGS += -q
 
-# Silence warnings
-DTC_FLAGS += -q
-
 # Disable noisy checks by default
 ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
 DTC_FLAGS += -Wno-unit_address_vs_reg
@@ -322,6 +319,14 @@ $(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
 	$(call if_changed_rule,dtc,yaml)
 
 dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
+
+# mkdtimg
+#----------------------------------------------------------------------------
+quiet_cmd_mkdtimg = DTBOIMG $@
+cmd_mkdtimg = python $(srctree)/scripts/mkdtboimg.py create $@ --page_size=4096 $(filter-out FORCE,$^)
+
+# cat
+# ---------------------------------------------------------------------------
 
 # Concatentate multiple files together
 quiet_cmd_cat = CAT $@

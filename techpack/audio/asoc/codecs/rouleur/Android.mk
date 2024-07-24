@@ -4,7 +4,7 @@
 
 # Check if this driver needs be built for current target
 ifeq ($(call is-board-platform,bengal),true)
-AUDIO_SELECT  := CONFIG_SND_SOC_BENGAL=m
+AUDIO_SELECT  := CONFIG_SND_SOC_BENGAL=y
 endif
 
 AUDIO_CHIPSET := audio

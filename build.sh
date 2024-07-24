@@ -42,7 +42,6 @@ make $MAKE_PARAMS $DEFCONFIG
 
 echo -e "\nStarting compilation...\n"
 make -j$(nproc --all) $MAKE_PARAMS || exit $?
-make -j$(nproc --all) $MAKE_PARAMS INSTALL_MOD_PATH=modules INSTALL_MOD_STRIP=1 modules_install
 
 kernel="out/arch/arm64/boot/Image"
 dtb="out/arch/arm64/boot/dts/vendor/qcom/yupik.dtb"
@@ -53,17 +52,12 @@ if [ ! -f "$kernel" ] || [ ! -f "$dtb" ] || [ ! -f "$dtbo" ]; then
 	exit 1
 fi
 
-rm -rf AnyKernel3/dtb
 rm -rf AnyKernel3/Image
+rm -rf AnyKernel3/dtb
+##rm -rf AnyKernel3/dtbo
 cp $kernel AnyKernel3
 cp $dtb AnyKernel3/dtb
-python2 scripts/dtc/libfdt/mkdtboimg.py create AnyKernel3/dtbo.img --page_size=4096 $dtbo
-cp $(find out/modules/lib/modules/5.4* -name '*.ko') AnyKernel3/modules/vendor/lib/modules/
-cp out/modules/lib/modules/5.4*/modules.{alias,dep,softdep} AnyKernel3/modules/vendor/lib/modules
-cp out/modules/lib/modules/5.4*/modules.order AnyKernel3/modules/vendor/lib/modules/modules.load
-sed -i 's/\(kernel\/[^: ]*\/\)\([^: ]*\.ko\)/\/vendor\/lib\/modules\/\2/g' AnyKernel3/modules/vendor/lib/modules/modules.dep
-sed -i 's/.*\///g' AnyKernel3/modules/vendor/lib/modules/modules.load
-rm -rf out/arch/arm64/boot out/modules
+##cp $dtbo AnyKernel3/dtbo
 cd AnyKernel3
 zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
 cd ..

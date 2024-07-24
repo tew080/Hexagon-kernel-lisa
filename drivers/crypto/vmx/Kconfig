@@ -7,7 +7,7 @@ config CRYPTO_DEV_VMX_ENCRYPT
 	select CRYPTO_CTR
 	select CRYPTO_GHASH
 	select CRYPTO_XTS
-	default m
+	default y
 	help
 	  Support for VMX cryptographic acceleration instructions on Power8 CPU.
 	  This module supports acceleration for AES and GHASH in hardware. If you

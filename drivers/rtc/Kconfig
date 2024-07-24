@@ -1926,7 +1926,7 @@ config RTC_DRV_GOLDFISH
 config RTC_DRV_WILCO_EC
 	tristate "Wilco EC RTC"
 	depends on WILCO_EC
-	default m
+	default y
 	help
 	  If you say yes here, you get read/write support for the Real Time
 	  Clock on the Wilco Embedded Controller (Wilco is a kind of Chromebook)

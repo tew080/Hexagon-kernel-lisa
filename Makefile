@@ -761,6 +761,8 @@ KBUILD_CFLAGS  += -mcpu=kryo
 KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2
 KBUILD_CFLAGS  += -mcpu=cortex-a78 
 KBUILD_CFLAGS  += -mtune=cortex-a78 
+KBUILD_CFLAGS  += -mcpu=cortex-a55
+KBUILD_CFLAGS  += -mtune=cortex-a55
 KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
 KBUILD_CFLAGS  += -mfloat-abi=hard
 KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
