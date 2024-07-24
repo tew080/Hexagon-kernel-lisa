@@ -3675,6 +3675,7 @@ static int ffs_func_set_alt(struct usb_function *f,
 	}
 
 	ffs_log("exit: ret %d", ret);
+
 	return ret;
 }
 

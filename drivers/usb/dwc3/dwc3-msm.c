@@ -2628,10 +2628,6 @@ static void dwc3_msm_notify_event(struct dwc3 *dwc,
 			GSI_EN_MASK, 0);
 		}
 		break;
-	case DWC3_USB_RESTART_EVENT:
-		dev_dbg(mdwc->dev, "DWC3_USB_RESTART_EVENT\n");
-		schedule_work(&mdwc->restart_usb_work);
-		break;
 	default:
 		dev_dbg(mdwc->dev, "unknown dwc3 event\n");
 		break;
@@ -3357,8 +3353,6 @@ static int dwc3_msm_suspend(struct dwc3_msm *mdwc, bool force_power_collapse,
 	/* make sure above writes are completed before turning off clocks */
 	wmb();
 
-	atomic_set(&dwc->in_lpm, 1);
-
 	/* Disable clocks */
 	clk_disable_unprepare(mdwc->bus_aggr_clk);
 	clk_disable_unprepare(mdwc->utmi_clk);
@@ -3410,6 +3404,7 @@ static int dwc3_msm_suspend(struct dwc3_msm *mdwc, bool force_power_collapse,
 		}
 	}
 
+	atomic_set(&dwc->in_lpm, 1);
 
 	/*
 	 * with the core in power collapse, we dont require wakeup
@@ -4593,7 +4588,7 @@ static void dwc3_start_stop_host(struct dwc3_msm *mdwc, bool start)
 	dwc3_ext_event_notify(mdwc);
 	dbg_event(0xFF, "flush_work", 0);
 	flush_work(&mdwc->resume_work);
-	flush_workqueue(mdwc->sm_usb_wq);
+	drain_workqueue(mdwc->sm_usb_wq);
 	if (start)
 		dbg_log_string("host mode started");
 	else
@@ -4617,7 +4612,7 @@ static void dwc3_start_stop_device(struct dwc3_msm *mdwc, bool start)
 	dwc3_ext_event_notify(mdwc);
 	dbg_event(0xFF, "flush_work", 0);
 	flush_work(&mdwc->resume_work);
-	flush_workqueue(mdwc->sm_usb_wq);
+	drain_workqueue(mdwc->sm_usb_wq);
 	if (start)
 		dbg_log_string("device mode restarted");
 	else
@@ -4653,7 +4648,7 @@ int dwc3_msm_release_ss_lane(struct device *dev, bool usb_dp_concurrent_mode)
 	dbg_event(0xFF, "ss_lane_release", 0);
 	/* flush any pending work */
 	flush_work(&mdwc->resume_work);
-	flush_workqueue(mdwc->sm_usb_wq);
+	drain_workqueue(mdwc->sm_usb_wq);
 
 	redriver_release_usb_lanes(mdwc->ss_redriver_node);
 
