@@ -105,6 +105,9 @@ static inline void dwc3_gadget_move_cancelled_request(struct dwc3_request *req, 
 	list_move_tail(&req->list, &dep->cancelled_list);
 }
 
+void dwc3_check_cmd(struct dwc3 *dwc);
+void dwc3_check_cmd_work(struct work_struct *w);
+
 void dwc3_gadget_giveback(struct dwc3_ep *dep, struct dwc3_request *req,
 		int status);
 

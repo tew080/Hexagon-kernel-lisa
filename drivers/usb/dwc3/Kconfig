@@ -152,4 +152,9 @@ config USB_DWC3_MSM
 	  Driver supports host, device and dual-role modes of operation.
 	  Say 'Y' or 'M' if you have one such device.
 
+config CLOSE_PRINT_K9E
+	tristate "close print GAD SUS"
+	help
+	  Say Y here to close print GAD SUS
+
 endif
