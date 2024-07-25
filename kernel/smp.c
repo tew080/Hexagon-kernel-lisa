@@ -14,7 +14,6 @@
 #include <linux/export.h>
 #include <linux/percpu.h>
 #include <linux/init.h>
-#include <linux/interrupt.h>
 #include <linux/gfp.h>
 #include <linux/smp.h>
 #include <linux/cpu.h>
@@ -129,8 +128,7 @@ static __always_inline void csd_lock(struct __call_single_data *csd)
 
 static __always_inline void csd_unlock(struct __call_single_data *csd)
 {
-	if (!(csd->flags & CSD_FLAG_LOCK))
-		return;
+	WARN_ON(!(csd->flags & CSD_FLAG_LOCK));
 
 	/*
 	 * ensure we're all done before releasing data:
@@ -275,9 +273,6 @@ void flush_smp_call_function_from_idle(void)
 
 	local_irq_save(flags);
 	flush_smp_call_function_queue(true);
-	if (local_softirq_pending())
-		do_softirq();
-
 	local_irq_restore(flags);
 }
 
@@ -355,7 +350,7 @@ EXPORT_SYMBOL(smp_call_function_single);
  * NOTE: Be careful, there is unfortunately no current debugging facility to
  * validate the correctness of this serialization.
  */
-int smp_call_function_single_async(int cpu, struct __call_single_data *csd)
+int smp_call_function_single_async(int cpu, call_single_data_t *csd)
 {
 	int err = 0;
 
