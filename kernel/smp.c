@@ -14,6 +14,7 @@
 #include <linux/export.h>
 #include <linux/percpu.h>
 #include <linux/init.h>
+#include <linux/interrupt.h>
 #include <linux/gfp.h>
 #include <linux/smp.h>
 #include <linux/cpu.h>
@@ -128,7 +129,8 @@ static __always_inline void csd_lock(struct __call_single_data *csd)
 
 static __always_inline void csd_unlock(struct __call_single_data *csd)
 {
-	WARN_ON(!(csd->flags & CSD_FLAG_LOCK));
+	if (!(csd->flags & CSD_FLAG_LOCK))
+		return;
 
 	/*
 	 * ensure we're all done before releasing data:
@@ -146,7 +148,7 @@ extern void send_call_function_single_ipi(int cpu);
  * ->func, ->info, and ->flags set.
  */
 int generic_exec_single(int cpu, struct __call_single_data *csd,
-			smp_call_func_t func, void *info)			
+			smp_call_func_t func, void *info)	
 {
 	if (cpu == smp_processor_id()) {
 		unsigned long flags;
@@ -273,6 +275,8 @@ void flush_smp_call_function_from_idle(void)
 
 	local_irq_save(flags);
 	flush_smp_call_function_queue(true);
+	if (local_softirq_pending())
+		do_softirq();
 	local_irq_restore(flags);
 }
 
@@ -351,6 +355,7 @@ EXPORT_SYMBOL(smp_call_function_single);
  * validate the correctness of this serialization.
  */
 int smp_call_function_single_async(int cpu, call_single_data_t *csd)
+
 {
 	int err = 0;
 
@@ -634,7 +639,7 @@ void __init smp_init(void)
 	idle_threads_init();
 	cpuhp_threads_init();
 
-	pr_debug("Bringing up secondary CPUs ...\n");
+	pr_info("Bringing up secondary CPUs ...\n");
 
 	/* FIXME: This should be done in userspace --RR */
 	for_each_present_cpu(cpu) {
@@ -647,7 +652,7 @@ void __init smp_init(void)
 
 	num_nodes = num_online_nodes();
 	num_cpus  = num_online_cpus();
-	pr_debug("Brought up %d node%s, %d CPU%s\n",
+	pr_info("Brought up %d node%s, %d CPU%s\n",
 		num_nodes, (num_nodes > 1 ? "s" : ""),
 		num_cpus,  (num_cpus  > 1 ? "s" : ""));
 
