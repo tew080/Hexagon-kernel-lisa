@@ -1316,7 +1316,7 @@ void __intel_init_wedge(struct intel_wedge_me *w,
 	w->name = name;
 
 	INIT_DELAYED_WORK_ONSTACK(&w->work, intel_wedge_me);
-	queue_delayed_work(system_power_efficient_wq,&w->work, timeout);
+	schedule_delayed_work(&w->work, timeout);
 }
 
 void __intel_fini_wedge(struct intel_wedge_me *w)

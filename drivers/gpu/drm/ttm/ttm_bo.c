@@ -527,7 +527,7 @@ error:
 	list_add_tail(&bo->ddestroy, &bdev->ddestroy);
 	spin_unlock(&glob->lru_lock);
 
-	queue_delayed_work(system_power_efficient_wq,&bdev->wq,
+	schedule_delayed_work(&bdev->wq,
 			      ((HZ / 100) < 1) ? 1 : HZ / 100);
 }
 
@@ -664,7 +664,7 @@ static void ttm_bo_delayed_workqueue(struct work_struct *work)
 	    container_of(work, struct ttm_bo_device, wq.work);
 
 	if (!ttm_bo_delayed_delete(bdev, false))
-		queue_delayed_work(system_power_efficient_wq,&bdev->wq,
+		schedule_delayed_work(&bdev->wq,
 				      ((HZ / 100) < 1) ? 1 : HZ / 100);
 }
 
@@ -701,7 +701,7 @@ EXPORT_SYMBOL(ttm_bo_lock_delayed_workqueue);
 void ttm_bo_unlock_delayed_workqueue(struct ttm_bo_device *bdev, int resched)
 {
 	if (resched)
-		queue_delayed_work(system_power_efficient_wq,&bdev->wq,
+		schedule_delayed_work(&bdev->wq,
 				      ((HZ / 100) < 1) ? 1 : HZ / 100);
 }
 EXPORT_SYMBOL(ttm_bo_unlock_delayed_workqueue);

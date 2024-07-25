@@ -112,7 +112,7 @@ static void set_grace_period(struct net *net)
 
 	locks_start_grace(net, &ln->lockd_manager);
 	cancel_delayed_work_sync(&ln->grace_period_end);
-	queue_delayed_work(system_power_efficient_wq,&ln->grace_period_end, grace_period);
+	schedule_delayed_work(&ln->grace_period_end, grace_period);
 }
 
 static void restart_grace(void)

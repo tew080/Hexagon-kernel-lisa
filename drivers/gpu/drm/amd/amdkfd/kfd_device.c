@@ -950,7 +950,7 @@ int kgd2kfd_schedule_evict_and_restore_process(struct mm_struct *mm,
 	/* During process initialization eviction_work.dwork is initialized
 	 * to kfd_evict_bo_worker
 	 */
-	queue_delayed_work(system_power_efficient_wq,&p->eviction_work, delay_jiffies);
+	schedule_delayed_work(&p->eviction_work, delay_jiffies);
 out:
 	kfd_unref_process(p);
 	return 0;

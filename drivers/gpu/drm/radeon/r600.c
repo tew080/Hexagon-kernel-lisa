@@ -4325,7 +4325,7 @@ restart_ih:
 		WREG32(IH_RB_RPTR, rptr);
 	}
 	if (queue_hotplug)
-		queue_delayed_work(system_power_efficient_wq,&rdev->hotplug_work, 0);
+		schedule_delayed_work(&rdev->hotplug_work, 0);
 	if (queue_hdmi)
 		schedule_work(&rdev->audio_work);
 	if (queue_thermal && rdev->pm.dpm_enabled)

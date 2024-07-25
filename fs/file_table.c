@@ -348,7 +348,7 @@ void fput_many(struct file *file, unsigned int refs)
 		}
 
 		if (llist_add(&file->f_u.fu_llist, &delayed_fput_list))
-			queue_delayed_work(system_power_efficient_wq,&delayed_fput_work, 1);
+			schedule_delayed_work(&delayed_fput_work, 1);
 	}
 }
 

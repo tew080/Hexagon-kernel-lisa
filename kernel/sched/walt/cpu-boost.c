@@ -268,7 +268,7 @@ static void do_input_boost(struct kthread_work *work)
 	}
 
 	pr_debug("Wake boost active = %d\n", wake_boost_active);
-	queue_delayed_work(system_power_efficient_wq,&input_boost_rem,
+	schedule_delayed_work(&input_boost_rem,
 		msecs_to_jiffies(wake_boost_active ? wake_boost_ms : input_boost_ms));
 }
 

@@ -1288,7 +1288,7 @@ radeon_dvi_detect(struct drm_connector *connector, bool force)
 		    connector->status != connector_status_connected) {
 			DRM_DEBUG_KMS("hpd detected without ddc, retrying in 1 second\n");
 			radeon_connector->detected_hpd_without_ddc = true;
-			queue_delayed_work(system_power_efficient_wq,&rdev->hotplug_work,
+			schedule_delayed_work(&rdev->hotplug_work,
 					      msecs_to_jiffies(1000));
 			goto exit;
 		}

@@ -758,7 +758,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 # Snapdragon optimization
 KBUILD_CFLAGS  += -mcpu=kryo 
-KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve2
+KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
 KBUILD_CFLAGS  += -mcpu=cortex-a78 
 KBUILD_CFLAGS  += -mtune=cortex-a78 
 KBUILD_CFLAGS  += -mcpu=cortex-a55
@@ -964,7 +964,8 @@ endif
 ifdef CONFIG_LTO_CLANG
 CC_FLAGS_LTO_CLANG := -flto=full $(call cc-option, -fsplit-lto-unit)
 KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
-KBUILD_LDFLAGS += --lto-O3
+KBUILD_LDFLAGS		+= --plugin-opt=O3
+KBUILD_LDFLAGS += --lto-O3 
 CC_FLAGS_LTO_CLANG += -fvisibility=default
 KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
 endif
