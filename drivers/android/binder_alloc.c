@@ -44,7 +44,7 @@ module_param_named(debug_mask, binder_alloc_debug_mask,
 #define binder_alloc_debug(mask, x...) \
 	do { \
 		if (binder_alloc_debug_mask & mask) \
-			pr_info_ratelimited(x); \
+			pr_debug_ratelimited(x); \
 	} while (0)
 
 static struct binder_buffer *binder_buffer_next(struct binder_buffer *buffer)
@@ -236,21 +236,21 @@ static int binder_install_single_page(struct binder_alloc *alloc,
 		goto out;
 
 	if (!alloc->vma) {
-		pr_err("%d: %s failed, no vma\n", alloc->pid, __func__);
+		pr_debug("%d: %s failed, no vma\n", alloc->pid, __func__);
 		ret = -ESRCH;
 		goto out;
 	}
 
 	page = alloc_page(GFP_KERNEL | __GFP_HIGHMEM | __GFP_ZERO);
 	if (!page) {
-		pr_err("%d: failed to allocate page\n", alloc->pid);
+		pr_debug("%d: failed to allocate page\n", alloc->pid);
 		ret = -ENOMEM;
 		goto out;
 	}
 
 	ret = vm_insert_page(alloc->vma, addr, page);
 	if (ret) {
-		pr_err("%d: %s failed to insert page at offset %lx with %d\n",
+		pr_debug("%d: %s failed to insert page at offset %lx with %d\n",
 		       alloc->pid, __func__, addr - (uintptr_t)alloc->buffer,
 		       ret);
 		__free_page(page);
