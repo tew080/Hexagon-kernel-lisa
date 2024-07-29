@@ -766,7 +766,7 @@ KBUILD_CFLAGS   += -mllvm -regalloc-enable-advisor=release
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 
 # Snapdragon optimization
-#KBUILD_CFLAGS  += -mcpu=kryo 
+KBUILD_CFLAGS  += -mcpu=kryo 
 KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
 KBUILD_CFLAGS  += -mcpu=cortex-a78 
 KBUILD_CFLAGS  += -mtune=cortex-a78 
