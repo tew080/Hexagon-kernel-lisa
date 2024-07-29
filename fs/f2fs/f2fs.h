@@ -649,6 +649,8 @@ enum {
 #elif defined(CONFIG_HZ_100)
 /* congestion wait timeout value, default: 10ms */
 #define	DEFAULT_IO_TIMEOUT	(msecs_to_jiffies(10))
+#else
+#define	DEFAULT_IO_TIMEOUT	(msecs_to_jiffies(20))
 #endif
 
 /* maximum retry quota flush count */
