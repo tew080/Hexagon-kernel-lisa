@@ -118,9 +118,7 @@ vmlinux_link()
 	shift
 
 	# The kallsyms linking does not need debug symbols included.
-	# except for LTO because gcc 10 LTO changes the layout of the data segment
-	# with --strip-debug
-	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" -a -z "$CONFIG_LTO_GCC" ] ; then
+	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" ] ; then
 		strip_debug=-Wl,--strip-debug
 	fi
 
