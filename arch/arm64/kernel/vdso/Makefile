@@ -25,9 +25,7 @@ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
 ldflags-y := -shared -soname=linux-vdso.so.1 --hash-style=sysv \
 		-Bsymbolic --build-id -n -T
 
-ccflags-y := -fno-common -fno-builtin -fno-stack-protector \
-	     -ffixed-x18 $(DISABLE_LTO)
-
+ccflags-y := -fno-common -fno-builtin -fno-stack-protector -ffixed-x18
 ccflags-y += -DDISABLE_BRANCH_PROFILING
 
 CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS) $(GCC_PLUGINS_CFLAGS) \
