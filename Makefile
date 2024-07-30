@@ -527,10 +527,6 @@ export KBUILD_AFLAGS AFLAGS_KERNEL AFLAGS_MODULE
 export KBUILD_AFLAGS_MODULE KBUILD_CFLAGS_MODULE KBUILD_LDFLAGS_MODULE
 export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
 
-ifdef CONFIG_GCC_GRAPHITE
-KBUILD_CFLAGS	+= -fgraphite-identity -floop-nest-optimize
-endif
-
 # Files to ignore in find ... statements
 
 export RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o    \
@@ -758,11 +754,8 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-truncation)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 
-#Enable MLGO for register allocation.
-KBUILD_CFLAGS   += -mllvm -regalloc-enable-advisor=release
 #Enable hot cold split optimization
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
-
 # Snapdragon optimization
 KBUILD_CFLAGS  += -mcpu=kryo 
 KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
@@ -805,11 +798,6 @@ endif
 # in order to preserve the overall effect of the linker's DCE.
 ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
 POLLY_FLAGS	+= -mllvm -polly-run-dce
-endif
-
-# Profile Guided Optimization
-ifeq ($(CONFIG_PGO), y)
-KBUILD_CFLAGS	+= -fprofile-use -Wno-coverage-mismatch -Wno-error=coverage-mismatch
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one

@@ -4,8 +4,7 @@
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
-TC_DIR="/home/tew404/lisa-Kernel/linux-x86-refs_heads_main-clang-r530567"
-TC_DIRR="/home/tew404/lisa-Kernel/Clang-20.0.0"
+TC_DIR="/home/tew404/lisa-Kernel/Clang-20.0.0"
 DEFCONFIG="lisa_defconfig"
 
 ZIPNAME="Hexagon-kernel-lisa-$(date '+%Y%m%d-%H%M').zip"
@@ -19,8 +18,8 @@ MAKE_PARAMS="O=out \
 	ARCH=arm64  \
  	CC=$TC_DIRR/bin/clang  \
 	CLANG_TRIPLE=aarch64-linux-gnu- \
-	CROSS_COMPILE=$TC_DIRR/bin/aarch64-linux-gnu-  \
-	CROSS_COMPILE_ARM32=$TC_DIRR/bin/arm-linux-gnueabi-  \
+	CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu-  \
+	CROSS_COMPILE_ARM32=$TC_DIR/bin/arm-linux-gnueabi-  \
 	LLVM=1 \
 	LLVM_IAS=1"
 
