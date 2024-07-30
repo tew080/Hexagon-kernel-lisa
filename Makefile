@@ -755,7 +755,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 
 #Enable hot cold split optimization
-KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
+#KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 # Snapdragon optimization
 KBUILD_CFLAGS  += -mcpu=kryo 
 KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
