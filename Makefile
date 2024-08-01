@@ -755,16 +755,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 
 #Enable hot cold split optimization
-#KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
-# Snapdragon optimization
-KBUILD_CFLAGS  += -mcpu=kryo 
-KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
-KBUILD_CFLAGS  += -mcpu=cortex-a78 
-KBUILD_CFLAGS  += -mtune=cortex-a78 
-KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
-KBUILD_CFLAGS  += -mfloat-abi=hard
-KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
-KBUILD_CFLAGS  += -msve-vector-bits=128 -fno-common
+KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
 KBUILD_CFLAGS += -O2
@@ -776,20 +767,26 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os
 endif
 
+# Snapdragon optimization
+#KBUILD_CFLAGS  += -mcpu=kryo 
+#KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
+KBUILD_CFLAGS  += -mcpu=cortex-a78 
+KBUILD_CFLAGS  += -mtune=cortex-a78 
+#KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
+#KBUILD_CFLAGS  += -mfloat-abi=hard
+#KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
+#KBUILD_CFLAGS  += -msve-vector-bits=128 -fno-common
+
 ifeq ($(CONFIG_LLVM_POLLY), y)
- KBUILD_CFLAGS	+= -mllvm -polly \
+KBUILD_CFLAGS	+= -mllvm -polly \
 		   -mllvm -polly-run-inliner \
+		   -mllvm -polly-reschedule=1 \
+		   -mllvm -polly-loopfusion-greedy=1 \
+		   -mllvm -polly-postopts=1 \
 		   -mllvm -polly-ast-use-context \
 		   -mllvm -polly-detect-keep-going \
-		   -mllvm -polly-invariant-load-hoisting \
 		   -mllvm -polly-vectorizer=stripmine \
-		   -mllvm -polly-loopfusion-greedy=1 \
-		   -mllvm -polly-reschedule=1 \
-		   -mllvm -polly-postopts=1 \
-		   -mllvm -polly-num-threads=0 \
-		   -mllvm -polly-omp-backend=LLVM \
-		   -mllvm -polly-scheduling=dynamic \
-		   -mllvm -polly-scheduling-chunksize=1
+		   -mllvm -polly-invariant-load-hoisting
 endif
 
 # Polly may optimise loops with dead paths beyound what the linker
@@ -961,7 +958,7 @@ endif
 
 ifdef CONFIG_LTO_CLANG
 ifdef CONFIG_FULL_LTO
-CC_FLAGS_LTO_CLANG := -flto=full $(call cc-option, -fsplit-lto-unit)
+CC_FLAGS_LTO_CLANG := -flto=thin $(call cc-option, -fsplit-lto-unit)
 KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
 else
 CC_FLAGS_LTO_CLANG := -flto
