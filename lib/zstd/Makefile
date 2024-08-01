@@ -1,10 +1,4 @@
 # SPDX-License-Identifier: GPL-2.0-only
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd \
-		-mcpu=cortex-a78 -mtune=cortex-a78  \
-		-funroll-loops -ftree-vectorize \
-		 -msve-vector-bits=128 -mfpu=neon-fp-armv8 \
-		-mfloat-abi=hard -fno-common 
-		
 # SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause
 # ################################################################
 # Copyright (c) Meta Platforms, Inc. and affiliates.
