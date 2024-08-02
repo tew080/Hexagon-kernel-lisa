@@ -3,13 +3,9 @@
 # Makefile for the linux kernel.
 #
 
-ccflags-y += -march=armv8.2-a+crypto+rcpc+dotprod+sve2+fp16+aes+sha2+lse+simd \
-		-mcpu=cortex-a78 -mtune=cortex-a78  \
-		-funroll-loops -ftree-vectorize \
-		 -msve-vector-bits=128 -mfpu=neon-fp-armv8 \
-		-mfloat-abi=hard -fno-common 
-
 ccflags-y := -fno-function-sections -fno-data-sections
+ccflags-y += -mllvm -inline-threshold=15000
+ccflags-y += -mllvm -inlinehint-threshold=10000
 
 obj-y                          := main.o version.o mounts.o
 ifneq ($(CONFIG_BLK_DEV_INITRD),y)

@@ -15,13 +15,6 @@
 #include <linux/sched/sysctl.h>
 #include <trace/hooks/sched.h>
 
-#define UP_RATE_LIMIT_US_CPU_LP_MASK 0
-#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 0
-#define UP_RATE_LIMIT_US_CPU_PERF_MASK 0
-#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 0
-#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 0
-#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 0
-
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
 	unsigned int		up_rate_limit_us;
@@ -566,7 +559,6 @@ static ssize_t up_rate_limit_us_store(struct gov_attr_set *attr_set,
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
-	return count;
 	tunables->up_rate_limit_us = rate_limit_us;
 
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
@@ -587,7 +579,6 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
-	return count;
 	tunables->down_rate_limit_us = rate_limit_us;
 
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
@@ -646,7 +637,7 @@ static void sugov_policy_free(struct sugov_policy *sg_policy)
 static int sugov_kthread_create(struct sugov_policy *sg_policy)
 {
 	struct task_struct *thread;
-	struct sched_param param = { .sched_priority = MAX_USER_RT_PRIO - 1 };
+	struct sched_param param = { .sched_priority = MAX_USER_RT_PRIO / 2 };
 	struct cpufreq_policy *policy = sg_policy->policy;
 	int ret;
 
@@ -793,22 +784,6 @@ static int sugov_init(struct cpufreq_policy *policy)
 
 	tunables->up_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
 	tunables->down_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
-
-		switch (policy->cpu) {
-	default:
-	case 0:
-		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_LP_MASK;
-		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_LP_MASK;
-		break;
-	case 4:
-		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PERF_MASK;
-		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PERF_MASK;
-		break;
-	case 7:
- 	    tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PRIME_MASK;
-	    tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PRIME_MASK;
-		break;
-	}
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
