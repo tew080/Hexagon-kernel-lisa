@@ -38,7 +38,7 @@ static struct gcov_info *gcov_info_head;
 struct gcov_fn_info {
 	unsigned int ident;
 	unsigned int checksum;
-	unsigned int n_ctrs[];
+	unsigned int n_ctrs[0];
 };
 
 /**
@@ -78,7 +78,7 @@ struct gcov_info {
 	unsigned int			n_functions;
 	const struct gcov_fn_info	*functions;
 	unsigned int			ctr_mask;
-	struct gcov_ctr_info		counts[];
+	struct gcov_ctr_info		counts[0];
 };
 
 /**
@@ -352,7 +352,7 @@ struct gcov_iterator {
 	unsigned int count;
 
 	int num_types;
-	struct type_info type_info[];
+	struct type_info type_info[0];
 };
 
 static struct gcov_fn_info *get_func(struct gcov_iterator *iter)
