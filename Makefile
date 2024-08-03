@@ -753,7 +753,6 @@ endif # may-sync-config
 endif # need-config
 
 KBUILD_CFLAGS	+= $(call cc-option,-fno-delete-null-pointer-checks,)
-KBUILD_CFLAGS	+= $(call cc-disable-warning, aggressive-loop-optimizations)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, array-compare)
 KBUILD_CFLAGS	+= $(call cc-disable-warning,frame-address,)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, format-truncation)
@@ -761,10 +760,6 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, format-overflow)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, -Wno-unused-result)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, -Wno-single-bit-bitfield-constant-conversion)
-KBUILD_CFLAGS 	+= $(call cc-disable-warning, sequence-point)
-KBUILD_CFLAGS	+= $(call cc-disable-warning, sizeof-pointer-memaccess)
-KBUILD_CFLAGS	+= $(call cc-disable-warning, unused-result)
-KBUILD_CFLAGS	+= $(call cc-disable-warning, unused-value)
 
 #Enable MLGO for register allocation.
 #KBUILD_CFLAGS   += -mllvm -regalloc-enable-advisor=release
