@@ -761,7 +761,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, -Wno-unused-result)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, -Wno-single-bit-bitfield-constant-conversion)
 
 #Enable MLGO for register allocation.
-#KBUILD_CFLAGS   += -mllvm -regalloc-enable-advisor=release
+KBUILD_CFLAGS   += -mllvm -regalloc-enable-advisor=release
 #Enable hot cold split optimization
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
 
