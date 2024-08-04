@@ -27,14 +27,18 @@
 
 #include "walt/walt.h"
 
-#define SYSCTL_SCHED_LATENCY 24000000ULL
-#define NORMALIZED_SYSCTL_SCHED_LATENCY 24000000ULL
-#define SYSCTL_SCHED_MIN_GRANULARITY 3000000ULL
-#define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 3000000ULL
+#ifdef CONFIG_SMP
+static inline bool task_fits_max(struct task_struct *p, int cpu);
+#endif /* CONFIG_SMP */
+
+#define SYSCTL_SCHED_LATENCY 10000000ULL
+#define NORMALIZED_SYSCTL_SCHED_LATENCY 10000000ULL
+#define SYSCTL_SCHED_MIN_GRANULARITY 2500000ULL
+#define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 2500000ULL
 #define SCHED_NR_LATENCY 8
 #define SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY 
-#define SYSCTL_SCHED_WAKEUP_GRANULARITY 4000000UL
-#define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 4000000UL
+#define SYSCTL_SCHED_WAKEUP_GRANULARITY 5000000UL
+#define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 5000000UL
 #define SYSCTL_SCHED_MIGRATION_COST 1000000UL
 #define SYSCTL_SCHED_CFS_BANDWIDTH_SLICE 5000UL
 
@@ -50,10 +54,6 @@
  * (default SCHED_TUNABLESCALING_LOG = *(1+ilog(ncpus))
  */
 enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_NONE;
-
-#ifdef CONFIG_SMP
-static inline bool task_fits_max(struct task_struct *p, int cpu);
-#endif /* CONFIG_SMP */
 
 /*
  * Targeted preemption latency for CPU-bound tasks:
@@ -135,7 +135,6 @@ int __weak arch_asym_cpu_priority(int cpu)
 #define capacity_greater(cap1, cap2) ((cap1) * 1024 > (cap2) * 1078)
 #endif
 
-#ifdef CONFIG_CFS_BANDWIDTH
 /*
  * Amount of runtime to allocate from global (tg) to local (per-cfs_rq) pool
  * each time a cfs_rq requests quota.
@@ -147,7 +146,7 @@ int __weak arch_asym_cpu_priority(int cpu)
  * (default: 4 msec, units: microseconds)
  */
 unsigned int sysctl_sched_cfs_bandwidth_slice = SYSCTL_SCHED_CFS_BANDWIDTH_SLICE;
-#endif
+
 
 /* Migration margins */
 unsigned int sched_capacity_margin_up[NR_CPUS] = {
