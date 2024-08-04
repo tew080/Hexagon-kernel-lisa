@@ -353,6 +353,7 @@ static noinline int __init __load_module(struct load_info *info, const char __us
 	load_modname(info->name, uargs, NORMAL);
 
 err:
+	free_copy(info);
 	return err;
 }
 
@@ -386,7 +387,6 @@ static int __ref load_module(struct load_info *info, const char __user *uargs,
 	}
 
 out:
-	free_copy(info);
 	mutex_unlock(&lazy_initcall_mutex);
 	return ret;
 }
