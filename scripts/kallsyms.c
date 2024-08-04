@@ -226,10 +226,6 @@ static int symbol_valid(struct sym_entry *s)
 	int i;
 	char *sym_name = (char *)s->sym + 1;
 
-	/* lazy initcall looks up __mod_present__ to see if it's built-in */
-	if (!strncmp(name, "__mod_present__", 15))
-		return 1;
-
 	/* if --all-symbols is not specified, then symbols outside the text
 	 * and inittext sections are discarded */
 	if (!all_symbols) {
