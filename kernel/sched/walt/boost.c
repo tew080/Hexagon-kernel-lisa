@@ -14,11 +14,11 @@
  * boost is responsible for disabling it as well.
  */
 
-unsigned int sysctl_sched_boost; /* To/from userspace */
-unsigned int sched_boost_type; /* currently activated sched boost */
-enum sched_boost_policy boost_policy;
+unsigned int sysctl_sched_boost= 1; /* To/from userspace */
+unsigned int sched_boost_type= 2; /* currently activated sched boost */
+enum sched_boost_policy boost_policy = SCHED_BOOST_ON_BIG;
 
-static enum sched_boost_policy boost_policy_dt = SCHED_BOOST_NONE;
+static enum sched_boost_policy boost_policy_dt = SCHED_BOOST_ON_BIG;
 static DEFINE_MUTEX(boost_mutex);
 
 #if defined(CONFIG_UCLAMP_TASK_GROUP)
