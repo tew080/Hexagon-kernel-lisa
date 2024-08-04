@@ -1093,11 +1093,6 @@ static void mark_readonly(void)
 	} else
 		pr_debug("Kernel memory protection disabled.\n");
 }
-#elif defined(CONFIG_ARCH_HAS_STRICT_KERNEL_RWX)
-static inline void mark_readonly(void)
-{
-	pr_warn("Kernel memory protection not selected by kernel config.\n");
-}
 #else
 static inline void mark_readonly(void)
 {
@@ -1119,7 +1114,6 @@ static int __ref kernel_init(void *unused)
 	async_synchronize_full();
 	kprobe_free_init_mem();
 	ftrace_free_init_mem();
-	kgdb_free_init_mem();
 	free_initmem();
 	mark_readonly();
 
