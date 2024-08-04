@@ -197,8 +197,7 @@ static int __init integrated_module_param_cb(char *param, char *val,
 	return 0;
 }
 
-static noinline void __init load_modname(const char * const modname, const char __user *uargs,
-					 enum lazy_initcall_type type)
+static noinline void __init load_modname(const char * const modname, const char __user *uargs)
 {
 	int i, ret;
 	bool match = false;
@@ -223,15 +222,10 @@ static noinline void __init load_modname(const char * const modname, const char 
 				pr_debug("lazy_initcalls[%d]: %s already loaded\n", i, modname);
 				return;
 			}
+			lazy_initcalls[i].loaded = true;
 			match = true;
 			break;
 		}
-	}
-
-	// Check if the driver is deferred
-	if (lazy_initcalls[i].type != type) {
-		pr_info("deferring \"%s\"\n", modname);
-		return;
 	}
 
 	// Unable to find the driver that the userspace requested
@@ -283,8 +277,6 @@ static noinline void __init load_modname(const char * const modname, const char 
 	if (ret != 0)
 		__err("lazy_initcalls[%d]: %s's init function returned %d\n", i, modname, ret);
 
-	lazy_initcalls[i].loaded = true;
-
 	// Check if all modules are loaded so that __init memory can be released
 	match = false;
 	for (i = 0; i < counter; i++) {
@@ -327,7 +319,7 @@ static noinline int __init __load_module(struct load_info *info, const char __us
 	if (err)
 		goto err;
 
-	load_modname(info->name, uargs, NORMAL);
+	load_modname(info->name, uargs);
 
 err:
 	free_copy(info);
@@ -354,7 +346,7 @@ static int __ref load_module(struct load_info *info, const char __user *uargs,
 			pr_info("all userspace modules loaded, now loading built-in deferred drivers\n");
 
 			for (i = 0; deferred_list[i]; i++)
-				load_modname(deferred_list[i], NULL, DEFERRED);
+				load_modname(deferred_list[i], NULL);
 		}
 		pr_info("all modules loaded, calling free_initmem()\n");
 		if (show_errors_str())
