@@ -102,7 +102,7 @@ CFLAGS_aegis128-neon-inner.o += -mcpu=cortex-a78 -mtune=cortex-a78
 aegis128-$(CONFIG_CRYPTO_AEGIS128_SIMD) += aegis128-neon.o aegis128-neon-inner.o
 endif
 ifeq ($(ARCH),arm64)
-aegis128-cflags-y := -ffreestanding -mcpu=generic+crypto
+aegis128-cflags-y := -ffreestanding -mcpu=cortex-a78+crypto
 aegis128-cflags-$(CONFIG_CC_IS_GCC) += -ffixed-q16 -ffixed-q17 -ffixed-q18 \
 				       -ffixed-q19 -ffixed-q20 -ffixed-q21 \
 				       -ffixed-q22 -ffixed-q23 -ffixed-q24 \

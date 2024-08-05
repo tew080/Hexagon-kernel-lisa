@@ -47,6 +47,11 @@ LC_COLLATE=C
 LC_NUMERIC=C
 export LC_COLLATE LC_NUMERIC
 
+# Force full LLVM build
+LLVM := 1
+LLVM_IAS := 1
+export LLVM LLVM_IAS
+
 # Avoid interference with shell env settings
 unexport GREP_OPTIONS
 
@@ -347,6 +352,7 @@ include scripts/Kbuild.include
 KERNELRELEASE = $(shell cat include/config/kernel.release 2> /dev/null)
 KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
 export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
+export CPP AR NM STRIP OBJCOPY OBJDUMP READELF OBJSIZE
 
 include scripts/subarch.include
 
@@ -408,6 +414,7 @@ HOST_LFS_LIBS := $(shell getconf LFS_LIBS 2>/dev/null)
 ifneq ($(LLVM),)
 HOSTCC	= $(CCACHE) clang
 HOSTCXX	= $(CCACHE) clang++
+HOSTLD       = $(CCACHE) ld.lld
 else
 HOSTCC	= $(CCACHE) gcc
 HOSTCXX	= $(CCACHE) g++
@@ -526,10 +533,6 @@ export CFLAGS_KASAN CFLAGS_KASAN_NOSANITIZE CFLAGS_UBSAN
 export KBUILD_AFLAGS AFLAGS_KERNEL AFLAGS_MODULE
 export KBUILD_AFLAGS_MODULE KBUILD_CFLAGS_MODULE KBUILD_LDFLAGS_MODULE
 export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
-
-ifdef CONFIG_GCC_GRAPHITE
-KBUILD_CFLAGS	+= -fipa-pta -fgraphite-identity -floop-nest-optimize -fno-semantic-interposition
-endif
 
 # Files to ignore in find ... statements
 
@@ -679,7 +682,7 @@ endif # KBUILD_EXTMOD
 # Defaults to vmlinux, but the arch makefile usually adds further targets
 all: vmlinux
 
-ifeq ($(CONFIG_PGO_GEN),y)
+ifdef CONFIG_PGO_GEN 
 CFLAGS_GCOV := -fprofile-generate -fkernel-pgo
 else
 CFLAGS_GCOV := --coverage
@@ -764,11 +767,6 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, -Wno-unused-result)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, -Wno-single-bit-bitfield-constant-conversion)
 
-#Enable MLGO for register allocation.
-KBUILD_CFLAGS   += -mllvm -regalloc-enable-advisor=release
-#Enable hot cold split optimization
-KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
-
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
 KBUILD_CFLAGS += -O2 
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
@@ -779,27 +777,53 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os 
 endif
 
-KBUILD_CFLAGS  +=  -g0
+# Graphite optimisation
+ifdef CONFIG_GCC_GRAPHITE
+KBUILD_CFLAGS	+= -fipa-pta -fgraphite-identity -floop-nest-optimize -fno-semantic-interposition
+endif
+
+# Enable MLGO for register allocation.
+KBUILD_CFLAGS   += -ffp-contract=fast -mllvm -regalloc-enable-advisor=release
+
+# Enable hot cold split optimization
+KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
+
+# Inlin optimization
+KBUILD_CFLAGS  +=   -mllvm -inline-threshold=15000
+KBUILD_CFLAGS  +=  -mllvm -inlinehint-threshold=10000
 
 # Snapdragon optimization
-KBUILD_CFLAGS  += -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
-KBUILD_CFLAGS  += -mcpu=cortex-a78 
-KBUILD_CFLAGS  += -mtune=cortex-a78 
-KBUILD_CFLAGS  += -mfpu=neon-fp-armv8 
-KBUILD_CFLAGS  += -mfloat-abi=hard
-KBUILD_CFLAGS  += -funroll-loops -ftree-vectorize 
-KBUILD_CFLAGS  += -msve-vector-bits=128 -fno-common
+KBUILD_CFLAGS  +=  -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
+KBUILD_CFLAGS  +=  -mcpu=cortex-a78 
+KBUILD_CFLAGS  +=  -mtune=cortex-a78 
+KBUILD_CFLAGS  +=  -mcpu=cortex-a55
+KBUILD_CFLAGS  +=  -mtune=cortex-a55
+KBUILD_CFLAGS  +=  -mfpu=neon-fp-armv8 
+KBUILD_CFLAGS  +=  -mfloat-abi=hard
+KBUILD_CFLAGS  +=  -ftree-vectorize 
+KBUILD_CFLAGS  +=  -funroll-loops
+KBUILD_CFLAGS  +=  -msve-vector-bits=128 
+KBUILD_CFLAGS  +=  -fno-common
 
-ifeq ($(CONFIG_LLVM_POLLY), y)
+# Polly optimization
+ifdef CONFIG_LLVM_POLLY
 KBUILD_CFLAGS	+= -mllvm -polly \
 		   -mllvm -polly-run-inliner \
-		   -mllvm -polly-reschedule=1 \
-		   -mllvm -polly-loopfusion-greedy=1 \
-		   -mllvm -polly-postopts=1 \
 		   -mllvm -polly-ast-use-context \
 		   -mllvm -polly-detect-keep-going \
-		   -mllvm -polly-vectorizer=stripmine \
-		   -mllvm -polly-invariant-load-hoisting
+		   -mllvm -polly-invariant-load-hoisting \
+		   -mllvm -polly-vectorizer=stripmine
+
+ifeq ($(shell test $(CONFIG_CLANG_VERSION) -gt 130000; echo $$?),0)
+KBUILD_CFLAGS	+= -mllvm -polly-loopfusion-greedy=1 \
+		   -mllvm -polly-reschedule=1 \
+		   -mllvm -polly-postopts=1 \
+		   -mllvm -polly-num-threads=0 \
+		   -mllvm -polly-omp-backend=LLVM \
+		   -mllvm -polly-scheduling=dynamic \
+		   -mllvm -polly-scheduling-chunksize=1
+else
+KBUILD_CFLAGS	+= -mllvm -polly-opt-fusion=max
 endif
 
 # Polly may optimise loops with dead paths beyound what the linker
@@ -809,9 +833,10 @@ endif
 ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION_POLLY
 POLLY_FLAGS	+= -mllvm -polly-run-dce
 endif
+endif
 
 # Use generated profiles from profiling with CONFIG_PGO_GEN to optimize the kernel
-ifeq ($(CONFIG_PGO_USE),y)
+ifdef  CONFIG_PGO_USE
 KBUILD_CFLAGS	+=	-fprofile-use \
 			-fprofile-correction \
 			-fprofile-partial-training \
@@ -979,6 +1004,7 @@ endif
 
 ifdef CONFIG_LTO_CLANG
 ifdef CONFIG_THINLTO
+CC_FLAGS_LTO_CLANG := -funified-lto
 CC_FLAGS_LTO_CLANG := -flto=full $(call cc-option, -fsplit-lto-unit)
 KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
 else
@@ -1089,6 +1115,11 @@ endif
 
 ifeq ($(CONFIG_RELR),y)
 LDFLAGS_vmlinux	+= --pack-dyn-relocs=relr --use-android-relr-tags
+ifneq ($(LLVM),1)
+OBJCOPY	:= $(LLVMOBJCOPY)
+NM	:= $(LLVMNM)
+export OBJCOPY NM
+endif
 endif
 
 # make the checker run with the right architecture

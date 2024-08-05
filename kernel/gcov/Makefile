@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
 # GCOV must not instrument itself in value profile, or kernel cannot be booted.
-ifeq ($(CONFIG_PGO_GEN),y)
+ifdef CONFIG_PGO_GEN 
 GCOV_PROFILE := n
 endif
 

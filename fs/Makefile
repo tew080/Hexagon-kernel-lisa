@@ -131,9 +131,9 @@ obj-$(CONFIG_NILFS2_FS)		+= nilfs2/
 obj-$(CONFIG_BEFS_FS)		+= befs/
 obj-$(CONFIG_HOSTFS)		+= hostfs/
 obj-$(CONFIG_CACHEFILES)	+= cachefiles/
-ifeq ($(CONFIG_DEBUG_FS),y)
+ifdef  CONFIG_DEBUG_FS
 obj-y				+= debugfs/
-else ifeq ($(CONFIG_PGO_GEN),y)
+else ifdef CONFIG_PGO_GEN 
 obj-y += debugfs/
 else
 obj-$(CONFIG_DEBUG_KMEMLEAK)	+= debugfs/
