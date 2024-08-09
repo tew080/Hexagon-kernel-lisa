@@ -14,7 +14,6 @@
 #include <linux/input.h>
 #include <linux/interrupt.h>
 #include <linux/completion.h>
-#include <linux/pm_qos.h>
 
 #include <linux/of_irq.h>
 #include <linux/proc_fs.h>
@@ -57,8 +56,12 @@
 #define PANEL_ORIENTATION_DEGREE_270	3	/* anticlockwise 270 degrees */
 #define GOODIX_LOCKDOWN_SIZE 8
 
-#define TS_DEFAULT_FIRMWARE			"goodix_gt9897t_fw_k9d.bin"
-#define TS_DEFAULT_CFG_BIN		"goodix_gt9897t_cfg_k9d.bin"
+#define TS_DEFAULT_FIRMWARE			"goodix_gt9897t_fw.bin"
+#define TS_DEFAULT_FIRMWARE_K9			"goodix_gt9897t_fw_k9.bin"
+#define TS_DEFAULT_FIRMWARE_K9D			"goodix_gt9897t_fw_k9d.bin"
+#define TS_DEFAULT_CFG_BIN		"goodix_gt9897t_cfg.bin"
+#define TS_DEFAULT_CFG_BIN_K9		"goodix_gt9897t_cfg_k9.bin"
+#define TS_DEFAULT_CFG_BIN_K9D		"goodix_gt9897t_cfg_k9d.bin"
 
 #ifdef GOODIX_DEBUGFS_ENABLE
 #include <linux/debugfs.h>
@@ -396,7 +399,6 @@ struct goodix_bus_interface {
 			unsigned char *data, unsigned int len);
 	int (*write)(struct device *dev, unsigned int addr,
 			unsigned char *data, unsigned int len);
-	int irq;
 };
 
 struct goodix_ts_hw_ops {
@@ -521,8 +523,6 @@ struct goodix_ts_core {
 	bool tp_pm_suspend;
 	struct completion pm_resume_completion;
 	struct notifier_block notifier;
-	struct pm_qos_request pm_qos_touch_req;
-	struct pm_qos_request pm_qos_spi_req;
 };
 
 /* external module structures */
@@ -610,13 +610,14 @@ struct goodix_ext_attribute {
 static struct goodix_ext_attribute ext_attr_##_name = \
 	__EXTMOD_ATTR(_name, _mode, _show, _store);
 
+
+#define CONFIG_GOODIX_DEBUG
 /* log macro */
+#define ts_info(fmt, arg...)	pr_info("[GTP-INF][%s:%d] "fmt"\n", __func__, __LINE__, ##arg)
 #define	ts_err(fmt, arg...)		pr_err("[GTP-ERR][%s:%d] "fmt"\n", __func__, __LINE__, ##arg)
 #ifdef CONFIG_GOODIX_DEBUG
-#define ts_info(fmt, arg...)	pr_info("[GTP-INF][%s:%d] "fmt"\n", __func__, __LINE__, ##arg)
 #define ts_debug(fmt, arg...)	pr_info("[GTP-DBG][%s:%d] "fmt"\n", __func__, __LINE__, ##arg)
 #else
-#define ts_info(fmt, arg...)	do {} while (0)
 #define ts_debug(fmt, arg...)	do {} while (0)
 #endif
 

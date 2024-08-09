@@ -1,7 +1,6 @@
  /*
   * Goodix Touchscreen Driver
   * Copyright (C) 2020 - 2021 Goodix, Inc.
-  * Copyright (C) 2021 XiaoMi, Inc.
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -18,7 +17,6 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/spi/spi.h>
-#include <linux/spi/spi-msm-geni.h>
 
 #include "goodix_ts_core.h"
 #define TS_DRIVER_NAME			"gtx8_spi"
@@ -165,8 +163,6 @@ static int goodix_spi_probe(struct spi_device *spi)
 	goodix_spi_bus.dev = &spi->dev;
 	goodix_spi_bus.read = goodix_spi_read;
 	goodix_spi_bus.write = goodix_spi_write;
-	goodix_spi_bus.irq = geni_spi_get_master_irq(spi);
-
 	/* ts core device */
 	goodix_pdev = kzalloc(sizeof(struct platform_device), GFP_KERNEL);
 	if (!goodix_pdev)

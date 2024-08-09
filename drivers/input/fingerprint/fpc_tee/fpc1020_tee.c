@@ -25,6 +25,8 @@
  * as published by the Free Software Foundation.
  */
 
+#define FPC_DRM_INTERFACE_WA
+
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/atomic.h>
@@ -42,7 +44,9 @@
 #include <linux/fb.h>
 #include <linux/pinctrl/qcom-pinctrl.h>
 #include <drm/drm_bridge.h>
+#ifndef FPC_DRM_INTERFACE_WA
 #include <drm/mi_disp_notifier.h>
+#endif
 
 #define FPC_GPIO_NO_DEFAULT -1
 #define FPC_GPIO_NO_DEFINED -2
@@ -114,10 +118,14 @@ struct fpc1020_data {
 
 	atomic_t wakeup_enabled;	/* Used both in ISR and non-ISR */
 	int irqf;
+#ifndef FPC_DRM_INTERFACE_WA
 	struct notifier_block notifier;
+#endif
 	bool fb_black;
 	bool wait_finger_down;
+#ifndef FPC_DRM_INTERFACE_WA
 	struct work_struct work;
+#endif
 };
 
 static int reset_gpio_res(struct fpc1020_data *fpc1020);
@@ -923,16 +931,7 @@ static int fpc1020_request_named_gpio(struct fpc1020_data *fpc1020,
 	return 0;
 }
 
-struct task_struct *get_fp_daemon_task(void);
-
-static void set_fp_daemon_nice(int nice)
-{
-	struct task_struct *p = get_fp_daemon_task();
-
-	if (p != NULL)
-		set_user_nice(p, nice);
-}
-
+#ifndef FPC_DRM_INTERFACE_WA
 static int fpc_fb_notif_callback(struct notifier_block *nb,
 				 unsigned long val, void *data)
 {
@@ -953,11 +952,9 @@ static int fpc_fb_notif_callback(struct notifier_block *nb,
 		blank = *(int *)(evdata->data);
 		switch (blank) {
 		case MI_DISP_DPMS_POWERDOWN:
-			set_fp_daemon_nice(MIN_NICE);
 			fpc1020->fb_black = true;
 			break;
 		case MI_DISP_DPMS_ON:
-			set_fp_daemon_nice(0);
 			fpc1020->fb_black = false;
 			break;
 		default:
@@ -971,6 +968,7 @@ static int fpc_fb_notif_callback(struct notifier_block *nb,
 static struct notifier_block fpc_notif_block = {
 	.notifier_call = fpc_fb_notif_callback,
 };
+#endif
 
 static int fpc1020_probe(struct platform_device *pdev)
 {
@@ -1028,7 +1026,7 @@ static int fpc1020_probe(struct platform_device *pdev)
 
 	atomic_set(&fpc1020->wakeup_enabled, 1);
 
-	fpc1020->irqf = IRQF_TRIGGER_RISING | IRQF_ONESHOT | IRQF_PRIME_AFFINE;
+	fpc1020->irqf = IRQF_TRIGGER_RISING | IRQF_ONESHOT;
 	fpc1020->irq_requested = false;
 	fpc1020->gpios_requested = false;
 	device_init_wakeup(dev, 1);
@@ -1066,19 +1064,11 @@ static int fpc1020_probe(struct platform_device *pdev)
 	fpc1020->wait_finger_down = false;
 #ifndef FPC_DRM_INTERFACE_WA
 	INIT_WORK(&fpc1020->work, notification_work);
-#endif
 	fpc1020->notifier = fpc_notif_block;
 	mi_disp_register_client(&fpc1020->notifier);
+#endif
 
 	//rc = hw_reset(fpc1020);
-
-#ifdef FPC_DRM_INTERFACE_WA
-	if (msm_gpio_mpm_wake_set(121, true)) {
-		dev_info(dev, "%s: GPIO 121 wake set failed!\n", __func__);
-	} else {
-		dev_info(dev, "%s: GPIO 121 wake set success!\n", __func__);
-	}
-#endif
 
 	dev_info(dev, "%s: ok\n", __func__);
 
@@ -1091,7 +1081,9 @@ static int fpc1020_remove(struct platform_device *pdev)
 {
 	struct fpc1020_data *fpc1020 = platform_get_drvdata(pdev);
 
+#ifndef FPC_DRM_INTERFACE_WA
 	mi_disp_unregister_client(&fpc1020->notifier);
+#endif
 	sysfs_remove_group(&pdev->dev.kobj, &attribute_group);
 	mutex_destroy(&fpc1020->lock);
 	wakeup_source_unregister(fpc1020->ttw_wl);

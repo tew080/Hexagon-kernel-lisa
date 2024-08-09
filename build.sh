@@ -49,11 +49,11 @@ fi
 
 rm -rf AnyKernel3/Image
 rm -rf AnyKernel3/dtb
-rm -rf AnyKernel3/dtbo.img
+#rm -rf AnyKernel3/dtbo.img
 
 cp $kernel AnyKernel3
 cp $dtb AnyKernel3/dtb
-cp $dtbo AnyKernel3
+#cp $dtbo AnyKernel3
 
 cd AnyKernel3
 zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
