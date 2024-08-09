@@ -3,6 +3,7 @@
 
 SECONDS=0 # builtin bash timer
 TC_DIR="/home/tew404/lisa-Kernel/neutron-clang-10032024"
+TC_DIRR="/home/tew404/lisa-Kernel/Clang-20.0.0git-20240807"
 DEFCONFIG="lisa_defconfig"
 ZIPNAME="Hexagon-kernel-lisa-$(date '+%Y%m%d-%H%M').zip"
 
@@ -14,13 +15,13 @@ fi
 MAKE_PARAMS="O=out \
 	ARCH=arm64  \
  	CC=$TC_DIR/bin/clang  \
-	CLANG_TRIPLE=$TC_DIR/bin/aarch64-linux-gnu- \
-	CROSS_COMPILE=$TC_DIR/bin/aarch64-linux-gnu-  \
-	CROSS_COMPILE_ARM32=$TC_DIR/bin/arm-linux-gnueabi-  \
+	CLANG_TRIPLE=$TC_DIRR/bin/aarch64-linux-gnu- \
+	CROSS_COMPILE=$TC_DIRR/bin/aarch64-linux-gnu-  \
+	CROSS_COMPILE_ARM32=$TC_DIRR/bin/arm-linux-gnueabi-  \
 	LLVM=1 \
 	LLVM_IAS=1"
 
-export PATH="$TC_DIRR/bin:$PATH"
+export PATH="$TC_DIR/bin:$PATH"
 
 if [[ $1 = "-r" || $1 = "--regen" ]]; then
 	make $MAKE_PARAMS $DEFCONFIG savedefconfig

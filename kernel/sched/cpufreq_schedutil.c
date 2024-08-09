@@ -15,13 +15,6 @@
 #include <linux/sched/sysctl.h>
 #include <trace/hooks/sched.h>
 
-#define UP_RATE_LIMIT_US_CPU_LP_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_LP_MASK 20000
-#define UP_RATE_LIMIT_US_CPU_PERF_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_PERF_MASK 10000
-#define UP_RATE_LIMIT_US_CPU_PRIME_MASK 500
-#define DOWN_RATE_LIMIT_US_CPU_PRIME_MASK 5000
-
 struct sugov_tunables {
 	struct gov_attr_set	attr_set;
 	unsigned int		up_rate_limit_us;
@@ -566,7 +559,6 @@ static ssize_t up_rate_limit_us_store(struct gov_attr_set *attr_set,
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
-	return count;
 	tunables->up_rate_limit_us = rate_limit_us;
 
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
@@ -587,7 +579,6 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
-	return count;
 	tunables->down_rate_limit_us = rate_limit_us;
 
 	list_for_each_entry(sg_policy, &attr_set->policy_list, tunables_hook) {
@@ -791,24 +782,8 @@ static int sugov_init(struct cpufreq_policy *policy)
 		goto stop_kthread;
 	}
 
-	tunables->up_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
-	tunables->down_rate_limit_us = cpufreq_policy_transition_delay_us(policy);
-
-	switch (policy->cpu) {
-	default:
-	case 0:
-		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_LP_MASK;
-		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_LP_MASK;
-		break;
-	case 4:
-		tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PERF_MASK;
-		tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PERF_MASK;
-		break;
-	case 7:
- 	    tunables->up_rate_limit_us = UP_RATE_LIMIT_US_CPU_PRIME_MASK;
-	    tunables->down_rate_limit_us = DOWN_RATE_LIMIT_US_CPU_PRIME_MASK;
-		break;
-	}
+	tunables->up_rate_limit_us = 500;
+	tunables->down_rate_limit_us = 20000;
 
 	policy->governor_data = sg_policy;
 	sg_policy->tunables = tunables;
