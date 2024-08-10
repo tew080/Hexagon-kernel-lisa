@@ -223,7 +223,7 @@
 		polling-delay-passive = <100>;
 		polling-delay = <0>;
 		thermal-governor = "step_wise";
-		thermal-sensors = <&bcl_soc>;
+		#thermal-sensors = <&bcl_soc>;
 
 		trips {
 			socd_trip:socd-trip {

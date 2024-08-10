@@ -781,17 +781,25 @@ endif
 ifdef CONFIG_GCC_GRAPHITE
 KBUILD_CFLAGS	+= -fipa-pta -fgraphite-identity -floop-nest-optimize -fno-semantic-interposition
 endif
-
 # Enable MLGO for register allocation.
 KBUILD_CFLAGS   += -ffp-contract=fast -mllvm -regalloc-enable-advisor=release
-
 # Enable hot cold split optimization
 KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
-
 # Inlin optimization
-KBUILD_CFLAGS  +=   -mllvm -inline-threshold=15000
-KBUILD_CFLAGS  +=  -mllvm -inlinehint-threshold=10000
-
+KBUILD_CFLAGS  += -mllvm -inline-threshold=15000
+KBUILD_CFLAGS  += -mllvm -inlinehint-threshold=10000
+# Optimization by Clang 
+KBUILD_CFLAGS  += -mllvm -regalloc=greedy
+KBUILD_CFLAGS  += -mllvm -misched-topdown
+KBUILD_CFLAGS  += -mllvm -unroll-runtime
+KBUILD_CFLAGS  += -mllvm -unroll-threshold=200 -mllvm -unroll-partial-threshold=200
+KBUILD_CFLAGS  += -mllvm -force-vector-width=4 -mllvm -force-vector-interleave=2
+KBUILD_CFLAGS  += -mllvm -enable-load-pre
+KBUILD_CFLAGS  += -mllvm -enable-loop-distribute 
+KBUILD_CFLAGS  += -mllvm -vectorize-loops -mllvm -enable-loopinterchange 
+KBUILD_CFLAGS  += -mllvm -enable-misched
+KBUILD_CFLAGS  += -fPIC
+KBUILD_CFLAGS  += -fstrict-aliasing
 # Snapdragon optimization
 KBUILD_CFLAGS  +=  -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
 KBUILD_CFLAGS  +=  -mcpu=cortex-a78 
@@ -804,7 +812,6 @@ KBUILD_CFLAGS  +=  -ftree-vectorize
 KBUILD_CFLAGS  +=  -funroll-loops
 KBUILD_CFLAGS  +=  -msve-vector-bits=128 
 KBUILD_CFLAGS  +=  -fno-common
-
 # Polly optimization
 ifdef CONFIG_LLVM_POLLY
 KBUILD_CFLAGS	+= -mllvm -polly \

@@ -1,6 +1,7 @@
  /*
   * Goodix Touchscreen Driver
   * Copyright (C) 2020 - 2021 Goodix, Inc.
+  * Copyright (C) 2021 XiaoMi, Inc.
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -19,7 +20,6 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/uaccess.h>
-#include <linux/hwid.h>
 
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 38)
 #include <linux/input/mt.h>
@@ -34,7 +34,6 @@
 #define CORE_MODULE_PROB_SUCCESS		1
 #define CORE_MODULE_PROB_FAILED			-1
 #define CORE_MODULE_REMOVED				-2
-#define OLED_JUDGE_ID					(17+307)
 int core_module_prob_sate = CORE_MODULE_UNPROBED;
 struct goodix_module goodix_modules;
 struct goodix_ts_core *goodix_core_data;
@@ -1098,21 +1097,8 @@ void goodix_match_fw(struct goodix_ts_core *ts_data)
 	if (is_lockdown_empty(ts_data->lockdown_info))
 		goodix_ts_get_lockdowninfo(ts_data);
 	if (goodix_get_panel_type(ts_data) < 0) {
-		switch (get_hw_version_platform()) {
-			case HARDWARE_PROJECT_K9:
-				ts->fw_name = TS_DEFAULT_FIRMWARE_K9;
-				ts->cfg_bin_name = TS_DEFAULT_CFG_BIN_K9;
-				break;
-			case HARDWARE_PROJECT_K9D:
-				ts->fw_name = TS_DEFAULT_FIRMWARE_K9D;
-				ts->cfg_bin_name = TS_DEFAULT_CFG_BIN_K9D;
-				break;
-			default:
-				ts->fw_name = TS_DEFAULT_FIRMWARE;
-				ts->cfg_bin_name = TS_DEFAULT_CFG_BIN;
-				break;
-		}
-
+		ts->fw_name = TS_DEFAULT_FIRMWARE;
+		ts->cfg_bin_name = TS_DEFAULT_CFG_BIN;
 	} else {
 		ts->fw_name = ts->config_array[ts->panel_index].gdx_fw_name;
 		ts->cfg_bin_name =ts->config_array[ts->panel_index].gdx_cfg_name;
@@ -1302,9 +1288,6 @@ static void goodix_ts_report_finger(struct input_dev *dev,
 			if (__test_and_clear_bit(i, &core_data->touch_id)) {
 				ts_info("finger report leave:%d", i);
 			}
-#ifdef GOODIX_XIAOMI_TOUCHFEATURE
-			last_touch_events_collect(i, 0);
-#endif
 			continue;
 		}
 		/* ts_debug("report: id %d, x %d, y %d, w %d", i,
@@ -1319,9 +1302,6 @@ static void goodix_ts_report_finger(struct input_dev *dev,
 		if (!__test_and_set_bit(i, &core_data->touch_id)) {
 			ts_info("finger report press:%d", i);
 		}
-#ifdef GOODIX_XIAOMI_TOUCHFEATURE
-			last_touch_events_collect(i, 1);
-#endif
 	}
 
 	/*first touch down and last touch up condition*/
@@ -1852,9 +1832,6 @@ static void goodix_ts_release_connects(struct goodix_ts_core *core_data)
 			input_mt_report_slot_state(input_dev,
 					MT_TOOL_FINGER,
 					false);
-#ifdef FTS_XIAOMI_TOUCHFEATURE
-			last_touch_events_collect(i, 0);
-#endif
 		}
 		input_report_key(input_dev, BTN_TOUCH, 0);
 #ifdef CONFIG_TOUCHSCREEN_QGKI_GOODIX
@@ -3204,16 +3181,6 @@ static struct platform_driver goodix_ts_driver = {
 static int __init goodix_ts_core_init(void)
 {
 	int ret;
-
-	if (get_hw_version_platform() == HARDWARE_PROJECT_K9) {
-		gpio_direction_input(OLED_JUDGE_ID);
-		if (gpio_get_value(OLED_JUDGE_ID)) {
-			ts_err("TP is goodix");
-		} else {
-			ts_err("TP is focal");
-			return 0;
-		}
-	}
 
 	ts_info("Core layer init:%s", GOODIX_DRIVER_VERSION);
 	ret = goodix_bus_init();
