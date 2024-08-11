@@ -31,12 +31,8 @@
 #define CLK_HW_DIV			2
 #define GT_IRQ_STATUS			BIT(2)
 #define MAX_FN_SIZE			20
-<<<<<<< HEAD
-#define LIMITS_POLLING_DELAY_MS		4
-#define MAX_ROW				2
-=======
 #define LIMITS_POLLING_DELAY_MS		1
->>>>>>> ff898da11d4e (cpufreq: qcom-cpufreq-hw: Reduce LIMITS_POLLING_DELAY_MS to 1ms)
+#define MAX_ROW				2
 
 #define CYCLE_CNTR_OFFSET(core_id, m, acc_count)				\
 			(acc_count ? ((core_id + 1) * 4) : 0)
