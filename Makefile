@@ -832,15 +832,13 @@ KBUILD_CFLAGS	+= -mllvm -polly-loopfusion-greedy=1 \
 else
 KBUILD_CFLAGS	+= -mllvm -polly-opt-fusion=max
 endif
+endif
 
 # Polly may optimise loops with dead paths beyound what the linker
 # can understand. This may negate the effect of the linker's DCE
 # so we tell Polly to perfom proven DCE on the loops it optimises
 # in order to preserve the overall effect of the linker's DCE.
-ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION_POLLY
 POLLY_FLAGS	+= -mllvm -polly-run-dce
-endif
-endif
 
 # Use generated profiles from profiling with CONFIG_PGO_GEN to optimize the kernel
 ifdef  CONFIG_PGO_USE
