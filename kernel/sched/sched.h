@@ -336,7 +336,7 @@ static inline int task_has_dl_policy(struct task_struct *p)
 
 static inline bool dl_entity_is_special(struct sched_dl_entity *dl_se)
 {
-#if defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL) || defined(CONFIG_CPU_FREQ_GOV_SCHEDHORIZON)
+#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 	return unlikely(dl_se->flags & SCHED_FLAG_SUGOV);
 #else
 	return false;
@@ -2809,7 +2809,7 @@ enum schedutil_type {
 	ENERGY_UTIL,
 };
 
-#if defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL) || defined(CONFIG_CPU_FREQ_GOV_SCHEDHORIZON)
+#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
 
 unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
 				 unsigned long max, enum schedutil_type type,
@@ -2841,14 +2841,14 @@ static inline unsigned long cpu_util_rt(struct rq *rq)
 {
 	return READ_ONCE(rq->avg_rt.util_avg);
 }
-#else /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL || CONFIG_CPU_FREQ_GOV_SCHEDHORIZON */
+#else /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
 static inline unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
 				 unsigned long max, enum schedutil_type type,
 				 struct task_struct *p)
 {
 	return 0;
 }
-#endif /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL || CONFIG_CPU_FREQ_GOV_SCHEDHORIZON */
+#endif /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
 
 #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
 static inline unsigned long cpu_util_irq(struct rq *rq)
@@ -2878,7 +2878,7 @@ unsigned long scale_irq_capacity(unsigned long util, unsigned long irq, unsigned
 }
 #endif
 
-#if defined(CONFIG_ENERGY_MODEL) && (defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL) || defined(CONFIG_CPU_FREQ_GOV_SCHEDHORIZON))
+#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
 
 #define perf_domain_span(pd) (to_cpumask(((pd)->em_pd->cpus)))
 
@@ -2889,12 +2889,12 @@ static inline bool sched_energy_enabled(void)
 	return static_branch_likely(&sched_energy_present);
 }
 
-#else /* ! (CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL || CONFIG_CPU_FREQ_GOV_SCHEDHORIZON) */
+#else /* ! (CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL) */
 
 #define perf_domain_span(pd) NULL
 static inline bool sched_energy_enabled(void) { return false; }
 
-#endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL || CONFIG_CPU_FREQ_GOV_SCHEDHORIZON */
+#endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
 
 #ifdef CONFIG_MEMBARRIER
 /*
