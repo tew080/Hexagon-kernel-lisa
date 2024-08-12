@@ -38,37 +38,6 @@
 
 static LIST_HEAD(cpufreq_policy_list);
 
-#define MAX_CLUSTERS 3
-
-struct cpumask_uint_kv {
-    cpumask_var_t key;
-    unsigned int value;
-};
-
-static struct cpumask_uint_kv cpumask_min_limit_store[MAX_CLUSTERS] __read_mostly;
-
-static void store_cpumask_min_limit(const cpumask_var_t key, const unsigned int value) {
-	int i;
-	for (i = 0; i < MAX_CLUSTERS; i++) {
-		if (cpumask_equal(cpumask_min_limit_store[i].key, key) || unlikely(cpumask_empty(cpumask_min_limit_store[i].key))) {
-			cpumask_copy(cpumask_min_limit_store[i].key, key);
-			cpumask_min_limit_store[i].value = value;
-			return;
-		}
-	}
-	pr_err("cpumask_min_limit_store is full.\n");
-}
-
-static unsigned int get_cpumask_min_limit(const cpumask_var_t key) {
-	int i;
-	for (i = 0; i < MAX_CLUSTERS; i++) {
-		if (cpumask_equal(cpumask_min_limit_store[i].key, key)) {
-		    return cpumask_min_limit_store[i].value;
-		}
-	}
-	return INT_MAX;
-}
-
 /* Macros to iterate over CPU policies */
 #define for_each_suitable_policy(__policy, __active)			 \
 	list_for_each_entry(__policy, &cpufreq_policy_list, policy_list) \
@@ -729,22 +698,6 @@ static ssize_t show_##file_name				\
 	return sprintf(buf, "%u\n", policy->object);	\
 }
 
-static ssize_t show_cpuinfo_max_freq(struct cpufreq_policy *policy, char *buf)
-{
-	unsigned int max_freq = policy->cpuinfo.max_freq;
-
-	trace_android_vh_show_max_freq(policy, &max_freq);
-	trace_android_rvh_show_max_freq(policy, &max_freq);
-	return sprintf(buf, "%u\n", max_freq);
-}
-
-static ssize_t show_scaling_min_freq_limit(struct cpufreq_policy *policy, char *buf)
-{
-	unsigned int val = get_cpumask_min_limit(policy->related_cpus);
-
-	return sprintf(buf, "%u\n", val);
-}
-
 show_one(cpuinfo_min_freq, cpuinfo.min_freq);
 show_one(cpuinfo_transition_latency, cpuinfo.transition_latency);
 show_one(scaling_min_freq, min);
@@ -812,20 +765,6 @@ static ssize_t store_##file_name					\
 									\
 	ret = freq_qos_update_request(policy->object##_freq_req, val);\
 	return ret >= 0 ? count : ret;					\
-}
-
-static ssize_t store_scaling_min_freq_limit
-(struct cpufreq_policy *policy, const char *buf, size_t count)
-{
-	unsigned long val;
-	int ret;
-
-	ret = sscanf(buf, "%u", &val);
-	if (ret != 1)
-		return -EINVAL;
-
-	store_cpumask_min_limit(policy->related_cpus, val);
-	return count;
 }
 
 store_one(scaling_min_freq, min);
@@ -1016,7 +955,6 @@ cpufreq_freq_attr_ro(bios_limit);
 cpufreq_freq_attr_ro(related_cpus);
 cpufreq_freq_attr_ro(affected_cpus);
 cpufreq_freq_attr_rw(scaling_min_freq);
-cpufreq_freq_attr_rw(scaling_min_freq_limit);
 cpufreq_freq_attr_rw(scaling_max_freq);
 cpufreq_freq_attr_rw(scaling_governor);
 cpufreq_freq_attr_rw(scaling_setspeed);
@@ -1026,7 +964,6 @@ static struct attribute *default_attrs[] = {
 	&cpuinfo_max_freq.attr,
 	&cpuinfo_transition_latency.attr,
 	&scaling_min_freq.attr,
-	&scaling_min_freq_limit.attr,
 	&scaling_max_freq.attr,
 	&affected_cpus.attr,
 	&related_cpus.attr,
@@ -2535,8 +2472,6 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
 	 */
 	new_data.min = freq_qos_read_value(&policy->constraints, FREQ_QOS_MIN);
 	new_data.max = freq_qos_read_value(&policy->constraints, FREQ_QOS_MAX);
-
-	new_data.min = min(new_data.min, get_cpumask_min_limit(policy->related_cpus));
 
 	pr_debug("setting new policy for CPU %u: %u - %u kHz\n",
 		 new_data.cpu, new_data.min, new_data.max);
