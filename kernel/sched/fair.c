@@ -165,23 +165,17 @@ static inline u64 scale_slice(u64 delta, struct sched_entity *se) {
 }
 
 static void update_burst_score(struct sched_entity *se) {
-    struct task_struct *p;
-    u8 prio, prev_prio, new_prio;
+	if (!entity_is_task(se)) return;
+	struct task_struct *p = task_of(se);
+	u8 prio = p->static_prio - MAX_RT_PRIO;
+	u8 prev_prio = min(39, prio + se->burst_score);
 
-    if (!entity_is_task(se)) return;
+	se->burst_score = se->burst_penalty >> 2;
 
-    p = task_of(se);
-    prio = p->static_prio - MAX_RT_PRIO;
-    prev_prio = min(39, prio + se->burst_score);
-
-    se->burst_score = se->burst_penalty >> 2;
-
-    new_prio = min(39, prio + se->burst_score);
-    if (new_prio != prev_prio)
-        reweight_task(p, new_prio);
+	u8 new_prio = min(39, prio + se->burst_score);
+	if (new_prio != prev_prio)
+		reweight_task(p, new_prio);
 }
-
-
 
 static void update_burst_penalty(struct sched_entity *se) {
 	se->curr_burst_penalty = calc_burst_penalty(se->burst_time);
