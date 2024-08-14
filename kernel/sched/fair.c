@@ -27,33 +27,10 @@
 
 #include "walt/walt.h"
 
+
 #ifdef CONFIG_SMP
 static inline bool task_fits_max(struct task_struct *p, int cpu);
 #endif /* CONFIG_SMP */
-
-#define SYSCTL_SCHED_LATENCY 10000000ULL
-#define NORMALIZED_SYSCTL_SCHED_LATENCY 10000000ULL
-#define SYSCTL_SCHED_MIN_GRANULARITY 2500000ULL
-#define NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY 2500000ULL
-#define SCHED_NR_LATENCY 8
-#define SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY 
-#define SYSCTL_SCHED_WAKEUP_GRANULARITY 5000000UL
-#define NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY 5000000UL
-#define SYSCTL_SCHED_MIGRATION_COST 1000000UL
-#define SYSCTL_SCHED_CFS_BANDWIDTH_SLICE 5000UL
-
-/*
- * The initial- and re-scaling of tunables is configurable
- *
- * Options are:
- *
- *   SCHED_TUNABLESCALING_NONE - unscaled, always *1
- *   SCHED_TUNABLESCALING_LOG - scaled logarithmical, *1+ilog(ncpus)
- *   SCHED_TUNABLESCALING_LINEAR - scaled linear, *ncpus
- *
- * (default SCHED_TUNABLESCALING_LOG = *(1+ilog(ncpus))
- */
-enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_NONE;
 
 /*
  * Targeted preemption latency for CPU-bound tasks:
@@ -66,29 +43,42 @@ enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_N
  * (to see the precise effective timeslice length of your workload,
  *  run vmstat and monitor the context-switches (cs) field)
  *
- * (default: 2.5ms * (1 + ilog(ncpus)), units: nanoseconds)
+ * (default: 6ms * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_latency = SYSCTL_SCHED_LATENCY;
-static unsigned int normalized_sysctl_sched_latency	= NORMALIZED_SYSCTL_SCHED_LATENCY;
+unsigned int sysctl_sched_latency			= 6000000ULL;
+static unsigned int normalized_sysctl_sched_latency	= 6000000ULL;
+
+/*
+ * The initial- and re-scaling of tunables is configurable
+ *
+ * Options are:
+ *
+ *   SCHED_TUNABLESCALING_NONE - unscaled, always *1
+ *   SCHED_TUNABLESCALING_LOG - scaled logarithmical, *1+ilog(ncpus)
+ *   SCHED_TUNABLESCALING_LINEAR - scaled linear, *ncpus
+ *
+ * (default SCHED_TUNABLESCALING_LOG = *(1+ilog(ncpus))
+ */
+enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
 
 /*
  * Minimal preemption granularity for CPU-bound tasks:
  *
- * (default: 0.25 msec * (1 + ilog(ncpus)), units: nanoseconds)
+ * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_min_granularity = SYSCTL_SCHED_MIN_GRANULARITY;
-static unsigned int normalized_sysctl_sched_min_granularity	= NORMALIZED_SYSCTL_SCHED_MIN_GRANULARITY;
+unsigned int sysctl_sched_min_granularity			= 750000ULL;
+static unsigned int normalized_sysctl_sched_min_granularity	= 750000ULL;
 
 /*
  * This value is kept at sysctl_sched_latency/sysctl_sched_min_granularity
  */
-static unsigned int sched_nr_latency = SCHED_NR_LATENCY;
+static unsigned int sched_nr_latency = 8;
 
 /*
  * After fork, child runs first. If set to 0 (default) then
  * parent will (try to) run first.
  */
-unsigned int sysctl_sched_child_runs_first __read_mostly SYSCTL_SCHED_CHILD_RUNS_FIRST_READ_MOSTLY;
+unsigned int sysctl_sched_child_runs_first __read_mostly;
 
 /*
  * SCHED_OTHER wake-up granularity.
@@ -99,12 +89,11 @@ unsigned int sysctl_sched_child_runs_first __read_mostly SYSCTL_SCHED_CHILD_RUNS
  *
  * (default: 1 msec * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_wakeup_granularity = SYSCTL_SCHED_WAKEUP_GRANULARITY;
-static unsigned int normalized_sysctl_sched_wakeup_granularity	= NORMALIZED_SYSCTL_SCHED_WAKEUP_GRANULARITY;
+unsigned int sysctl_sched_wakeup_granularity			= 1000000UL;
+static unsigned int normalized_sysctl_sched_wakeup_granularity	= 1000000UL;
 
-const_debug unsigned int sysctl_sched_migration_cost = SYSCTL_SCHED_MIGRATION_COST;
+const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
 DEFINE_PER_CPU_READ_MOSTLY(int, sched_load_boost);
-
 /*
  * check pinned tasks before balance
  */

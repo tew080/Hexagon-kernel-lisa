@@ -53,12 +53,6 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
   endif
 endif
 
-ifdef CONFIG_ARCH_LAHAINA
-KBUILD_CFLAGS += -march=armv8-a \
-										-mcpu=cortex-a78 \
-										-mtune=cortex-a78 		
-endif
-
 KBUILD_CFLAGS	+= -mgeneral-regs-only $(lseinstr) $(brokengasinst)	\
 			   $(compat_vdso) $(cc_has_k_constraint)
 KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
