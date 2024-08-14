@@ -69,11 +69,15 @@ static unsigned int normalized_sysctl_sched_latency	= 6000000ULL;
  * (BORE default SCHED_TUNABLESCALING_NONE = *1 constant)
  * (CFS  default SCHED_TUNABLESCALING_LOG  = *(1+ilog(ncpus))
  */
-#ifdef CONFIG_SCHED_BORE
-enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_NONE;
-#else // CONFIG_SCHED_BORE
+<<<<<<< HEAD
 enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
+=======
+#ifdef CONFIG_SCHED_BORE
+unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_NONE;
+#else // CONFIG_SCHED_BORE
+unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
 #endif // CONFIG_SCHED_BORE
+>>>>>>> 9d615786662f1 (sched: Introduce BORE Scheduler (5.1.0))
 
 /*
  * Minimal preemption granularity for CPU-bound tasks:
@@ -119,11 +123,13 @@ static unsigned int normalized_sysctl_sched_wakeup_granularity	= 1000000UL;
 #endif // CONFIG_SCHED_BORE
 
 const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+<<<<<<< HEAD
 DEFINE_PER_CPU_READ_MOSTLY(int, sched_load_boost);
 /*
  * check pinned tasks before balance
  */
 static DEFINE_PER_CPU(unsigned int, nr_pinned_tasks);
+=======
 
 #ifdef CONFIG_SCHED_BORE
 bool __read_mostly sched_bore                   = 1;
@@ -212,6 +218,7 @@ static int __init setup_sched_thermal_decay_shift(char *str)
 	return 1;
 }
 __setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
+>>>>>>> 9d615786662f1 (sched: Introduce BORE Scheduler (5.1.0))
 
 #ifdef CONFIG_SMP
 /*
