@@ -2,6 +2,7 @@
 /*
  * Copyright (c) 2008-2021, The Linux Foundation. All rights reserved.
  * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (C) 2022 XiaoMi, Inc.
  */
 
 #include <uapi/linux/msm_ion.h>
@@ -884,7 +885,16 @@ static void kgsl_destroy_process_private(struct kref *kref)
 	struct kgsl_process_private *private = container_of(kref,
 			struct kgsl_process_private, refcount);
 
+
+/*
+ * While removing sysfs entries, kernfs_mutex is held by sysfs apis. Since
+ * it is a global fs mutex, sometimes it takes longer for kgsl to get hold
+ * of the lock. Meanwhile, kgsl open thread may exhaust all its re-tries
+ * and open can fail. To avoid this, remove sysfs entries inside process
+ * mutex to avoid wasting re-tries when kgsl is waiting for kernfs mutex.
+ */
 	mutex_lock(&kgsl_driver.process_mutex);
+	
 	debugfs_remove_recursive(private->debug_root);
 	kgsl_process_uninit_sysfs(private);
 
@@ -1097,11 +1107,13 @@ static struct kgsl_process_private *kgsl_process_private_open(
 	 * private destroy is triggered but didn't complete. Retry creating
 	 * process private after sometime to allow previous destroy to complete.
 	 */
-	for (i = 0; (PTR_ERR_OR_ZERO(private) == -EEXIST) && (i < 5); i++) {
+	for (i = 0; (PTR_ERR_OR_ZERO(private) == -EEXIST) && (i < 100); i++) {
 		usleep_range(10, 100);
 		private = _process_private_open(device);
 	}
-
+	if (i >= 100) {
+		pr_info("kgsl: kgsl_process_private_open times = %d\n", i);
+	}
 	return private;
 }
 
