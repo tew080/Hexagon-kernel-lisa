@@ -3868,7 +3868,7 @@ static struct platform_driver adreno_platform_driver = {
 	}
 };
 
-static int __kgsl_3d_init(void *arg)
+static int __init kgsl_3d_init(void)
 {
 	int ret;
 
@@ -3882,16 +3882,6 @@ static int __kgsl_3d_init(void *arg)
 		kgsl_core_exit();
 
 	return ret;
-}
-
-static int __init kgsl_3d_init(void)
-{
-	struct task_struct *kgsl_3d_init_task =
-		kthread_run(__kgsl_3d_init, NULL, "kgsl_3d_init");
-	if (IS_ERR(kgsl_3d_init_task))
-		return PTR_ERR(kgsl_3d_init_task);
-	else
-		return 0;
 }
 
 static void __exit kgsl_3d_exit(void)
