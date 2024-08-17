@@ -2401,9 +2401,6 @@ struct task_struct *fork_idle(int cpu)
 	return task;
 }
 
-#ifdef CONFIG_KPROFILES
-extern int kp_active_mode(void);
-#endif
 /*
  *  Ok, this is the main fork-routine.
  *
@@ -2422,40 +2419,11 @@ long _do_fork(struct kernel_clone_args *args)
 	long nr;
 
 	/* Boost DDR bus to the max for 150 ms when userspace launches an app */
-	if (task_is_zygote(current)) {
-#ifdef CONFIG_KPROFILES
-   /*
-    * Boost CPU and DDR for 300ms if performance mode is active.
-    * Boost CPU and DDR for 250ms if default mode is active to retain default behaviour.
-    * Boost CPU & DDR for 150ms if balanced profile is enabled
-    * Dont boost CPU & DDR if battery saver profile is enabled
-    */
-       switch (kp_active_mode()) {
-       case 0:
-           df_boost_within_input(60);
-           devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 200);
-           devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 200);
-           break;
-       case 2:
-           df_boost_within_input(60);
-           devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 50);
-           devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 50);
-           break;
-       case 3:
-           df_boost_within_input(60);
-           devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 300);
-           devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 300);
-           break;
-       default:
-           pr_info("Battery Profile Active, Skipping Boost...\n");
-           break;
-       }
- #else
-       df_boost_within_input(60);
-       devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 100);
-       devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 100);
-#endif
+	if (task_is_zygote(current) && df_boost_within_input(1500)) {
+		devfreq_boost_kick_max(DEVFREQ_MSM_LLCCBW, 100);
+		devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 100);
 	}
+
 	/*
 	 * Determine whether and which event to report to ptracer.  When
 	 * called from kernel_thread or CLONE_UNTRACED is explicitly
