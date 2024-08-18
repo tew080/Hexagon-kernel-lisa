@@ -792,23 +792,19 @@ ifdef CONFIG_GCC_GRAPHITE
 KBUILD_CFLAGS	+= -fipa-pta -fgraphite-identity -floop-nest-optimize -fno-semantic-interposition
 endif
 # Snapdragon optimization
-#KBUILD_CFLAGS  +=  -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
-KBUILD_CFLAGS  +=  -mcpu=cortex-a78 
-KBUILD_CFLAGS  +=  -mtune=cortex-a78 
-#KBUILD_CFLAGS  +=  -mfpu=neon-fp-armv8 
-#KBUILD_CFLAGS  +=  -mfloat-abi=hard
-#KBUILD_AFLAGS  +=  -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd+sve
-KBUILD_AFLAGS  +=  -mcpu=cortex-a78 
-KBUILD_AFLAGS  +=  -mtune=cortex-a78 
-#KBUILD_AFLAGS  +=  -mfpu=neon-fp-armv8 
-#KBUILD_AFLAGS  +=  -mfloat-abi=hard
+KBUILD_CFLAGS  +=  -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KBUILD_CFLAGS  +=  -mcpu=cortex-a78+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KBUILD_CFLAGS  +=  -mtune=cortex-a78
+KBUILD_AFLAGS  +=  -march=armv8-a+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KBUILD_AFLAGS  +=  -mcpu=cortex-a78+crypto+rcpc+dotprod+fp16+aes+sha2+lse+simd
+KBUILD_AFLAGS  +=  -mtune=cortex-a78
 # Machine Instruction Scheduler
 KBUILD_CFLAGS  +=  -mllvm -enable-misched
 # Inlin optimization
-#KBUILD_CFLAGS += -mllvm -inline-threshold=18000
-#KBUILD_CFLAGS += -mllvm -inlinehint-threshold=15000
-#KBUILD_CFLAGS += -mllvm -unroll-threshold=1200
-#KBUILD_CFLAGS += -mllvm -unroll-partial-threshold=1200
+KBUILD_CFLAGS  += -mllvm -inline-threshold=52000
+KBUILD_CFLAGS  += -mllvm -inlinehint-threshold=32000
+KBUILD_CFLAGS  += -mllvm -unroll-threshold=21000
+KBUILD_CFLAGS  += -mllvm -unroll-partial-threshold=21000
 # Polly optimization
 ifdef CONFIG_LLVM_POLLY
 KBUILD_CFLAGS	+= -mllvm -polly \

@@ -135,14 +135,16 @@ int __weak arch_asym_cpu_priority(int cpu)
  *
  * (default: 4 msec, units: microseconds)
  */
-unsigned int sysctl_sched_cfs_bandwidth_slice = SYSCTL_SCHED_CFS_BANDWIDTH_SLICE;
+unsigned int sysctl_sched_cfs_bandwidth_slice = 4000UL;
 #endif
 
 /* Migration margins */
 unsigned int sched_capacity_margin_up[NR_CPUS] = {
-			[0 ... NR_CPUS-1] = 1078}; /* ~5% margin */
+    1280, 1280, 1280, 1280,1625, 1625, 1625,1920                   
+};
 unsigned int sched_capacity_margin_down[NR_CPUS] = {
-			[0 ... NR_CPUS-1] = 1205}; /* ~15% margin */
+    1024, 1024, 1024, 1024,1796, 1796, 1796,1536                   
+};
 
 #ifdef CONFIG_SCHED_WALT
 __read_mostly unsigned int sysctl_sched_prefer_spread;
