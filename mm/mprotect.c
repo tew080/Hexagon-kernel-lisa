@@ -456,8 +456,7 @@ success:
 	 * held in write mode.
 	 */
 	vm_write_begin(vma);
-	WRITE_ONCE(vma->vm_flags, newflags);
-	vma->vm_flags = vma_pad_fixup_flags(vma, newflags);
+	WRITE_ONCE(vma->vm_flags, vma_pad_fixup_flags(vma, newflags));
 	dirty_accountable = vma_wants_writenotify(vma, vma->vm_page_prot);
 	vma_set_page_prot(vma);
 
