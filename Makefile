@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 VERSION = 5
 PATCHLEVEL = 4
-SUBLEVEL = 281
+SUBLEVEL = 282
 EXTRAVERSION =
 NAME = Kleptomaniac Octopus
 
@@ -799,12 +799,12 @@ KBUILD_AFLAGS  +=  -mtune=cortex-a78
 # Machine Instruction Scheduler
 KBUILD_CFLAGS  +=  -mllvm -enable-misched
 # Inlin optimization
-KBUILD_CFLAGS  += -mllvm -inline-threshold=20000
-KBUILD_CFLAGS  += -mllvm -inlinehint-threshold=15000
+KBUILD_CFLAGS += -mllvm -inline-threshold=20000
+KBUILD_CFLAGS += -mllvm -inlinehint-threshold=15000
 KBUILD_CFLAGS += -mllvm -unroll-runtime
 KBUILD_CFLAGS += -mllvm -unroll-count=4
-KBUILD_CFLAGS  += -mllvm -unroll-threshold=11000
-KBUILD_CFLAGS  += -mllvm -unroll-partial-threshold=11000
+KBUILD_CFLAGS += -mllvm -unroll-threshold=11000
+KBUILD_CFLAGS += -mllvm -unroll-partial-threshold=11000
 # Polly optimization
 ifdef CONFIG_LLVM_POLLY
 KBUILD_CFLAGS	+= -mllvm -polly \
