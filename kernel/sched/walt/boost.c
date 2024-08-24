@@ -14,11 +14,11 @@
  * boost is responsible for disabling it as well.
  */
 
-unsigned int sysctl_sched_boost; /* To/from userspace */
+unsigned int sysctl_sched_boost = 1; /* To/from userspace */
 unsigned int sched_boost_type; /* currently activated sched boost */
 enum sched_boost_policy boost_policy;
 
-static enum sched_boost_policy boost_policy_dt = SCHED_BOOST_NONE;
+static enum sched_boost_policy boost_policy_dt = SCHED_BOOST_ON_ALL;
 static DEFINE_MUTEX(boost_mutex);
 
 #if defined(CONFIG_UCLAMP_TASK_GROUP)
@@ -26,7 +26,7 @@ void walt_init_sched_boost(struct task_group *tg)
 {
 	tg->wtg.sched_boost_no_override = false;
 	tg->wtg.sched_boost_enabled = true;
-	tg->wtg.colocate = false;
+	tg->wtg.colocate = true;
 	tg->wtg.colocate_update_disabled = false;
 }
 

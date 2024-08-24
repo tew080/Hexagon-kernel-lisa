@@ -833,14 +833,14 @@ KBUILD_CFLAGS += -finline-functions
 KBUILD_CFLAGS += -mllvm -inline-threshold=15000
 KBUILD_CFLAGS += -mllvm -inlinehint-threshold=10000
 KBUILD_CFLAGS += -mllvm -unroll-runtime
-KBUILD_CFLAGS += -mllvm -unroll-count=11
+KBUILD_CFLAGS += -mllvm -unroll-count=10
 KBUILD_CFLAGS += -mllvm -unroll-threshold=8000
 KBUILD_CFLAGS += -mllvm -unroll-partial-threshold=8000
 KBUILD_AFLAGS += -finline-functions
 KBUILD_AFLAGS += -mllvm -inline-threshold=15000
 KBUILD_AFLAGS += -mllvm -inlinehint-threshold=10000
 KBUILD_AFLAGS += -mllvm -unroll-runtime
-KBUILD_AFLAGS += -mllvm -unroll-count=11
+KBUILD_AFLAGS += -mllvm -unroll-count=10
 KBUILD_AFLAGS += -mllvm -unroll-threshold=8000
 KBUILD_AFLAGS += -mllvm -unroll-partial-threshold=8000
 # Polly optimization

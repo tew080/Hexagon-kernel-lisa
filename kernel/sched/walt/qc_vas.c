@@ -10,9 +10,9 @@
 
 #ifdef CONFIG_SCHED_WALT
 /* 1ms default for 20ms window size scaled to 1024 */
-unsigned int sysctl_sched_min_task_util_for_boost = 51;
+unsigned int sysctl_sched_min_task_util_for_boost = 65;
 /* 0.68ms default for 20ms window size scaled to 1024 */
-unsigned int sysctl_sched_min_task_util_for_colocation = 0;
+unsigned int sysctl_sched_min_task_util_for_colocation = 40;
 
 static int
 kick_active_balance(struct rq *rq, struct task_struct *p, int new_cpu)
@@ -174,6 +174,7 @@ static void walt_check_for_rotation(struct rq *src_rq)
 	if (wr)
 		queue_work_on(src_cpu, system_highpri_wq, &wr->w);
 }
+
 #ifdef CONFIG_SCHED_CASS
 extern int cass_best_cpu(struct task_struct *p, int prev_cpu, bool sync);
 #endif /* CONFIG_SCHED_CASS */

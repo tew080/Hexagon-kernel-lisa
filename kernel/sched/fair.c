@@ -45,8 +45,8 @@ static inline bool task_fits_max(struct task_struct *p, int cpu);
  *
  * (default: 6ms * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_latency			= 6000000ULL;
-static unsigned int normalized_sysctl_sched_latency	= 6000000ULL;
+unsigned int sysctl_sched_latency			= 10000000ULL;
+static unsigned int normalized_sysctl_sched_latency	= 10000000ULL;
 
 /*
  * The initial- and re-scaling of tunables is configurable
@@ -59,15 +59,15 @@ static unsigned int normalized_sysctl_sched_latency	= 6000000ULL;
  *
  * (default SCHED_TUNABLESCALING_LOG = *(1+ilog(ncpus))
  */
-enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
+enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_NONE;
 
 /*
  * Minimal preemption granularity for CPU-bound tasks:
  *
  * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_min_granularity			= 750000ULL;
-static unsigned int normalized_sysctl_sched_min_granularity	= 750000ULL;
+unsigned int sysctl_sched_min_granularity			= 2500000ULL;
+static unsigned int normalized_sysctl_sched_min_granularity	= 2500000ULL;
 
 /*
  * This value is kept at sysctl_sched_latency/sysctl_sched_min_granularity
@@ -78,7 +78,7 @@ static unsigned int sched_nr_latency = 8;
  * After fork, child runs first. If set to 0 (default) then
  * parent will (try to) run first.
  */
-unsigned int sysctl_sched_child_runs_first __read_mostly;
+unsigned int sysctl_sched_child_runs_first __read_mostly = 1;
 
 /*
  * SCHED_OTHER wake-up granularity.
@@ -89,11 +89,11 @@ unsigned int sysctl_sched_child_runs_first __read_mostly;
  *
  * (default: 1 msec * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_wakeup_granularity			= 1000000UL;
-static unsigned int normalized_sysctl_sched_wakeup_granularity	= 1000000UL;
+unsigned int sysctl_sched_wakeup_granularity			= 5000000UL;
+static unsigned int normalized_sysctl_sched_wakeup_granularity	= 5000000UL;
 
-const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
-DEFINE_PER_CPU_READ_MOSTLY(int, sched_load_boost);
+const_debug unsigned int sysctl_sched_migration_cost	= 1000000UL;
+DEFINE_PER_CPU_READ_MOSTLY(int, sched_load_boost) = 15;
 /*
  * check pinned tasks before balance
  */
@@ -140,19 +140,19 @@ unsigned int sysctl_sched_cfs_bandwidth_slice = 4000UL;
 
 /* Migration margins */
 unsigned int sched_capacity_margin_up[NR_CPUS] = {
-    1280, 1280, 1280, 1280,1625, 1625, 1625,1920                   
+    1280, 1280, 1280, 1280, 1792, 1792, 1792, 2048
 };
 unsigned int sched_capacity_margin_down[NR_CPUS] = {
-    1024, 1024, 1024, 1024,1796, 1796, 1796,1536                   
+    1024, 1024, 1024, 1024, 1536, 1536, 1536, 1792
 };
 
 #ifdef CONFIG_SCHED_WALT
-__read_mostly unsigned int sysctl_sched_prefer_spread;
-unsigned int sysctl_walt_rtg_cfs_boost_prio = 99; /* disabled by default */
-unsigned int sysctl_walt_low_latency_task_threshold; /* disabled by default */
+__read_mostly unsigned int sysctl_sched_prefer_spread = 1;
+unsigned int sysctl_walt_rtg_cfs_boost_prio = 100; /* disabled by default */
+unsigned int sysctl_walt_low_latency_task_threshold = 50; /* disabled by default */
 unsigned int sysctl_sched_sync_hint_enable = 1;
 #endif
-unsigned int sched_small_task_threshold = 102;
+unsigned int sched_small_task_threshold = 96;
 __read_mostly unsigned int sysctl_sched_force_lb_enable = 1;
 
 static inline void update_load_add(struct load_weight *lw, unsigned long inc)
