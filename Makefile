@@ -788,34 +788,28 @@ KBUILD_CFLAGS += -O3 -ffast-math
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os 
 endif
+
 # Graphite optimisation
 ifdef CONFIG_GCC_GRAPHITE
 KBUILD_CFLAGS	+= -fipa-pta -fgraphite-identity -floop-nest-optimize -fno-semantic-interposition
 endif
-# Enable hot cold split optimization
-KBUILD_CFLAGS   += -mllvm -hot-cold-split=true
-KBUILD_AFLAGS   += -mllvm -hot-cold-split=true
 # Increase the speed of mathematical calculations
 KBUILD_CFLAGS  += -ffp-contract=fast 
 KBUILD_AFLAGS  += -ffp-contract=fast 
-# Load Preloading
-KBUILD_CFLAGS  += -mllvm -enable-load-pre
-KBUILD_AFLAGS  += -mllvm -enable-load-pre
 # Snapdragon optimization
-KBUILD_CFLAGS  +=  -march=armv8-a
-KBUILD_CFLAGS  +=  -mcpu=cortex-a78+crypto+rcpc+dotprod+fp+aes+sha2+lse+simd
+KBUILD_CFLAGS  +=  -march=armv8.2-a
+KBUILD_CFLAGS  +=  -mcpu=cortex-a78
 KBUILD_CFLAGS  +=  -mtune=cortex-a78
-KBUILD_CFLAGS  +=  -mfpu=neon-fp-armv8
+KBUILD_CFLAGS  +=  -mfpu=neon-fp-armv8.2-a
 KBUILD_CFLAGS  +=  -mfloat-abi=hard
-KBUILD_CFLAGS  +=  -mllvm -regalloc=greedy
 KBUILD_CFLAGS  +=  -fno-rtti
 KBUILD_CFLAGS  +=  -fno-trapping-math
 KBUILD_CFLAGS  +=  -fno-exceptions
 KBUILD_CFLAGS  +=  -fno-math-errno
-KBUILD_AFLAGS  +=  -march=armv8-a
-KBUILD_AFLAGS  +=  -mcpu=cortex-a78+crypto+rcpc+dotprod+fp+aes+sha2+lse+simd
+KBUILD_AFLAGS  +=  -march=armv8.2-a
+KBUILD_AFLAGS  +=  -mcpu=cortex-a78
 KBUILD_AFLAGS  +=  -mtune=cortex-a78
-KBUILD_AFLAGS  +=  -mfpu=neon-fp-armv8
+KBUILD_AFLAGS  +=  -mfpu=neon-fp-armv8.2-a
 KBUILD_AFLAGS  +=  -mfloat-abi=hard
 KBUILD_AFLAGS  +=  -fno-rtti
 KBUILD_AFLAGS  +=  -fno-trapping-math
@@ -828,21 +822,6 @@ KBUILD_CFLAGS  +=  -mllvm -regalloc=greedy
 KBUILD_AFLAGS  +=  -mllvm -enable-misched
 KBUILD_AFLAGS  +=  -mllvm -misched-topdown
 KBUILD_AFLAGS  +=  -mllvm -regalloc=greedy
-# Inlin optimization
-KBUILD_CFLAGS += -finline-functions
-KBUILD_CFLAGS += -mllvm -inline-threshold=15000
-KBUILD_CFLAGS += -mllvm -inlinehint-threshold=10000
-KBUILD_CFLAGS += -mllvm -unroll-runtime
-KBUILD_CFLAGS += -mllvm -unroll-count=10
-KBUILD_CFLAGS += -mllvm -unroll-threshold=8000
-KBUILD_CFLAGS += -mllvm -unroll-partial-threshold=8000
-KBUILD_AFLAGS += -finline-functions
-KBUILD_AFLAGS += -mllvm -inline-threshold=15000
-KBUILD_AFLAGS += -mllvm -inlinehint-threshold=10000
-KBUILD_AFLAGS += -mllvm -unroll-runtime
-KBUILD_AFLAGS += -mllvm -unroll-count=10
-KBUILD_AFLAGS += -mllvm -unroll-threshold=8000
-KBUILD_AFLAGS += -mllvm -unroll-partial-threshold=8000
 # Polly optimization
 ifdef CONFIG_LLVM_POLLY
 KBUILD_CFLAGS	+= -mllvm -polly \
