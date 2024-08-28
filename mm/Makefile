@@ -2,7 +2,6 @@
 #
 # Makefile for the linux memory manager.
 #
- 
 		 
 KASAN_SANITIZE_slab_common.o := n
 KASAN_SANITIZE_slab.o := n

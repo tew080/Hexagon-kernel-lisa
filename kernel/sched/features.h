@@ -35,7 +35,7 @@ SCHED_FEAT(CACHE_HOT_BUDDY, true)
 /*
  * Allow wakeup-time preemption of the current task:
  */
-SCHED_FEAT(WAKEUP_PREEMPTION, true)
+SCHED_FEAT(WAKEUP_PREEMPTION, false)
 
 SCHED_FEAT(HRTICK, false)
 SCHED_FEAT(DOUBLE_TICK, false)
@@ -49,12 +49,12 @@ SCHED_FEAT(NONTASK_CAPACITY, true)
  * Queue remote wakeups on the target CPU and process them
  * using the scheduler IPI. Reduces rq->lock contention/bounces.
  */
-SCHED_FEAT(TTWU_QUEUE,  false)
+SCHED_FEAT(TTWU_QUEUE, true)
 
 /*
  * When doing wakeups, attempt to limit superfluous scans of the LLC domain.
  */
-SCHED_FEAT(SIS_AVG_CPU, false)
+SCHED_FEAT(SIS_AVG_CPU, true)
 SCHED_FEAT(SIS_PROP, true)
 
 /*
