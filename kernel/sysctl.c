@@ -1626,15 +1626,6 @@ static struct ctl_table kern_table[] = {
 		.extra2		= SYSCTL_ONE,
 	},
 	{
-		.procname	= "sched_burst_score_rounding",
-		.data		= &sched_burst_score_rounding,
-		.maxlen		= sizeof(int),
-		.mode		= 0644,
-		.proc_handler = proc_douintvec_minmax,
-		.extra1		= SYSCTL_ZERO,
-		.extra2		= SYSCTL_ONE,
-	},
-	{
 		.procname	= "sched_burst_smoothness_long",
 		.data		= &sched_burst_smoothness_long,
 		.maxlen		= sizeof(int),
