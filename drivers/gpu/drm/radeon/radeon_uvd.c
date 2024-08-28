@@ -881,7 +881,7 @@ static void radeon_uvd_idle_work_handler(struct work_struct *work)
 			radeon_set_uvd_clocks(rdev, 0, 0);
 		}
 	} else {
-		schedule_delayed_work(&rdev->uvd.idle_work,
+		queue_delayed_work(system_power_efficient_wq,&rdev->uvd.idle_work,
 				      msecs_to_jiffies(UVD_IDLE_TIMEOUT_MS));
 	}
 }

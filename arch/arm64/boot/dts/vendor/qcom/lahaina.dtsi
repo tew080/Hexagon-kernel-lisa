@@ -68,7 +68,7 @@
 			cpu-release-addr = <0x0 0x90000000>;
 			qcom,freq-domain = <&cpufreq_hw 0 4>;
 			capacity-dmips-mhz = <409>;
-			dynamic-power-coefficient = <264>;
+			dynamic-power-coefficient = <75>;
 			cpu-idle-states = <&SLVR_RAIL_OFF>;
 			next-level-cache = <&L2_0>;
 			#cooling-cells = <2>;
@@ -92,7 +92,7 @@
 			cpu-release-addr = <0x0 0x90000000>;
 			qcom,freq-domain = <&cpufreq_hw 0 4>;
 			capacity-dmips-mhz = <409>;
-			dynamic-power-coefficient = <264>;
+			dynamic-power-coefficient = <75>;
 			cpu-idle-states = <&SLVR_RAIL_OFF>;
 			next-level-cache = <&L2_1>;
 			#cooling-cells = <2>;
@@ -111,7 +111,7 @@
 			cpu-release-addr = <0x0 0x90000000>;
 			qcom,freq-domain = <&cpufreq_hw 0 4>;
 			capacity-dmips-mhz = <409>;
-			dynamic-power-coefficient = <264>;
+			dynamic-power-coefficient = <75>;
 			cpu-idle-states = <&SLVR_RAIL_OFF>;
 			next-level-cache = <&L2_2>;
 			#cooling-cells = <2>;
@@ -130,7 +130,7 @@
 			cpu-release-addr = <0x0 0x90000000>;
 			qcom,freq-domain = <&cpufreq_hw 0 4>;
 			capacity-dmips-mhz = <409>;
-			dynamic-power-coefficient = <264>;
+			dynamic-power-coefficient = <75>;
 			cpu-idle-states = <&SLVR_RAIL_OFF>;
 			next-level-cache = <&L2_3>;
 			#cooling-cells = <2>;
@@ -149,7 +149,7 @@
 			cpu-release-addr = <0x0 0x90000000>;
 			qcom,freq-domain = <&cpufreq_hw 1 4>;
 			capacity-dmips-mhz = <1004>;
-			dynamic-power-coefficient = <362>;
+			dynamic-power-coefficient = <280>;
 			cpu-idle-states = <&GOLD_RAIL_OFF>;
 			next-level-cache = <&L2_4>;
 			#cooling-cells = <2>;
@@ -168,7 +168,7 @@
 			cpu-release-addr = <0x0 0x90000000>;
 			qcom,freq-domain = <&cpufreq_hw 1 4>;
 			capacity-dmips-mhz = <1004>;
-			dynamic-power-coefficient = <362>;
+			dynamic-power-coefficient = <280>;
 			cpu-idle-states = <&GOLD_RAIL_OFF>;
 			next-level-cache = <&L2_5>;
 			#cooling-cells = <2>;
@@ -187,7 +187,7 @@
 			cpu-release-addr = <0x0 0x90000000>;
 			qcom,freq-domain = <&cpufreq_hw 1 4>;
 			capacity-dmips-mhz = <1004>;
-			dynamic-power-coefficient = <362>;
+			dynamic-power-coefficient = <280>;
 			cpu-idle-states = <&GOLD_RAIL_OFF>;
 			next-level-cache = <&L2_6>;
 			#cooling-cells = <2>;
@@ -206,7 +206,7 @@
 			cpu-release-addr = <0x0 0x90000000>;
 			qcom,freq-domain = <&cpufreq_hw 2 4>;
 			capacity-dmips-mhz = <1004>;
-			dynamic-power-coefficient = <362>;
+			dynamic-power-coefficient = <280>;
 			cpu-idle-states = <&GOLD_RAIL_OFF>;
 			next-level-cache = <&L2_7>;
 			#cooling-cells = <2>;

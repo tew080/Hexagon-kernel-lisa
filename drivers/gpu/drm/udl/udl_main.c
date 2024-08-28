@@ -157,7 +157,7 @@ void udl_urb_completion(struct urb *urb)
 	 * while another is waiting. So queue to another process.
 	 */
 	if (fb_defio)
-		schedule_delayed_work(&unode->release_urb_work, 0);
+		queue_delayed_work(system_power_efficient_wq,&unode->release_urb_work, 0);
 	else
 #endif
 		up(&udl->urbs.limit_sem);
