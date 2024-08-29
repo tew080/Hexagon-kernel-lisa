@@ -101,7 +101,7 @@ CONFIG_COMPAT=y
 # CONFIG_ARM64_VHE is not set
 # CONFIG_ARM64_PAN is not set
 CONFIG_RANDOMIZE_BASE=y
-CONFIG_CMDLINE="loglevel=0 ramoops_memreserve=4M cgroup_disable=pressure"
+CONFIG_CMDLINE="ramoops_memreserve=4M cgroup_disable=pressure"
 CONFIG_CMDLINE_EXTEND=y
 # CONFIG_DMI is not set
 # CONFIG_EFI is not set
@@ -970,9 +970,9 @@ CONFIG_CPUSET_SYSTEM_BG="0-3"
 CONFIG_CPUSET_TOP_APP="0-7"
 # CONFIG_HZ_50  is not set
 # CONFIG_HZ_100  is not set
-CONFIG_HZ=250
-CONFIG_HZ_250=y
-# CONFIG_HZ_300  is not set
+CONFIG_HZ=300
+# CONFIG_HZ_250  is not set
+CONFIG_HZ_300=y
 # CONFIG_HZ_350  is not set
 # CONFIG_HZ_1000  is not set
 # CONFIG_BFQ_GROUP_IOSCHED  is not set
