@@ -526,6 +526,8 @@ struct task_group {
 	struct uclamp_se	uclamp[UCLAMP_CNT];
 	/* Latency-sensitive flag used for a task group */
 	unsigned int		latency_sensitive;
+	/* Boosted flag for a task group */
+	unsigned int 		boosted;
 #ifdef CONFIG_SCHED_WALT
 	struct walt_task_group	wtg;
 #endif /* CONFIG_SCHED_WALT */
@@ -2716,7 +2718,18 @@ out:
 
 static inline bool uclamp_boosted(struct task_struct *p)
 {
-	return uclamp_eff_value(p, UCLAMP_MIN) > 0;
+	struct cgroup_subsys_state *css = task_css(p, cpu_cgrp_id);
+	struct task_group *tg;
+
+	if (!css)
+		return false;
+
+	if (!strlen(css->cgroup->kn->name))
+		return 0;
+
+	tg = container_of(css, struct task_group, css);
+
+	return tg->boosted;
 }
 
 /*
