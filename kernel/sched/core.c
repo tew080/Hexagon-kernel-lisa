@@ -2985,34 +2985,39 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags,
 	 * __schedule().  See the comment for smp_mb__after_spinlock().
 	 */
 	smp_rmb();
-	if (READ_ONCE(p->on_rq) && ttwu_remote(p, wake_flags))
-		goto unlock;
+	if (READ_ONCE(p->on_rq)) {
+		if (ttwu_remote(p, wake_flags))
+			goto unlock;
+	} else {
 
 #ifdef CONFIG_SMP
-	/*
-	 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
-	 * possible to, falsely, observe p->on_cpu == 0.
-	 *
-	 * One must be running (->on_cpu == 1) in order to remove oneself
-	 * from the runqueue.
-	 *
-	 * __schedule() (switch to task 'p')	try_to_wake_up()
-	 *   STORE p->on_cpu = 1		  LOAD p->on_rq
-	 *   UNLOCK rq->lock
-	 *
-	 * __schedule() (put 'p' to sleep)
-	 *   LOCK rq->lock			  smp_rmb();
-	 *   smp_mb__after_spinlock();
-	 *   STORE p->on_rq = 0			  LOAD p->on_cpu
-	 *
-	 * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
-	 * __schedule().  See the comment for smp_mb__after_spinlock().
-	 *
-	 * Form a control-dep-acquire with p->on_rq == 0 above, to ensure
-	 * schedule()'s deactivate_task() has 'happened' and p will no longer
-	 * care about it's own p->state. See the comment in __schedule().
-	 */
-	smp_acquire__after_ctrl_dep();
+		/*
+		 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would
+		 * be possible to, falsely, observe p->on_cpu == 0.
+		 *
+		 * One must be running (->on_cpu == 1) in order to remove
+		 * oneself from the runqueue.
+		 *
+		 *  [S] ->on_cpu = 1;	[L] ->on_rq
+		 *      UNLOCK rq->lock
+		 *			RMB
+		 *      LOCK   rq->lock
+		 *  [S] ->on_rq = 0;    [L] ->on_cpu
+		 *
+		 * Pairs with the full barrier implied in the UNLOCK+LOCK on
+		 * rq->lock from the consecutive calls to schedule(); the first
+		 * switching to our task, the second putting it to sleep.
+		 *
+		 * Form a control-dep-acquire with p->on_rq == 0 above, to
+		 * ensure schedule()'s deactivate_task() has 'happened' and p
+		 * will no longer care about it's own p->state. See the comment
+		 * in __schedule().
+		 */
+		smp_acquire__after_ctrl_dep();
+#endif
+	}
+
+#ifdef CONFIG_SMP
 
 	/*
 	 * We're doing the wakeup (@success == 1), they did a dequeue (p->on_rq
@@ -8369,7 +8374,7 @@ static void uclamp_set(struct cgroup_subsys_state *css)
 		{"top-app",             		"30", "max", 1, 1, 20480},
 		{"rt",								"10", "max", 1, 0, 20480},
 		{"nnapi-hal",		   		   "10", "max", 1, 0, 20480},
-       	{"foreground",         		  "10", "max", 0, 0, 20480},
+       	{"foreground",         		     "10", "max",  1, 0, 20480},
         {"camera-daemon", 		 "30", "max", 1, 1, 20480},
         {"system",              		  "0", "max", 0, 0, 20480},
         {"dex2oat",            			 "0", "10", 0, 0, 512},
