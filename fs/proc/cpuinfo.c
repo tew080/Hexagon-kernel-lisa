@@ -16,20 +16,11 @@ static int cpuinfo_open(struct inode *inode, struct file *file)
 	return seq_open(file, &cpuinfo_op);
 }
 
-<<<<<<< HEAD
 static const struct file_operations proc_cpuinfo_operations = {
 	.open		= cpuinfo_open,
 	.read		= seq_read,
 	.llseek		= seq_lseek,
 	.release	= seq_release,
-=======
-static const struct proc_ops cpuinfo_proc_ops = {
-	.proc_flags	= PROC_ENTRY_PERMANENT,
-	.proc_open	= cpuinfo_open,
-	.proc_read	= seq_read,
-	.proc_lseek	= seq_lseek,
-	.proc_release	= seq_release,
->>>>>>> b0183a84bd3e (proc: faster open/read/close with "permanent" files)
 };
 
 static int __init proc_cpuinfo_init(void)

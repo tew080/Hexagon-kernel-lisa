@@ -1655,22 +1655,12 @@ static int slabinfo_open(struct inode *inode, struct file *file)
 	return seq_open(file, &slabinfo_op);
 }
 
-<<<<<<< HEAD
 static const struct file_operations proc_slabinfo_operations = {
 	.open		= slabinfo_open,
 	.read		= seq_read,
 	.write          = slabinfo_write,
 	.llseek		= seq_lseek,
 	.release	= seq_release,
-=======
-static const struct proc_ops slabinfo_proc_ops = {
-	.proc_flags	= PROC_ENTRY_PERMANENT,
-	.proc_open	= slabinfo_open,
-	.proc_read	= seq_read,
-	.proc_write	= slabinfo_write,
-	.proc_lseek	= seq_lseek,
-	.proc_release	= seq_release,
->>>>>>> b0183a84bd3e (proc: faster open/read/close with "permanent" files)
 };
 
 static int __init slab_proc_init(void)
