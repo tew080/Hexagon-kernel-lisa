@@ -158,59 +158,6 @@ config QCOM_RIMPS
 	 the subsystems.
 	 If unsure, say n.
 
-config QCOM_SHIMA_LLCC
-	tristate "Qualcomm Technologies, Inc. SHIMA LLCC driver"
-	depends on QCOM_LLCC
-	help
-	  Say y or m here to enable the LLCC driver for Shima platform.
-	  This provides data required to configure LLCC so that clients
-	  can start using the LLCC slices.
-	  If unsure, say n.
-
-config QCOM_YUPIK_LLCC
-	tristate "Qualcomm Technologies, Inc. YUPIK LLCC driver"
-	depends on QCOM_LLCC
-	help
-	  Say y or m here to enable the LLCC driver for Yupik platform.
-	  This provides data required to configure LLCC so that clients
-	  can start using the LLCC slices.
-	  If unsure, say n.
-
-config QCOM_SM8150_LLCC
-	tristate "Qualcomm Technologies, Inc. SM8150 LLCC driver"
-	depends on QCOM_LLCC
-	help
-	 Say y or m here to enable the LLCC driver for SM8150 platform.
-	 This provides data required to configure LLCC so that clients
-	 can start using the LLCC slices.
-	 If unsure, say n.
-
-config QCOM_SDMSHRIKE_LLCC
-	tristate "Qualcomm Technologies, Inc. SDMSHRIKE LLCC driver"
-	depends on QCOM_LLCC
-	help
-	  Say y or m here to enable the LLCC driver for SDMSHRIKE platform.
-	  This provides data required to configure LLCC so that clients
-	  can start using the LLCC slices.
-	  If unsure, say n.
-
-config QCOM_SM6150_LLCC
-	tristate "Qualcomm Technologies, Inc. SM6150 LLCC driver"
-	depends on QCOM_LLCC
-	help
-	  Say yes here to enable the LLCC driver for SM6150. This is provides
-	  data required to configure LLCC so that clients can start using the
-	  LLCC slices.
-	  If unsure, say n.
-
-config QCOM_SDM845_LLCC
-	tristate "Qualcomm Technologies, Inc. SDM845 LLCC driver"
-	depends on QCOM_LLCC
-	help
-	  Say yes here to enable the LLCC driver for SDM845. This provides
-	  data required to configure LLCC so that clients can start using the
-	  LLCC slices.
-	  
 config QCOM_LLCC
 	tristate "Qualcomm Technologies, Inc. LLCC driver"
 	depends on ARCH_QCOM || COMPILE_TEST
