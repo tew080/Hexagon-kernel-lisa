@@ -12,7 +12,6 @@
 #include "sched.h"
 
 #include <linux/sched/cpufreq.h>
-#include <trace/events/power.h>
 #include <linux/sched/sysctl.h>
 #include <trace/hooks/sched.h>
 
@@ -20,6 +19,7 @@ struct sugov_tunables {
 	struct gov_attr_set	attr_set;
 	unsigned int		up_rate_limit_us;
 	unsigned int		down_rate_limit_us;
+	bool 				exp_util;
 };
 
 struct sugov_policy {
@@ -210,8 +210,7 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
         if (next_freq)
                 freq = next_freq;
         else
-                freq = map_util_freq(util, freq, max);
-	trace_sugov_next_freq(policy->cpu, util, max, freq);
+                freq = map_util_freq(util, freq, max, sg_policy->tunables->exp_util);
 	if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
 		return sg_policy->next_freq;
 
@@ -522,6 +521,9 @@ static ssize_t up_rate_limit_us_store(struct gov_attr_set *attr_set,
 	struct sugov_policy *sg_policy;
 	unsigned int rate_limit_us;
 
+	if (task_is_zygote(current))
+		return count;
+
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
@@ -543,6 +545,9 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	struct sugov_policy *sg_policy;
 	unsigned int rate_limit_us;
 
+	if (task_is_zygote(current))
+		return count;
+
 	if (kstrtouint(buf, 10, &rate_limit_us))
 		return -EINVAL;
 
@@ -557,12 +562,32 @@ static ssize_t down_rate_limit_us_store(struct gov_attr_set *attr_set,
 	return count;
 }
 
+static ssize_t exp_util_show(struct gov_attr_set *attr_set, char *buf)
+{
+	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
+
+	return scnprintf(buf, PAGE_SIZE, "%u\n", tunables->exp_util);
+}
+
+static ssize_t exp_util_store(struct gov_attr_set *attr_set, const char *buf,
+				   size_t count)
+{
+	struct sugov_tunables *tunables = to_sugov_tunables(attr_set);
+
+	if (kstrtobool(buf, &tunables->exp_util))
+		return -EINVAL;
+
+	return count;
+}
+
 static struct governor_attr up_rate_limit_us = __ATTR_RW(up_rate_limit_us);
 static struct governor_attr down_rate_limit_us = __ATTR_RW(down_rate_limit_us);
+static struct governor_attr exp_util = __ATTR_RW(exp_util);
 
 static struct attribute *sugov_attrs[] = {
 	&up_rate_limit_us.attr,
 	&down_rate_limit_us.attr,
+	&exp_util.attr,
 	NULL
 };
 ATTRIBUTE_GROUPS(sugov);
@@ -597,7 +622,7 @@ static struct sugov_policy *sugov_policy_alloc(struct cpufreq_policy *policy)
 	return sg_policy;
 }
 
-static void sugov_policy_free(struct sugov_policy *sg_policy)
+static inline void sugov_policy_free(struct sugov_policy *sg_policy)
 {
 	kfree(sg_policy);
 }
@@ -698,6 +723,7 @@ static void sugov_tunables_save(struct cpufreq_policy *policy,
 
 	cached->up_rate_limit_us = tunables->up_rate_limit_us;
 	cached->down_rate_limit_us = tunables->down_rate_limit_us;
+	cached->exp_util = tunables->exp_util;
 }
 
 static void sugov_clear_global_tunables(void)
@@ -719,6 +745,7 @@ static void sugov_tunables_restore(struct cpufreq_policy *policy)
 	tunables->down_rate_limit_us = cached->down_rate_limit_us;
 	sg_policy->up_rate_delay_ns = cached->up_rate_limit_us;
 	sg_policy->down_rate_delay_ns = cached->down_rate_limit_us;
+	tunables->exp_util = cached->exp_util;
 	update_min_rate_limit_ns(sg_policy);
 }
 
