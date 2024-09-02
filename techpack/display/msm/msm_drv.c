@@ -937,7 +937,7 @@ void msm_idle_set_state(struct drm_encoder *encoder, bool active)
 			idle->active_mask &= ~mask;
 
 		if (idle->timeout_ms && !idle->active_mask)
-			mod_delayed_work(system_wq, &idle->work,
+			mod_delayed_work(system_power_efficient_wq, &idle->work,
 					 msecs_to_jiffies(idle->timeout_ms));
 		else
 			cancel_delayed_work(&idle->work);

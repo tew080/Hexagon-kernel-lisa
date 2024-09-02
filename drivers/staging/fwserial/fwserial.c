@@ -367,7 +367,7 @@ static void fwtty_update_port_status(struct fwtty_port *port,
 			queue_delayed_work(system_power_efficient_wq,&port->emit_breaks, 0);
 		} else {
 			/* run emit_breaks one last time (if pending) */
-			mod_delayed_work(system_wq, &port->emit_breaks, 0);
+			mod_delayed_work(system_power_efficient_wq, &port->emit_breaks, 0);
 		}
 	}
 

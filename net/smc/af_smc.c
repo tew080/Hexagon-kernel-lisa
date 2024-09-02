@@ -1782,7 +1782,7 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
 		    sk->sk_state != SMC_LISTEN &&
 		    sk->sk_state != SMC_CLOSED) {
 			if (val)
-				mod_delayed_work(system_wq, &smc->conn.tx_work,
+				mod_delayed_work(system_power_efficient_wq, &smc->conn.tx_work,
 						 0);
 		}
 		break;
@@ -1791,7 +1791,7 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
 		    sk->sk_state != SMC_LISTEN &&
 		    sk->sk_state != SMC_CLOSED) {
 			if (!val)
-				mod_delayed_work(system_wq, &smc->conn.tx_work,
+				mod_delayed_work(system_power_efficient_wq, &smc->conn.tx_work,
 						 0);
 		}
 		break;

@@ -186,7 +186,7 @@ static irqreturn_t tfp410_hpd_irq_thread(int irq, void *arg)
 {
 	struct tfp410 *dvi = arg;
 
-	mod_delayed_work(system_wq, &dvi->hpd_work,
+	mod_delayed_work(system_power_efficient_wq, &dvi->hpd_work,
 			msecs_to_jiffies(HOTPLUG_DEBOUNCE_MS));
 
 	return IRQ_HANDLED;

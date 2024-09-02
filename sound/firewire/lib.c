@@ -95,7 +95,7 @@ void snd_fw_schedule_registration(struct fw_unit *unit,
 	else
 		delay = 0;
 
-	mod_delayed_work(system_wq, dwork, delay);
+	mod_delayed_work(system_power_efficient_wq, dwork, delay);
 }
 EXPORT_SYMBOL(snd_fw_schedule_registration);
 

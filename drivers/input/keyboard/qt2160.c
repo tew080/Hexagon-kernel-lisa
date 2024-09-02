@@ -199,7 +199,7 @@ static irqreturn_t qt2160_irq(int irq, void *_qt2160)
 {
 	struct qt2160_data *qt2160 = _qt2160;
 
-	mod_delayed_work(system_wq, &qt2160->dwork, 0);
+	mod_delayed_work(system_power_efficient_wq, &qt2160->dwork, 0);
 
 	return IRQ_HANDLED;
 }

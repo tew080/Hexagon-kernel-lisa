@@ -691,7 +691,7 @@ static void xen_free_irq(unsigned irq)
 
 	WARN_ON(info->refcnt > 0);
 
-	queue_rcu_work(system_wq, &info->rwork);
+	queue_rcu_work(system_power_efficient_wq, &info->rwork);
 }
 
 static void xen_evtchn_close(unsigned int port)

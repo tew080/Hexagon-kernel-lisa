@@ -206,7 +206,7 @@ static void drm_sched_start_timeout(struct drm_gpu_scheduler *sched)
  */
 void drm_sched_fault(struct drm_gpu_scheduler *sched)
 {
-	mod_delayed_work(system_wq, &sched->work_tdr, 0);
+	mod_delayed_work(system_power_efficient_wq, &sched->work_tdr, 0);
 }
 EXPORT_SYMBOL(drm_sched_fault);
 
@@ -233,7 +233,7 @@ unsigned long drm_sched_suspend_timeout(struct drm_gpu_scheduler *sched)
 	 * Modify the timeout to an arbitrarily large value. This also prevents
 	 * the timeout to be restarted when new submissions arrive
 	 */
-	if (mod_delayed_work(system_wq, &sched->work_tdr, MAX_SCHEDULE_TIMEOUT)
+	if (mod_delayed_work(system_power_efficient_wq, &sched->work_tdr, MAX_SCHEDULE_TIMEOUT)
 			&& time_after(sched_timeout, now))
 		return sched_timeout - now;
 	else
@@ -260,7 +260,7 @@ void drm_sched_resume_timeout(struct drm_gpu_scheduler *sched,
 	if (list_empty(&sched->ring_mirror_list))
 		cancel_delayed_work(&sched->work_tdr);
 	else
-		mod_delayed_work(system_wq, &sched->work_tdr, remaining);
+		mod_delayed_work(system_power_efficient_wq, &sched->work_tdr, remaining);
 
 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
 }

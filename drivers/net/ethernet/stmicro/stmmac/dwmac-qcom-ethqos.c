@@ -1008,7 +1008,7 @@ static irqreturn_t ETHQOS_PHY_ISR(int irq, void *dev_data)
 
 	pm_wakeup_event(&ethqos->pdev->dev, 5000);
 
-	queue_work(system_wq, &ethqos->emac_phy_work);
+	queue_work(system_power_efficient_wq, &ethqos->emac_phy_work);
 	return IRQ_HANDLED;
 }
 
@@ -1719,7 +1719,7 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
 		INIT_WORK(&ethqos->early_eth,
 			  qcom_ethqos_bringup_iface);
 		/* Queue the work*/
-		queue_work(system_wq, &ethqos->early_eth);
+		queue_work(system_power_efficient_wq, &ethqos->early_eth);
 		/*Set early eth parameters*/
 		ethqos_set_early_eth_param(priv, ethqos);
 	}

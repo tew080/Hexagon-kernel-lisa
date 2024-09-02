@@ -2662,7 +2662,7 @@ void hclge_task_schedule(struct hclge_dev *hdev, unsigned long delay_time)
 		hdev->hw_stats.stats_timer++;
 		hdev->fd_arfs_expire_timer++;
 		mod_delayed_work_on(cpumask_first(&hdev->affinity_mask),
-				    system_wq, &hdev->service_task,
+				    system_power_efficient_wq, &hdev->service_task,
 				    delay_time);
 	}
 }

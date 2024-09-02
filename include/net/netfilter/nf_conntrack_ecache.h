@@ -220,7 +220,7 @@ static inline void nf_conntrack_ecache_work(struct net *net)
 #ifdef CONFIG_NF_CONNTRACK_EVENTS
 	if (net->ct.ecache_dwork_pending) {
 		net->ct.ecache_dwork_pending = false;
-		mod_delayed_work(system_wq, &net->ct.ecache_dwork, 0);
+		mod_delayed_work(system_power_efficient_wq, &net->ct.ecache_dwork, 0);
 	}
 #endif
 }

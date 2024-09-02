@@ -48,14 +48,14 @@ static void smc_lgr_schedule_free_work(struct smc_link_group *lgr)
 	 * creation. For client use a somewhat higher removal delay time,
 	 * otherwise there is a risk of out-of-sync link groups.
 	 */
-	mod_delayed_work(system_wq, &lgr->free_work,
+	mod_delayed_work(system_power_efficient_wq, &lgr->free_work,
 			 (!lgr->is_smcd && lgr->role == SMC_CLNT) ?
 			 SMC_LGR_FREE_DELAY_CLNT : SMC_LGR_FREE_DELAY_SERV);
 }
 
 void smc_lgr_schedule_free_work_fast(struct smc_link_group *lgr)
 {
-	mod_delayed_work(system_wq, &lgr->free_work, SMC_LGR_FREE_DELAY_FAST);
+	mod_delayed_work(system_power_efficient_wq, &lgr->free_work, SMC_LGR_FREE_DELAY_FAST);
 }
 
 /* Register connection's alert token in our lookup structure.
