@@ -341,7 +341,7 @@ void intel_gt_queue_hangcheck(struct intel_gt *gt)
 	 */
 
 	delay = round_jiffies_up_relative(DRM_I915_HANGCHECK_JIFFIES);
-	queue_delayed_work(system_long_wq, &gt->hangcheck.work, delay);
+	queue_delayed_work(system_power_efficient_wq, &gt->hangcheck.work, delay);
 }
 
 void intel_engine_init_hangcheck(struct intel_engine_cs *engine)

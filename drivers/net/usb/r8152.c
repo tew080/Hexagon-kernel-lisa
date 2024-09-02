@@ -4856,7 +4856,7 @@ static int rtl8152_reset_resume(struct usb_interface *intf)
 
 	clear_bit(SELECTIVE_SUSPEND, &tp->flags);
 	tp->rtl_ops.init(tp);
-	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
+	queue_delayed_work(system_power_efficient_wq, &tp->hw_phy_work, 0);
 	set_ethernet_addr(tp);
 	return rtl8152_resume(intf);
 }
@@ -5756,7 +5756,7 @@ static int rtl8152_probe(struct usb_interface *intf,
 		tp->saved_wolopts = __rtl_get_wol(tp);
 
 	tp->rtl_ops.init(tp);
-	queue_delayed_work(system_long_wq, &tp->hw_phy_work, 0);
+	queue_delayed_work(system_power_efficient_wq, &tp->hw_phy_work, 0);
 	set_ethernet_addr(tp);
 
 	usb_set_intfdata(intf, tp);

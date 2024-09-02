@@ -98,7 +98,7 @@ static void flush_old_commits(struct work_struct *work)
 		/* Requeue work if we are not cancelling it */
 		spin_lock(&sbi->old_work_lock);
 		if (sbi->work_queued == 1)
-			queue_delayed_work(system_long_wq, &sbi->old_work, HZ);
+			queue_delayed_work(system_power_efficient_wq, &sbi->old_work, HZ);
 		spin_unlock(&sbi->old_work_lock);
 		return;
 	}
@@ -127,7 +127,7 @@ void reiserfs_schedule_old_flush(struct super_block *s)
 	spin_lock(&sbi->old_work_lock);
 	if (!sbi->work_queued) {
 		delay = msecs_to_jiffies(dirty_writeback_interval * 10);
-		queue_delayed_work(system_long_wq, &sbi->old_work, delay);
+		queue_delayed_work(system_power_efficient_wq, &sbi->old_work, delay);
 		sbi->work_queued = 1;
 	}
 	spin_unlock(&sbi->old_work_lock);
