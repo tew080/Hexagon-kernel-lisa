@@ -393,7 +393,7 @@ drm_writeback_signal_completion(struct drm_writeback_connector *wb_connector,
 	}
 
 	INIT_WORK(&job->cleanup_work, cleanup_work);
-	queue_work(system_long_wq, &job->cleanup_work);
+	queue_work(system_power_efficient_wq, &job->cleanup_work);
 }
 EXPORT_SYMBOL(drm_writeback_signal_completion);
 

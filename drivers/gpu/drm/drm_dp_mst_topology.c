@@ -1757,7 +1757,7 @@ static void drm_dp_update_port(struct drm_dp_mst_branch *mstb,
 
 	drm_dp_mst_topology_put_port(port);
 	if (dowork)
-		queue_work(system_long_wq, &mstb->mgr->work);
+		queue_work(system_power_efficient_wq, &mstb->mgr->work);
 
 }
 
@@ -2746,7 +2746,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
 			drm_dp_dpcd_write_payload(mgr, 0, &reset_pay);
 		}
 
-		queue_work(system_long_wq, &mgr->work);
+		queue_work(system_power_efficient_wq, &mgr->work);
 
 		ret = 0;
 	} else {
@@ -3610,7 +3610,7 @@ static int test_calc_pbn_mode(void)
 /* we want to kick the TX after we've ack the up/down IRQs. */
 static void drm_dp_mst_kick_tx(struct drm_dp_mst_topology_mgr *mgr)
 {
-	queue_work(system_long_wq, &mgr->tx_work);
+	queue_work(system_power_efficient_wq, &mgr->tx_work);
 }
 
 static void drm_dp_mst_dump_mstb(struct seq_file *m,

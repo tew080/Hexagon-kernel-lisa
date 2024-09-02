@@ -1302,7 +1302,7 @@ static void smb1390_status_change_work(struct work_struct *work)
 			 */
 			if (!chip->taper_work_running) {
 				chip->taper_work_running = true;
-				queue_work(system_long_wq,
+				queue_work(system_power_efficient_wq,
 					   &chip->taper_work);
 			}
 		}
