@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 
 /*
- * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014-2020, The Linux Foundation. All rights reserved.
  */
 
 #define pr_fmt(fmt) "%s: " fmt, KBUILD_MODNAME
@@ -543,7 +543,6 @@ static int parse_cpu_levels(struct device_node *dn, struct lpm_cluster *c)
 	if (!cpu)
 		return -ENOMEM;
 
-	spin_lock_init(&cpu->cpu_lock);
 	if (get_cpumask_for_node(dn, &cpu->related_cpus))
 		return -EINVAL;
 
@@ -633,7 +632,6 @@ static struct lpm_cluster *parse_cluster(struct device_node *node,
 	if (ret)
 		return NULL;
 
-	INIT_LIST_HEAD(&c->list);
 	INIT_LIST_HEAD(&c->child);
 	INIT_LIST_HEAD(&c->cpu);
 	c->parent = parent;
@@ -748,12 +746,6 @@ struct lpm_cluster *lpm_of_parse_cluster(struct platform_device *pdev)
 
 	lpm_pdev = pdev;
 	c = parse_cluster(top, NULL);
-
-	if (!c) {
-		pr_err("Failed to find cluster\n");
-		return ERR_PTR(-ENODEV);
-	}
-
 	add_rimps_tmr_register(pdev->dev.of_node, c);
 	of_node_put(top);
 	return c;
