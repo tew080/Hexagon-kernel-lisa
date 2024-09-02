@@ -1344,24 +1344,25 @@ setup_irq_thread(struct irqaction *new, unsigned int irq, bool secondary)
 
 static void affine_one_perf_thread(struct irqaction *action)
 {
-	const struct cpumask *mask;
+    const struct cpumask *mask;
 
-	if (!action->thread)
-		return;
+    if (!action->thread)
+        return;
 
-	if (action->flags & IRQF_PERF_AFFINE) {
-		mask = cpu_perf_mask;
-	else if (action->flags & IRQF_DRM_AFFINE)
-		mask = cpu_drm_mask;
-	else if (action->flags & IRQF_KGSL_AFFINE)
-		mask = cpu_kgsl_mask;
-	else
-		mask = cpu_prime_mask;
-		action->thread->pc_flags |= PC_PRIME_AFFINE;
-	}
+    if (action->flags & IRQF_PERF_AFFINE) {
+        mask = cpu_perf_mask;
+    } else if (action->flags & IRQF_DRM_AFFINE) {
+        mask = cpu_drm_mask;
+    } else if (action->flags & IRQF_KGSL_AFFINE) {
+        mask = cpu_kgsl_mask;
+    } else {
+        mask = cpu_prime_mask;
+        action->thread->pc_flags |= PC_PRIME_AFFINE;
+    }
 
-	set_cpus_allowed_ptr(action->thread, mask);
+    set_cpus_allowed_ptr(action->thread, mask);
 }
+
 
 static void unaffine_one_perf_thread(struct irqaction *action)
 {
