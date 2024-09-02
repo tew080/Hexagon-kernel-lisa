@@ -674,7 +674,7 @@ static void fc_rport_error_retry(struct fc_rport_priv *rdata, int err)
 		if (err == -FC_EX_TIMEOUT)
 			delay = 0;
 		kref_get(&rdata->kref);
-		if (!schedule_delayed_work(&rdata->retry_work, delay))
+		if (!queue_delayed_work(system_power_efficient_wq, &rdata->retry_work, delay))
 			kref_put(&rdata->kref, fc_rport_destroy);
 		return;
 	}

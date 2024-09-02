@@ -280,7 +280,7 @@ static const char gap_count_table[] = {
 void fw_schedule_bm_work(struct fw_card *card, unsigned long delay)
 {
 	fw_card_get(card);
-	if (!schedule_delayed_work(&card->bm_work, delay))
+	if (!queue_delayed_work(system_power_efficient_wq, &card->bm_work, delay))
 		fw_card_put(card);
 }
 

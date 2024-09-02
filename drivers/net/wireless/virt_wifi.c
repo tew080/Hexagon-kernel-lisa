@@ -251,7 +251,7 @@ static int virt_wifi_connect(struct wiphy *wiphy, struct net_device *netdev,
 	priv->connect_requested_ssid_len = sme->ssid_len;
 	memcpy(priv->connect_requested_ssid, sme->ssid, sme->ssid_len);
 
-	could_schedule = schedule_delayed_work(&priv->connect, HZ * 2);
+	could_schedule = queue_delayed_work(system_power_efficient_wq, &priv->connect, HZ * 2);
 	if (!could_schedule)
 		return -EBUSY;
 

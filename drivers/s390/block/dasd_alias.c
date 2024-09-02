@@ -563,7 +563,7 @@ static void lcu_update_work(struct work_struct *work)
 	if ((rc && (rc != -EOPNOTSUPP)) || (lcu->flags & NEED_UAC_UPDATE)) {
 		DBF_DEV_EVENT(DBF_WARNING, device, "could not update"
 			    " alias data in lcu (rc = %d), retry later", rc);
-		if (!schedule_delayed_work(&lcu->ruac_data.dwork, 30*HZ))
+		if (!queue_delayed_work(system_power_efficient_wq, &lcu->ruac_data.dwork, 30*HZ))
 			dasd_put_device(device);
 	} else {
 		dasd_put_device(device);
@@ -611,7 +611,7 @@ static int _schedule_lcu_update(struct alias_lcu *lcu,
 		return -EINVAL;
 	dasd_get_device(usedev);
 	lcu->ruac_data.device = usedev;
-	if (!schedule_delayed_work(&lcu->ruac_data.dwork, 0))
+	if (!queue_delayed_work(system_power_efficient_wq, &lcu->ruac_data.dwork, 0))
 		dasd_put_device(usedev);
 	return 0;
 }
