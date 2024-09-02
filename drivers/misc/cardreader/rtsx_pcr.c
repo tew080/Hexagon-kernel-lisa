@@ -174,7 +174,7 @@ void rtsx_pci_start_run(struct rtsx_pcr *pcr)
 		rtsx_pm_full_on(pcr);
 	}
 
-	mod_delayed_work(system_power_efficient_wq, &pcr->idle_work, msecs_to_jiffies(200));
+	mod_delayed_work(system_wq, &pcr->idle_work, msecs_to_jiffies(200));
 }
 EXPORT_SYMBOL_GPL(rtsx_pci_start_run);
 

@@ -497,7 +497,7 @@ static int smcr_tx_sndbuf_nonempty(struct smc_connection *conn)
 				return sock_error(&smc->sk);
 			rc = 0;
 			if (conn->alert_token_local) /* connection healthy */
-				mod_delayed_work(system_power_efficient_wq, &conn->tx_work,
+				mod_delayed_work(system_wq, &conn->tx_work,
 						 SMC_TX_WORK_DELAY);
 		}
 		return rc;

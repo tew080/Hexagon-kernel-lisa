@@ -290,7 +290,7 @@ void xhci_ring_cmd_db(struct xhci_hcd *xhci)
 
 static bool xhci_mod_cmd_timer(struct xhci_hcd *xhci, unsigned long delay)
 {
-	return mod_delayed_work(system_power_efficient_wq, &xhci->cmd_timer, delay);
+	return mod_delayed_work(system_wq, &xhci->cmd_timer, delay);
 }
 
 static struct xhci_command *xhci_next_queued_cmd(struct xhci_hcd *xhci)

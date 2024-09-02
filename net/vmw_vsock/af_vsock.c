@@ -1213,7 +1213,7 @@ static int vsock_stream_connect(struct socket *sock, struct sockaddr *addr,
 			 * reschedule it, then ungrab the socket refcount to
 			 * keep it balanced.
 			 */
-			if (mod_delayed_work(system_power_efficient_wq, &vsk->connect_work,
+			if (mod_delayed_work(system_wq, &vsk->connect_work,
 					     timeout))
 				sock_put(sk);
 

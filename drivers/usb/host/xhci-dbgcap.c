@@ -337,7 +337,7 @@ int dbc_ep_queue(struct dbc_ep *dep, struct dbc_request *req,
 		ret = dbc_ep_do_queue(dep, req);
 	spin_unlock_irqrestore(&dbc->lock, flags);
 
-	mod_delayed_work(system_power_efficient_wq, &dbc->event_work, 0);
+	mod_delayed_work(system_wq, &dbc->event_work, 0);
 
 	trace_xhci_dbc_queue_request(req);
 
@@ -537,7 +537,7 @@ static int xhci_dbc_start(struct xhci_hcd *xhci)
 		return ret;
 	}
 
-	return mod_delayed_work(system_power_efficient_wq, &dbc->event_work, 1);
+	return mod_delayed_work(system_wq, &dbc->event_work, 1);
 }
 
 static void xhci_dbc_stop(struct xhci_hcd *xhci)
@@ -815,7 +815,7 @@ static void xhci_dbc_handle_events(struct work_struct *work)
 		return;
 	}
 
-	mod_delayed_work(system_power_efficient_wq, &dbc->event_work, 1);
+	mod_delayed_work(system_wq, &dbc->event_work, 1);
 }
 
 static void xhci_do_dbc_exit(struct xhci_hcd *xhci)

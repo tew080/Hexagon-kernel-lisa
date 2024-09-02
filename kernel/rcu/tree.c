@@ -2839,7 +2839,7 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
 			 * that the work is in the pending state when two channels have
 			 * been detached following each other, one by one.
 			 */
-			queue_rcu_work(system_power_efficient_wq, &krwp->rcu_work);
+			queue_rcu_work(system_wq, &krwp->rcu_work);
 		}
 
 		/* Repeat if any "free" corresponding channel is still busy. */

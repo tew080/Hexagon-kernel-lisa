@@ -1858,7 +1858,7 @@ static irqreturn_t rt5663_irq(int irq, void *data)
 	dev_dbg(regmap_get_device(rt5663->regmap), "%s IRQ queue work\n",
 		__func__);
 
-	queue_delayed_work(system_power_efficient_wq, &rt5663->jack_detect_work,
+	queue_delayed_work(system_wq, &rt5663->jack_detect_work,
 		msecs_to_jiffies(250));
 
 	return IRQ_HANDLED;
@@ -2023,7 +2023,7 @@ static void rt5663_jd_unplug_work(struct work_struct *work)
 				    SND_JACK_BTN_0 | SND_JACK_BTN_1 |
 				    SND_JACK_BTN_2 | SND_JACK_BTN_3);
 	} else {
-		queue_delayed_work(system_power_efficient_wq, &rt5663->jd_unplug_work,
+		queue_delayed_work(system_wq, &rt5663->jd_unplug_work,
 			msecs_to_jiffies(500));
 	}
 }

@@ -187,7 +187,7 @@ EXPORT_SYMBOL(fqdir_init);
 void fqdir_exit(struct fqdir *fqdir)
 {
 	INIT_WORK(&fqdir->destroy_work, fqdir_work_fn);
-	queue_work(system_power_efficient_wq, &fqdir->destroy_work);
+	queue_work(system_wq, &fqdir->destroy_work);
 }
 EXPORT_SYMBOL(fqdir_exit);
 

@@ -284,7 +284,7 @@ void iwl_mvm_rx_tdls_notif(struct iwl_mvm *mvm, struct iwl_rx_cmd_buffer *rxb)
 	 * Also convert TU to msec.
 	 */
 	delay = TU_TO_MS(vif->bss_conf.dtim_period * vif->bss_conf.beacon_int);
-	mod_delayed_work(system_power_efficient_wq, &mvm->tdls_cs.dwork,
+	mod_delayed_work(system_wq, &mvm->tdls_cs.dwork,
 			 msecs_to_jiffies(delay));
 
 	iwl_mvm_tdls_update_cs_state(mvm, IWL_MVM_TDLS_SW_ACTIVE);
@@ -603,7 +603,7 @@ iwl_mvm_tdls_channel_switch(struct ieee80211_hw *hw,
 	 */
 	delay = 2 * TU_TO_MS(vif->bss_conf.dtim_period *
 			     vif->bss_conf.beacon_int);
-	mod_delayed_work(system_power_efficient_wq, &mvm->tdls_cs.dwork,
+	mod_delayed_work(system_wq, &mvm->tdls_cs.dwork,
 			 msecs_to_jiffies(delay));
 
 out:
@@ -717,7 +717,7 @@ retry:
 	/* register a timeout in case we don't succeed in switching */
 	delay = vif->bss_conf.dtim_period * vif->bss_conf.beacon_int *
 		1024 / 1000;
-	mod_delayed_work(system_power_efficient_wq, &mvm->tdls_cs.dwork,
+	mod_delayed_work(system_wq, &mvm->tdls_cs.dwork,
 			 msecs_to_jiffies(delay));
 	mutex_unlock(&mvm->mutex);
 }

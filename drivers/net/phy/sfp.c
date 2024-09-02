@@ -1828,7 +1828,7 @@ static void sfp_poll(struct work_struct *work)
 	struct sfp *sfp = container_of(work, struct sfp, poll.work);
 
 	sfp_check_state(sfp);
-	mod_delayed_work(system_power_efficient_wq, &sfp->poll, poll_jiffies);
+	mod_delayed_work(system_wq, &sfp->poll, poll_jiffies);
 }
 
 static struct sfp *sfp_alloc(struct device *dev)
@@ -1989,7 +1989,7 @@ static int sfp_probe(struct platform_device *pdev)
 	}
 
 	if (poll)
-		mod_delayed_work(system_power_efficient_wq, &sfp->poll, poll_jiffies);
+		mod_delayed_work(system_wq, &sfp->poll, poll_jiffies);
 
 	/* We could have an issue in cases no Tx disable pin is available or
 	 * wired as modules using a laser as their light source will continue to

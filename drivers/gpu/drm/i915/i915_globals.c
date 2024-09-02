@@ -104,7 +104,7 @@ void i915_globals_park(void)
 		return;
 
 	park.epoch = atomic_inc_return(&epoch);
-	queue_rcu_work(system_power_efficient_wq, &park.work);
+	queue_rcu_work(system_wq, &park.work);
 }
 
 void i915_globals_unpark(void)

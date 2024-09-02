@@ -260,7 +260,7 @@ void __delete_partition(struct percpu_ref *ref)
 {
 	struct hd_struct *part = container_of(ref, struct hd_struct, ref);
 	INIT_RCU_WORK(&part->rcu_work, delete_partition_work_fn);
-	queue_rcu_work(system_power_efficient_wq, &part->rcu_work);
+	queue_rcu_work(system_wq, &part->rcu_work);
 }
 
 /*
