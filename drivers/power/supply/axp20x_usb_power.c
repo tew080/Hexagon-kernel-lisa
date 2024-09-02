@@ -521,7 +521,7 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
 
 	INIT_DELAYED_WORK(&power->vbus_detect, axp20x_usb_power_poll_vbus);
 	if (axp20x_usb_vbus_needs_polling(power))
-		queue_delayed_work(system_wq, &power->vbus_detect, 0);
+		queue_delayed_work(system_power_efficient_wq, &power->vbus_detect, 0);
 
 	return 0;
 }

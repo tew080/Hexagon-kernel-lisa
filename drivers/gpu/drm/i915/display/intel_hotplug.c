@@ -348,7 +348,7 @@ static void i915_digport_work_func(struct work_struct *work)
 		spin_lock_irq(&dev_priv->irq_lock);
 		dev_priv->hotplug.event_bits |= old_bits;
 		spin_unlock_irq(&dev_priv->irq_lock);
-		queue_delayed_work(system_wq, &dev_priv->hotplug.hotplug_work, 0);
+		queue_delayed_work(system_power_efficient_wq, &dev_priv->hotplug.hotplug_work, 0);
 	}
 }
 
@@ -553,7 +553,7 @@ void intel_hpd_irq_handler(struct drm_i915_private *dev_priv,
 	if (queue_dig)
 		queue_work(dev_priv->hotplug.dp_wq, &dev_priv->hotplug.dig_port_work);
 	if (queue_hp)
-		queue_delayed_work(system_wq, &dev_priv->hotplug.hotplug_work, 0);
+		queue_delayed_work(system_power_efficient_wq, &dev_priv->hotplug.hotplug_work, 0);
 }
 
 /**

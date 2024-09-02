@@ -111,7 +111,7 @@ set_speed:
 	gpd_pocket_fan_set_speed(fan, speed);
 
 	/* When mostly idle (low temp/speed), slow down the poll interval. */
-	queue_delayed_work(system_wq, &fan->work,
+	queue_delayed_work(system_power_efficient_wq, &fan->work,
 			   msecs_to_jiffies(4000 / (speed + 1)));
 }
 

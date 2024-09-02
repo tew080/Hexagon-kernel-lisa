@@ -8903,7 +8903,7 @@ int dsi_display_disable(struct dsi_display *display)
 				display->panel->poms_align_vsync) {
 			INIT_DELAYED_WORK(&display->poms_te_work,
 					dsi_display_handle_poms_te);
-			queue_delayed_work(system_wq,
+			queue_delayed_work(system_power_efficient_wq,
 					&display->poms_te_work,
 					msecs_to_jiffies(100));
 		}

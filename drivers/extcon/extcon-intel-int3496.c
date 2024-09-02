@@ -147,7 +147,7 @@ static int int3496_probe(struct platform_device *pdev)
 	}
 
 	/* process id-pin so that we start with the right status */
-	queue_delayed_work(system_wq, &data->work, 0);
+	queue_delayed_work(system_power_efficient_wq, &data->work, 0);
 	flush_delayed_work(&data->work);
 
 	platform_set_drvdata(pdev, data);
