@@ -1262,7 +1262,7 @@ static void srp_unmap_data(struct scsi_cmnd *scmnd,
 				shost_printk(KERN_ERR, target->scsi_host, PFX
 				  "Queueing INV WR for rkey %#x failed (%d)\n",
 				  (*pfr)->mr->rkey, res);
-				queue_delayed_work(system_power_efficient_wq,
+				queue_work(system_long_wq,
 					   &target->tl_err_work);
 			}
 		}
@@ -2332,7 +2332,7 @@ static void srp_handle_qp_err(struct ib_cq *cq, struct ib_wc *wc,
 			     PFX "failed %s status %s (%d) for CQE %p\n",
 			     opname, ib_wc_status_msg(wc->status), wc->status,
 			     wc->wr_cqe);
-		queue_delayed_work(system_power_efficient_wq, &target->tl_err_work);
+		queue_work(system_long_wq, &target->tl_err_work);
 	}
 	target->qp_in_error = true;
 }
@@ -2734,7 +2734,7 @@ static int srp_ib_cm_handler(struct ib_cm_id *cm_id,
 		if (ib_send_cm_drep(cm_id, NULL, 0))
 			shost_printk(KERN_ERR, target->scsi_host,
 				     PFX "Sending CM DREP failed\n");
-		queue_delayed_work(system_power_efficient_wq, &target->tl_err_work);
+		queue_work(system_long_wq, &target->tl_err_work);
 		break;
 
 	case IB_CM_TIMEWAIT_EXIT:
@@ -2867,7 +2867,7 @@ static int srp_rdma_cm_handler(struct rdma_cm_id *cm_id,
 			rdma_disconnect(ch->rdma_cm.cm_id);
 			comp = 1;
 			ch->status = 0;
-			queue_delayed_work(system_power_efficient_wq, &target->tl_err_work);
+			queue_work(system_long_wq, &target->tl_err_work);
 		}
 		break;
 

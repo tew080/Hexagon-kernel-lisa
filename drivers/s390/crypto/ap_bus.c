@@ -670,7 +670,7 @@ static void ap_bus_resume(void)
 	if (ap_airq_flag)
 		xchg(ap_airq.lsi_ptr, 0);
 	tasklet_enable(&ap_tasklet);
-	queue_delayed_work(system_power_efficient_wq, &ap_scan_work);
+	queue_work(system_long_wq, &ap_scan_work);
 }
 
 static int ap_power_event(struct notifier_block *this, unsigned long event,
@@ -877,7 +877,7 @@ void ap_bus_force_rescan(void)
 		return;
 	/* processing a asynchronous bus rescan */
 	del_timer(&ap_config_timer);
-	queue_delayed_work(system_power_efficient_wq, &ap_scan_work);
+	queue_work(system_long_wq, &ap_scan_work);
 	flush_work(&ap_scan_work);
 }
 EXPORT_SYMBOL(ap_bus_force_rescan);
@@ -1569,7 +1569,7 @@ static void ap_config_timeout(struct timer_list *unused)
 {
 	if (ap_suspend_flag)
 		return;
-	queue_delayed_work(system_power_efficient_wq, &ap_scan_work);
+	queue_work(system_long_wq, &ap_scan_work);
 }
 
 static int __init ap_debug_init(void)
@@ -1692,7 +1692,7 @@ static int __init ap_module_init(void)
 	if (rc)
 		goto out_pm;
 
-	queue_delayed_work(system_power_efficient_wq, &ap_scan_work);
+	queue_work(system_long_wq, &ap_scan_work);
 	initialised = true;
 
 	return 0;

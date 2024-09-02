@@ -1760,7 +1760,7 @@ static void smb1398_status_change_work(struct work_struct *work)
 		if (!chip->taper_work_running) {
 			chip->taper_work_running = true;
 			vote(chip->awake_votable, TAPER_VOTER, true, 0);
-			queue_delayed_work(system_power_efficient_wq, &chip->taper_work);
+			queue_work(system_long_wq, &chip->taper_work);
 		}
 	}
 out:

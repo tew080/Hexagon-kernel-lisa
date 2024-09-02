@@ -970,7 +970,7 @@ static int h5_btrtl_resume(struct h5 *h5)
 
 	INIT_WORK(&reprobe->work, h5_btrtl_reprobe_worker);
 	reprobe->dev = get_device(&h5->hu->serdev->dev);
-	queue_delayed_work(system_power_efficient_wq, &reprobe->work);
+	queue_work(system_long_wq, &reprobe->work);
 	return 0;
 }
 

@@ -1105,7 +1105,7 @@ int ucsi_register(struct ucsi *ucsi)
 	if (!ucsi->version)
 		return -ENODEV;
 
-	queue_delayed_work(system_power_efficient_wq, &ucsi->work);
+	queue_work(system_long_wq, &ucsi->work);
 
 	return 0;
 }

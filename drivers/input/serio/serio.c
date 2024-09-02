@@ -281,7 +281,7 @@ static int serio_queue_event(void *object, struct module *owner,
 	event->owner = owner;
 
 	list_add_tail(&event->node, &serio_event_list);
-	queue_delayed_work(system_power_efficient_wq, &serio_event_work);
+	queue_work(system_long_wq, &serio_event_work);
 
 out:
 	spin_unlock_irqrestore(&serio_event_lock, flags);

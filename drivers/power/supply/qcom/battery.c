@@ -1594,7 +1594,7 @@ static int pl_disable_vote_callback(struct votable *votable,
 					"pl enabled in Taper scheduing work\n");
 				vote(chip->pl_awake_votable, TAPER_END_VOTER,
 						true, 0);
-				queue_delayed_work(system_power_efficient_wq,
+				queue_work(system_long_wq,
 						&chip->pl_taper_work);
 			}
 		}
@@ -1804,7 +1804,7 @@ static void handle_main_charge_type(struct pl_data *chip)
 		if (!chip->taper_work_running) {
 			pl_dbg(chip, PR_PARALLEL, "taper entry scheduling work\n");
 			vote(chip->pl_awake_votable, TAPER_END_VOTER, true, 0);
-			queue_delayed_work(system_power_efficient_wq, &chip->pl_taper_work);
+			queue_work(system_long_wq, &chip->pl_taper_work);
 		}
 		return;
 	}

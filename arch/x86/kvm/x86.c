@@ -7295,7 +7295,7 @@ static int pvclock_gtod_notify(struct notifier_block *nb, unsigned long unused,
 	 */
 	if (!gtod_is_based_on_tsc(gtod->clock.vclock_mode) &&
 	    atomic_read(&kvm_guest_has_master_clock) != 0)
-		queue_delayed_work(system_power_efficient_wq, &pvclock_gtod_work);
+		queue_work(system_long_wq, &pvclock_gtod_work);
 
 	return 0;
 }

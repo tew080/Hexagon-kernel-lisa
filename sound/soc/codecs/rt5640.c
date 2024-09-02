@@ -2340,7 +2340,7 @@ static void rt5640_jack_work(struct work_struct *work)
 		 * disabled the OVCD IRQ, the IRQ pin will stay high and as
 		 * we react to edges, we miss the unplug event -> recheck.
 		 */
-		queue_delayed_work(system_power_efficient_wq, &rt5640->jack_work);
+		queue_work(system_long_wq, &rt5640->jack_work);
 	}
 }
 
@@ -2349,7 +2349,7 @@ static irqreturn_t rt5640_irq(int irq, void *data)
 	struct rt5640_priv *rt5640 = data;
 
 	if (rt5640->jack)
-		queue_delayed_work(system_power_efficient_wq, &rt5640->jack_work);
+		queue_work(system_long_wq, &rt5640->jack_work);
 
 	return IRQ_HANDLED;
 }
@@ -2425,7 +2425,7 @@ static void rt5640_enable_jack_detect(struct snd_soc_component *component,
 
 	enable_irq(rt5640->irq);
 	/* sync initial jack state */
-	queue_delayed_work(system_power_efficient_wq, &rt5640->jack_work);
+	queue_work(system_long_wq, &rt5640->jack_work);
 }
 
 static void rt5640_disable_jack_detect(struct snd_soc_component *component)
