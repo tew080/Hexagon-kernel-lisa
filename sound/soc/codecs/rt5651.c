@@ -1832,7 +1832,7 @@ static void rt5651_jack_detect_work(struct work_struct *work)
 		 * disabled the OVCD IRQ, the IRQ pin will stay high and as
 		 * we react to edges, we miss the unplug event -> recheck.
 		 */
-		queue_work(system_long_wq, &rt5651->jack_detect_work);
+		queue_delayed_work(system_power_efficient_wq, &rt5651->jack_detect_work);
 	}
 }
 

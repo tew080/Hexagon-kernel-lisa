@@ -337,7 +337,7 @@ int gb_interface_request_mode_switch(struct gb_interface *intf)
 	 */
 	get_device(&intf->dev);
 
-	if (!queue_work(system_long_wq, &intf->mode_switch_work)) {
+	if (!queue_delayed_work(system_power_efficient_wq, &intf->mode_switch_work)) {
 		put_device(&intf->dev);
 		ret = -EBUSY;
 		goto out_unlock;

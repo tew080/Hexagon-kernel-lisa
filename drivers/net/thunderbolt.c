@@ -438,14 +438,14 @@ static int tbnet_handle_packet(const void *buf, size_t size, void *data)
 			}
 			mutex_unlock(&net->connection_lock);
 
-			queue_work(system_long_wq, &net->connected_work);
+			queue_delayed_work(system_power_efficient_wq, &net->connected_work);
 		}
 		break;
 
 	case TBIP_LOGOUT:
 		ret = tbnet_logout_response(net, route, sequence, command_id);
 		if (!ret)
-			queue_work(system_long_wq, &net->disconnect_work);
+			queue_delayed_work(system_power_efficient_wq, &net->disconnect_work);
 		break;
 
 	default:
@@ -655,7 +655,7 @@ static void tbnet_login_work(struct work_struct *work)
 		net->login_sent = true;
 		mutex_unlock(&net->connection_lock);
 
-		queue_work(system_long_wq, &net->connected_work);
+		queue_delayed_work(system_power_efficient_wq, &net->connected_work);
 	}
 }
 

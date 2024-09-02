@@ -553,7 +553,7 @@ static int dp_mst_sim_topology_mgr_set_mst(
 	}
 
 	if (mst_state)
-		queue_work(system_long_wq, &mst->simulator.probe_work);
+		queue_delayed_work(system_power_efficient_wq, &mst->simulator.probe_work);
 
 	mst->simulator.mst_state = mst_state;
 	return 0;

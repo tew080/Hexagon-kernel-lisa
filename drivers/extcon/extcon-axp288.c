@@ -269,7 +269,7 @@ no_vbus:
 	if (info->role_sw && info->vbus_attach != vbus_attach) {
 		info->vbus_attach = vbus_attach;
 		/* Setting the role can take a while */
-		queue_work(system_long_wq, &info->role_work);
+		queue_delayed_work(system_power_efficient_wq, &info->role_work);
 	}
 
 	return 0;
@@ -288,7 +288,7 @@ static int axp288_extcon_id_evt(struct notifier_block *nb,
 		container_of(nb, struct axp288_extcon_info, id_nb);
 
 	/* We may not sleep and setting the role can take a while */
-	queue_work(system_long_wq, &info->role_work);
+	queue_delayed_work(system_power_efficient_wq, &info->role_work);
 
 	return NOTIFY_OK;
 }
@@ -416,7 +416,7 @@ static int axp288_extcon_probe(struct platform_device *pdev)
 
 	/* Make sure the role-sw is set correctly before doing BC detection */
 	if (info->role_sw) {
-		queue_work(system_long_wq, &info->role_work);
+		queue_delayed_work(system_power_efficient_wq, &info->role_work);
 		flush_work(&info->role_work);
 	}
 
