@@ -1,6 +1,7 @@
  /*
   * Goodix Touchscreen Driver
   * Copyright (C) 2020 - 2021 Goodix, Inc.
+  * Copyright (C) 2021 XiaoMi, Inc.
   *
   * This program is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -19,7 +20,6 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/uaccess.h>
-#include <linux/hwid.h>
 
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 38)
 #include <linux/input/mt.h>
@@ -34,7 +34,6 @@
 #define CORE_MODULE_PROB_SUCCESS		1
 #define CORE_MODULE_PROB_FAILED			-1
 #define CORE_MODULE_REMOVED				-2
-#define OLED_JUDGE_ID					(17+307)
 int core_module_prob_sate = CORE_MODULE_UNPROBED;
 struct goodix_module goodix_modules;
 struct goodix_ts_core *goodix_core_data;
@@ -1098,21 +1097,8 @@ void goodix_match_fw(struct goodix_ts_core *ts_data)
 	if (is_lockdown_empty(ts_data->lockdown_info))
 		goodix_ts_get_lockdowninfo(ts_data);
 	if (goodix_get_panel_type(ts_data) < 0) {
-		switch (get_hw_version_platform()) {
-			case HARDWARE_PROJECT_K9:
-				ts->fw_name = TS_DEFAULT_FIRMWARE_K9;
-				ts->cfg_bin_name = TS_DEFAULT_CFG_BIN_K9;
-				break;
-			case HARDWARE_PROJECT_K9D:
-				ts->fw_name = TS_DEFAULT_FIRMWARE_K9D;
-				ts->cfg_bin_name = TS_DEFAULT_CFG_BIN_K9D;
-				break;
-			default:
-				ts->fw_name = TS_DEFAULT_FIRMWARE;
-				ts->cfg_bin_name = TS_DEFAULT_CFG_BIN;
-				break;
-		}
-
+		ts->fw_name = TS_DEFAULT_FIRMWARE;
+		ts->cfg_bin_name = TS_DEFAULT_CFG_BIN;
 	} else {
 		ts->fw_name = ts->config_array[ts->panel_index].gdx_fw_name;
 		ts->cfg_bin_name =ts->config_array[ts->panel_index].gdx_cfg_name;
@@ -1302,9 +1288,6 @@ static void goodix_ts_report_finger(struct input_dev *dev,
 			if (__test_and_clear_bit(i, &core_data->touch_id)) {
 				ts_info("finger report leave:%d", i);
 			}
-#ifdef GOODIX_XIAOMI_TOUCHFEATURE
-			last_touch_events_collect(i, 0);
-#endif
 			continue;
 		}
 		/* ts_debug("report: id %d, x %d, y %d, w %d", i,
@@ -1319,9 +1302,6 @@ static void goodix_ts_report_finger(struct input_dev *dev,
 		if (!__test_and_set_bit(i, &core_data->touch_id)) {
 			ts_info("finger report press:%d", i);
 		}
-#ifdef GOODIX_XIAOMI_TOUCHFEATURE
-			last_touch_events_collect(i, 1);
-#endif
 	}
 
 	/*first touch down and last touch up condition*/
@@ -1378,7 +1358,7 @@ static irqreturn_t goodix_ts_threadirq_func(int irq, void *data)
 
 	if (atomic_read(&ts_esd->esd_on)) {
 		cancel_delayed_work_sync(&ts_esd->esd_work);
-	queue_delayed_work(system_power_efficient_wq,&ts_esd->esd_work, 2 * HZ);
+		queue_delayed_work(system_power_efficient_wq,&ts_esd->esd_work, 2 * HZ);
 	}
 
 #ifdef CONFIG_PM
@@ -1740,7 +1720,7 @@ static void goodix_ts_esd_work(struct work_struct *work)
 		/* 	hw_ops->reset(cd, GOODIX_NORMAL_RESET_DELAY_MS); */
 	}
 	if (atomic_read(&ts_esd->esd_on))
-	queue_delayed_work(system_power_efficient_wq,&ts_esd->esd_work, 2 * HZ);
+		queue_delayed_work(system_power_efficient_wq,&ts_esd->esd_work, 2 * HZ);
 }
 
 /**
@@ -1755,7 +1735,7 @@ static void goodix_ts_esd_on(struct goodix_ts_core *cd)
 		return;
 
 	atomic_set(&ts_esd->esd_on, 1);
-	if (!queue_delayed_work(system_power_efficient_wq, &ts_esd->esd_work, 2 * HZ)) {
+	if (!schedule_delayed_work(&ts_esd->esd_work, 2 * HZ)) {
 		ts_info("esd work already in workqueue");
 	}
 	ts_info("esd on");
@@ -1852,9 +1832,6 @@ static void goodix_ts_release_connects(struct goodix_ts_core *core_data)
 			input_mt_report_slot_state(input_dev,
 					MT_TOOL_FINGER,
 					false);
-#ifdef FTS_XIAOMI_TOUCHFEATURE
-			last_touch_events_collect(i, 0);
-#endif
 		}
 		input_report_key(input_dev, BTN_TOUCH, 0);
 #ifdef CONFIG_TOUCHSCREEN_QGKI_GOODIX
@@ -2762,50 +2739,54 @@ static const struct file_operations goodix_lockdown_info_ops = {
 };
 
 static ssize_t goodix_fw_version_info_read(struct file *file, char __user *buf,
-                     size_t count, loff_t *pos)
+					 size_t count, loff_t *pos)
 {
-    struct goodix_ts_hw_ops *hw_ops = goodix_core_data->hw_ops;
-    struct goodix_fw_version chip_ver = goodix_core_data->fw_version;
-    char k_buf[100] = {0};
-    int ret = 0;
-    int cnt = 0;
-    int remaining = sizeof(k_buf) - 1;
+	struct goodix_ts_hw_ops *hw_ops = goodix_core_data->hw_ops;
+	struct goodix_fw_version chip_ver = goodix_core_data->fw_version;
+	char k_buf[256] = {0};  
+	int ret = 0;
+	int cnt = 0;
 
-    if (*pos != 0 || !hw_ops)
-        return 0;
+	if (*pos != 0 || !hw_ops)
+		return 0;
 
-    if (hw_ops->read_version) {
-        ret = hw_ops->read_version(goodix_core_data, &chip_ver);
-        if (!ret) {
-            cnt = snprintf(k_buf, remaining,
-                "patch_pid:%s\n",
-                chip_ver.patch_pid);
-            if (cnt > 0 && cnt < remaining) {
-                remaining -= cnt;
-                cnt += snprintf(k_buf + cnt, remaining,
-                    "patch_vid:%02x%02x%02x%02x\n",
-                    chip_ver.patch_vid[0], chip_ver.patch_vid[1],
-                    chip_ver.patch_vid[2], chip_ver.patch_vid[3]);
-            }
-        }
-    }
+	if (hw_ops->read_version) {
+		ret = hw_ops->read_version(goodix_core_data, &chip_ver);
+		if (!ret) {
+			cnt = snprintf(k_buf, sizeof(k_buf),
+				"patch_pid:%s\n",
+				chip_ver.patch_pid);
+			if (cnt > 0 && cnt < sizeof(k_buf)) {
+				cnt += snprintf(k_buf + cnt, sizeof(k_buf) - cnt,
+					"patch_vid:%02x%02x%02x%02x\n",
+					chip_ver.patch_vid[0], chip_ver.patch_vid[1],
+					chip_ver.patch_vid[2], chip_ver.patch_vid[3]);
+			}
+		}
+	}
 
-    if (hw_ops->get_ic_info && remaining > 0) {
-        ret = hw_ops->get_ic_info(goodix_core_data, &goodix_core_data->ic_info, false);
-        if (!ret) {
-            int temp = snprintf(k_buf + cnt, remaining,
-                "config_version:%x\n", goodix_core_data->ic_info.version.config_version);
-            if (temp > 0) {
-                cnt += temp;
-            }
-        }
-    }
+	if (hw_ops->get_ic_info && cnt > 0 && cnt < sizeof(k_buf)) {
+		ret = hw_ops->get_ic_info(goodix_core_data, &goodix_core_data->ic_info, false);
+		if (!ret) {
+			cnt += snprintf(k_buf + cnt, sizeof(k_buf) - cnt,
+				"config_version:%x\n", goodix_core_data->ic_info.version.config_version);
+		}
+	}
 
-    cnt = min_t(int, cnt, count);
-    ret = copy_to_user(buf, k_buf, cnt);
-    *pos += cnt;
-    return ret ? 0 : cnt;
+	if (cnt >= sizeof(k_buf)) {
+		cnt = sizeof(k_buf) - 1;
+	}
+
+	cnt = min_t(int, cnt, count);
+	ret = copy_to_user(buf, k_buf, cnt);
+	*pos += cnt;
+
+	if (ret != 0)
+		return 0;
+	else
+		return cnt;
 }
+
 static const struct file_operations goodix_fw_version_info_ops = {
 	.read = goodix_fw_version_info_read,
 };
@@ -3200,16 +3181,6 @@ static struct platform_driver goodix_ts_driver = {
 static int __init goodix_ts_core_init(void)
 {
 	int ret;
-
-	if (get_hw_version_platform() == HARDWARE_PROJECT_K9) {
-		gpio_direction_input(OLED_JUDGE_ID);
-		if (gpio_get_value(OLED_JUDGE_ID)) {
-			ts_err("TP is goodix");
-		} else {
-			ts_err("TP is focal");
-			return 0;
-		}
-	}
 
 	ts_info("Core layer init:%s", GOODIX_DRIVER_VERSION);
 	ret = goodix_bus_init();

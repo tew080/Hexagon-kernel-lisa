@@ -29,6 +29,7 @@
 #include <linux/cpuhotplug.h>
 #include <linux/regulator/machine.h>
 #include <linux/sched/clock.h>
+#include <linux/sched/idle.h>
 #include <linux/sched/stat.h>
 #include <linux/rcupdate.h>
 #include <linux/psci.h>
@@ -47,6 +48,7 @@
 #define SCLK_HZ (32768)
 #define PSCI_POWER_STATE(reset) (reset << 30)
 #define PSCI_AFFINITY_LEVEL(lvl) ((lvl & 0x3) << 24)
+#define MAX_LPM_CPUS (8)
 
 static struct system_pm_ops *sys_pm_ops;
 
@@ -76,7 +78,6 @@ struct ipi_history {
 	ktime_t cpu_idle_resched_ts;
 };
 
-static DEFINE_PER_CPU(ktime_t, next_hrtimer);
 static DEFINE_PER_CPU(struct lpm_history, hist);
 static DEFINE_PER_CPU(struct ipi_history, cpu_ipi_history);
 static DEFINE_PER_CPU(struct lpm_cpu*, cpu_lpm);
@@ -94,6 +95,15 @@ static void cluster_prepare(struct lpm_cluster *cluster,
 static bool sleep_disabled;
 module_param_named(sleep_disabled, sleep_disabled, bool, 0664);
 
+#ifdef CONFIG_SMP
+static int lpm_cpu_qos_notify(struct notifier_block *nb,
+		unsigned long val, void *ptr);
+
+static struct notifier_block dev_pm_qos_nb[MAX_LPM_CPUS] = {
+	[0 ... (MAX_LPM_CPUS - 1)] = { .notifier_call = lpm_cpu_qos_notify },
+};
+#endif
+
 #ifdef CONFIG_SCHED_WALT
 static bool check_cpu_isolated(int cpu)
 {
@@ -103,6 +113,46 @@ static bool check_cpu_isolated(int cpu)
 static bool check_cpu_isolated(int cpu)
 {
 	return false;
+}
+#endif
+
+#ifdef CONFIG_SMP
+static int lpm_cpu_qos_notify(struct notifier_block *nb,
+		unsigned long val, void *ptr)
+{
+	int cpu = nb - dev_pm_qos_nb;
+
+	preempt_disable();
+	if (cpu != smp_processor_id() && cpu_online(cpu) &&
+	    !check_cpu_isolated(cpu))
+		wake_up_if_idle(cpu);
+	preempt_enable();
+
+	return NOTIFY_OK;
+}
+
+static int lpm_offline_cpu(unsigned int cpu)
+{
+	struct device *dev = get_cpu_device(cpu);
+
+	if (!dev)
+		return 0;
+
+	dev_pm_qos_remove_notifier(dev, &dev_pm_qos_nb[cpu],
+				   DEV_PM_QOS_RESUME_LATENCY);
+	return 0;
+}
+
+static int lpm_online_cpu(unsigned int cpu)
+{
+	struct device *dev = get_cpu_device(cpu);
+
+	if (!dev)
+		return 0;
+
+	dev_pm_qos_add_notifier(dev, &dev_pm_qos_nb[cpu],
+				DEV_PM_QOS_RESUME_LATENCY);
+	return 0;
 }
 #endif
 
@@ -163,10 +213,10 @@ static uint32_t get_next_event(struct lpm_cpu *cpu)
 		return 0;
 
 	for_each_cpu(next_cpu, &cpu_lpm_mask) {
-		ktime_t next_event_c = per_cpu(next_hrtimer, next_cpu);
+		ktime_t *next_event_c = get_next_event_cpu(next_cpu);
 
-		if (next_event > next_event_c)
-			next_event = next_event_c;
+		if (next_event > *next_event_c)
+			next_event = *next_event_c;
 	}
 
 	return ktime_to_us(ktime_sub(next_event, ktime_get()));
@@ -179,11 +229,13 @@ static void disable_rimps_timer(struct lpm_cpu *cpu)
 	if (!cpu->rimps_tmr_base)
 		return;
 
+	spin_lock(&cpu->cpu_lock);
 	ctrl_val = readl_relaxed(cpu->rimps_tmr_base + TIMER_CTRL);
 	writel_relaxed(ctrl_val & ~(TIMER_CONTROL_EN),
 				cpu->rimps_tmr_base + TIMER_CTRL);
 	/* Ensure the write is complete before returning. */
 	wmb();
+	spin_unlock(&cpu->cpu_lock);
 
 }
 
@@ -206,9 +258,10 @@ static void program_rimps_timer(struct lpm_cpu *cpu)
 		return;
 
 	next_event = us_to_ticks(next_event);
+	spin_lock(&cpu->cpu_lock);
 
 	/* RIMPS timer pending should be read before programming timeout val */
-	readl(cpu->rimps_tmr_base + TIMER_PENDING);
+	readl_relaxed(cpu->rimps_tmr_base + TIMER_PENDING);
 	ctrl_val = readl_relaxed(cpu->rimps_tmr_base + TIMER_CTRL);
 	writel_relaxed(ctrl_val & ~(TIMER_CONTROL_EN),
 				cpu->rimps_tmr_base + TIMER_CTRL);
@@ -217,6 +270,7 @@ static void program_rimps_timer(struct lpm_cpu *cpu)
 				cpu->rimps_tmr_base + TIMER_CTRL);
 	/* Ensure the write is complete before returning. */
 	wmb();
+	spin_unlock(&cpu->cpu_lock);
 }
 
 #ifdef CONFIG_SMP
@@ -269,7 +323,7 @@ static void histtimer_start(uint32_t time_us)
 	struct hrtimer *cpu_histtimer = &per_cpu(histtimer, cpu);
 
 	cpu_histtimer->function = histtimer_fn;
-	hrtimer_start(cpu_histtimer, hist_ktime, HRTIMER_MODE_REL_PINNED_HARD);
+	hrtimer_start(cpu_histtimer, hist_ktime, HRTIMER_MODE_REL_PINNED);
 }
 
 static void cluster_timer_init(struct lpm_cluster *cluster)
@@ -279,8 +333,7 @@ static void cluster_timer_init(struct lpm_cluster *cluster)
 	if (!cluster)
 		return;
 
-	hrtimer_init(&cluster->histtimer, CLOCK_MONOTONIC,
-		     HRTIMER_MODE_REL_HARD);
+	hrtimer_init(&cluster->histtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 
 	list_for_each(list, &cluster->child) {
 		struct lpm_cluster *n;
@@ -327,7 +380,7 @@ static void clusttimer_start(struct lpm_cluster *cluster, uint32_t time_us)
 
 	cluster->histtimer.function = clusttimer_fn;
 	hrtimer_start(&cluster->histtimer, clust_ktime,
-		      HRTIMER_MODE_REL_PINNED_HARD);
+				HRTIMER_MODE_REL_PINNED);
 }
 
 static void biastimer_cancel(void)
@@ -355,7 +408,7 @@ static void biastimer_start(uint32_t time_ns)
 	struct hrtimer *cpu_biastimer = &per_cpu(biastimer, cpu);
 
 	cpu_biastimer->function = biastimer_fn;
-	hrtimer_start(cpu_biastimer, bias_ktime, HRTIMER_MODE_REL_PINNED_HARD);
+	hrtimer_start(cpu_biastimer, bias_ktime, HRTIMER_MODE_REL_PINNED);
 }
 
 static uint64_t find_deviation(int *interval, uint32_t ref_stddev,
@@ -682,10 +735,10 @@ static unsigned int get_next_online_cpu(bool from_idle)
 		return next_cpu;
 	next_event = KTIME_MAX;
 	for_each_online_cpu(cpu) {
-		ktime_t next_event_c = per_cpu(next_hrtimer, cpu);
+		ktime_t *next_event_c = get_next_event_cpu(cpu);
 
-		if (next_event_c < next_event) {
-			next_event = next_event_c;
+		if (*next_event_c < next_event) {
+			next_event = *next_event_c;
 			next_cpu = cpu;
 		}
 	}
@@ -709,10 +762,10 @@ static uint64_t get_cluster_sleep_time(struct lpm_cluster *cluster,
 			&cluster->num_children_in_sync, cpu_online_mask);
 
 	for_each_cpu(cpu, &online_cpus_in_cluster) {
-		ktime_t next_event_c = per_cpu(next_hrtimer, cpu);
+		ktime_t *next_event_c = get_next_event_cpu(cpu);
 
-		if (next_event_c < next_event)
-			next_event = next_event_c;
+		if (*next_event_c < next_event)
+			next_event = *next_event_c;
 
 		if (from_idle && lpm_prediction && cluster->lpm_prediction) {
 			history = &per_cpu(hist, cpu);
@@ -1342,16 +1395,14 @@ static int lpm_cpuidle_enter(struct cpuidle_device *dev,
 	bool success = false;
 	const struct cpumask *cpumask = get_cpu_mask(dev->cpu);
 	ktime_t start = ktime_get();
+	uint64_t start_time = ktime_to_ns(start), end_time;
 	int ret = -EBUSY;
 
-	/* Read the timer from the CPU that is entering idle */
-	per_cpu(next_hrtimer, dev->cpu) = tick_nohz_get_next_hrtimer();
-
 	cpu_prepare(cpu, idx, true);
-	cluster_prepare(cpu->parent, cpumask, idx, true, 0);
+	cluster_prepare(cpu->parent, cpumask, idx, true, start_time);
 
 	RCU_NONIDLE(trace_cpu_idle_enter(idx));
-	lpm_stats_cpu_enter(idx, 0);
+	lpm_stats_cpu_enter(idx, start_time);
 
 	if (need_resched() || is_IPI_pending(cpumask_of(dev->cpu)))
 		goto exit;
@@ -1359,16 +1410,18 @@ static int lpm_cpuidle_enter(struct cpuidle_device *dev,
 	if (idx == cpu->nlevels - 1)
 		program_rimps_timer(cpu);
 
+	cpuidle_set_idle_cpu(dev->cpu);
 	ret = psci_enter_sleep(cpu, idx, true);
+	cpuidle_clear_idle_cpu(dev->cpu);
 	success = (ret == 0);
 
+exit:
 	if (idx == cpu->nlevels - 1)
 		disable_rimps_timer(cpu);
+	end_time = ktime_to_ns(ktime_get());
+	lpm_stats_cpu_exit(idx, end_time, success);
 
-exit:
-	lpm_stats_cpu_exit(idx, 0, success);
-
-	cluster_unprepare(cpu->parent, cpumask, idx, true, 0, success);
+	cluster_unprepare(cpu->parent, cpumask, idx, true, end_time, success);
 	cpu_unprepare(cpu, idx, true);
 	dev->last_residency = ktime_us_delta(ktime_get(), start);
 	update_history(dev, idx);
@@ -1672,11 +1725,9 @@ static int lpm_probe(struct platform_device *pdev)
 	 */
 	for_each_possible_cpu(cpu) {
 		cpu_histtimer = &per_cpu(histtimer, cpu);
-		hrtimer_init(cpu_histtimer, CLOCK_MONOTONIC,
-			     HRTIMER_MODE_REL_HARD);
+		hrtimer_init(cpu_histtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 		cpu_histtimer = &per_cpu(biastimer, cpu);
-		hrtimer_init(cpu_histtimer, CLOCK_MONOTONIC,
-			     HRTIMER_MODE_REL_HARD);
+		hrtimer_init(cpu_histtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	}
 
 	cluster_timer_init(lpm_root_node);
@@ -1693,6 +1744,12 @@ static int lpm_probe(struct platform_device *pdev)
 	ret = cpuhp_setup_state(CPUHP_AP_QCOM_TIMER_STARTING,
 			"AP_QCOM_SLEEP_STARTING",
 			lpm_starting_cpu, lpm_dying_cpu);
+	if (ret)
+		goto failed;
+
+	ret = cpuhp_setup_state(CPUHP_AP_QCOM_CPU_QOS_ONLINE,
+			"AP_QCOM_CPU_QOS_ONLINE",
+			lpm_online_cpu, lpm_offline_cpu);
 	if (ret)
 		goto failed;
 #endif
