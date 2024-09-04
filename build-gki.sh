@@ -4,7 +4,7 @@
 # Copyright (C) 2020-2021 Adithya R.
 
 SECONDS=0 # builtin bash timer
-ZIPNAME="StormBreaker-lisa-$(date '+%Y%m%d-%H%M').zip"
+ZIPNAME="Test-lisa-$(date '+%Y%m%d-%H%M').zip"
 TC_DIR="/home/tew404/lisa-Kernel/clang-r416183b"
 GCC_64_DIR="/home/tew404/lisa-Kernel/aarch64-linux-android-4.9"
 GCC_32_DIR="/home/tew404/lisa-Kernel/arm-linux-androideabi-4.9"
