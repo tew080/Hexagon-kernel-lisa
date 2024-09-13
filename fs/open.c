@@ -497,8 +497,8 @@ int ksys_chdir(const char __user *filename)
 	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
 
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
-	int status;
 	struct filename* fname;
+	int status;
 
 	fname = getname_safe(filename);
 	status = susfs_sus_path_by_filename(fname, &error, SYSCALL_FAMILY_ALL_ENOENT);

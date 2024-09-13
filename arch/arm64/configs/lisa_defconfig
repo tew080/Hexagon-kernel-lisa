@@ -916,7 +916,7 @@ CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK=y
 # 					   #
 # Add Custom #
 #					  #
-# CONFIG_KSU is not set
+CONFIG_KSU=y
 # CONFIG_KSU_SUSFS is not set
 # CONFIG_KSU_SUSFS_SUS_PATH is not set
 # CONFIG_KSU_SUSFS_SUS_MOUNT_MNT_ID_REORDER is not set
