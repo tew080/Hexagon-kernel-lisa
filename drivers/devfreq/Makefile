@@ -1,12 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
 
-# Inlin optimization
-KBUILD_CFLAGS += -mllvm -inline-threshold=5000
-KBUILD_CFLAGS += -mllvm -inlinehint-threshold=4000
-KBUILD_CFLAGS += -mllvm -unroll-count=10
-KBUILD_CFLAGS += -mllvm -unroll-threshold=3000
-KBUILD_CFLAGS += -mllvm -unroll-partial-threshold=3000
-
 obj-$(CONFIG_PM_DEVFREQ)	+= devfreq.o
 obj-$(CONFIG_PM_DEVFREQ_EVENT)	+= devfreq-event.o
 obj-$(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)	+= governor_simpleondemand.o

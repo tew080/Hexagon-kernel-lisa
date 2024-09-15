@@ -10,16 +10,8 @@
 #include "trace.h"
 
 #ifdef CONFIG_SCHED_WALT
-#ifdef CONFIG_HZ_300
-/*
- * Tick interval becomes to 3333333 due to
- * rounding error when HZ=300.
- */
-#define DEFAULT_SCHED_RAVG_WINDOW (3333333 * 5)
-#else
 /* Min window size (in ns) = 12ms */
 #define DEFAULT_SCHED_RAVG_WINDOW 12000000
-#endif
 
 /* Max window size (in ns) = 1s */
 #define MAX_SCHED_RAVG_WINDOW 1000000000
