@@ -2,7 +2,11 @@
 #
 # Cryptographic API
 #
- 
+ # Snapdragon optimization
+KBUILD_CFLAGS  +=  -fno-rtti
+KBUILD_CFLAGS  +=  -fno-trapping-math
+KBUILD_CFLAGS  +=  -fno-exceptions
+KBUILD_CFLAGS  +=  -fno-math-errno
 	
 obj-$(CONFIG_CRYPTO) += crypto.o
 crypto-y := api.o cipher.o compress.o memneq.o

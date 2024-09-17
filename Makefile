@@ -781,8 +781,8 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, unused-value)
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
 KBUILD_CFLAGS += -O2 
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
-KBUILD_CFLAGS += -O3 
-KBUILD_AFLAGS += -O3 
+KBUILD_CFLAGS += -O3 -ffp-contract=fast 
+KBUILD_AFLAGS += -O3 -ffp-contract=fast 
 else ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_QC_LLVM
 KBUILD_CFLAGS += -O3 -ffast-math
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
