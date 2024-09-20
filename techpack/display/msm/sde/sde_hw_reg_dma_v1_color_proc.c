@@ -7,7 +7,11 @@
 #include "sde_reg_dma.h"
 #include "sde_hw_reg_dma_v1_color_proc.h"
 #include "sde_hw_color_proc_common_v4.h"
+
+#ifdef CONFIG_DRM_MSM_KCAL_CTRL
 #include "sde_hw_kcal_ctrl.h"
+#endif
+
 #include "sde_hw_ctl.h"
 #include "sde_hw_sspp.h"
 #include "sde_hwio.h"
