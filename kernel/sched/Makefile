@@ -4,18 +4,11 @@ KBUILD_CFLAGS  +=  -fno-rtti
 KBUILD_CFLAGS  +=  -fno-trapping-math
 KBUILD_CFLAGS  +=  -fno-exceptions
 KBUILD_CFLAGS  +=  -fno-math-errno
-KBUILD_LDFLAGS  +=  -fno-rtti
-KBUILD_LDFLAGS  +=  -fno-trapping-math
-KBUILD_LDFLAGS  +=  -fno-exceptions
-KBUILD_LDFLAGS  +=  -fno-math-errno
 
 # Machine Instruction Scheduler
 KBUILD_CFLAGS  +=  -mllvm -enable-misched
 KBUILD_CFLAGS  +=  -mllvm -misched-topdown
 KBUILD_CFLAGS  +=  -mllvm -regalloc=greedy
-KBUILD_LDFLAGS  +=  -mllvm -enable-misched
-KBUILD_LDFLAGS  +=  -mllvm -misched-topdown
-KBUILD_LDFLAGS  +=  -mllvm -regalloc=greedy
 
 ifdef CONFIG_FUNCTION_TRACER
 CFLAGS_REMOVE_clock.o = $(CC_FLAGS_FTRACE)
