@@ -23,6 +23,7 @@
 #ifdef CONFIG_DRM_MSM_KCAL_CTRL
 #include "sde_hw_kcal_ctrl.h"
 #endif
+
 struct sde_cp_node {
 	u32 property_id;
 	u32 prop_flags;
@@ -2187,6 +2188,7 @@ struct drm_crtc *g_pcc_crtc;
 struct drm_property *g_pcc_property;
 uint64_t g_pcc_val;
 #endif
+
 int sde_cp_crtc_set_property(struct drm_crtc *crtc,
 				struct drm_property *property,
 				uint64_t val)
