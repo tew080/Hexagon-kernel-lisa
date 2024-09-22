@@ -523,7 +523,7 @@ static int qcom_cpufreq_hw_read_lut(struct platform_device *pdev,
 			invalidate_freq = true;
 			c->table[i].frequency = CPUFREQ_ENTRY_INVALID;
 		} else {
-			invalidate_freq = false;
+			invalidate_freq = true;
 			if (core_count != max_cores)
 				c->table[i].flags = CPUFREQ_BOOST_FREQ;
 
