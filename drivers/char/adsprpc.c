@@ -1279,14 +1279,8 @@ static void fastrpc_mmap_free(struct fastrpc_mmap *map, uint32_t flags)
 	} else {
 		if (map->refs)
 			map->refs--;
-<<<<<<< HEAD
-		/* flags is passed as 1 during fastrpc_file_free
-		 * (ie process exit), so that maps will be cleared
-		 *  even though references are present.
-=======
 		/* flags is passed as 1 during fastrpc_file_free (ie process exit),
 		 * so that maps will be cleared even though references are present.
->>>>>>> 1598df16eb270fdb902ef0a9d6e591edf3db2968
 		 */
 		if (!map->refs && !map->ctx_refs && !map->dma_handle_refs)
 			hlist_del_init(&map->hn);
